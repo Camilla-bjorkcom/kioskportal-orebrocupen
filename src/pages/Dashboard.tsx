@@ -1,11 +1,18 @@
-import React from 'react'
+import DashboardLink from "@/components/DashboardLink";
+import DashboardStats from "@/components/DashboardStats";
+import DaysLeftTourStat from "@/components/DaysLeftTourStat";
+import { Input } from "@/components/ui/input";
+import { CopyIcon } from "@radix-ui/react-icons";
 
-const Dashboard = () => {
+function Dashboard() {
   return (
-    <div>Dashboard</div>
-  )
+    <div className="container mx-auto">
+      <h1 className="font-bold text-5xl mb-24 pl-5">Din översikt</h1>
+      <DashboardStats />
+      <DashboardLink />
+      <DaysLeftTourStat />
+    </div>
+  );
 }
 
-export default Dashboard
-
-
+export default Dashboard;
