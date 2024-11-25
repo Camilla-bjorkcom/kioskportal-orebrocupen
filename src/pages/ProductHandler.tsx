@@ -1,22 +1,41 @@
 
-import { PlusIcon } from "@radix-ui/react-icons";
+import CreateProductButton from "@/components/CreateProductButton";
 
-import React from "react";
+
+import React, {useState} from "react";
 
 function ProductHandler() {
+
+  const [products, setProducts] = useState<string[]>([]);
+  
+  const handleSaveProduct = (productName: string) => {
+    setProducts((prev) => [...prev, productName]);
+  };
   return (
     <section>
       <div className="container mx-auto px-4 flex-row items-center">
         <h2 className="font-bold text-4xl my-4">Produkthantering</h2>
 
-    <button className="rounded-xl border bg-card text-card-foreground shadow aspect-video h-32 flex p-3">
-      <h3 className="font-extrabold text-left">Lägg till produkt</h3>
-      <PlusIcon className="self-end h-20 w-20"></PlusIcon>
-      </button>
-
+    <CreateProductButton onSave={handleSaveProduct}/>
+    <div className="mt-8">
+          <h3 className="font-semibold text-2xl">Sparade produkter:</h3>
+          <div className="mt-4 space-y-2">
+            {products.map((product, index) => (
+              <div
+                key={index}
+                className="p-4 border border-gray-200 rounded-md shadow"
+              >
+                {product}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+    
+
     </section>
   );
 }
 
 export default ProductHandler;
+
