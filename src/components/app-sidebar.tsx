@@ -12,6 +12,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -38,8 +39,8 @@ const items = [
     icon: Hammer,
     subitems: [
       { title: "Din översikt", url: "/dashboard" },
-      { title: "Lägg till produktlista", url: "#" },
-      { title: "Lägg till planstruktur", url: "#" },
+      { title: "Produktlista", url: "#" },
+      { title: "Planstruktur", url: "#" },
       { title: "Produkthanterare", url: "#" },
     ],
   },
@@ -47,14 +48,21 @@ const items = [
     title: "Inventering",
     url: "#",
     icon: SquareChartGantt,
-    subitems: [{ title: "Visa saldo", url: "#" }],
+    subitems: [
+        { title: "Visa saldo för kiosk", url: "#" },
+        { title: "Visa saldo för anläggning", url: "#" }
+    ],
+    
   },
 ];
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar variant="sidebar" collapsible="icon">
       <SidebarContent>
+        <SidebarHeader>
+            <h2 className="font-bold">ÖC 2025</h2>
+        </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Meny</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -73,7 +81,7 @@ export function AppSidebar() {
                           className="flex items-center justify-between"
                         >
                           <div className="flex items-center gap-2">
-                            <item.icon className="w-5 h-5"/>
+                            <item.icon className="w-5 h-5" />
                             <span>{item.title}</span>
                           </div>
                           <ChevronDown className="h-4 w-4" />

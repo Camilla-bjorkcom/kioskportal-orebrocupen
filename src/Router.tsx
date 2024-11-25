@@ -8,7 +8,7 @@ function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<NavLayout />}>
+        <Route path="/" >
           <Route index element={<Home />} />
           <Route  element={<SidebarLayout />}>
             <Route path="tournaments" >
@@ -19,7 +19,7 @@ function Router() {
               </Route>
             </Route>
             <Route path="dashboard">
-              <Route index element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
             </Route>
           </Route>
         </Route>
