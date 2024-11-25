@@ -36,7 +36,7 @@ const CreateTournamentBtn = () => {
               <DatePicker />
           </div>
           <div className="flex justify-end">
-            <button className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow">Spara Turnering</button>
+            <button className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow">Spara turnering</button>
           </div>
         </div>
       </DialogContent>
