@@ -7,10 +7,8 @@ const Header: React.FC = () => {
             <div className="container mx-auto px-4 flex items-center ">
                 <div className="logoImage">
                     <img src="src\assets\images\tempLogo.svg" alt="Kiosk Portalen"></img>
-                </div>
-                
-                    <h1 className="w-full mx-auto text-center text-2xl font-bold">Välkommen till Kiosk Portalen</h1>
-                
+                </div>         
+                              
             </div>
         </header>
     )
