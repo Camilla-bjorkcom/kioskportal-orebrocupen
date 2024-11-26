@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import SidebarLayout from "./layouts/SidebarLayout";
 import ProductHandler from "./pages/ProductHandler";
+import CreateTournament from "./pages/CreateTournament";
 
 function Router() {
   return (
@@ -18,6 +19,9 @@ function Router() {
               <Route path=":id" element={<NavLayout />}>
                 <Route index element={<Home />} />
               </Route>
+            </Route>
+            <Route path="createtournament">
+              <Route path="/createtournament" element={<CreateTournament />} />
             </Route>
             <Route path="dashboard">
               <Route path="/dashboard" element={<Dashboard />} />

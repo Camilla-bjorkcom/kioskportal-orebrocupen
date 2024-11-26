@@ -4,6 +4,7 @@ import {
   SquareChartGantt,
   Settings,
   ChevronDown,
+  ChartSpline
 } from "lucide-react";
 
 import {
@@ -37,8 +38,7 @@ const items = [
     title: "Verktyg",
     url: "#",
     icon: Hammer,
-    subitems: [
-      { title: "Din översikt", url: "/dashboard" },
+    subitems: [     
       { title: "Produktlista", url: "#" },
       { title: "Planstruktur", url: "#" },
       { title: "Produkthanterare", url: "/producthandler" },
@@ -51,6 +51,16 @@ const items = [
     subitems: [
         { title: "Visa saldo för kiosk", url: "#" },
         { title: "Visa saldo för anläggning", url: "#" }
+    ],
+    
+  },
+  {
+    title: "Statistik",
+    url: "#",
+    icon: ChartSpline,
+    subitems: [
+        { title: "Din översikt", url: "/dashboard" },
+        { title: "?", url: "#" }
     ],
     
   },
