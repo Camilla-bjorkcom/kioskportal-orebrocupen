@@ -3,6 +3,7 @@ import NavLayout from "./layouts/NavLayout";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import SidebarLayout from "./layouts/SidebarLayout";
+import ProductHandler from "./pages/ProductHandler";
 
 function Router() {
   return (
@@ -20,6 +21,9 @@ function Router() {
             </Route>
             <Route path="dashboard">
               <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
+            <Route path="producthandler">
+              <Route path="/producthandler" element={<ProductHandler />} />
             </Route>
           </Route>
         </Route>

@@ -41,7 +41,7 @@ const items = [
       { title: "Din översikt", url: "/dashboard" },
       { title: "Produktlista", url: "#" },
       { title: "Planstruktur", url: "#" },
-      { title: "Produkthanterare", url: "#" },
+      { title: "Produkthanterare", url: "/producthandler" },
     ],
   },
   {
