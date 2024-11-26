@@ -1,7 +1,7 @@
 import DashboardLink from "@/components/DashboardLink";
 import DashboardStats from "@/components/DashboardStats";
 import DaysLeftTourStat from "@/components/DaysLeftTourStat";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import PagesHeader from "@/components/PagesHeader";
 import { useLocation } from "react-router-dom";
 
 function Dashboard() {
@@ -9,10 +9,7 @@ function Dashboard() {
 
   return (
     <>
-      <div className="p-1 shadow w-full flex items-center mb-8">
-        <SidebarTrigger />
-        <h2>{pathname}</h2>
-      </div>
+      <PagesHeader pathname={pathname} />
       <div className="container mx-auto">
         <h1 className="font-bold text-5xl mb-24 pl-5">Din översikt</h1>
         <DashboardStats />
