@@ -12,6 +12,9 @@ function Router() {
       <Routes>
         <Route path="/" >
           <Route index element={<Home />} />
+          <Route path="createtournament">
+              <Route path="/createtournament" element={<CreateTournament />} />
+            </Route>
           <Route  element={<SidebarLayout />}>
             <Route path="tournaments" >
               <Route index element={<p>Not found</p>} />
@@ -19,9 +22,6 @@ function Router() {
               <Route path=":id" element={<NavLayout />}>
                 <Route index element={<Home />} />
               </Route>
-            </Route>
-            <Route path="createtournament">
-              <Route path="/createtournament" element={<CreateTournament />} />
             </Route>
             <Route path="dashboard">
               <Route path="/dashboard" element={<Dashboard />} />
