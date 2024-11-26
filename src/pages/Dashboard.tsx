@@ -1,8 +1,7 @@
 import DashboardLink from "@/components/DashboardLink";
 import DashboardStats from "@/components/DashboardStats";
 import DaysLeftTourStat from "@/components/DaysLeftTourStat";
-import { Input } from "@/components/ui/input";
-import { CopyIcon } from "@radix-ui/react-icons";
+
 
 function Dashboard() {
   return (
