@@ -1,9 +1,8 @@
-import Router from './Router'
+import { SidebarProvider } from "./components/ui/sidebar";
+import Router from "./Router";
 
 function App() {
-  return (
-    <Router />
-  )
+  return <Router />;
 }
 
-export default App
+export default App;
