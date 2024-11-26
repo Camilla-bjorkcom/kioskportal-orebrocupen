@@ -61,7 +61,7 @@ export function AppSidebar() {
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarContent>
         <SidebarHeader>
-            <h2 className="font-bold">ÖC 2025</h2>
+            <img src="src/assets/images/tempLogo.svg" alt="kiosk porta logo" />
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Meny</SidebarGroupLabel>
