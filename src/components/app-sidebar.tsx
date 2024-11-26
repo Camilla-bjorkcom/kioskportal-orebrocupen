@@ -32,7 +32,12 @@ const items = [
     title: "Profil",
     url: "#",
     icon: CircleUserRound,
-    subitems: [{ icon: Settings, title: "Inställningar", url: "#" }],
+    subitems: [
+      { icon: Settings, title: "Inställningar", url: "#" },
+      { icon: Settings, title: "Mina turneringar", url: "/createtournament" }
+      
+    ],
+    
   },
   {
     title: "Verktyg",

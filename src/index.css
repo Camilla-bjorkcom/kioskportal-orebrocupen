@@ -89,3 +89,18 @@
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;  
 }
+
+.gradient-wave {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, rgba(255, 165, 0, 0.8), transparent);
+  clip-path: ellipse(75% 50% at 100% 100%);
+  z-index: -1;
+}
+
+.clip-path-wave {
+  clip-path: polygon(0 75%, 100% 25%, 100% 100%, 0% 100%);
+}
