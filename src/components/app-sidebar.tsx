@@ -1,4 +1,4 @@
-git mimport {
+import {
   CircleUserRound,
   Hammer,
   SquareChartGantt,
@@ -40,7 +40,7 @@ const items = [
     subitems: [
       { title: "Din översikt", url: "/dashboard" },
       { title: "Produktlista", url: "#" },
-      { title: "Planstruktur", url: "/kioskmanager" },
+      { title: "Planstruktur", url: "#" },
       { title: "Produkthanterare", url: "#" },
     ],
   },
