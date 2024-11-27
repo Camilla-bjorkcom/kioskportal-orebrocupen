@@ -1,18 +1,15 @@
 import { useAuth } from "react-oidc-context";
 import {
-  CircleUserRound,
   Hammer,
   SquareChartGantt,
-  Settings,
   ChevronDown,
   ChartSpline,
   LogOut,
   ChevronsUpDown,
   BadgeCheck,
-  Bell,
-  CreditCard,
-  Sparkles,
   BookHeart,
+  House,
+  ShoppingBasket,
 } from "lucide-react";
 
 import {
@@ -48,16 +45,30 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 // Menu items.
 const items = [
+  
   {
-    title: "Verktyg",
+    title: "Produkter",
     url: "#",
-    icon: Hammer,
+    icon: ShoppingBasket,
     subitems: [
-      { title: "Produktlista", url: "#" },
-      { title: "Planstruktur", url: "#" },
       { title: "Produkthanterare", url: "/producthandler" },
+      { title: "Produktlista", url: "#" },
+      
     ],
   },
+  
+  {
+    title: "Anläggningar",
+    url: "#",
+    icon: House,
+    subitems: [      
+      { title: "Planstruktur", url: "#" },
+      { title: "Kontaktpersoner", url: "#" },
+      { title: "QR koder till kiosker", url: "#" },
+      
+    ],
+  },
+
   {
     title: "Inventering",
     url: "#",
@@ -156,7 +167,7 @@ export function AppSidebar() {
                 className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
                 align="end"
                 sideOffset={4}
-                side="right"
+                side={window.innerWidth < 768 ? "top" : "right"}
               >
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
