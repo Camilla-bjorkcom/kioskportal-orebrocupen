@@ -13,9 +13,6 @@ function Router() {
       <Routes>
         <Route path="/" >
           <Route index element={<Home />} />
-          <Route path="signup">
-              <Route path="/signup" element={<SignUpPage />} />
-            </Route>
           <Route path="createtournament">
               <Route path="/createtournament" element={<CreateTournament />} />
             </Route>
