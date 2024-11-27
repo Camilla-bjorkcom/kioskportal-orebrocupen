@@ -104,3 +104,8 @@
 .clip-path-wave {
   clip-path: polygon(0 75%, 100% 25%, 100% 100%, 0% 100%);
 }
+
+.logout-button {
+  border-top: 1px solid #d1d5db; /* Tailwind's gray-300 */
+  padding-top: 0.5rem; /* 2 i Tailwind */
+}
