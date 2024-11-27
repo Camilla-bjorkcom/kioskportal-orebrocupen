@@ -11,7 +11,6 @@ import {
   
   import { Input } from "./ui/input";
   import { PlusIcon } from "@radix-ui/react-icons";
-  import React from 'react'
   import { zodResolver } from "@hookform/resolvers/zod"
   import { useForm } from "react-hook-form"
 
@@ -75,12 +74,10 @@ const formSchema = z.object({
                   <FormMessage />
                 </FormItem>
               )}
-            />
-           
+            />     
             <div className="flex justify-end">
               <button type="submit" className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow">Spara Produkt</button>
-            </div>
-         
+            </div>         
           </form>
           </Form>
         </DialogContent>
