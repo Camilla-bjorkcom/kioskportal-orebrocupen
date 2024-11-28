@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from "./ui/form";
 
+
 const formSchema = z.object({
   kioskname: z.string().min(2, {
     message: "Kiosk namn måste ha minst 2 bokstäver",

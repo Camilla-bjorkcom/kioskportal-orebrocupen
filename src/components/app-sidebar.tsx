@@ -4,6 +4,7 @@ import {
   SquareChartGantt,
   Settings,
   ChevronDown,
+  ChartSpline
 } from "lucide-react";
 
 import {
@@ -31,17 +32,21 @@ const items = [
     title: "Profil",
     url: "#",
     icon: CircleUserRound,
-    subitems: [{ icon: Settings, title: "Inställningar", url: "#" }],
+    subitems: [
+      { icon: Settings, title: "Inställningar", url: "#" },
+      { icon: Settings, title: "Mina turneringar", url: "/createtournament" }
+      
+    ],
+    
   },
   {
     title: "Verktyg",
     url: "#",
     icon: Hammer,
-    subitems: [
-      { title: "Din översikt", url: "/dashboard" },
+    subitems: [     
       { title: "Produktlista", url: "#" },
       { title: "Planstruktur", url: "#" },
-      { title: "Produkthanterare", url: "#" },
+      { title: "Produkthanterare", url: "/producthandler" },
     ],
   },
   {
@@ -54,6 +59,16 @@ const items = [
     ],
     
   },
+  {
+    title: "Statistik",
+    url: "#",
+    icon: ChartSpline,
+    subitems: [
+        { title: "Din översikt", url: "/dashboard" },
+        { title: "?", url: "#" }
+    ],
+    
+  },
 ];
 
 export function AppSidebar() {
@@ -61,7 +76,7 @@ export function AppSidebar() {
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarContent>
         <SidebarHeader>
-            <h2 className="font-bold">ÖC 2025</h2>
+            <img src="src/assets/images/tempLogo.svg" alt="kiosk porta logo" />
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Meny</SidebarGroupLabel>

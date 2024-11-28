@@ -1,11 +1,14 @@
 
 import CreateProductButton from "@/components/CreateProductButton";
+import PagesHeader from "@/components/PagesHeader";
+
 
 
 import React, {useState} from "react";
+import { useLocation } from "react-router-dom";
 
 function ProductHandler() {
-
+const {pathname} = useLocation();
   const [products, setProducts] = useState<string[]>([]);
   
   const handleSaveProduct = (productName: string) => {
@@ -13,6 +16,7 @@ function ProductHandler() {
   };
   return (
     <section>
+      <PagesHeader pathname={pathname} />
       <div className="container mx-auto px-4 flex-row items-center">
         <h2 className="font-bold text-4xl my-4">Produkthantering</h2>
 

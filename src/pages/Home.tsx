@@ -1,18 +1,21 @@
-import CreateTournamentBtn from "@/components/CreateTournamentBtn"
-import Header from "@/components/header"
+import Header from "@/components/header";
+import { LogInForm } from "@/components/LogInForm";
 
-function Home() {
+const Home = () => {
   return (
     <>
-    <Header />
-    
-    <div className="container mx-auto ">  
-      <h1 className="font-bold text-5xl mb-24">Välkommen tillbaka</h1>
-      <CreateTournamentBtn />
-      <p className="pt-64 font-bold">Avslutade turneringar</p>     
-    </div>
+      <Header />
+      <div className="container mx-auto">
+        <h1 className="text-5xl font-bold py-5 text-center">
+          Välkommen tillbaka
+        </h1>
+        <h2 className="text-3xl pt-5">Logga in</h2>
+        <div className="">
+          <LogInForm />
+        </div>        
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
