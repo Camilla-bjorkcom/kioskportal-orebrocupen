@@ -42,6 +42,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Menu items.
 const items = [
@@ -167,7 +168,7 @@ export function AppSidebar() {
                 className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
                 align="end"
                 sideOffset={4}
-                side={window.innerWidth < 768 ? "top" : "right"}
+                side={useIsMobile() ? "top" : "right"}           
               >
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
