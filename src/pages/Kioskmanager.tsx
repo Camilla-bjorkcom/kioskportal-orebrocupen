@@ -4,6 +4,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { TrashIcon } from "lucide-react";
+import { CaretDownIcon } from "@radix-ui/react-icons";
 
 function Kioskmanager() {
   const { pathname } = useLocation();
@@ -148,10 +149,10 @@ function Kioskmanager() {
                     <li>
                       <h3
                         onClick={() => handleProductListClick(0)}
-                        className="font-semibold cursor-pointer mb-1"
+                        className="font-semibold cursor-pointer mb-1 flex justify-between " 
                       >
                         Standard kiosker
-                      </h3>
+                      <CaretDownIcon className="mr-5 w-5 h-5 place-self-center"/></h3>
                       {selectedProductlist === 0 && (
                         <ul className="ml-2 list-inside list-disc">
                           <li>Hamburgare</li>
@@ -164,12 +165,12 @@ function Kioskmanager() {
 
                   <ul className="ml-6">
                     <li>
-                      <h3
+                    <h3
                         onClick={() => handleProductListClick(1)}
-                        className="font-semibold cursor-pointer mb-1"
+                        className="font-semibold cursor-pointer mb-1 flex justify-between " 
                       >
                         Standard skola
-                      </h3>
+                      <CaretDownIcon className="mr-5 w-5 h-5 place-self-center"/></h3>
                       {selectedProductlist === 1 && (
                         <ul className="ml-2 list-inside list-disc">
                           <li>Hamburgare</li>
