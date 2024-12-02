@@ -5,13 +5,13 @@ import Dashboard from "./pages/Dashboard";
 import SidebarLayout from "./layouts/SidebarLayout";
 import ProductHandler from "./pages/ProductHandler";
 import CreateTournament from "./pages/CreateTournament";
-import SignUpPage from "./pages/SignUpPage";
+import Kioskmanager from "./pages/Kioskmanager";
 
 function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" >
+        <Route path="/">
           <Route index element={<Home />} />
           <Route path="createtournament">
               <Route path="/createtournament" element={<CreateTournament />} />
@@ -29,6 +29,9 @@ function Router() {
             </Route>
             <Route path="producthandler">
               <Route path="/producthandler" element={<ProductHandler />} />
+            </Route>
+            <Route path="kioskmanager">
+              <Route path="/kioskmanager" element={<Kioskmanager />} />
             </Route>
           </Route>
         </Route>
