@@ -10,7 +10,7 @@ function CreateTournament() {
     <Header />
     
     <div className="container mx-auto ">  
-      <h1 className="font-bold text-5xl mb-24">Dina turneringar</h1>
+      <h2 className="font-bold text-4xl mb-24">Dina turneringar</h2>
       <CreateTournamentBtn />
       <p className="pt-64 font-bold">Avslutade turneringar</p>     
     </div>

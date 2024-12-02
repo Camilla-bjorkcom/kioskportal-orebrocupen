@@ -11,7 +11,7 @@ function Dashboard() {
     <>
       <PagesHeader pathname={pathname} />
       <div className="container mx-auto">
-        <h2 className="font-bold text-5xl mb-24 pl-5">Din översikt</h2>
+        <h2 className="font-bold text-4xl mb-24 pl-5">Din översikt</h2>
         <DashboardStats />
         <DashboardLink />
         <DaysLeftTourStat />
