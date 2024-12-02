@@ -194,7 +194,7 @@ export function AppSidebar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <BadgeCheck />
-                    Inställningar
+                    <a href="/settings">Inställningar</a>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
