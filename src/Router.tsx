@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import SidebarLayout from "./layouts/SidebarLayout";
 import ProductHandler from "./pages/ProductHandler";
 import CreateTournament from "./pages/CreateTournament";
+import SignUpPage from "./pages/SignUpPage";
 
 function Router() {
   return (
