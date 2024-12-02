@@ -12,6 +12,9 @@ function Kioskmanager() {
   const [products, setProducts] = useState<string[]>([]);
 
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
+  const [selectedProductlist, setSelectedProductlist] = useState<number | null>(
+    null
+  );
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
 
   const [selectedOptions, setSelectedOptions] = useState<{
@@ -52,6 +55,22 @@ function Kioskmanager() {
       ...prev,
       kiosk: kioskName,
     }));
+  };
+
+  const handleProductListClick = (index: number) => {
+    const productListNames = ["Standard kiosker", "Standard skola"];
+    const isSelected = selectedProductlist === index;
+    const productlist = isSelected ? null : productListNames[index];
+
+    setSelectedProductlist(isSelected ? null : index);
+
+    setSelectedOptions((prev) => {
+      return ({
+        ...prev,
+        kiosk: selectedKiosk !== null ? kiosks[selectedKiosk] : null,
+        productlist: productlist,
+      });
+    });
   };
 
   console.log(selectedOptions);
@@ -118,26 +137,37 @@ function Kioskmanager() {
                 <div className="mt-4 flex flex-col gap-4">
                   <ul className="ml-6">
                     <li>
-                      <h3 className="font-semibold cursor-pointer mb-1">
+                      <h3
+                        onClick={() => handleProductListClick(0)}
+                        className="font-semibold cursor-pointer mb-1"
+                      >
                         Standard kiosker
                       </h3>
-                      <ul className="ml-2 list-inside list-disc">
-                        <li>Hamburgare</li>
-                        <li>Korv</li>
-                        <li>Festis</li>
-                      </ul>
+                      {selectedProductlist === 0 && (
+                        <ul className="ml-2 list-inside list-disc">
+                          <li>Hamburgare</li>
+                          <li>Korv</li>
+                          <li>Festis</li>
+                        </ul>
+                      )}
                     </li>
                   </ul>
+
                   <ul className="ml-6">
                     <li>
-                      <h3 className="font-semibold cursor-pointer mb-1">
+                      <h3
+                        onClick={() => handleProductListClick(1)}
+                        className="font-semibold cursor-pointer mb-1"
+                      >
                         Standard skola
                       </h3>
-                      <ul className="ml-2 list-inside list-disc">
-                        <li>Hamburgare</li>
-                        <li>Korv</li>
-                        <li>Festis</li>
-                      </ul>
+                      {selectedProductlist === 1 && (
+                        <ul className="ml-2 list-inside list-disc">
+                          <li>Hamburgare</li>
+                          <li>Korv</li>
+                          <li>Festis</li>
+                        </ul>
+                      )}
                     </li>
                   </ul>
                 </div>
