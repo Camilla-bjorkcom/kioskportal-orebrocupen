@@ -37,13 +37,18 @@ function Kioskmanager() {
     const isSelected = selectedFacility === index;
     const facilityName = isSelected ? null : facility[index];
     setSelectedFacility(isSelected ? null : index);
-
+  
+    // Återställ kiosk och produktlista
+    setSelectedKiosk(null);
+    setSelectedProductlist(null);
+  
     // Uppdatera endast facility i `selectedOptions`
     setSelectedOptions({
       facility: facilityName,
       kiosk: null, // Återställ kioskval när facility ändras
     });
   };
+  
 
   const handleKioskClick = (index: number) => {
     const isSelected = selectedKiosk === index;
@@ -65,11 +70,11 @@ function Kioskmanager() {
     setSelectedProductlist(isSelected ? null : index);
 
     setSelectedOptions((prev) => {
-      return ({
+      return {
         ...prev,
         kiosk: selectedKiosk !== null ? kiosks[selectedKiosk] : null,
         productlist: productlist,
-      });
+      };
     });
   };
 
@@ -95,7 +100,7 @@ function Kioskmanager() {
                  ${
                    selectedFacility === index
                      ? "text-black border-black border rounded-xl h-fit w-10/12"
-                     : "text-black"
+                     : "text-black border-none"
                  }`}
                   onClick={() => handleFacilityClick(index)}
                 >
@@ -115,11 +120,14 @@ function Kioskmanager() {
                     <p
                       key={index}
                       className={`ml-3 pl-3 cursor-pointer mb-2
-                 ${
-                   selectedKiosk === index
-                     ? "text-black border-black border rounded-xl h-fit w-10/12"
-                     : "text-black"
-                 }`}
+                        ${
+                          selectedKiosk === index
+                            ? "text-black border-black border rounded-xl h-fit w-10/12"
+                            : selectedKiosk === null
+                            ? "text-black border-none"
+                            : "text-black"
+                        }            
+                `}
                       onClick={() => handleKioskClick(index)}
                     >
                       {kiosk}
