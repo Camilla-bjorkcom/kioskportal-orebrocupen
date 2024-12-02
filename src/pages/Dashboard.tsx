@@ -1,17 +1,22 @@
 import DashboardLink from "@/components/DashboardLink";
 import DashboardStats from "@/components/DashboardStats";
 import DaysLeftTourStat from "@/components/DaysLeftTourStat";
-import { Input } from "@/components/ui/input";
-import { CopyIcon } from "@radix-ui/react-icons";
+import PagesHeader from "@/components/PagesHeader";
+import { useLocation } from "react-router-dom";
 
 function Dashboard() {
+  const { pathname } = useLocation();
+
   return (
-    <div className="container mx-auto">
-      <h1 className="font-bold text-5xl mb-24 pl-5">Din översikt</h1>
-      <DashboardStats />
-      <DashboardLink />
-      <DaysLeftTourStat />
-    </div>
+    <>
+      <PagesHeader pathname={pathname} />
+      <div className="container mx-auto">
+        <h1 className="font-bold text-5xl mb-24 pl-5">Din översikt</h1>
+        <DashboardStats />
+        <DashboardLink />
+        <DaysLeftTourStat />
+      </div>
+    </>
   );
 }
 
