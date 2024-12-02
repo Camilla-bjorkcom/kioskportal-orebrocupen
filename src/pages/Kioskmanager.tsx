@@ -166,10 +166,10 @@ function Kioskmanager() {
                   <ul className="ml-6">
                     <li>
                     <h3
-                        onClick={() => handleProductListClick(0)}
+                        onClick={() => handleProductListClick(1)}
                         className="font-semibold cursor-pointer mb-1 flex justify-between " 
                       >
-                        Standard kiosker
+                        Standard skola
                       <CaretDownIcon className="mr-5 w-5 h-5 place-self-center"/></h3>
                       {selectedProductlist === 1 && (
                         <ul className="ml-2 list-inside list-disc">
