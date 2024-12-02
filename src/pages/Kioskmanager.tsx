@@ -1,7 +1,6 @@
 import AddFacilityButton from "@/components/AddFacilityButton";
 import AddKioskButton from "@/components/AddKioskButton";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -64,10 +63,11 @@ function Kioskmanager() {
         <h2>{pathname}</h2>
       </div>
       <section className="container mx-auto px-5">
-        <div className="grid grid-cols-3 gap-5">
+        <h1 className="text-3xl font-bold mb-10">Skapa kiosker och utbud</h1>
+        <div className="grid lg:grid-cols-3 gap-5">
           <div>
             <h3 className="text-xl font-bold mb-2">Anläggning</h3>
-            <div className="border border-solid aspect-square border-black rounded-xl">
+            <div className="border border-solid lg:aspect-square border-black rounded-xl">
               <AddFacilityButton onSave={addFacility} />
               {facility.map((facility, index) => (
                 <p
@@ -88,7 +88,7 @@ function Kioskmanager() {
 
           <div>
             <h3 className="text-xl font-bold mb-2">Kiosker</h3>
-            <div className="border border-solid aspect-square border-black rounded-xl">
+            <div className="border border-solid lg:aspect-square border-black rounded-xl">
               {selectedFacility !== null && (
                 <div className="mt-4">
                   <AddKioskButton onSave={addKiosk} />
@@ -113,8 +113,21 @@ function Kioskmanager() {
 
           <div>
             <h3 className="text-xl font-bold mb-2">Produktlista</h3>
-            <div className="border border-solid aspect-square border-black rounded-xl">
-              {/* Rendera ut Produktlista */}
+            <div className="border border-solid lg:aspect-square border-black rounded-xl">
+              {selectedKiosk !== null && (
+                <div className="mt-4">
+                  <ul className="ml-6">
+                    <li>
+                      <h3 className="font-semibold cursor-pointer mb-1">Standard Kiosker</h3>
+                      <ul className="ml-2 list-inside list-disc">
+                        <li>Hamburgare</li>
+                        <li>Korv</li>
+                        <li>Festis</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>
