@@ -115,10 +115,24 @@ function Kioskmanager() {
             <h3 className="text-xl font-bold mb-2">Produktlista</h3>
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
               {selectedKiosk !== null && (
-                <div className="mt-4">
+                <div className="mt-4 flex flex-col gap-4">
                   <ul className="ml-6">
                     <li>
-                      <h3 className="font-semibold cursor-pointer mb-1">Standard Kiosker</h3>
+                      <h3 className="font-semibold cursor-pointer mb-1">
+                        Standard kiosker
+                      </h3>
+                      <ul className="ml-2 list-inside list-disc">
+                        <li>Hamburgare</li>
+                        <li>Korv</li>
+                        <li>Festis</li>
+                      </ul>
+                    </li>
+                  </ul>
+                  <ul className="ml-6">
+                    <li>
+                      <h3 className="font-semibold cursor-pointer mb-1">
+                        Standard skola
+                      </h3>
                       <ul className="ml-2 list-inside list-disc">
                         <li>Hamburgare</li>
                         <li>Korv</li>
