@@ -1,15 +1,21 @@
+import { useAuth } from "react-oidc-context";
 import {
-  CircleUserRound,
   Hammer,
   SquareChartGantt,
-  Settings,
   ChevronDown,
-  ChartSpline
+  ChartSpline,
+  LogOut,
+  ChevronsUpDown,
+  BadgeCheck,
+  BookHeart,
+  House,
+  ShoppingBasket,
 } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -26,57 +32,71 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useIsMobile } from "@/hooks/use-mobile";
+
 // Menu items.
 const items = [
+  
   {
-    title: "Profil",
+    title: "Produkter",
     url: "#",
-    icon: CircleUserRound,
+    icon: ShoppingBasket,
     subitems: [
-      { icon: Settings, title: "Inställningar", url: "#" },
-      { icon: Settings, title: "Mina turneringar", url: "/createtournament" }
+      { title: "Produkthanterare", url: "/producthandler" },
+      { title: "Produktlista", url: "#" },
       
     ],
-    
   },
+  
   {
-    title: "Verktyg",
+    title: "Anläggningar",
     url: "#",
-    icon: Hammer,
-    subitems: [     
-      { title: "Produktlista", url: "#" },
+    icon: House,
+    subitems: [      
       { title: "Planstruktur", url: "#" },
-      { title: "Produkthanterare", url: "/producthandler" },
+      { title: "Kontaktpersoner", url: "#" },
+      { title: "QR koder till kiosker", url: "#" },
+      
     ],
   },
+
   {
     title: "Inventering",
     url: "#",
     icon: SquareChartGantt,
     subitems: [
-        { title: "Visa saldo för kiosk", url: "#" },
-        { title: "Visa saldo för anläggning", url: "#" }
+      { title: "Visa saldo för kiosk", url: "#" },
+      { title: "Visa saldo för anläggning", url: "#" },
     ],
-    
   },
   {
     title: "Statistik",
     url: "#",
     icon: ChartSpline,
     subitems: [
-        { title: "Din översikt", url: "/dashboard" },
-        { title: "?", url: "#" }
+      { title: "Din översikt", url: "/dashboard" },
+      
     ],
-    
   },
 ];
 
 export function AppSidebar() {
+  const auth = useAuth();
   return (
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarContent>
         <SidebarHeader>
-            <img src="src/assets/images/tempLogo.svg" alt="kiosk porta logo" />
+          <img src="src/assets/images/sidebarLogo.svg" alt="kiosk porta logo" />
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Meny</SidebarGroupLabel>
@@ -125,6 +145,72 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton
+                  size="lg"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                >
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarImage src={"user.avatar"} alt={"username"} />
+                    <AvatarFallback className="rounded-lg bg-amber-500 font-bold">KP</AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate text-xs">{auth.user?.profile.email}</span>
+                  </div>
+                  <ChevronsUpDown className="ml-auto size-4" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                align="end"
+                sideOffset={4}
+                side={useIsMobile() ? "top" : "right"}           
+              >
+                <DropdownMenuLabel className="p-0 font-normal">
+                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                    <Avatar className="h-8 w-8 rounded-lg">
+                      <AvatarImage src={"user.avatar"} alt={"username"} />
+                      <AvatarFallback className="rounded-lg bg-amber-500 font-bold">KP</AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate text-xs">
+                        {auth.user?.profile.email}
+                      </span>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>    
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                <DropdownMenuItem>
+                    <BookHeart />
+                    <a href="/createtournament">Mina turneringar</a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <BadgeCheck />
+                    Inställningar
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <button  onClick={() => auth.removeUser()} className="w-full">                    
+                    <LogOut />
+                    <a href="/">
+                    Logga ut
+                    </a>
+                  </button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }
