@@ -3,6 +3,7 @@ import AddKioskButton from "@/components/AddKioskButton";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { TrashIcon } from "lucide-react";
 
 function Kioskmanager() {
   const { pathname } = useLocation();
@@ -88,7 +89,7 @@ function Kioskmanager() {
       </div>
       <section className="container mx-auto px-5">
         <h1 className="text-3xl font-bold mb-10">Skapa kiosker och utbud</h1>
-        <div className="grid lg:grid-cols-3 gap-5">
+        <div className="grid lg:grid-cols-3 gap-5 w-10/12">
           <div>
             <h3 className="text-xl font-bold mb-2">Anläggning</h3>
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
@@ -96,15 +97,15 @@ function Kioskmanager() {
               {facility.map((facility, index) => (
                 <p
                   key={index}
-                  className={`ml-3 pl-3 cursor-pointer mb-2
+                  className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
                  ${
                    selectedFacility === index
-                     ? "text-black border-black border rounded-xl h-fit w-10/12"
-                     : "text-black border-none"
+                     ? "text-black border-black border rounded-xl h-fit w-11/12"
+                     : "text-black border-none w-11/12"
                  }`}
                   onClick={() => handleFacilityClick(index)}
                 >
-                  {facility}
+                  {facility} <TrashIcon className="mr-5 w-5 h-5 place-self-center" />
                 </p>
               ))}
             </div>
@@ -119,18 +120,18 @@ function Kioskmanager() {
                   {kiosks.map((kiosk, index) => (
                     <p
                       key={index}
-                      className={`ml-3 pl-3 cursor-pointer mb-2
+                      className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
                         ${
                           selectedKiosk === index
-                            ? "text-black border-black border rounded-xl h-fit w-10/12"
+                            ? "text-black border-black border rounded-xl h-fit w-11/12"
                             : selectedKiosk === null
-                            ? "text-black border-none"
+                            ? "text-black border-none w-11/12"
                             : "text-black"
                         }            
                 `}
                       onClick={() => handleKioskClick(index)}
                     >
-                      {kiosk}
+                      {kiosk} <TrashIcon className="mr-5 w-5 h-5 place-self-center" />
                     </p>
                   ))}
                 </div>
