@@ -6,6 +6,7 @@ import SidebarLayout from "./layouts/SidebarLayout";
 import ProductHandler from "./pages/ProductHandler";
 import CreateTournament from "./pages/CreateTournament";
 import SignUpPage from "./pages/SignUpPage";
+import SettingsPage from "./pages/SettingsPage";
 
 function Router() {
   return (
@@ -29,6 +30,9 @@ function Router() {
             </Route>
             <Route path="producthandler">
               <Route path="/producthandler" element={<ProductHandler />} />
+            </Route>
+            <Route path="settings">
+              <Route path="/settings" element={<SettingsPage />} />
             </Route>
           </Route>
         </Route>
