@@ -14,7 +14,7 @@ function Kioskmanager() {
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
   const [productList, setProductList] = useState<string[]>([]);
-  
+
   const [selectedOptions, setSelectedOptions] = useState<{
     facility: string | null;
     kiosk: string | null;
@@ -34,7 +34,6 @@ function Kioskmanager() {
   const addProductList = (productListName: string) => {
     setProductList((prev) => [...prev, productListName]);
   };
-  
 
   const handleFacilityClick = (index: number) => {
     const isSelected = selectedFacility === index;
@@ -63,6 +62,11 @@ function Kioskmanager() {
     }));
   };
 
+  // const removeFacility = (facilityId: string) => {
+  // };
+  // const removeKiosk = (kioskId: string) => {
+  // };
+
   console.log(selectedOptions);
 
   return (
@@ -89,8 +93,8 @@ function Kioskmanager() {
                  }`}
                   onClick={() => handleFacilityClick(index)}
                 >
-                  {facility}{" "}
-                  <TrashIcon className="mr-5 w-5 h-5 place-self-center" />
+                  {facility} {/* Lägg till removeFacility onClick */}
+                  <TrashIcon className="mr-5 w-5 h-5 place-self-center hover:text-red-500" />
                 </p>
               ))}
             </div>
@@ -116,8 +120,8 @@ function Kioskmanager() {
                 `}
                       onClick={() => handleKioskClick(index)}
                     >
-                      {kiosk}{" "}
-                      <TrashIcon className="mr-5 w-5 h-5 place-self-center" />
+                      {kiosk} {/* Lägg till removeKiosk onClick */}
+                      <TrashIcon className="mr-5 w-5 h-5 place-self-center hover:text-red-500" />
                     </p>
                   ))}
                 </div>
@@ -130,7 +134,9 @@ function Kioskmanager() {
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
               {selectedKiosk !== null && (
                 <div className="mt-4 flex flex-col gap-4">
-                  <AddProductListButton onSave={addProductList} />
+                  {productList.length === 0 && (
+                    <AddProductListButton onSave={addProductList} />
+                  )}
                   {productList.map((product, index) => (
                     <p key={index}>{product}</p>
                   ))}
