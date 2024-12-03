@@ -4,21 +4,17 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { TrashIcon } from "lucide-react";
-import { CaretDownIcon } from "@radix-ui/react-icons";
+import AddProductListButton from "@/components/AddProductListButton";
 
 function Kioskmanager() {
   const { pathname } = useLocation();
 
   const [facility, setFacility] = useState<string[]>([]);
   const [kiosks, setKiosks] = useState<string[]>([]);
-  const [products, setProducts] = useState<string[]>([]);
-
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
-  const [selectedProductlist, setSelectedProductlist] = useState<number | null>(
-    null
-  );
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
-
+  const [productList, setProductList] = useState<string[]>([]);
+  
   const [selectedOptions, setSelectedOptions] = useState<{
     facility: string | null;
     kiosk: string | null;
@@ -35,22 +31,25 @@ function Kioskmanager() {
     setKiosks((prev) => [...prev, kioskName]);
   };
 
+  const addProductList = (productListName: string) => {
+    setProductList((prev) => [...prev, productListName]);
+  };
+  
+
   const handleFacilityClick = (index: number) => {
     const isSelected = selectedFacility === index;
     const facilityName = isSelected ? null : facility[index];
     setSelectedFacility(isSelected ? null : index);
-  
+
     // Återställ kiosk och produktlista
     setSelectedKiosk(null);
-    setSelectedProductlist(null);
-  
+
     // Uppdatera endast facility i `selectedOptions`
     setSelectedOptions({
       facility: facilityName,
-      kiosk: null, // Återställ kioskval när facility ändras
+      kiosk: null,
     });
   };
-  
 
   const handleKioskClick = (index: number) => {
     const isSelected = selectedKiosk === index;
@@ -62,22 +61,6 @@ function Kioskmanager() {
       ...prev,
       kiosk: kioskName,
     }));
-  };
-
-  const handleProductListClick = (index: number) => {
-    const productListNames = ["Standard kiosker", "Standard skola"];
-    const isSelected = selectedProductlist === index;
-    const productlist = isSelected ? null : productListNames[index];
-
-    setSelectedProductlist(isSelected ? null : index);
-
-    setSelectedOptions((prev) => {
-      return {
-        ...prev,
-        kiosk: selectedKiosk !== null ? kiosks[selectedKiosk] : null,
-        productlist: productlist,
-      };
-    });
   };
 
   console.log(selectedOptions);
@@ -106,7 +89,8 @@ function Kioskmanager() {
                  }`}
                   onClick={() => handleFacilityClick(index)}
                 >
-                  {facility} <TrashIcon className="mr-5 w-5 h-5 place-self-center" />
+                  {facility}{" "}
+                  <TrashIcon className="mr-5 w-5 h-5 place-self-center" />
                 </p>
               ))}
             </div>
@@ -132,7 +116,8 @@ function Kioskmanager() {
                 `}
                       onClick={() => handleKioskClick(index)}
                     >
-                      {kiosk} <TrashIcon className="mr-5 w-5 h-5 place-self-center" />
+                      {kiosk}{" "}
+                      <TrashIcon className="mr-5 w-5 h-5 place-self-center" />
                     </p>
                   ))}
                 </div>
@@ -145,41 +130,10 @@ function Kioskmanager() {
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
               {selectedKiosk !== null && (
                 <div className="mt-4 flex flex-col gap-4">
-                  <ul className="ml-6">
-                    <li>
-                      <h3
-                        onClick={() => handleProductListClick(0)}
-                        className="font-semibold cursor-pointer mb-1 flex justify-between " 
-                      >
-                        Standard kiosker
-                      <CaretDownIcon className="mr-5 w-5 h-5 place-self-center"/></h3>
-                      {selectedProductlist === 0 && (
-                        <ul className="ml-2 list-inside list-disc">
-                          <li>Hamburgare</li>
-                          <li>Korv</li>
-                          <li>Festis</li>
-                        </ul>
-                      )}
-                    </li>
-                  </ul>
-
-                  <ul className="ml-6">
-                    <li>
-                    <h3
-                        onClick={() => handleProductListClick(1)}
-                        className="font-semibold cursor-pointer mb-1 flex justify-between " 
-                      >
-                        Standard skola
-                      <CaretDownIcon className="mr-5 w-5 h-5 place-self-center"/></h3>
-                      {selectedProductlist === 1 && (
-                        <ul className="ml-2 list-inside list-disc">
-                          <li>Hamburgare</li>
-                          <li>Korv</li>
-                          <li>Festis</li>
-                        </ul>
-                      )}
-                    </li>
-                  </ul>
+                  <AddProductListButton onSave={addProductList} />
+                  {productList.map((product, index) => (
+                    <p key={index}>{product}</p>
+                  ))}
                 </div>
               )}
             </div>

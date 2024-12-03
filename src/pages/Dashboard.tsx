@@ -13,8 +13,10 @@ function Dashboard() {
       <div className="container mx-auto">
         <h1 className="font-bold text-5xl mb-24 pl-5">Din översikt</h1>
         <DashboardStats />
+        <div className="flex justify-between items-center">
         <DashboardLink />
-        <DaysLeftTourStat />
+          <DaysLeftTourStat />
+        </div>
       </div>
     </>
   );

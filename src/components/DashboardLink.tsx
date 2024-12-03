@@ -1,17 +1,11 @@
-import { CopyIcon } from "@radix-ui/react-icons";
-import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+
 
 const DashboardLink = () => {
   return (
-    <div className="mt-10 flex flex-col items-center md:items-start ">
-      <div className="flex w-1/2 justify-between ">
-        <h3 className="font-bold text-xl mt-10 mb-4">
-          Länk till kioskapplikation
-        </h3>
-        <CopyIcon className="w-8 h-8 place-self-center" />
-      </div>
-
-      <Input className="md:w-1/2 w-3/4" />
+    <div className="mt-10 flex w-1/2 flex-col items-center md:items-start ">
+      <Button className="w-3/4 p-10 mb-5">Inventera turneringsprodukter</Button>
+      <Button className="w-3/4 p-10">Qr-koder</Button>
     </div>
   );
 };
