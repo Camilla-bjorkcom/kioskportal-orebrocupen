@@ -4,8 +4,8 @@ const DashboardLink = () => {
   return (
     <div className="mt-10 flex flex-col items-center md:items-start ">
       <div className="flex w-1/2 gap-5">
-      <Button>Inventera turneringsprodukter</Button>
-      <Button>Qr-koder</Button>
+      <Button className="w-full p-7">Inventera turneringsprodukter</Button>
+      <Button className="w-full p-7">Qr-koder</Button>
         </div>
     </div>
   );
