@@ -4,7 +4,7 @@ import PagesHeader from "@/components/PagesHeader";
 
 
 
-import React, {useState} from "react";
+import  {useState} from "react";
 import { useLocation } from "react-router-dom";
 
 function ProductHandler() {

@@ -7,6 +7,7 @@ import ProductHandler from "./pages/ProductHandler";
 import CreateTournament from "./pages/CreateTournament";
 import Kioskmanager from "./pages/Kioskmanager";
 import SettingsPage from "./pages/SettingsPage";
+import ProductListHandler from "./pages/ProductListHandler";
 
 function Router() {
   return (
@@ -36,6 +37,9 @@ function Router() {
             </Route>
             <Route path="kioskmanager">
               <Route path="/kioskmanager" element={<Kioskmanager />} />
+            </Route>
+            <Route path="productlisthandler">
+              <Route path="/productlisthandler" element={<ProductListHandler />} />
             </Route>
           </Route>
         </Route>

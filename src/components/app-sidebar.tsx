@@ -53,7 +53,7 @@ const items = [
     icon: ShoppingBasket,
     subitems: [
       { title: "Produkthanterare", url: "/producthandler" },
-      { title: "Produktlista", url: "#" },
+      { title: "Produktlista", url: "/productlisthandler" },
       
     ],
   },
