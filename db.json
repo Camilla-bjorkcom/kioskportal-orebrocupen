@@ -1,0 +1,13 @@
+{
+    "productslists" :[
+
+        { "id": 1, "productlistname": "standard" ,"products" :[
+        {"productname":"Kexchoklad"}, {"productname":"Festis"}
+    ]},
+        { "id": 2, "productlistname": "liten skola","products": [
+            {"productname":"Korv"}, {"productname":"Hamburgare"}
+        ] }
+    ]
+        
+    
+}
