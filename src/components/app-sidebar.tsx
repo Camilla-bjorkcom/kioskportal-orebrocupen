@@ -64,7 +64,7 @@ const items = [
     icon: House,
     subitems: [      
       { title: "Planstruktur", url: "#" },
-      { title: "Kontaktpersoner", url: "#" },
+      { title: "Kontaktpersoner", url: "/settings" },
       { title: "QR koder till kiosker", url: "#" },
       
     ],
