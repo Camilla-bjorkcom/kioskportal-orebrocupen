@@ -63,7 +63,7 @@ const items = [
     url: "#",
     icon: House,
     subitems: [      
-      { title: "Planstruktur", url: "#" },
+      { title: "Planstruktur", url: "/kioskmanager" },
       { title: "Kontaktpersoner", url: "/settings" },
       { title: "QR koder till kiosker", url: "#" },
       

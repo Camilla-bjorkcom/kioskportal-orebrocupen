@@ -32,7 +32,7 @@ const formSchema = z.object({
 });
 
 interface AddKioskButtonProps {
-  onSave: (kioskname: string) => void; // Callback för att spara produktnamn
+  onSave: (kioskname: string) => void; // Callback för att spara kiosknamn
 }
 
 function AddKioskButton({ onSave }: AddKioskButtonProps) {
