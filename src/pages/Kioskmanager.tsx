@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { TrashIcon } from "lucide-react";
 import AddProductListButton from "@/components/AddProductListButton";
+import AddProductsButton from "@/components/AddProductButton";
 
 function Kioskmanager() {
   type ProductListItem = {
@@ -19,6 +20,7 @@ function Kioskmanager() {
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
   const [productList, setProductList] = useState<ProductListItem | undefined>();
+  const [products, setProducts] = useState<string[]>([]);
 
   //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
@@ -49,41 +51,24 @@ function Kioskmanager() {
     }
   };
 
+  const addProduct = (productName: string) => {
+    setProducts((prev) => [...prev, productName]);
+  };
+
   const handleFacilityClick = (index: number) => {
     const isSelected = selectedFacility === index;
     const facilityName = isSelected ? null : facility[index];
     setSelectedFacility(isSelected ? null : index);
 
-    // Återställ kiosk och produktlista
+    //återställ kiosk
     setSelectedKiosk(null);
 
-
-    // Uppdatera endast facility i `selectedOptions`
     setSelectedOptions({
       facility: facilityName,
       kiosk: null,
       productlist: undefined,
     });
   };
-
-  // const handleKioskClick = (index: number) => {
-  //   const isSelected = selectedKiosk === index;
-  //   const kioskName = isSelected ? null : kiosks[index];
-
-  //   setSelectedKiosk(isSelected ? null : index);
-
-  //   // Uppdatera `selectedOptions`
-  //   setSelectedOptions((prev) => ({
-  //     ...prev,
-  //     kiosk: kioskName,
-  //     productlist: isSelected ? undefined : prev.productlist, // Nollställ produktlistan om kiosken avmarkeras
-  //   }));
-
-  //   // Nollställ `productList` om kiosken är `null`
-  //   if (isSelected) {
-  //     setProductList(undefined);
-  //   }
-  // };
 
   const handleKioskClick = (index: number) => {
     const isSelected = selectedKiosk === index;
@@ -95,7 +80,7 @@ function Kioskmanager() {
     setSelectedOptions((prev) => ({
       ...prev,
       kiosk: kioskName,
-      productlist: isSelected ? undefined : prev.productlist, 
+      productlist: isSelected ? undefined : prev.productlist,
     }));
   };
 
@@ -173,7 +158,7 @@ function Kioskmanager() {
                   )}
                   <ul className="ml-5">
                     <div className="flex justify-between">
-                      <h3 className="text-lg font-semibold">
+                      <h3 className="font-semibold">
                         {productList?.productListName}
                       </h3>
                       {productList != undefined && (
@@ -184,6 +169,20 @@ function Kioskmanager() {
                       <li key={index} className="list-inside ml-4">
                         {product}
                       </li>
+                    ))}
+                  </ul>
+                  <ul>
+                    {productList != undefined && (
+                      <AddProductsButton onSave={addProduct} />
+                    )}
+
+                    {products.map((product, index) => (
+                      <div className="flex justify-between">
+                        <li key={index} className="list-inside ml-9">
+                          {product}
+                        </li>
+                        <TrashIcon className="mr-5 w-4 h-4 place-self-center cursor-pointer hover:text-red-500" />
+                      </div>
                     ))}
                   </ul>
                 </div>

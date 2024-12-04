@@ -20,30 +20,25 @@ import {
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
-type ProductListItem = {
-  productListName: string;
+type ProductsItem = {
   products: string[];
 };
 
-const productList: ProductListItem[] = [
-  { productListName: "Standard skola", products: ["Hamburgare", "Kexchoklad"] },
-  { productListName: "Standard kiosk", products: ["Hamburgare", "Kexchoklad"] },
-];
+const allProducts: ProductsItem = 
+  {  products: ["Hamburgare", "Kexchoklad", "Korv", "Coca-cola"] }
+;
 
-interface AddProductListButtonProps {
-  onSave: (productList: ProductListItem | undefined) => void;
+interface AddProductsButtonProps {
+  onSave: (products: string) => void;
 }
 
-function AddProductListButton({ onSave }: AddProductListButtonProps) {
+function AddProductsButton({ onSave }: AddProductsButtonProps) {
   const [selectedValue, setSelectedValue] = useState<
-    ProductListItem | undefined
+  string | undefined
   >();
 
-  const handleChange = (value: ProductListItem["productListName"]) => {
-    const selectedProductList = productList.find(
-      (product) => product.productListName === value
-    );
-    setSelectedValue(selectedProductList);
+  const handleChange = (value: string) => {
+    setSelectedValue(value);
   };
   
 
@@ -56,15 +51,15 @@ function AddProductListButton({ onSave }: AddProductListButtonProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <p className="m-5 flex w-fit gap-2 cursor-pointer font-semibold">
-          Lägg till produktlista<PlusIcon className="w-4 h-4 place-self-center" />
+        <p className="m-5 mb-2 flex w-fit gap-2 cursor-pointer font-semibold">
+          Lägg till fler produkter <PlusIcon className="w-4 h-4 place-self-center" />
         </p>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Lägg till produktlista</DialogTitle>
+          <DialogTitle>Lägg till enstaka produkter till kiosken</DialogTitle>
           <DialogDescription className="sr-only">
-            Lägg till produktlista för kiosk
+          Lägg till enstaka produkter till kiosken
           </DialogDescription>
         </DialogHeader>
         <Select onValueChange={handleChange}>
@@ -72,9 +67,9 @@ function AddProductListButton({ onSave }: AddProductListButtonProps) {
             <SelectValue placeholder="Välj produktlista" />
           </SelectTrigger>
           <SelectContent>
-            {productList.map((product, index) => (
-              <SelectItem key={index} value={product.productListName}>
-                {product.productListName}
+            {allProducts?.products.map((product, index) => (
+              <SelectItem key={index} value={product}>
+                {product}
               </SelectItem>
             ))}
           </SelectContent>
@@ -86,7 +81,7 @@ function AddProductListButton({ onSave }: AddProductListButtonProps) {
             onClick={handleSave}
             className="border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
           >
-            Spara produktlista
+            Lägg till produkt
           </button>
         </div>
       </DialogContent>
@@ -94,4 +89,4 @@ function AddProductListButton({ onSave }: AddProductListButtonProps) {
   );
 }
 
-export default AddProductListButton;
+export default AddProductsButton;
