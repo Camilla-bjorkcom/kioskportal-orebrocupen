@@ -12,6 +12,7 @@
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.699.0",
     "@hookform/resolvers": "^3.9.1",
+    "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",
