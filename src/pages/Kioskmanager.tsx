@@ -3,17 +3,22 @@ import AddKioskButton from "@/components/AddKioskButton";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { TrashIcon } from "lucide-react";
+import { Trash, TrashIcon } from "lucide-react";
 import AddProductListButton from "@/components/AddProductListButton";
 
 function Kioskmanager() {
+  type ProductListItem = {
+    productListName: string;
+    products: string[];
+  };
+
   const { pathname } = useLocation();
 
   const [facility, setFacility] = useState<string[]>([]);
   const [kiosks, setKiosks] = useState<string[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
-  const [productList, setProductList] = useState<string[]>([]);
+  const [productList, setProductList] = useState<ProductListItem | undefined>();
 
   const [selectedOptions, setSelectedOptions] = useState<{
     facility: string | null;
@@ -31,8 +36,8 @@ function Kioskmanager() {
     setKiosks((prev) => [...prev, kioskName]);
   };
 
-  const addProductList = (productListName: string) => {
-    setProductList((prev) => [...prev, productListName]);
+  const addProductList = (productList: ProductListItem | undefined) => {
+    setProductList(productList);
   };
 
   const handleFacilityClick = (index: number) => {
@@ -62,13 +67,14 @@ function Kioskmanager() {
     }));
   };
 
+
   // const removeFacility = (facilityId: string) => {
   // };
   // const removeKiosk = (kioskId: string) => {
   // };
 
   console.log(selectedOptions);
-
+  console.log(typeof productList);
   return (
     <>
       <div className="p-1 shadow w-full flex items-center mb-8">
@@ -120,8 +126,8 @@ function Kioskmanager() {
                 `}
                       onClick={() => handleKioskClick(index)}
                     >
-                      {kiosk} {/* Lägg till removeKiosk onClick */}
-                      <TrashIcon className="mr-5 w-5 h-5 place-self-center hover:text-red-500" />
+                      {kiosk} {/* Lägg till removeKiosk onClick på trashIcon */}
+                      <TrashIcon className="mr-5 w-5 h-5 place-self-center cursor-pointer hover:text-red-500" />
                     </p>
                   ))}
                 </div>
@@ -134,12 +140,15 @@ function Kioskmanager() {
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
               {selectedKiosk !== null && (
                 <div className="mt-4 flex flex-col gap-4">
-                  {productList.length === 0 && (
+                  {productList === undefined && (
                     <AddProductListButton onSave={addProductList} />
                   )}
-                  {productList.map((product, index) => (
-                    <p key={index}>{product}</p>
-                  ))}
+                  <ul className="ml-5">
+                    <div className="flex justify-between"><h3 className="text-lg font-semibold">{productList?.productListName}</h3>{productList != undefined && ( <TrashIcon className="mr-5 w-5 h-5 place-self-center cursor-pointer hover:text-red-500" /> )}</div>
+                    {productList?.products.map((product, index) => (
+                      <li key={index} className="list-inside ml-4">{product}</li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>
