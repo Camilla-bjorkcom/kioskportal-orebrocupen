@@ -26,8 +26,8 @@ type ProductListItem = {
 };
 
 const productList: ProductListItem[] = [
-  { productListName: "Standard skola", products: ["Hamburgare", "Kexchoklad"] },
-  { productListName: "Standard kiosk", products: ["Hamburgare", "Kexchoklad"] },
+  { productListName: "Standard skola", products: ["Hamburgare", "Kexchoklad","Korv", "Banan", "Dressing", "Rostad lök", "Festis päron", "Festis hallon", "Loka naturell", "Loka citron", "Loka hallon", "Coca-cola", "Sprite", "Coca-cola zero", "Fanta", "Gurka", "Senap", "Ketchup", "Korvbröd", "Ost", "Festis citron", "Festis naturell"] },
+  { productListName: "Standard kiosk", products: ["Hamburgare", "Kexchoklad","Korv", "Banan", "Dressing", "Rostad lök", "Festis päron", "Festis hallon", "Loka naturell", "Loka citron", "Loka hallon", "Coca-cola", "Sprite", "Coca-cola zero", "Fanta", "Gurka", "Senap", "Ketchup", "Korvbröd", "Ost", "Festis citron", "Festis naturell"] },
 ];
 
 interface AddProductListButtonProps {
