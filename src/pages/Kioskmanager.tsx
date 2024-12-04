@@ -41,10 +41,10 @@ function Kioskmanager() {
 
   const addProductList = (productList: ProductListItem | undefined) => {
     setProductList(productList);
-    if(productList != undefined){
+    if (productList != undefined) {
       setSelectedOptions((prev) => ({
         ...prev,
-        productlist: productList.productListName
+        productlist: productList.productListName,
       }));
     }
   };
@@ -57,6 +57,7 @@ function Kioskmanager() {
     // Återställ kiosk och produktlista
     setSelectedKiosk(null);
 
+
     // Uppdatera endast facility i `selectedOptions`
     setSelectedOptions({
       facility: facilityName,
@@ -65,18 +66,38 @@ function Kioskmanager() {
     });
   };
 
+  // const handleKioskClick = (index: number) => {
+  //   const isSelected = selectedKiosk === index;
+  //   const kioskName = isSelected ? null : kiosks[index];
+
+  //   setSelectedKiosk(isSelected ? null : index);
+
+  //   // Uppdatera `selectedOptions`
+  //   setSelectedOptions((prev) => ({
+  //     ...prev,
+  //     kiosk: kioskName,
+  //     productlist: isSelected ? undefined : prev.productlist, // Nollställ produktlistan om kiosken avmarkeras
+  //   }));
+
+  //   // Nollställ `productList` om kiosken är `null`
+  //   if (isSelected) {
+  //     setProductList(undefined);
+  //   }
+  // };
+
   const handleKioskClick = (index: number) => {
     const isSelected = selectedKiosk === index;
     const kioskName = isSelected ? null : kiosks[index];
+
     setSelectedKiosk(isSelected ? null : index);
 
-    // Uppdatera endast kiosk i `selectedOptions`
+    // Uppdatera `selectedOptions`
     setSelectedOptions((prev) => ({
       ...prev,
       kiosk: kioskName,
+      productlist: isSelected ? undefined : prev.productlist, 
     }));
   };
-
 
   // const removeFacility = (facilityId: string) => {
   // };
@@ -127,8 +148,8 @@ function Kioskmanager() {
                       className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
                         ${
                           selectedKiosk === index
-                             ? "text-black border-black border rounded-xl h-fit w-11/12"
-                     : "text-black border-none w-11/12"
+                            ? "text-black border-black border rounded-xl h-fit w-11/12"
+                            : "text-black border-none w-11/12"
                         }            
                 `}
                       onClick={() => handleKioskClick(index)}
@@ -151,9 +172,18 @@ function Kioskmanager() {
                     <AddProductListButton onSave={addProductList} />
                   )}
                   <ul className="ml-5">
-                    <div className="flex justify-between"><h3 className="text-lg font-semibold">{productList?.productListName}</h3>{productList != undefined && ( <TrashIcon className="mr-5 w-5 h-5 place-self-center cursor-pointer hover:text-red-500" /> )}</div>
+                    <div className="flex justify-between">
+                      <h3 className="text-lg font-semibold">
+                        {productList?.productListName}
+                      </h3>
+                      {productList != undefined && (
+                        <TrashIcon className="mr-5 w-5 h-5 place-self-center cursor-pointer hover:text-red-500" />
+                      )}
+                    </div>
                     {productList?.products.map((product, index) => (
-                      <li key={index} className="list-inside ml-4">{product}</li>
+                      <li key={index} className="list-inside ml-4">
+                        {product}
+                      </li>
                     ))}
                   </ul>
                 </div>
