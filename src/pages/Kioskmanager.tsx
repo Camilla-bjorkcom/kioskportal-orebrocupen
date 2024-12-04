@@ -3,7 +3,7 @@ import AddKioskButton from "@/components/AddKioskButton";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Trash, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import AddProductListButton from "@/components/AddProductListButton";
 
 function Kioskmanager() {
@@ -20,12 +20,15 @@ function Kioskmanager() {
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
   const [productList, setProductList] = useState<ProductListItem | undefined>();
 
+  //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
     facility: string | null;
     kiosk: string | null;
+    productlist: string | undefined;
   }>({
     facility: null,
     kiosk: null,
+    productlist: undefined,
   });
 
   const addFacility = (facilityName: string) => {
@@ -38,6 +41,12 @@ function Kioskmanager() {
 
   const addProductList = (productList: ProductListItem | undefined) => {
     setProductList(productList);
+    if(productList != undefined){
+      setSelectedOptions((prev) => ({
+        ...prev,
+        productlist: productList.productListName
+      }));
+    }
   };
 
   const handleFacilityClick = (index: number) => {
@@ -52,6 +61,7 @@ function Kioskmanager() {
     setSelectedOptions({
       facility: facilityName,
       kiosk: null,
+      productlist: undefined,
     });
   };
 
@@ -74,7 +84,6 @@ function Kioskmanager() {
   // };
 
   console.log(selectedOptions);
-  console.log(typeof productList);
   return (
     <>
       <div className="p-1 shadow w-full flex items-center mb-8">
@@ -118,16 +127,14 @@ function Kioskmanager() {
                       className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
                         ${
                           selectedKiosk === index
-                            ? "text-black border-black border rounded-xl h-fit w-11/12"
-                            : selectedKiosk === null
-                            ? "text-black border-none w-11/12"
-                            : "text-black"
+                             ? "text-black border-black border rounded-xl h-fit w-11/12"
+                     : "text-black border-none w-11/12"
                         }            
                 `}
                       onClick={() => handleKioskClick(index)}
                     >
                       {kiosk} {/* Lägg till removeKiosk onClick på trashIcon */}
-                      <TrashIcon className="mr-5 w-5 h-5 place-self-center cursor-pointer hover:text-red-500" />
+                      <TrashIcon className="mr-7 w-5 h-5 place-self-center  hover:text-red-500" />
                     </p>
                   ))}
                 </div>
