@@ -15,4 +15,4 @@ const InventoryStatus = () => {
   )
 }
 
-export default InventoryStatus
+export default InventoryStatus;
