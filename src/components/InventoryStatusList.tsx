@@ -27,7 +27,7 @@ const InventoryStatusList = () => {
 
   const toggleExpandAll = () => {
     if (expandedItems.length === 0) {
-      setExpandedItems(["item-1", "item-2"]);
+      setExpandedItems(["item-1"]);
     } else {
       setExpandedItems([]);
     }
@@ -37,7 +37,7 @@ const InventoryStatusList = () => {
     <div className="w-full">
       <div className="flex justify-between items-center bg-gray-100 px-4 py-2 rounded-t-md">
         <h2 className="text-lg font-bold">{facilityName}</h2>
-        <button onClick={toggleExpandAll} className="underline">
+        <button onClick={toggleExpandAll} className="underline font-semibold">
           {expandedItems.length === 0 ? "Expandera alla" : "Minimera alla"}
         </button>
       </div>
@@ -47,10 +47,10 @@ const InventoryStatusList = () => {
         onValueChange={(newValue) => setExpandedItems(newValue)}
       >
         <AccordionItem value="item-1">
-          <AccordionTrigger>{kioskNameOne}</AccordionTrigger>
+          <AccordionTrigger className="px-4">{kioskNameOne}</AccordionTrigger>
           <AccordionContent>
             <div className="w-full border-t border-gray-300 mt-2">
-              <div className="grid grid-cols-3 gap-4 font-bold text-gray-600 py-2">
+              <div className="grid grid-cols-3 gap-4 font-bold text-gray-600 py-2 px-4">
                 <p>Namn</p>
                 <p>Styckvaror</p>
                 <p>Obrutna förpackningar</p>
@@ -59,7 +59,9 @@ const InventoryStatusList = () => {
               {inventoryDataOne.map((item, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-3 gap-4 py-2 text-gray-700 border-b border-gray-200"
+                  className={`px-4 grid grid-cols-3 gap-4 py-2 text-gray-700 border-b border-gray-200 ${
+                    index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                  }`}
                 >
                   <p>{item.name}</p>
                   <p>{item.quantity}</p>
