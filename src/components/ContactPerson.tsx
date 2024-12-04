@@ -16,7 +16,7 @@ const ContactPersonComponent = () => {
   const [phone, setPhone] = useState<string>("");
   const [facility, setFacility] = useState<string>("");
 
-  // Lägg till kontaktperson
+
   const addContactPerson = () => {
     if (!name.trim() || !phone.trim() || !facility.trim()) {
       alert("Alla fält måste fyllas i!");
@@ -32,7 +32,6 @@ const ContactPersonComponent = () => {
     setShowInputs(false);
   };
 
-  // Ta bort kontaktperson
   const removeContactPerson = (indexToRemove: number) => {
     setContactPersons((prev) =>
       prev.filter((_, index) => index !== indexToRemove)
