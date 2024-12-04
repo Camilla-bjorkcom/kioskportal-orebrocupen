@@ -64,7 +64,7 @@ const items = [
     icon: House,
     subitems: [      
       { title: "Planstruktur", url: "/kioskmanager" },
-      { title: "Kontaktpersoner", url: "#" },
+      { title: "Kontaktpersoner", url: "/settings" },
       { title: "QR koder till kiosker", url: "#" },
       
     ],
@@ -194,7 +194,7 @@ export function AppSidebar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <BadgeCheck />
-                    Inställningar
+                    <a href="/settings">Inställningar</a>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
