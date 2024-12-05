@@ -152,7 +152,7 @@ function Kioskmanager() {
             <h3 className="text-xl font-bold mb-2">Produktlista</h3>
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
               {selectedKiosk !== null && (
-                <div className="mt-4 flex flex-col gap-4">
+                <div className="mt-4 flex flex-col gap-4 mb-5">
                   {productList === undefined && (
                     <AddProductListButton onSave={addProductList} />
                   )}
