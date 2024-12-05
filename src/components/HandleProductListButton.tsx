@@ -21,6 +21,7 @@ import {
 } from "@radix-ui/react-collapsible";
 import { useQuery } from "@tanstack/react-query";
 import { Checkbox } from "./ui/checkbox";
+import { Button } from "./ui/button";
 
 interface ProductList {
   id: number;
@@ -53,6 +54,28 @@ function HandleProductListButton({ children, id }: PropsWithChildren & {id:numbe
   const [products, setProducts] = useState<Product[]>([]);
   const [productlistForUpdate, setProductlistforUpdate] = useState<ProductList>();
   //const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+
+
+  const { isLoading: isLoadingProductList, error: productListError } = useQuery<ProductList>({
+    queryKey: ["productlist", id],
+    queryFn: async () => {
+      const response = await fetch(`http://localhost:3000/productlists/${id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch product list");
+      }
+      const data = await response.json();
+      setProductlistforUpdate(data);
+      form.setValue("productlistname", data.productlistname); // Fyll i formuläret med befintligt namn
+      return data;
+    },
+  });
+  if (isLoadingProductList) {
+    return <div>Loading...</div>;
+  }
+
+  if ( productListError) {
+    return <div>Error: {String(productListError)}</div>;
+  }
 
   const UpdateProductListButton = async (
     productlist: ProductList
@@ -168,7 +191,7 @@ function HandleProductListButton({ children, id }: PropsWithChildren & {id:numbe
                           </div>
                         ))}
                       </div>
-                      <button type="submit"/>
+                      <Button type="submit">Uppdatera Listan</Button>
                     </CollapsibleContent>
                   </Collapsible>
                   <FormMessage />
