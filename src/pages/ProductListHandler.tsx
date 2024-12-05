@@ -31,7 +31,9 @@ function ProductListHandler() {
         throw new Error("Failed to fetch product lists");
       }
       const data = await response.json();
+      console.log(data);
       setProductLists(data); // Uppdatera state när data hämtas
+ 
       return data;
     },
   });
@@ -91,7 +93,7 @@ function ProductListHandler() {
           <h3 className="font-semibold text-2xl">Sparade produktlistor:</h3>
           <div className="mt-4 flex gap-2">
           {productlists.map((productlist) =>  (
-              <HandleProductListButton key={productlist.id}>
+              <HandleProductListButton key={productlist.id} id={productlist.id} >
               <div
                 
                 className="flex flex-col p-2 justify-between rounded-xl border-2

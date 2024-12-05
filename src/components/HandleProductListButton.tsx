@@ -25,7 +25,7 @@ import { Checkbox } from "./ui/checkbox";
 interface ProductList {
   id: number;
   productlistname: string;
-  products: [];
+  products: Product[];
 }
 interface Product {
   id: number;
@@ -38,35 +38,39 @@ const formSchema = z.object({
   }),
 });
 
-function HandleProductListButton({ children }: PropsWithChildren) {
+function HandleProductListButton({ children, id }: PropsWithChildren & {id:number}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      
       productlistname: "",
+    
     },
   });
+
+  console.log("Product List ID:", id);
+
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+  const [productlistForUpdate, setProductlistforUpdate] = useState<ProductList>();
+  //const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
 
   const UpdateProductListButton = async (
-    productlistname: string,
-    id: number
+    productlist: ProductList
+   
   ) => {
     try {
-      const response = await fetch("http://localhost:3000/productlists", {
+      const response = await fetch(`http://localhost:3000/productlists/${productlist.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productlistname: productlistname,
-          id: id,
-          products: selectedProducts,
-        }),
+        body: JSON.stringify(
+        productlist
+        ),
       });
       if (!response.ok) {
         throw new Error("failed to update list");
       }
       const data = await response.json();
-      setSelectedProducts(data);
+      setProductlistforUpdate(data);
       return data;
     } catch (error) {
       console.error(error);
@@ -87,8 +91,12 @@ function HandleProductListButton({ children }: PropsWithChildren) {
   });
 
   const handleSubmit = form.handleSubmit((values) => {
-    console.log(values);
-    form.reset();
+    if (productlistForUpdate) {
+      UpdateProductListButton({
+        ...productlistForUpdate,
+        productlistname: values.productlistname,
+      });
+    }
   });
 
   if (isLoading) {
@@ -126,7 +134,7 @@ function HandleProductListButton({ children }: PropsWithChildren) {
                 <FormItem>
                   <FormLabel>Produktlistnamn</FormLabel>
                   <FormControl>
-                    <Input placeholder="skriv in produktlistnamn" {...field} />
+                    <Input placeholder= {productlistForUpdate?.productlistname}  {...field} />
                   </FormControl>
                   <Collapsible>
                     <CollapsibleTrigger>
@@ -141,17 +149,13 @@ function HandleProductListButton({ children }: PropsWithChildren) {
                           >
                             <Checkbox
                               id={`product-${product.id}`}
-                              checked={selectedProducts.includes(product.id)}
+                              checked={productlistForUpdate?.products.some((p) => p.id === product.id) || false}
                               onCheckedChange={(checked) => {
-                                if (checked) {
-                                  setSelectedProducts((prev) => [
-                                    ...prev,
-                                    product.id,
-                                  ]);
-                                } else {
-                                  setSelectedProducts((prev) =>
-                                    prev.filter((id) => id !== product.id)
-                                  );
+                                if (productlistForUpdate) {
+                                  const updatedProducts = checked
+                                    ? [...productlistForUpdate.products, product]
+                                    : productlistForUpdate.products.filter((p) => p.id !== product.id);
+                                  setProductlistforUpdate((prev) => prev && { ...prev, products: updatedProducts });
                                 }
                               }}
                             />
@@ -164,6 +168,7 @@ function HandleProductListButton({ children }: PropsWithChildren) {
                           </div>
                         ))}
                       </div>
+                      <button type="submit"/>
                     </CollapsibleContent>
                   </Collapsible>
                   <FormMessage />
