@@ -93,7 +93,7 @@ function ProductListHandler() {
           <h3 className="font-semibold text-2xl">Sparade produktlistor:</h3>
           <div className="mt-4 flex gap-2">
           {productlists.map((productlist) =>  (
-              <HandleProductListButton key={productlist.id} id={productlist.id} >
+              <HandleProductListButton key={productlist.id} productlist={productlist} >
               <div
                 
                 className="flex flex-col p-2 justify-between rounded-xl border-2

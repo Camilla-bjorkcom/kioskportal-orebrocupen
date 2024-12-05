@@ -39,50 +39,44 @@ const formSchema = z.object({
   }),
 });
 
-function HandleProductListButton({ children, id }: PropsWithChildren & {id:number}) {
+function HandleProductListButton({ children, productlist }: PropsWithChildren & {productlist : ProductList}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       
-      productlistname: "",
+      productlistname: productlist.productlistname,
     
     },
   });
 
-  console.log("Product List ID:", id);
+  console.log("Product List ID:", productlist.id);
+  console.log("productname", productlist.productlistname);
+  console.log("products", productlist.products);
 
   const [products, setProducts] = useState<Product[]>([]);
-  const [productlistForUpdate, setProductlistforUpdate] = useState<ProductList>();
+  const [productlistForUpdate, setProductlistforUpdate] = useState<ProductList>(productlist);
   //const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-
-
-  const { isLoading: isLoadingProductList, error: productListError } = useQuery<ProductList>({
-    queryKey: ["productlist", id],
-    queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/productlists/${id}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch product list");
-      }
-      const data = await response.json();
-      setProductlistforUpdate(data);
-      form.setValue("productlistname", data.productlistname); // Fyll i formuläret med befintligt namn
-      return data;
-    },
-  });
-  if (isLoadingProductList) {
-    return <div>Loading...</div>;
-  }
-
-  if ( productListError) {
-    return <div>Error: {String(productListError)}</div>;
-  }
+  
 
   const UpdateProductListButton = async (
     productlist: ProductList
    
   ) => {
+    const url = `http://localhost:3000/productslists/${productlist.id}`;
+  console.log("Request URL:", url);
+
+    const sanitizedProductList = {
+      id: Number(productlist.id),
+      productlistname: productlist.productlistname,
+      products: productlist.products.map((product) => ({
+        id: product.id || "temp-id", // Fyll i ett temporärt id om saknas
+        productname: product.productname,
+      })),
+    };
+  
+    console.log("Payload sent to server:", sanitizedProductList);
     try {
-      const response = await fetch(`http://localhost:3000/productlists/${productlist.id}`, {
+      const response = await fetch(url, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
@@ -90,13 +84,17 @@ function HandleProductListButton({ children, id }: PropsWithChildren & {id:numbe
         ),
       });
       if (!response.ok) {
+        const errorText = await response.text();
+      console.error("Server response error:", errorText);
         throw new Error("failed to update list");
       }
       const data = await response.json();
+      console.log("Update successful:", data);
       setProductlistforUpdate(data);
       return data;
     } catch (error) {
-      console.error(error);
+      console.error("Update failed:", error);
+    throw error;
     }
   };
 
@@ -118,7 +116,12 @@ function HandleProductListButton({ children, id }: PropsWithChildren & {id:numbe
       UpdateProductListButton({
         ...productlistForUpdate,
         productlistname: values.productlistname,
+        
       });
+      if (!productlistForUpdate) {
+        console.error("Product list is undefined");
+        return;
+      }
     }
   });
 
@@ -140,7 +143,7 @@ function HandleProductListButton({ children, id }: PropsWithChildren & {id:numbe
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Skapa Produkt</DialogTitle>
+          <DialogTitle>Hantera Produktlista</DialogTitle>
           <DialogDescription className="sr-only">
             Fyll i informationen för att skapa en ny Produkt
           </DialogDescription>
@@ -191,7 +194,9 @@ function HandleProductListButton({ children, id }: PropsWithChildren & {id:numbe
                           </div>
                         ))}
                       </div>
-                      <Button type="submit">Uppdatera Listan</Button>
+                      <button type="button" onClick={() => {
+                        UpdateProductListButton(productlistForUpdate);
+                      }}>Uppdatera Listan</button>
                     </CollapsibleContent>
                   </Collapsible>
                   <FormMessage />
