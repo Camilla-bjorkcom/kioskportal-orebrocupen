@@ -23,6 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { useState } from "react";
 
 
 const formSchema = z.object({
@@ -36,8 +37,11 @@ interface AddFacilityButtonProps {
   onSave: (facilityName: string) => void; 
 }
 
+
+
 function AddFacilityButton({ onSave }: AddFacilityButtonProps) {
   
+  const [open, setOpen] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,12 +52,13 @@ function AddFacilityButton({ onSave }: AddFacilityButtonProps) {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     onSave(values.facilityName);
+    setOpen(false);
     form.reset();
   }
 
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen} >
       <DialogTrigger asChild>
         <p className="m-5 flex w-fit gap-2 cursor-pointer font-semibold">
           Lägg till <PlusIcon className="w-4 h-4 place-self-center" />
