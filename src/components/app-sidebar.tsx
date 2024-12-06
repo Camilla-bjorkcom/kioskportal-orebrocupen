@@ -75,8 +75,8 @@ const items = [
     url: "#",
     icon: SquareChartGantt,
     subitems: [
+      { title: "Inventera lager", url: "/inventorystorage" },
       { title: "Visa gjorda inventeringar", url: "/inventorystatus" },
-      
     ],
   },
   {
