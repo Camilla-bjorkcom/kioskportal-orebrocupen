@@ -1,6 +1,5 @@
 import { useAuth } from "react-oidc-context";
 import {
-  Hammer,
   SquareChartGantt,
   ChevronDown,
   ChartSpline,

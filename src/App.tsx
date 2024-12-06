@@ -1,5 +1,4 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SidebarProvider } from "./components/ui/sidebar";
 import Router from "./Router";
 import { AuthProvider } from "react-oidc-context";
 
@@ -15,8 +14,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider {...cognitoAuthConfig}>
-      
+      <AuthProvider {...cognitoAuthConfig}> 
         <Router />
       </AuthProvider>
     </QueryClientProvider>

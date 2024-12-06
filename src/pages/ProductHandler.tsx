@@ -3,9 +3,6 @@ import CreateProductButton from "@/components/CreateProductButton";
 import PagesHeader from "@/components/PagesHeader";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-
-
-
 import  {useState} from "react";
 import { useLocation } from "react-router-dom";
 
@@ -16,7 +13,7 @@ interface Product {
 
 function ProductHandler() {
 const {pathname} = useLocation();
-  const [products, setProducts] = useState<Product[]>([]);
+const [products, setProducts] = useState<Product[]>([]);
   
  const{isLoading, error}  = useQuery<Product[]>({
     queryKey :["products"],

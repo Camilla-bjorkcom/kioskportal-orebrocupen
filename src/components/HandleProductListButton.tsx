@@ -1,27 +1,13 @@
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
 import { ReaderIcon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { PropsWithChildren, ReactNode, useState } from "react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@radix-ui/react-collapsible";
+import { PropsWithChildren, useState } from "react";
+
 import { useQuery } from "@tanstack/react-query";
-import { Checkbox } from "./ui/checkbox";
-import { Button } from "./ui/button";
+
 import UpdateProductListButton from "./UpdateProductListButton";
 
 interface ProductList {
