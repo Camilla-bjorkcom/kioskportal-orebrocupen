@@ -22,6 +22,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
+import UpdateProductListButton from "./UpdateProductListButton";
 
 interface ProductList {
   id: number;
@@ -39,7 +40,7 @@ const formSchema = z.object({
   }),
 });
 
-function HandleProductListButton({ children, productlist }: PropsWithChildren & {productlist : ProductList}) {
+function HandleProductListButton({ children, productlist, onUpdate }: PropsWithChildren & {productlist : ProductList;  onUpdate: (updatedList: ProductList) => void;}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,7 +59,7 @@ function HandleProductListButton({ children, productlist }: PropsWithChildren & 
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   
 
-  const UpdateProductListButton = async (
+  const UpdateListButton = async (
     productlist: ProductList
    
   ) => {
@@ -111,19 +112,7 @@ function HandleProductListButton({ children, productlist }: PropsWithChildren & 
     },
        });
 
-  const handleSubmit = form.handleSubmit((values) => {
-    if (productlistForUpdate) {
-      UpdateProductListButton({
-        ...productlistForUpdate,
-        productlistname: values.productlistname,
-        
-      });
-      if (!productlistForUpdate) {
-        console.error("Product list is undefined");
-        return;
-      }
-    }
-  });
+ 
 
   if (isLoading) {
     return <div>Loading products...</div>;
@@ -132,10 +121,7 @@ function HandleProductListButton({ children, productlist }: PropsWithChildren & 
   if (error) {
     return <div>Error: {String(error)}</div>;
   }
-  const handleClose = () => {
-    console.log("Dialog stängd");
-    // Här kan du eventuellt återställa tillstånd eller utföra någon annan åtgärd
-  };
+ 
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -165,7 +151,10 @@ function HandleProductListButton({ children, productlist }: PropsWithChildren & 
           
           
         </DialogHeader>
-        <UpdateProductListButton{...productlist}/>
+        
+        <UpdateProductListButton productlist={productlist} onUpdate={onUpdate}/>
+        
+        
         </DialogContent>
         </Dialog>
 

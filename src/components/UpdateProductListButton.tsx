@@ -8,6 +8,8 @@ import { Input } from "./ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
 import { Checkbox } from "./ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
+import { Button } from "./ui/button";
+
 
 interface ProductList {
     id: number;
@@ -27,46 +29,19 @@ const formSchema = z.object({
 });
 
 interface UpdateProductListButtonProps {
-    productlistId: ProductList["id"];
-    onClose: () => void;
+    productlist: ProductList;
+    
   }
-
-// const saveChangesToProductList(productlist: ProductList) {
-//     const url = `http://localhost:3000/productslists/${productlist.id}`;
-//     const sanitizedProductList = {
-//         id: Number(productlist.id),
-//         productlistname: productlist.productlistname,
-//         products: productlist.products.map((product) => ({
-//             id: product.id || "temp-id", 
-//             productname: product.productname,
-//         })),
-//     };
-
-//     try {
-//         const response = await fetch(url, {
-//             method: "PUT",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify(sanitizedProductList),
-//         });
-//         if (!response.ok) {
-//             const errorText = await response.text();
-//             console.error("Server response error:", errorText);
-//             throw new Error("Failed to update list");
-//         }
-//         const data = await response.json();
-//         return data;
-//     } catch (error) {
-//         console.error("Update failed:", error);
-//         throw error;
-//     }
-// }
-
 
 
 function UpdateProductListButton({
-    productlistId,
-    onClose,
-}:UpdateProductListButtonProps ) 
+    productlist,
+    onUpdate,
+    
+}: {
+    productlist: ProductList,
+    onUpdate: (updatedList:ProductList) =>void;
+} )
 {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -76,7 +51,15 @@ function UpdateProductListButton({
     });
 
     const [products, setProducts] = useState<Product[]>([]);
-    const [productlistForUpdate, setProductlistforUpdate] = useState<ProductList["id"]>();
+    const [productlistForUpdate, setProductlistforUpdate] = useState<ProductList>(productlist);
+    const [isOpen , setIsOpen] =useState(false);
+
+
+    const handleToggle = (open: boolean) => {
+        setIsOpen(open);
+    }
+
+    
 
     const { isLoading, error } = useQuery<Product[]>({
         queryKey: ["products"],
@@ -100,13 +83,13 @@ function UpdateProductListButton({
             id: productlist.id,
             productlistname: productlist.productlistname,
             products: productlist.products.map((product) => ({
-                id: product.id || "temp-id", // Använd ett temporärt ID om inget finns
+                id: product.id,
                 productname: product.productname,
             })),
         };
     
         try {
-            // Utför API-anropet för att uppdatera produktlistan
+           
             const response = await fetch(url, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -122,7 +105,7 @@ function UpdateProductListButton({
     
             // Returnera den uppdaterade datan om allt gick bra
             const data = await response.json();
-            return data;
+            onUpdate(data);
         } catch (error) {
             console.error("Update failed:", error);
             throw error;
@@ -133,12 +116,16 @@ function UpdateProductListButton({
     const handleSubmit = form.handleSubmit(async (values) => {
         if (productlistForUpdate) {
             try {
+                // Sätt produktlistan med de nya värdena
                 const updatedList = await saveChangesToProductList({
                     ...productlistForUpdate,
                     productlistname: values.productlistname,
                 });
-                setProductlistforUpdate(updatedList);
-                onClose(); // Optionally close the dialog after saving
+    
+                console.log("Updated list:", updatedList); 
+                setIsOpen(false);
+                
+    
             } catch (error) {
                 console.error("Failed to save changes", error);
             }
@@ -154,11 +141,10 @@ function UpdateProductListButton({
     }
 
     return (
-        <Dialog>
+        <Dialog  open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
             <DialogTrigger asChild>
-                <div className="flex flex-col p-2 justify-between bg-card text-card-foreground hover:text-white text-black aspect-video h-32">
-                    {/* Trigger content */}
-                </div>
+                <Button >Redigera Produktlista</Button>
+                
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -190,9 +176,10 @@ function UpdateProductListButton({
                                 </FormItem>
                             )}
                         />
-                        <Collapsible>
+                        <Collapsible  open={isOpen} onOpenChange={handleToggle}>
                             <CollapsibleTrigger>
-                                Lägg till produkter i din lista
+                            <Button style={{ display: isOpen ? "none" : "inline-block" }}> Lägg till produkter i din lista</Button>
+                               
                             </CollapsibleTrigger>
                             <CollapsibleContent>
                                 <div className="mt-4 grid-cols-3 gap-2">
@@ -216,9 +203,9 @@ function UpdateProductListButton({
                                         </div>
                                     ))}
                                 </div>
-                                <button type="button" onClick={() => saveChangesToProductList(productlistForUpdate)}>
+                                <Button onClick={() => saveChangesToProductList(productlistForUpdate)}>
                                     Uppdatera Listan
-                                </button>
+                                </Button>
                             </CollapsibleContent>
                         </Collapsible>
                         <FormMessage />

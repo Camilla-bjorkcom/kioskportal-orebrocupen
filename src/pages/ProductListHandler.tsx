@@ -10,10 +10,16 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import  {useState} from "react";
 import { useLocation } from "react-router-dom";
 
+
+interface Product {
+  id: number;
+  productname: string;
+}
+
 interface ProductList {
   id: number;
   productlistname: string;
-  products: []
+  products: Product[];
 }
 
 function ProductListHandler() {
@@ -37,6 +43,12 @@ function ProductListHandler() {
       return data;
     },
   });
+
+  const updateProductList = (updatedList: ProductList) => {
+    setProductLists((prev) =>
+      prev.map((list) => (list.id === updatedList.id ? updatedList : list))
+    );
+  };
 
   // Spara ny produktlista (POST)
   const SaveProductList = async (productListName: string) => {
@@ -88,12 +100,12 @@ function ProductListHandler() {
       <div className="container mx-auto px-4 flex-row items-center">
         <h2 className="font-bold text-4xl my-4">Produktlistor</h2>
 
-        <CreateProductListButton onSave={SaveProductList} />
+        <CreateProductListButton onSave={SaveProductList}  />
       <div className="mt-8">
           <h3 className="font-semibold text-2xl">Sparade produktlistor:</h3>
           <div className="mt-4 flex gap-2">
           {productlists.map((productlist) =>  (
-              <HandleProductListButton key={productlist.id} productlist={productlist} >
+              <HandleProductListButton key={productlist.id} productlist={productlist} onUpdate={updateProductList} >
               <div
                 
                 className="flex flex-col p-2 justify-between rounded-xl border-2
