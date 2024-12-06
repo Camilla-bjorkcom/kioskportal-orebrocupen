@@ -23,6 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { useState } from "react";
 
 
 const formSchema = z.object({
@@ -32,10 +33,13 @@ const formSchema = z.object({
 });
 
 interface AddKioskButtonProps {
-  onSave: (kioskname: string) => void; // Callback för att spara produktnamn
+  onSave: (kioskname: string) => void; // Callback för att spara kiosknamn
 }
 
 function AddKioskButton({ onSave }: AddKioskButtonProps) {
+  
+  const [open, setOpen] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,7 +54,7 @@ function AddKioskButton({ onSave }: AddKioskButtonProps) {
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen} >
       <DialogTrigger asChild>
         <p className="m-5 flex w-fit gap-2 cursor-pointer font-semibold">
           Lägg till <PlusIcon className="w-4 h-4 place-self-center" />

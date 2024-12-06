@@ -63,7 +63,7 @@ const items = [
     url: "#",
     icon: House,
     subitems: [      
-      { title: "Planstruktur", url: "#" },
+      { title: "Planstruktur", url: "/kioskmanager" },
       { title: "Kontaktpersoner", url: "/settings" },
       { title: "QR koder till kiosker", url: "#" },
       
@@ -75,8 +75,8 @@ const items = [
     url: "#",
     icon: SquareChartGantt,
     subitems: [
-      { title: "Visa saldo för kiosk", url: "#" },
-      { title: "Visa saldo för anläggning", url: "#" },
+      { title: "Visa gjorda inventeringar", url: "/inventorystatus" },
+      
     ],
   },
   {

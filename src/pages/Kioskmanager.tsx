@@ -4,27 +4,33 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { TrashIcon } from "lucide-react";
-import { CaretDownIcon } from "@radix-ui/react-icons";
+import AddProductListButton from "@/components/AddProductListButton";
+import AddProductsButton from "@/components/AddProductButton";
 
 function Kioskmanager() {
+  type ProductListItem = {
+    productListName: string;
+    products: string[];
+  };
+
   const { pathname } = useLocation();
 
   const [facility, setFacility] = useState<string[]>([]);
   const [kiosks, setKiosks] = useState<string[]>([]);
+  const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
+  const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
+  const [productList, setProductList] = useState<ProductListItem | undefined>();
   const [products, setProducts] = useState<string[]>([]);
 
-  const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
-  const [selectedProductlist, setSelectedProductlist] = useState<number | null>(
-    null
-  );
-  const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
-
+  //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
     facility: string | null;
     kiosk: string | null;
+    productlist: string | undefined;
   }>({
     facility: null,
     kiosk: null,
+    productlist: undefined,
   });
 
   const addFacility = (facilityName: string) => {
@@ -35,53 +41,55 @@ function Kioskmanager() {
     setKiosks((prev) => [...prev, kioskName]);
   };
 
+  const addProductList = (productList: ProductListItem | undefined) => {
+    setProductList(productList);
+    if (productList != undefined) {
+      setSelectedOptions((prev) => ({
+        ...prev,
+        productlist: productList.productListName,
+      }));
+    }
+  };
+
+  const addProduct = (productName: string) => {
+    setProducts((prev) => [...prev, productName]);
+  };
+
   const handleFacilityClick = (index: number) => {
     const isSelected = selectedFacility === index;
     const facilityName = isSelected ? null : facility[index];
     setSelectedFacility(isSelected ? null : index);
-  
-    // Återställ kiosk och produktlista
+
+    //återställ kiosk
     setSelectedKiosk(null);
-    setSelectedProductlist(null);
-  
-    // Uppdatera endast facility i `selectedOptions`
+
     setSelectedOptions({
       facility: facilityName,
-      kiosk: null, // Återställ kioskval när facility ändras
+      kiosk: null,
+      productlist: undefined,
     });
   };
-  
 
   const handleKioskClick = (index: number) => {
     const isSelected = selectedKiosk === index;
     const kioskName = isSelected ? null : kiosks[index];
+
     setSelectedKiosk(isSelected ? null : index);
 
-    // Uppdatera endast kiosk i `selectedOptions`
+    // Uppdatera `selectedOptions`
     setSelectedOptions((prev) => ({
       ...prev,
       kiosk: kioskName,
+      productlist: isSelected ? undefined : prev.productlist,
     }));
   };
 
-  const handleProductListClick = (index: number) => {
-    const productListNames = ["Standard kiosker", "Standard skola"];
-    const isSelected = selectedProductlist === index;
-    const productlist = isSelected ? null : productListNames[index];
-
-    setSelectedProductlist(isSelected ? null : index);
-
-    setSelectedOptions((prev) => {
-      return {
-        ...prev,
-        kiosk: selectedKiosk !== null ? kiosks[selectedKiosk] : null,
-        productlist: productlist,
-      };
-    });
-  };
+  // const removeFacility = (facilityId: string) => {
+  // };
+  // const removeKiosk = (kioskId: string) => {
+  // };
 
   console.log(selectedOptions);
-
   return (
     <>
       <div className="p-1 shadow w-full flex items-center mb-8">
@@ -106,7 +114,8 @@ function Kioskmanager() {
                  }`}
                   onClick={() => handleFacilityClick(index)}
                 >
-                  {facility} <TrashIcon className="mr-5 w-5 h-5 place-self-center" />
+                  {facility} {/* Lägg till removeFacility onClick */}
+                  <TrashIcon className="mr-5 w-5 h-5 place-self-center hover:text-red-500" />
                 </p>
               ))}
             </div>
@@ -125,14 +134,13 @@ function Kioskmanager() {
                         ${
                           selectedKiosk === index
                             ? "text-black border-black border rounded-xl h-fit w-11/12"
-                            : selectedKiosk === null
-                            ? "text-black border-none w-11/12"
-                            : "text-black"
+                            : "text-black border-none w-11/12"
                         }            
                 `}
                       onClick={() => handleKioskClick(index)}
                     >
-                      {kiosk} <TrashIcon className="mr-5 w-5 h-5 place-self-center" />
+                      {kiosk} {/* Lägg till removeKiosk onClick på trashIcon */}
+                      <TrashIcon className="mr-7 w-5 h-5 place-self-center  hover:text-red-500" />
                     </p>
                   ))}
                 </div>
@@ -144,41 +152,38 @@ function Kioskmanager() {
             <h3 className="text-xl font-bold mb-2">Produktlista</h3>
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
               {selectedKiosk !== null && (
-                <div className="mt-4 flex flex-col gap-4">
-                  <ul className="ml-6">
-                    <li>
-                      <h3
-                        onClick={() => handleProductListClick(0)}
-                        className="font-semibold cursor-pointer mb-1 flex justify-between " 
-                      >
-                        Standard kiosker
-                      <CaretDownIcon className="mr-5 w-5 h-5 place-self-center"/></h3>
-                      {selectedProductlist === 0 && (
-                        <ul className="ml-2 list-inside list-disc">
-                          <li>Hamburgare</li>
-                          <li>Korv</li>
-                          <li>Festis</li>
-                        </ul>
+                <div className="mt-4 flex flex-col gap-4 mb-5">
+                  {productList === undefined && (
+                    <AddProductListButton onSave={addProductList} />
+                  )}
+                  <ul className="ml-5">
+                    <div className="flex justify-between">
+                      <h3 className="font-semibold">
+                        {productList?.productListName}
+                      </h3>
+                      {productList != undefined && (
+                        <TrashIcon className="mr-5 w-5 h-5 place-self-center cursor-pointer hover:text-red-500" />
                       )}
-                    </li>
+                    </div>
+                    {productList?.products.map((product, index) => (
+                      <li key={index} className="list-inside ml-4">
+                        {product}
+                      </li>
+                    ))}
                   </ul>
+                  <ul>
+                    {productList != undefined && (
+                      <AddProductsButton onSave={addProduct} />
+                    )}
 
-                  <ul className="ml-6">
-                    <li>
-                    <h3
-                        onClick={() => handleProductListClick(1)}
-                        className="font-semibold cursor-pointer mb-1 flex justify-between " 
-                      >
-                        Standard skola
-                      <CaretDownIcon className="mr-5 w-5 h-5 place-self-center"/></h3>
-                      {selectedProductlist === 1 && (
-                        <ul className="ml-2 list-inside list-disc">
-                          <li>Hamburgare</li>
-                          <li>Korv</li>
-                          <li>Festis</li>
-                        </ul>
-                      )}
-                    </li>
+                    {products.map((product, index) => (
+                      <div className="flex justify-between">
+                        <li key={index} className="list-inside ml-9">
+                          {product}
+                        </li>
+                        <TrashIcon className="mr-5 w-4 h-4 place-self-center cursor-pointer hover:text-red-500" />
+                      </div>
+                    ))}
                   </ul>
                 </div>
               )}

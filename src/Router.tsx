@@ -8,6 +8,7 @@ import CreateTournament from "./pages/CreateTournament";
 import Kioskmanager from "./pages/Kioskmanager";
 import SettingsPage from "./pages/SettingsPage";
 import ProductListHandler from "./pages/ProductListHandler";
+import InventoryStatus from "./pages/InventoryStatus";
 
 function Router() {
   return (
@@ -40,6 +41,9 @@ function Router() {
             </Route>
             <Route path="productlisthandler">
               <Route path="/productlisthandler" element={<ProductListHandler />} />
+            </Route>
+            <Route path="inventorystatus">
+              <Route path="/inventorystatus" element={<InventoryStatus />} />
             </Route>
           </Route>
         </Route>
