@@ -100,7 +100,7 @@
   "productslists": [
     {
       "id": "1",
-      "productlistname": "Updated Name",
+      "productlistname": "Lillån",
       "products": [
         {
           "id": "1",
@@ -137,27 +137,50 @@
         {
           "id": "6fd0",
           "productname": "Pringels Original"
+        },
+        {
+          "id": "e3c0",
+          "productname": "Rullgrillskorv"
+        },
+        {
+          "id": "b368",
+          "productname": "Haribo Nappar Frukt 80g"
+        },
+        {
+          "id": "ebf0",
+          "productname": "Haribo Nappar Cola 80g"
         }
       ]
     },
     {
-      "id": "576d",
+      "id": "213b",
       "productlistname": "Stor Skola",
-      "products": []
+      "products": [
+        {
+          "id": "0bad",
+          "productname": "Mer Päron"
+        },
+        {
+          "id": "5f35",
+          "productname": "Pizza Kebab"
+        },
+        {
+          "id": "c660",
+          "productname": "Delicatoboll"
+        },
+        {
+          "id": "4b07",
+          "productname": "Johnnys Ketchup Original"
+        },
+        {
+          "id": "b56e",
+          "productname": "Sibyllia Hamburgerficka"
+        }
+      ]
     },
     {
-      "id": "1652",
-      "productlistname": "Liten Skola",
-      "products": []
-    },
-    {
-      "id": "6a1e",
-      "productlistname": "Standard",
-      "products": []
-    },
-    {
-      "id": "9d0f",
-      "productlistname": "blablabla",
+      "id": "339c",
+      "productlistname": "sssssssf",
       "products": []
     }
   ]
