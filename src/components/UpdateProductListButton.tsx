@@ -27,7 +27,7 @@ const formSchema = z.object({
 });
 
 interface UpdateProductListButtonProps {
-    productlist: ProductList;
+    productlistId: ProductList["id"];
     onClose: () => void;
   }
 
@@ -64,7 +64,7 @@ interface UpdateProductListButtonProps {
 
 
 function UpdateProductListButton({
-    productlist,
+    productlistId,
     onClose,
 }:UpdateProductListButtonProps ) 
 {
@@ -76,7 +76,7 @@ function UpdateProductListButton({
     });
 
     const [products, setProducts] = useState<Product[]>([]);
-    const [productlistForUpdate, setProductlistforUpdate] = useState<ProductList>(productlist);
+    const [productlistForUpdate, setProductlistforUpdate] = useState<ProductList["id"]>();
 
     const { isLoading, error } = useQuery<Product[]>({
         queryKey: ["products"],
