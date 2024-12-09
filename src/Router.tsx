@@ -11,7 +11,6 @@ import InventoryStatus from "./pages/InventoryStatus";
 import InventoryStorage from "./pages/InventoryStorage";
 
 function Router() {
-  
   return (
     <BrowserRouter>
       <Routes>
@@ -26,28 +25,25 @@ function Router() {
               <Route path="new" element={<p>New item</p>} />
             </Route>
             <Route path="dashboard">
-              <Route path=":id" element={<Dashboard />} />{" "}              
+              <Route path=":id" element={<Dashboard />} />{" "}
             </Route>
             <Route path="producthandler">
-              <Route path="/producthandler" element={<ProductHandler />} />
+              <Route path=":id" element={<ProductHandler />} />
             </Route>
             <Route path="settings">
-              <Route path="/settings" element={<SettingsPage />} />
+              <Route path=":id" element={<SettingsPage />} />
             </Route>
             <Route path="kioskmanager">
-              <Route path="/kioskmanager" element={<Kioskmanager />} />
+              <Route path=":id" element={<Kioskmanager />} />
             </Route>
             <Route path="productlisthandler">
-              <Route
-                path=":id"
-                element={<ProductListHandler />}
-              />
+              <Route path=":id" element={<ProductListHandler />} />
             </Route>
             <Route path="inventorystatus">
-              <Route path="/inventorystatus" element={<InventoryStatus />} />
+              <Route path=":id" element={<InventoryStatus />} />
             </Route>
             <Route path="inventorystorage">
-              <Route path="/inventorystorage" element={<InventoryStorage />} />
+              <Route path=":id" element={<InventoryStorage />} />
             </Route>
           </Route>
         </Route>

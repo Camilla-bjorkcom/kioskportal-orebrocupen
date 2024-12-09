@@ -95,17 +95,17 @@ function CreateTournament() {
             {tournaments.length > 0 ? (
               tournaments.map((tournament, index) => (
                 <button
-                  // onClick={() => navigate(`/dashboard/${tournament.id}`)} // Navigera till dashboard
+                  onClick={() => navigate(`/dashboard/${tournament.id}`)} // Navigera till dashboard
                   key={index}
                   className="flex flex-col p-2 justify-between rounded-xl border bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 relative"
                 >
-                  <div>
+                  <div className="flex justify-between w-full">
                     <p className="font-bold">{tournament.tournamentName}</p>
                     <button onClick={(e) => {
                       e.stopPropagation(); // Förhindra att navigering sker vid radering
                       DeleteTournament(tournament.id);
                     }}>
-                      <TrashIcon className="w-8 h-6 hover:text-red-500"></TrashIcon>
+                      <TrashIcon className="w-7 h-5 hover:text-red-500"></TrashIcon>
                     </button>
                     <p className="text-xs font-bold absolute bottom-2 right-2">
                       Skapad: {datetime}

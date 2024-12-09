@@ -43,6 +43,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+
 // Menu items.
 
 
@@ -55,8 +56,8 @@ export function AppSidebar({ id }: { id?: number }) {
       url: "#",
       icon: ShoppingBasket,
       subitems: [
-        { title: "Produkthanterare", url:  `{/producthandler/${id}}` },
-        { title: "Produktlista", url: `{/productlisthandler/${id}}` },
+        { title: "Produkthanterare", url:  `/producthandler/${id}` },
+        { title: "Produktlista", url: `/productlisthandler/${id}` },
         
       ],
     },
@@ -66,8 +67,8 @@ export function AppSidebar({ id }: { id?: number }) {
       url: "#",
       icon: House,
       subitems: [      
-        { title: "Planstruktur", url: "/kioskmanager" },
-        { title: "Kontaktpersoner", url: "/settings" },
+        { title: "Planstruktur", url: `/kioskmanager/${id}` },
+        { title: "Kontaktpersoner", url: `/settings/${id}` },
         { title: "QR koder till kiosker", url: "#" },
         
       ],
@@ -78,8 +79,8 @@ export function AppSidebar({ id }: { id?: number }) {
       url: "#",
       icon: SquareChartGantt,
       subitems: [
-        { title: "Inventera lager", url: "/inventorystorage" },
-        { title: "Visa gjorda inventeringar", url: "/inventorystatus" },
+        { title: "Inventera lager", url: `/inventorystorage/${id}` },
+        { title: "Visa gjorda inventeringar", url: `/inventorystatus/${id}` },
       ],
     },
     {
@@ -87,7 +88,7 @@ export function AppSidebar({ id }: { id?: number }) {
       url: "#",
       icon: ChartSpline,
       subitems: [
-        { title: "Din översikt", url: "/dashboard" },
+        { title: "Din översikt", url: `/dashboard/${id}` },
         
       ],
     },
@@ -97,7 +98,7 @@ export function AppSidebar({ id }: { id?: number }) {
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarContent>
         <SidebarHeader>
-          <img src="src/assets/images/sidebarLogo.svg" alt="kiosk porta logo" />
+          <img src="../src/assets/images/sidebarLogo.svg" alt="kiosk portal logo" />
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Meny</SidebarGroupLabel>
@@ -195,7 +196,7 @@ export function AppSidebar({ id }: { id?: number }) {
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <BadgeCheck />
-                    <a href="/settings">Inställningar</a>
+                    <a href={`/settings/${id}`}>Inställningar</a>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
