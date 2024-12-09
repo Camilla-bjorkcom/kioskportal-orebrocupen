@@ -1,6 +1,6 @@
 
 import CreateProductButton from "@/components/CreateProductButton";
-import PagesHeader from "@/components/PagesHeader";
+
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import  {useState} from "react";
@@ -77,7 +77,7 @@ const SaveProduct = async (productname: string) => {
 
   return (
     <section>
-      <PagesHeader pathname={pathname} />
+     
       <div className="container mx-auto px-4 flex-row items-center">
         <h2 className="font-bold text-4xl my-4">Produkthantering</h2>
 
