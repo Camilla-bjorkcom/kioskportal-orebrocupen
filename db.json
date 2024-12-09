@@ -1,4 +1,18 @@
 {
+  "tournaments": [
+    {
+      "id": "34c7",
+      "tournamentName": "Öc 2025",
+      "startDate": "2024-12-09T08:58:33.867Z",
+      "endDate": "2024-12-09T08:58:33.867Z"
+    },
+    {
+      "id": "2ba5",
+      "tournamentName": "Hejochhallå",
+      "startDate": "2024-12-09T09:32:21.935Z",
+      "endDate": "2024-12-09T09:32:21.935Z"
+    }
+  ],
   "products": [
     {
       "id": "eedc",
@@ -244,6 +258,16 @@
       "id": "7362",
       "productlistname": "Stor Skola",
       "products": []
+    },
+    {
+      "id": "86f1",
+      "productlistname": "Andreas Lista",
+      "products": [
+        {
+          "id": "9d9f",
+          "productname": "Kexchoklad"
+        }
+      ]
     }
   ]
 }

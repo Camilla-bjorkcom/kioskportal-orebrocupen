@@ -1,4 +1,4 @@
-import PagesHeader from "@/components/PagesHeader";
+
 import { useLocation } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 import ChangePassword from "@/components/ChangePassword";
@@ -10,7 +10,7 @@ const SettingsPage = () => {
   const auth = useAuth();
   return (
     <>
-      <PagesHeader pathname={pathname} />
+     
       <div className="container mx-auto">
         <h2 className="font-bold text-4xl mb-24 pl-5">Inställningar</h2>
         <h3 className=" text-2xl pb-2 border-b border-b-slate-300">

@@ -44,52 +44,54 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Menu items.
-const items = [
-  
-  {
-    title: "Produkter",
-    url: "#",
-    icon: ShoppingBasket,
-    subitems: [
-      { title: "Produkthanterare", url: "/producthandler" },
-      { title: "Produktlista", url: "/productlisthandler" },
-      
-    ],
-  },
-  
-  {
-    title: "Anläggningar",
-    url: "#",
-    icon: House,
-    subitems: [      
-      { title: "Planstruktur", url: "/kioskmanager" },
-      { title: "Kontaktpersoner", url: "/settings" },
-      { title: "QR koder till kiosker", url: "#" },
-      
-    ],
-  },
 
-  {
-    title: "Inventering",
-    url: "#",
-    icon: SquareChartGantt,
-    subitems: [
-      { title: "Inventera lager", url: "/inventorystorage" },
-      { title: "Visa gjorda inventeringar", url: "/inventorystatus" },
-    ],
-  },
-  {
-    title: "Statistik",
-    url: "#",
-    icon: ChartSpline,
-    subitems: [
-      { title: "Din översikt", url: "/dashboard" },
-      
-    ],
-  },
-];
 
-export function AppSidebar() {
+export function AppSidebar({ id }: { id?: number }) {
+
+  const items = [
+  
+    {
+      title: "Produkter",
+      url: "#",
+      icon: ShoppingBasket,
+      subitems: [
+        { title: "Produkthanterare", url:  `{/producthandler/${id}}` },
+        { title: "Produktlista", url: `{/productlisthandler/${id}}` },
+        
+      ],
+    },
+    
+    {
+      title: "Anläggningar",
+      url: "#",
+      icon: House,
+      subitems: [      
+        { title: "Planstruktur", url: "/kioskmanager" },
+        { title: "Kontaktpersoner", url: "/settings" },
+        { title: "QR koder till kiosker", url: "#" },
+        
+      ],
+    },
+  
+    {
+      title: "Inventering",
+      url: "#",
+      icon: SquareChartGantt,
+      subitems: [
+        { title: "Inventera lager", url: "/inventorystorage" },
+        { title: "Visa gjorda inventeringar", url: "/inventorystatus" },
+      ],
+    },
+    {
+      title: "Statistik",
+      url: "#",
+      icon: ChartSpline,
+      subitems: [
+        { title: "Din översikt", url: "/dashboard" },
+        
+      ],
+    },
+  ];
   const auth = useAuth();
   return (
     <Sidebar variant="sidebar" collapsible="icon">

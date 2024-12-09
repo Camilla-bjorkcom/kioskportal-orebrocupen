@@ -1,8 +1,6 @@
 import AddFacilityButton from "@/components/AddFacilityButton";
 import AddKioskButton from "@/components/AddKioskButton";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
 import { TrashIcon } from "lucide-react";
 import AddProductListButton from "@/components/AddProductListButton";
 import AddProductsButton from "@/components/AddProductButton";
@@ -13,7 +11,7 @@ function Kioskmanager() {
     products: string[];
   };
 
-  const { pathname } = useLocation();
+ 
 
   const [facility, setFacility] = useState<string[]>([]);
   const [kiosks, setKiosks] = useState<string[]>([]);
@@ -92,10 +90,7 @@ function Kioskmanager() {
   console.log(selectedOptions);
   return (
     <>
-      <div className="p-1 shadow w-full flex items-center mb-8">
-        <SidebarTrigger />
-        <h2>{pathname}</h2>
-      </div>
+
       <section className="container mx-auto px-5">
         <h1 className="text-3xl font-bold mb-10">Skapa kiosker och utbud</h1>
         <div className="grid lg:grid-cols-3 gap-5 w-10/12">
