@@ -1,12 +1,11 @@
-
-import { useLocation } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 import ChangePassword from "@/components/ChangePassword";
 import ContactPerson from "@/components/ContactPerson";
+import { Delete } from "lucide-react";
+import DeleteTournamentButton from "@/components/DeleteTournamentButton";
 
 
 const SettingsPage = () => {
-  const { pathname } = useLocation();
   const auth = useAuth();
   return (
     <>
@@ -28,6 +27,12 @@ const SettingsPage = () => {
         </h3>
         <div>
           <ContactPerson />
+        </div>
+        <h3 className=" mt-8 text-2xl pb-2 border-b border-b-slate-300">
+          Ta bort turnering
+        </h3>
+        <div>
+          <DeleteTournamentButton />
         </div>
       </div>
     </>
