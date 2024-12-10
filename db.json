@@ -1,22 +1,10 @@
 {
   "tournaments": [
     {
-      "id": "34c7",
-      "tournamentName": "Öc 2025",
-      "startDate": "2024-12-09T08:58:33.867Z",
-      "endDate": "2024-12-09T08:58:33.867Z"
-    },
-    {
-      "id": "2ba5",
-      "tournamentName": "Hejochhallå",
-      "startDate": "2024-12-09T09:32:21.935Z",
-      "endDate": "2024-12-09T09:32:21.935Z"
-    },
-    {
-      "id": "88ff",
-      "tournamentName": "Hejsan",
-      "startDate": "2024-12-09T12:34:47.569Z",
-      "endDate": "2024-12-09T12:34:47.569Z"
+      "id": "7eec",
+      "tournamentName": "ÖC 2025",
+      "startDate": "2024-12-10T09:14:13.041Z",
+      "endDate": "2024-12-10T09:14:13.041Z"
     }
   ],
   "products": [
