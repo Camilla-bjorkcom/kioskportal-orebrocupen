@@ -15,15 +15,15 @@ interface Tournament {
 const SettingsPage = () => {
   const auth = useAuth();
   const location = useLocation();
-  const { id } = useParams<{ id: string }>(); // Hämta turnerings-ID från URL
+  const { id } = useParams<{ id: string }>(); 
   const navigate = useNavigate();
   const [tournament, setTournament] = useState<Tournament | null>(
     location.state?.tournament || null
-  ); // Försök att använda `state` först
+  ); 
 
   useEffect(() => {
     if (!tournament && id) {
-      // Om `tournament` saknas, hämta från backend
+    
       const fetchTournament = async () => {
         try {
           const response = await fetch(`http://localhost:3000/tournaments/${id}`);
@@ -34,7 +34,7 @@ const SettingsPage = () => {
           setTournament(data);
         } catch (error) {
           console.error(error);
-          navigate("/"); // Gå tillbaka till startsidan om något går fel
+          navigate("/"); 
         }
       };
 
@@ -43,7 +43,7 @@ const SettingsPage = () => {
   }, [tournament, id, navigate]);
 
   const handleDelete = () => {
-    navigate("/createtournament"); // Navigera tillbaka till startsidan efter borttagning
+    navigate("/createtournament"); 
   };
 
   if (!tournament) {
