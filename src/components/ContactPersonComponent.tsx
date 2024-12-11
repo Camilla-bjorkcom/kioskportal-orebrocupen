@@ -24,6 +24,7 @@ const ContactPersonComponent = ({
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [facility, setFacility] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const addContactPerson = async () => {
     if (!name.trim() || !phone.trim() || !facility.trim()) {
@@ -36,6 +37,16 @@ const ContactPersonComponent = ({
     setFacility("");
     setShowInputs(false);
   };
+
+  const sortedContactPersons = [...contactPersons].sort((a, b) => {
+    if (a.facility.toLowerCase() < b.facility.toLowerCase()) {
+      return sortOrder === "asc" ? -1 : 1;
+    }
+    if (a.facility.toLowerCase() > b.facility.toLowerCase()) {
+      return sortOrder === "asc" ? 1 : -1;
+    }
+    return 0;
+  });
 
   return (
     <div className="container mx-auto">
@@ -86,15 +97,27 @@ const ContactPersonComponent = ({
       )}
 
       <div className="mt-6">
-        <div className="grid grid-cols-4 gap-4 font-bold border-b border-gray-300 pb-2">
+        <div className="flex justify-between items-center">
+          <div className="font-semibold">Sortera på anläggning:</div>
+          <Button
+            className="text-white px-4 py-2 rounded"
+            onClick={() =>
+              setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+            }
+          >
+            {sortOrder === "asc" ? "A-Ö" : "Ö-A"}
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-4 gap-4 font-bold border-b border-gray-300 pb-2 mt-4">
           <span>Namn</span>
           <span>Telefonnummer</span>
           <span>Anläggning</span>
           <span>Åtgärder</span>
         </div>
-        {contactPersons.length > 0 ? (
+        {sortedContactPersons.length > 0 ? (
           <ul>
-            {contactPersons.map((person: ContactPerson) => (
+            {sortedContactPersons.map((person: ContactPerson) => (
               <li
                 key={person.id}
                 className="grid grid-cols-4 gap-4 py-2 border-b border-gray-200"

@@ -1,6 +1,5 @@
 import ContactPerson from "@/components/ContactPersonComponent";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 
 interface ContactPerson {
     id: number;
