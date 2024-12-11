@@ -1,10 +1,58 @@
 {
   "contactPersons": [
     {
-      "name": "Andreas Fredriksson",
+      "id": "93f8",
+      "name": "Camilla",
+      "facility": "Lillån",
+      "phone": "021225"
+    },
+    {
+      "id": "6103",
+      "name": "Hans",
+      "facility": "Trängen",
+      "phone": "062161584"
+    },
+    {
+      "id": "eaac",
+      "name": "Helene",
+      "facility": "Lugnet",
+      "phone": "0215251"
+    },
+    {
+      "id": "bf09",
+      "name": "Nisse",
+      "facility": "Pettersberg",
+      "phone": "0561515"
+    },
+    {
+      "id": "807f",
+      "name": "Emma",
+      "facility": "Grönpepparparken",
+      "phone": "0251215"
+    },
+    {
+      "id": "6a01",
+      "name": "Klas",
+      "facility": "Heden",
+      "phone": "5151515"
+    },
+    {
+      "id": "6e53",
+      "name": "Mårten",
+      "facility": "Brickeberg",
+      "phone": "0215154"
+    },
+    {
+      "id": "07e0",
+      "name": "Julia",
       "facility": "Rosta gärde",
-      "phone": "0702542545",
-      "id": "28fd"
+      "phone": "021215"
+    },
+    {
+      "id": "7149",
+      "name": "Viktor",
+      "facility": "Rosta gärde",
+      "phone": "0211515"
     }
   ],
   "tournaments": [

@@ -242,7 +242,7 @@ const ContactPersonComponent = ({
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Skicka notis: Dags att inventera!</p>
+                          <p>Skicka notis: Dags att inventera kiosk!</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
