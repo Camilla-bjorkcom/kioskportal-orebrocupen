@@ -1,4 +1,5 @@
-import ContactPerson from "@/components/ContactPersonComponent";
+
+import ContactPersonComponent from "@/components/ContactPersonComponent";
 import { useQuery } from "@tanstack/react-query";
 
 interface ContactPerson {
@@ -17,6 +18,7 @@ const ContactPersons = () => {
             return response.json();
         },
     });
+    
 
     const SaveContactPerson = async (name: string, facility: string, phone: string) => {
       console.log(name, facility, phone);
@@ -32,6 +34,20 @@ const ContactPersons = () => {
             console.error(error);
         }
     };
+
+    const UpdateContactPerson = async (id: number, name: string, facility: string, phone: string) => {
+        try {
+            const response = await fetch(`http://localhost:3000/contactPersons/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, facility, phone }),
+            });
+            if (!response.ok) throw new Error("Failed to update contactPerson");
+            refetch();
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     const DeleteContactPerson = async (id: number) => {
         try {
@@ -51,10 +67,11 @@ const ContactPersons = () => {
     return (
         <div className="container mx-auto">
             <h3 className="mt-8 text-2xl pb-2">Kontaktpersoner</h3>
-            <ContactPerson
+            <ContactPersonComponent
                 contactPersons={contactPerson}
                 onSave={SaveContactPerson}
                 onDelete={DeleteContactPerson}
+                onUpdate={UpdateContactPerson}
             />
         </div>
     );

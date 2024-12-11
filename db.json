@@ -1,10 +1,10 @@
 {
   "contactPersons": [
     {
-      "id": "5f20",
       "name": "Andreas",
       "facility": "Rosta gärde",
-      "phone": "0703177812"
+      "phone": "0703177812",
+      "id": "5f20"
     }
   ],
   "tournaments": [

@@ -1,6 +1,12 @@
 import { useState } from "react";
-import { Button } from "./ui/button";
-import { PlusIcon } from "lucide-react";
+import { BellRing, PlusIcon, Trash, UserPenIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type ContactPerson = {
   id: number;
@@ -11,31 +17,71 @@ type ContactPerson = {
 
 type Props = {
   contactPersons: ContactPerson[];
-  onSave: (name: string, email: string, phone: string) => Promise<void>;
+  onSave: (name: string, facility: string, phone: string) => Promise<void>;
   onDelete: (id: number) => Promise<void>;
+  onUpdate: (
+    id: number,
+    name: string,
+    facility: string,
+    phone: string
+  ) => Promise<void>;
 };
 
 const ContactPersonComponent = ({
   contactPersons,
   onSave,
+  onUpdate,
   onDelete,
 }: Props) => {
   const [showInputs, setShowInputs] = useState<boolean>(false);
+  const [editingPerson, setEditingPerson] = useState<ContactPerson | null>(
+    null
+  );
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [facility, setFacility] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+  const startEditing = (person: ContactPerson) => {
+    setEditingPerson(person);
+    setName(person.name);
+    setPhone(person.phone);
+    setFacility(person.facility);
+  };
 
   const addContactPerson = async () => {
     if (!name.trim() || !phone.trim() || !facility.trim()) {
       alert("Alla fält måste fyllas i!");
       return;
     }
+
     await onSave(name, facility, phone);
     setName("");
     setPhone("");
     setFacility("");
     setShowInputs(false);
+  };
+
+  const saveChanges = async () => {
+    if (!editingPerson) return;
+
+    if (!name.trim() || !phone.trim() || !facility.trim()) {
+      alert("Alla fält måste fyllas i!");
+      return;
+    }
+
+    await onUpdate(editingPerson.id, name, facility, phone);
+    setEditingPerson(null);
+    setName("");
+    setPhone("");
+    setFacility("");
+  };
+
+  const cancelEditing = () => {
+    setEditingPerson(null);
+    setName("");
+    setPhone("");
+    setFacility("");
   };
 
   const sortedContactPersons = [...contactPersons].sort((a, b) => {
@@ -50,15 +96,9 @@ const ContactPersonComponent = ({
 
   return (
     <div className="container mx-auto">
-      <Button
-        className="mt-4 text-white px-4 py-2 rounded mb-4"
-        onClick={() => setShowInputs(true)}
-      >
-        Lägg till <PlusIcon className="w-4 h-4 place-self-center" />
-      </Button>
-
-      {showInputs && (
+      {editingPerson ? (
         <div className="mt-4">
+          <h3>Redigera kontaktperson</h3>
           <input
             type="text"
             placeholder="Namn"
@@ -83,61 +123,147 @@ const ContactPersonComponent = ({
 
           <Button
             className="text-white px-4 py-2 rounded mt-2"
-            onClick={addContactPerson}
+            onClick={saveChanges}
           >
-            Spara
+            Spara ändringar
           </Button>
           <Button
             className="text-white px-4 py-2 rounded mt-2 ml-2"
-            onClick={() => setShowInputs(false)}
+            onClick={cancelEditing}
           >
             Avbryt
           </Button>
         </div>
-      )}
-
-      <div className="mt-6">
-        <div className="flex justify-between items-center">
-          <div className="font-semibold">Sortera på anläggning:</div>
+      ) : (
+        <>
           <Button
-            className="text-white px-4 py-2 rounded"
-            onClick={() =>
-              setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
-            }
+            className="mt-4 text-white px-4 py-2 rounded mb-4"
+            onClick={() => setShowInputs(true)}
           >
-            {sortOrder === "asc" ? "A-Ö" : "Ö-A"}
+            Lägg till <PlusIcon className="w-4 h-4 place-self-center" />
           </Button>
-        </div>
 
-        <div className="grid grid-cols-4 gap-4 font-bold border-b border-gray-300 pb-2 mt-4">
-          <span>Namn</span>
-          <span>Telefonnummer</span>
-          <span>Anläggning</span>
-          <span>Åtgärder</span>
-        </div>
-        {sortedContactPersons.length > 0 ? (
-          <ul>
-            {sortedContactPersons.map((person: ContactPerson) => (
-              <li
-                key={person.id}
-                className="grid grid-cols-4 gap-4 py-2 border-b border-gray-200"
+          {showInputs && (
+            <div className="mt-4">
+              <input
+                type="text"
+                placeholder="Namn"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="block border border-gray-300 rounded-md p-2 mb-2"
+              />
+              <input
+                type="text"
+                placeholder="Telefonnummer"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="block border border-gray-300 rounded-md p-2 mb-2"
+              />
+              <input
+                type="text"
+                placeholder="Anläggning"
+                value={facility}
+                onChange={(e) => setFacility(e.target.value)}
+                className="block border border-gray-300 rounded-md p-2 mb-2"
+              />
+
+              <Button
+                className="text-white px-4 py-2 rounded mt-2"
+                onClick={addContactPerson}
               >
-                <span>{person.name}</span>
-                <span>{person.phone}</span>
-                <span>{person.facility}</span>
-                <Button
-                  className=" w-1/2 text-white px-2 py-1 rounded"
-                  onClick={() => person.id && onDelete(person.id)}
-                >
-                  Ta bort
-                </Button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-4">Inga kontaktpersoner tillagda ännu.</p>
-        )}
-      </div>
+                Spara
+              </Button>
+              <Button
+                className="text-white px-4 py-2 rounded mt-2 ml-2"
+                onClick={() => setShowInputs(false)}
+              >
+                Avbryt
+              </Button>
+            </div>
+          )}
+
+          <div className="mt-6">
+            <div className="flex justify-between items-center">
+              <div className="font-semibold">Sortera på anläggning:</div>
+              <Button
+                className="text-white px-4 py-2 rounded"
+                onClick={() =>
+                  setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+                }
+              >
+                {sortOrder === "asc" ? "A-Ö" : "Ö-A"}
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-4 gap-4 font-bold border-b border-gray-300 pb-2 mt-4">
+              <span>Namn</span>
+              <span>Telefonnummer</span>
+              <span>Anläggning</span>
+              <span>Åtgärder</span>
+            </div>
+            {sortedContactPersons.length > 0 ? (
+              <ul>
+                {sortedContactPersons.map((person: ContactPerson) => (
+                  <li
+                    key={person.id}
+                    className="grid grid-cols-4 gap-4 py-2 border-b border-gray-200"
+                  >
+                    <span>{person.name}</span>
+                    <span>{person.phone}</span>
+                    <span>{person.facility}</span>
+                    <div className="flex gap-2">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              className=" w-fit text-white px-2 py-1 rounded"
+                              onClick={() => startEditing(person)}
+                            >
+                              <UserPenIcon />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Redigera kontaktperson</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button className=" w-fit text-white px-2 py-1 rounded">
+                              <BellRing />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Skicka notis: Dags att inventera!</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              className=" w-fit text-white px-2 py-1 rounded"
+                              onClick={() => person.id && onDelete(person.id)}
+                            >
+                              <Trash />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Ta bort kontaktperson</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-4">Inga kontaktpersoner tillagda ännu.</p>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
