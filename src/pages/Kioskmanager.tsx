@@ -8,11 +8,13 @@ import AddProductListButton from "@/components/AddProductListButton";
 import AddProductsButton from "@/components/AddProductButton";
 import { useQuery } from "@tanstack/react-query";
 
-
-
 interface Facility {
   id: number;
-  facilityname : string;
+  facilityname: string;
+}
+interface Kiosk {
+  id: number;
+  kioskName: string;
 }
 
 function Kioskmanager() {
@@ -24,7 +26,7 @@ function Kioskmanager() {
   const { pathname } = useLocation();
 
   const [facility, setFacility] = useState<Facility[]>([]);
-  const [kiosks, setKiosks] = useState<string[]>([]);
+  const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
   const [productList, setProductList] = useState<ProductListItem | undefined>();
@@ -33,57 +35,76 @@ function Kioskmanager() {
   //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
     facility: number | undefined;
-    kiosk: string | null;
+    kiosk: number | null;
     productlist: string | undefined;
   }>({
     facility: undefined,
     kiosk: null,
     productlist: undefined,
   });
-
-
-  const{isLoading, error}  = useQuery<Facility[]>({
-    queryKey :["facilities"],
+ 
+  const facilityQuery = useQuery<Facility[]>({
+    queryKey: ["facilities"],
     queryFn: async () => {
-      const response = await fetch('http://localhost:3000/facilities');
-      if(!response.ok){
+      const response = await fetch("http://localhost:3000/facilities");
+      if (!response.ok) {
         throw new Error("Failed to fetch facilites");
       }
       const data = await response.json();
-      setFacility(data)
+      setFacility(data);
       return data;
+    },
+  });
+
+  const kioskQuery = useQuery<Kiosk[]>({
+    queryKey: ["kiosks"],
+    queryFn: async () => {
+      const response = await fetch("http://localhost:3000/kiosks");
+      if (!response.ok) {
+        throw new Error("Failed to fetch facilites");
+      }
+      const data = await response.json();
+      setKiosks(data);
+      return data;
+    },
+  });
+
+  const CreateFacility = async (facilityname: string) => {
+    try {
+      const response = await fetch("http://localhost:3000/facilities", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ facilityname: facilityname }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to save product");
+      }
+      const newFacility = await response.json();
+      setFacility((prev) => [...prev, newFacility]);
+    } catch (error) {
+      console.error(error);
+      throw new Error("failed to create facility");
     }
- })
-
- 
-const CreateFacility = async (facilityname: string) => {
-  try{
-    const response = await fetch('http://localhost:3000/facilities' ,{
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({facilityname: facilityname}),
-    });
-    if(!response.ok) {
-      throw new Error("Failed to save product");
-    }
-    const newFacility = await response.json();
-    setFacility((prev) =>[...prev, newFacility]);
-  }
-  catch(error){
-    console.error(error)
-    throw new Error("failed to create facility")
-     } 
-    };
-
-    
-
-  // const addFacility = (facility: Facility) => {
-  //   setFacility((prev) => [...prev, facility]);
-  // };
-
-  const addKiosk = (kioskName: string) => {
-    setKiosks((prev) => [...prev, kioskName]);
   };
+
+  const CreateKiosk = async (kioskName: string) => {
+    try {
+      const response = await fetch("http://localhost:3000/kiosks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kiosks: kioskName }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to save product");
+      }
+      const newKiosk = await response.json();
+      setKiosks((prev) => [...prev, newKiosk]);
+    } catch (error) {
+      console.error(error);
+      throw new Error("failed to create facility");
+    }
+  };
+
 
   const addProductList = (productList: ProductListItem | undefined) => {
     setProductList(productList);
@@ -99,8 +120,8 @@ const CreateFacility = async (facilityname: string) => {
     setProducts((prev) => [...prev, productName]);
   };
 
-  const handleFacilityClick = (facility: Facility) => { 
-     setSelectedFacility(facility.id);
+  const handleFacilityClick = (facility: Facility) => {
+    setSelectedFacility(facility.id);
 
     //återställ kiosk
     setSelectedKiosk(null);
@@ -112,44 +133,36 @@ const CreateFacility = async (facilityname: string) => {
     });
   };
 
-  const handleKioskClick = (index: number) => {
-    const isSelected = selectedKiosk === index;
-    const kioskName = isSelected ? null : kiosks[index];
-
-    setSelectedKiosk(isSelected ? null : index);
+  const handleKioskClick = (kiosk: Kiosk) => {
+    setSelectedKiosk(kiosk.id);
 
     // Uppdatera `selectedOptions`
     setSelectedOptions((prev) => ({
       ...prev,
-      kiosk: kioskName,
-      productlist: isSelected ? undefined : prev.productlist,
+      kiosk: kiosk.id,
+      productlist: prev.productlist,
     }));
   };
 
   const DeleteFacility = async (id: number) => {
-    try{
-      const response = await fetch(
-        `http://localhost:3000/facilities/${id}`, 
-        {
-          method: "DELETE",
-        }
-      );
-      if(!response.ok){
-        throw new Error("failed to delete product")
+    try {
+      const response = await fetch(`http://localhost:3000/facilities/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("failed to delete product");
       }
-      setFacility((prev) => prev.filter((list) =>list.id !==id));
+      setFacility((prev) => prev.filter((list) => list.id !== id));
+    } catch (error) {
+      console.error(error);
     }
-    catch (error) {
-      console.error(error)
-    }
-  }
+  };
 
   // const removeFacility = (facilityId: string) => {
   // };
   // const removeKiosk = (kioskId: string) => {
   // };
 
-  
   if (isLoading) {
     return <div>Loading products...</div>;
   }
@@ -182,8 +195,12 @@ const CreateFacility = async (facilityname: string) => {
                  }`}
                   onClick={() => handleFacilityClick(facility)}
                 >
-                  {facility.facilityname} {/* Lägg till removeFacility onClick */}
-                  <TrashIcon onClick={() => DeleteFacility(facility.id)} className="mr-5 w-5 h-5 place-self-center hover:text-red-500" />
+                  {facility.facilityname}{" "}
+                  {/* Lägg till removeFacility onClick */}
+                  <TrashIcon
+                    onClick={() => DeleteFacility(facility.id)}
+                    className="mr-5 w-5 h-5 place-self-center hover:text-red-500"
+                  />
                 </p>
               ))}
             </div>
@@ -194,7 +211,7 @@ const CreateFacility = async (facilityname: string) => {
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
               {selectedFacility !== null && (
                 <div className="mt-4">
-                  <AddKioskButton onSave={addKiosk} />
+                  <AddKioskButton onSave={CreateKiosk} />
                   {kiosks.map((kiosk, index) => (
                     <p
                       key={index}
@@ -207,7 +224,7 @@ const CreateFacility = async (facilityname: string) => {
                 `}
                       onClick={() => handleKioskClick(index)}
                     >
-                      {kiosk} {/* Lägg till removeKiosk onClick på trashIcon */}
+                      {kiosk.kioskName} {/* Lägg till removeKiosk onClick på trashIcon */}
                       <TrashIcon className="mr-7 w-5 h-5 place-self-center  hover:text-red-500" />
                     </p>
                   ))}

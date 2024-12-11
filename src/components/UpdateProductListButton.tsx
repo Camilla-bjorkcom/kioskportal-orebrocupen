@@ -24,8 +24,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "./ui/collapsible";
-import { Checkbox } from "./ui/checkbox";
-import { useQuery } from "@tanstack/react-query";
+
 import { Button } from "./ui/button";
 
 interface ProductList {
