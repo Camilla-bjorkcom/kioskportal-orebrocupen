@@ -1,6 +1,5 @@
 import { useAuth } from "react-oidc-context";
 import {
-  Hammer,
   SquareChartGantt,
   ChevronDown,
   ChartSpline,
@@ -53,7 +52,7 @@ const items = [
     icon: ShoppingBasket,
     subitems: [
       { title: "Produkthanterare", url: "/producthandler" },
-      { title: "Produktlista", url: "#" },
+      { title: "Produktlista", url: "/productlisthandler" },
       
     ],
   },
@@ -75,8 +74,8 @@ const items = [
     url: "#",
     icon: SquareChartGantt,
     subitems: [
+      { title: "Inventera lager", url: "/inventorystorage" },
       { title: "Visa gjorda inventeringar", url: "/inventorystatus" },
-      
     ],
   },
   {

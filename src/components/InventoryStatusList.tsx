@@ -19,11 +19,11 @@ const InventoryStatusList = () => {
     { name: "Äpple", quantity: "15 st", unbroken: "10 st" },
     { name: "Apelsin", quantity: "10 st", unbroken: "5 st" },
   ];
-
+  
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
   const facilityName = "Rosta Gärde";
-  const kioskNameOne = "Kiosk 1";
+  const kioskNameOne = "Kiosk 1";  
 
   const toggleExpandAll = () => {
     if (expandedItems.length === 0) {

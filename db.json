@@ -95,10 +95,6 @@
     {
       "id": "1715",
       "productname": "Haribo Nappar Lakrits"
-    },
-    {
-      "id": "f88f",
-      "productname": "Gurka"
     }
   ],
   "productslists": [
@@ -248,12 +244,6 @@
       "id": "7362",
       "productlistname": "Stor Skola",
       "products": []
-    }
-  ],
-  "facilities": [
-    {
-      "id": "9d3b",
-      "facilityname": "Rosta"
     }
   ]
 }

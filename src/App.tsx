@@ -1,4 +1,4 @@
-import { SidebarProvider } from "./components/ui/sidebar";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Router from "./Router";
 import { AuthProvider } from "react-oidc-context";
 
@@ -9,9 +9,16 @@ const cognitoAuthConfig = {
   response_type: "code",
   scope: "email openid phone aws.cognito.signin.user.admin",
 };
+const queryClient = new QueryClient();
 
 function App() {
-  return <AuthProvider {...cognitoAuthConfig} ><Router /></AuthProvider>;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider {...cognitoAuthConfig}> 
+        <Router />
+      </AuthProvider>
+    </QueryClientProvider>
+  );
 }
 
 export default App;

@@ -7,7 +7,9 @@ import ProductHandler from "./pages/ProductHandler";
 import CreateTournament from "./pages/CreateTournament";
 import Kioskmanager from "./pages/Kioskmanager";
 import SettingsPage from "./pages/SettingsPage";
+import ProductListHandler from "./pages/ProductListHandler";
 import InventoryStatus from "./pages/InventoryStatus";
+import InventoryStorage from "./pages/InventoryStorage";
 
 function Router() {
   return (
@@ -38,8 +40,14 @@ function Router() {
             <Route path="kioskmanager">
               <Route path="/kioskmanager" element={<Kioskmanager />} />
             </Route>
+            <Route path="productlisthandler">
+              <Route path="/productlisthandler" element={<ProductListHandler />} />
+            </Route>
             <Route path="inventorystatus">
               <Route path="/inventorystatus" element={<InventoryStatus />} />
+            </Route>
+            <Route path="inventorystorage">
+              <Route path="/inventorystorage" element={<InventoryStorage />} />
             </Route>
           </Route>
         </Route>
