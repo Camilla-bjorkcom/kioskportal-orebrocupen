@@ -183,85 +183,91 @@ const ContactPersonComponent = ({
           )}
 
           <div className="mt-6">
-            <div className="flex justify-between items-center">
-              <div className="font-semibold">Sortera på anläggning:</div>
-              <Button
-                className="text-white px-4 py-2 rounded"
-                onClick={() =>
-                  setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
-                }
-              >
-                {sortOrder === "asc" ? "A-Ö" : "Ö-A"}
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-4 gap-4 font-bold border-b border-gray-300 pb-2 mt-4">
-              <span>Namn</span>
-              <span>Telefonnummer</span>
-              <span>Anläggning</span>
-              <span>Åtgärder</span>
-            </div>
-            {sortedContactPersons.length > 0 ? (
-              <ul>
-                {sortedContactPersons.map((person: ContactPerson) => (
-                  <li
-                    key={person.id}
-                    className="grid grid-cols-4 gap-4 py-2 border-b border-gray-200"
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    className="text-white px-4 py-2 rounded"
+                    onClick={() =>
+                      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+                    }
                   >
-                    <span>{person.name}</span>
-                    <span>{person.phone}</span>
-                    <span>{person.facility}</span>
-                    <div className="flex gap-2">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              className=" w-fit text-white px-2 py-1 rounded"
-                              onClick={() => startEditing(person)}
-                            >
-                              <UserPenIcon />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Redigera kontaktperson</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button className=" w-fit text-white px-2 py-1 rounded">
-                              <BellRing />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Skicka notis: Dags att inventera!</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              className=" w-fit text-white px-2 py-1 rounded"
-                              onClick={() => person.id && onDelete(person.id)}
-                            >
-                              <Trash />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Ta bort kontaktperson</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-4">Inga kontaktpersoner tillagda ännu.</p>
-            )}
+                    {sortOrder === "asc" ? "A-Ö" : "Ö-A"}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Sortera på anläggningsnamn</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
+
+          <div className="grid grid-cols-4 gap-4 font-bold border-b border-gray-300 pb-2 mt-4">
+            <span>Namn</span>
+            <span>Telefonnummer</span>
+            <span>Anläggning</span>
+            <span>Åtgärder</span>
+          </div>
+          {sortedContactPersons.length > 0 ? (
+            <ul>
+              {sortedContactPersons.map((person: ContactPerson) => (
+                <li
+                  key={person.id}
+                  className="grid grid-cols-4 gap-4 py-2 border-b border-gray-200 items-center"
+                >
+                  <span>{person.name}</span>
+                  <span>{person.phone}</span>
+                  <span>{person.facility}</span>
+                  <div className="flex gap-2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            className=" w-fit text-white px-2 py-1 rounded"
+                            onClick={() => startEditing(person)}
+                          >
+                            <UserPenIcon />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Redigera kontaktperson</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button className=" w-fit text-white px-2 py-1 rounded">
+                            <BellRing />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Skicka notis: Dags att inventera!</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            className=" w-fit text-white px-2 py-1 rounded"
+                            onClick={() => person.id && onDelete(person.id)}
+                          >
+                            <Trash />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Ta bort kontaktperson</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-4">Inga kontaktpersoner tillagda ännu.</p>
+          )}
         </>
       )}
     </div>
