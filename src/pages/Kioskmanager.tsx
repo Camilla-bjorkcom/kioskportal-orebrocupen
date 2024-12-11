@@ -6,6 +6,14 @@ import { useLocation } from "react-router-dom";
 import { TrashIcon } from "lucide-react";
 import AddProductListButton from "@/components/AddProductListButton";
 import AddProductsButton from "@/components/AddProductButton";
+import { useQuery } from "@tanstack/react-query";
+
+
+
+interface Facility {
+  id: number;
+  facilityname : string;
+}
 
 function Kioskmanager() {
   type ProductListItem = {
@@ -15,7 +23,7 @@ function Kioskmanager() {
 
   const { pathname } = useLocation();
 
-  const [facility, setFacility] = useState<string[]>([]);
+  const [facility, setFacility] = useState<Facility[]>([]);
   const [kiosks, setKiosks] = useState<string[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
@@ -24,18 +32,54 @@ function Kioskmanager() {
 
   //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
-    facility: string | null;
+    facility: number | undefined;
     kiosk: string | null;
     productlist: string | undefined;
   }>({
-    facility: null,
+    facility: undefined,
     kiosk: null,
     productlist: undefined,
   });
 
-  const addFacility = (facilityName: string) => {
-    setFacility((prev) => [...prev, facilityName]);
-  };
+
+  const{isLoading, error}  = useQuery<Facility[]>({
+    queryKey :["facilities"],
+    queryFn: async () => {
+      const response = await fetch('http://localhost:3000/facilities');
+      if(!response.ok){
+        throw new Error("Failed to fetch facilites");
+      }
+      const data = await response.json();
+      setFacility(data)
+      return data;
+    }
+ })
+
+ 
+const CreateFacility = async (facilityname: string) => {
+  try{
+    const response = await fetch('http://localhost:3000/facilities' ,{
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({facilityname: facilityname}),
+    });
+    if(!response.ok) {
+      throw new Error("Failed to save product");
+    }
+    const newFacility = await response.json();
+    setFacility((prev) =>[...prev, newFacility]);
+  }
+  catch(error){
+    console.error(error)
+    throw new Error("failed to create facility")
+     } 
+    };
+
+    
+
+  // const addFacility = (facility: Facility) => {
+  //   setFacility((prev) => [...prev, facility]);
+  // };
 
   const addKiosk = (kioskName: string) => {
     setKiosks((prev) => [...prev, kioskName]);
@@ -55,16 +99,14 @@ function Kioskmanager() {
     setProducts((prev) => [...prev, productName]);
   };
 
-  const handleFacilityClick = (index: number) => {
-    const isSelected = selectedFacility === index;
-    const facilityName = isSelected ? null : facility[index];
-    setSelectedFacility(isSelected ? null : index);
+  const handleFacilityClick = (facility: Facility) => { 
+     setSelectedFacility(facility.id);
 
     //återställ kiosk
     setSelectedKiosk(null);
 
     setSelectedOptions({
-      facility: facilityName,
+      facility: facility.id,
       kiosk: null,
       productlist: undefined,
     });
@@ -84,11 +126,37 @@ function Kioskmanager() {
     }));
   };
 
+  const DeleteFacility = async (id: number) => {
+    try{
+      const response = await fetch(
+        `http://localhost:3000/facilities/${id}`, 
+        {
+          method: "DELETE",
+        }
+      );
+      if(!response.ok){
+        throw new Error("failed to delete product")
+      }
+      setFacility((prev) => prev.filter((list) =>list.id !==id));
+    }
+    catch (error) {
+      console.error(error)
+    }
+  }
+
   // const removeFacility = (facilityId: string) => {
   // };
   // const removeKiosk = (kioskId: string) => {
   // };
 
+  
+  if (isLoading) {
+    return <div>Loading products...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {String(error)}</div>;
+  }
   console.log(selectedOptions);
   return (
     <>
@@ -102,20 +170,20 @@ function Kioskmanager() {
           <div>
             <h3 className="text-xl font-bold mb-2">Anläggning</h3>
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
-              <AddFacilityButton onSave={addFacility} />
-              {facility.map((facility, index) => (
+              <AddFacilityButton onSave={CreateFacility} />
+              {facility.map((facility) => (
                 <p
-                  key={index}
+                  key={facility.id}
                   className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
                  ${
-                   selectedFacility === index
+                   selectedFacility === facility.id
                      ? "text-black border-black border rounded-xl h-fit w-11/12"
                      : "text-black border-none w-11/12"
                  }`}
-                  onClick={() => handleFacilityClick(index)}
+                  onClick={() => handleFacilityClick(facility)}
                 >
-                  {facility} {/* Lägg till removeFacility onClick */}
-                  <TrashIcon className="mr-5 w-5 h-5 place-self-center hover:text-red-500" />
+                  {facility.facilityname} {/* Lägg till removeFacility onClick */}
+                  <TrashIcon onClick={() => DeleteFacility(facility.id)} className="mr-5 w-5 h-5 place-self-center hover:text-red-500" />
                 </p>
               ))}
             </div>

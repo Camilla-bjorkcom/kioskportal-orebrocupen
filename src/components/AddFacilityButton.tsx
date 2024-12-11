@@ -33,8 +33,10 @@ const formSchema = z.object({
 });
 
 
+
+
 interface AddFacilityButtonProps {
-  onSave: (facilityName: string) => void; 
+  onSave: (facilityname: string) => void; 
 }
 
 
