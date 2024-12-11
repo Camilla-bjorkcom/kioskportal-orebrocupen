@@ -41,7 +41,7 @@ function Kioskmanager() {
     productlist: undefined,
   });
  
-  const facilityQuery = useQuery<Facility[]>({
+  useQuery<Facility[]>({
     queryKey: ["facilities"],
     queryFn: async () => {
       const response = await fetch("http://localhost:3000/facilities");
@@ -54,7 +54,7 @@ function Kioskmanager() {
     },
   });
 
-  const kioskQuery = useQuery<Kiosk[]>({
+  useQuery<Kiosk[]>({
     queryKey: ["kiosks"],
     queryFn: async () => {
       const response = await fetch("http://localhost:3000/kiosks");
@@ -161,13 +161,6 @@ function Kioskmanager() {
   // const removeKiosk = (kioskId: string) => {
   // };
 
-  if (isLoading) {
-    return <div>Loading products...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {String(error)}</div>;
-  }
   console.log(selectedOptions);
   return (
     <>
@@ -217,7 +210,7 @@ function Kioskmanager() {
                             : "text-black border-none w-11/12"
                         }            
                 `}
-                      onClick={() => handleKioskClick(index)}
+                      onClick={() => handleKioskClick(kiosk)}
                     >
                       {kiosk.kioskName} {/* Lägg till removeKiosk onClick på trashIcon */}
                       <TrashIcon className="mr-7 w-5 h-5 place-self-center  hover:text-red-500" />
