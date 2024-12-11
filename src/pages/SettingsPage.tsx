@@ -4,6 +4,7 @@ import ContactPerson from "@/components/ContactPerson";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DeleteTournamentButton from "@/components/DeleteTournamentButton";
+import { useQuery } from "@tanstack/react-query";
 
 interface Tournament {
   id: number;
@@ -21,33 +22,31 @@ const SettingsPage = () => {
     location.state?.tournament || null
   ); 
 
-  useEffect(() => {
-    if (!tournament && id) {
-    
-      const fetchTournament = async () => {
-        try {
-          const response = await fetch(`http://localhost:3000/tournaments/${id}`);
-          if (!response.ok) {
-            throw new Error("Failed to fetch tournament");
-          }
-          const data = await response.json();
-          setTournament(data);
-        } catch (error) {
-          console.error(error);
-          navigate("/"); 
-        }
-      };
-
-      fetchTournament();
-    }
-  }, [tournament, id, navigate]);
+ const { isLoading, error } = useQuery<Tournament>({
+    queryKey: ["tournament", id],
+    queryFn: async () => {
+      if (!id) {
+        throw new Error("No tournament ID provided");
+      }
+      const response = await fetch(`http://localhost:3000/tournaments/${id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch tournament");
+      }
+      const data = await response.json();
+      setTournament(data); 
+      return data;
+    },
+  });
 
   const handleDelete = () => {
     navigate("/createtournament"); 
   };
 
-  if (!tournament) {
-    return <div>Loading tournament details...</div>;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: {String(error)}</div>;
   }
 
   return (
@@ -70,16 +69,22 @@ const SettingsPage = () => {
           <ContactPerson />
         </div>
       <h3 className="text-2xl pt-5 pb-2 border-b border-b-slate-300">Turneringsdetaljer</h3>
-      <div>
-        <p className="font-semibold mt-2">{tournament.tournamentName}</p>
-        <p>Startdatum: {new Date(tournament.startDate).toLocaleDateString()}</p>
-        <p>Slutdatum: {new Date(tournament.endDate).toLocaleDateString()}</p>
-      </div>
+      {tournament ? (
+        <div>
+          <p className="font-semibold mt-2">{tournament.tournamentName}</p>
+          <p>Startdatum: {new Date(tournament.startDate).toLocaleDateString()}</p>
+          <p>Slutdatum: {new Date(tournament.endDate).toLocaleDateString()}</p>
+        </div>
+      ) : (
+        <div>Ingen turneringsinformation tillgänglig</div>
+      )}
       <div className="mt-6">
-        <DeleteTournamentButton
-          tournamentId={tournament.id}
-          onDelete={handleDelete}
-        />
+        {tournament && (
+          <DeleteTournamentButton
+            tournamentId={tournament.id}
+            onDelete={handleDelete}
+          />
+        )}
       </div>
     </div>
   );
