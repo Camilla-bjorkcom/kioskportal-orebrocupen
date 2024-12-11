@@ -12,12 +12,9 @@ interface Tournament {
   endDate: Date;
 }
 
-
-
 function CreateTournament() {
   const navigate = useNavigate();
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
-  
 
   const datetime = new Date().toLocaleDateString();
 
@@ -95,23 +92,30 @@ function CreateTournament() {
             {tournaments.length > 0 ? (
               tournaments.map((tournament, index) => (
                 <button
-                  onClick={() => navigate(`/dashboard/${tournament.id}`)} // Navigera till dashboard
-                  key={index}
-                  className="flex flex-col p-2 justify-between rounded-xl border bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 relative"
-                >
-                  <div className="flex justify-between w-full">
-                    <p className="font-bold">{tournament.tournamentName}</p>
-                    <button onClick={(e) => {
-                      e.stopPropagation(); // Förhindra att navigering sker vid radering
+                onClick={() =>
+                  navigate(`/dashboard/${tournament.id}`, {
+                    state: { tournament }, // Skicka turneringsinformationen här
+                  })
+                }
+                key={index}
+                className="flex flex-col p-2 justify-between rounded-xl border bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 relative"
+              >
+                <div className="flex justify-between w-full">
+                  <p className="font-bold">{tournament.tournamentName}</p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation(); // Förhindra navigering vid radering
                       DeleteTournament(tournament.id);
-                    }}>
-                      <TrashIcon className="w-7 h-5 hover:text-red-500"></TrashIcon>
-                    </button>
-                    <p className="text-xs font-bold absolute bottom-2 right-2">
-                      Skapad: {datetime}
-                    </p>
-                  </div>
-                </button>
+                    }}
+                  >
+                    <TrashIcon className="w-7 h-5 hover:text-red-500"></TrashIcon>
+                  </button>
+                  <p className="text-xs font-bold absolute bottom-2 right-2">
+                    Skapad: {datetime}
+                  </p>
+                </div>
+              </button>
+              
               ))
             ) : (
               <p className="text-gray-500">
