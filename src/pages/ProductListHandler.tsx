@@ -2,7 +2,7 @@
 
 import CreateProductListButton from "@/components/CreateProductListButton";
 import HandleProductListButton from "@/components/HandleProductListButton";
-import PagesHeader from "@/components/PagesHeader";
+
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -96,7 +96,7 @@ function ProductListHandler() {
   }
   return (
     <section>
-      <PagesHeader pathname={pathname} />
+      
       <div className="container mx-auto px-4 flex-row items-center">
         <h2 className="font-bold text-4xl my-4">Produktlistor</h2>
 

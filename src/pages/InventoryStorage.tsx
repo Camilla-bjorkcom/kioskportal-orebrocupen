@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "react-router-dom";
-import PagesHeader from "@/components/PagesHeader";
+
 
 
 
@@ -77,7 +77,7 @@ function InventoryStorage() {
 
   return (
     <>
-    <PagesHeader pathname={pathname} />
+
       <div className="container mx-auto">
         <h1 className="text-4xl font-bold w-full mb-10 mt-5">
           Inventering för lager
