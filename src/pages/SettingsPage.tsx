@@ -1,6 +1,6 @@
 import { useAuth } from "react-oidc-context";
 import ChangePassword from "@/components/ChangePassword";
-import ContactPerson from "@/components/ContactPerson";
+import ContactPerson from "@/components/ContactPersonComponent";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DeleteTournamentButton from "@/components/DeleteTournamentButton";

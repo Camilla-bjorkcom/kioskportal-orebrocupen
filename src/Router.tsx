@@ -9,7 +9,9 @@ import SettingsPage from "./pages/SettingsPage";
 import ProductListHandler from "./pages/ProductListHandler";
 import InventoryStatus from "./pages/InventoryStatus";
 import InventoryStorage from "./pages/InventoryStorage";
-import ContactPersons from "./pages/ContactPersons";
+import ContactPerson from "./pages/ContactPerson";
+
+
 
 function Router() {
   return (
@@ -46,8 +48,8 @@ function Router() {
             <Route path="inventorystorage">
               <Route path=":id" element={<InventoryStorage />} />
             </Route>
-            <Route path="contactpersons">
-              <Route path=":id" element={<ContactPersons />} />
+            <Route path="contactperson">
+              <Route path=":id" element={<ContactPerson />} />
             </Route>
           </Route>
         </Route>

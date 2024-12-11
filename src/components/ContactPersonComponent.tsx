@@ -3,39 +3,38 @@ import { Button } from "./ui/button";
 import { PlusIcon } from "lucide-react";
 
 type ContactPerson = {
+  id: number;
   name: string;
   phone: string;
   facility: string;
 };
 
-const ContactPersonComponent = () => {
-  const [showInputs, setShowInputs] = useState<boolean>(false);
-  const [contactPersons, setContactPersons] = useState<ContactPerson[]>([]);
+type Props = {
+  contactPersons: ContactPerson[];
+  onSave: (name: string, email: string, phone: string) => Promise<void>;
+  onDelete: (id: number) => Promise<void>;
+};
 
+const ContactPersonComponent = ({
+  contactPersons,
+  onSave,
+  onDelete,
+}: Props) => {
+  const [showInputs, setShowInputs] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [facility, setFacility] = useState<string>("");
 
-
-  const addContactPerson = () => {
+  const addContactPerson = async () => {
     if (!name.trim() || !phone.trim() || !facility.trim()) {
       alert("Alla fält måste fyllas i!");
       return;
     }
-
-    const newContact: ContactPerson = { name, phone, facility };
-    setContactPersons((prev) => [...prev, newContact]);
-
+    await onSave(name, facility, phone);
     setName("");
     setPhone("");
     setFacility("");
     setShowInputs(false);
-  };
-
-  const removeContactPerson = (indexToRemove: number) => {
-    setContactPersons((prev) =>
-      prev.filter((_, index) => index !== indexToRemove)
-    );
   };
 
   return (
@@ -70,6 +69,7 @@ const ContactPersonComponent = () => {
             onChange={(e) => setFacility(e.target.value)}
             className="block border border-gray-300 rounded-md p-2 mb-2"
           />
+
           <Button
             className="text-white px-4 py-2 rounded mt-2"
             onClick={addContactPerson}
@@ -94,9 +94,9 @@ const ContactPersonComponent = () => {
         </div>
         {contactPersons.length > 0 ? (
           <ul>
-            {contactPersons.map((person, index) => (
+            {contactPersons.map((person: ContactPerson) => (
               <li
-                key={index}
+                key={person.id}
                 className="grid grid-cols-4 gap-4 py-2 border-b border-gray-200"
               >
                 <span>{person.name}</span>
@@ -104,7 +104,7 @@ const ContactPersonComponent = () => {
                 <span>{person.facility}</span>
                 <Button
                   className=" w-1/2 text-white px-2 py-1 rounded"
-                  onClick={() => removeContactPerson(index)}
+                  onClick={() => person.id && onDelete(person.id)}
                 >
                   Ta bort
                 </Button>

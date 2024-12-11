@@ -1,10 +1,24 @@
 {
+  "contactPersons": [
+    {
+      "id": "3f87",
+      "name": "Andreas",
+      "facility": "Rosta Gärde",
+      "phone": "0703177812"
+    }
+  ],
   "tournaments": [
     {
       "id": "7eec",
       "tournamentName": "ÖC 2025",
       "startDate": "2024-12-10T09:14:13.041Z",
       "endDate": "2024-12-10T09:14:13.041Z"
+    },
+    {
+      "id": "2272",
+      "tournamentName": "Select cup",
+      "startDate": "2024-12-11T09:39:52.721Z",
+      "endDate": "2024-12-11T09:39:52.721Z"
     }
   ],
   "products": [
