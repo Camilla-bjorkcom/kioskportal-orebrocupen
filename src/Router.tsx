@@ -9,6 +9,7 @@ import SettingsPage from "./pages/SettingsPage";
 import ProductListHandler from "./pages/ProductListHandler";
 import InventoryStatus from "./pages/InventoryStatus";
 import InventoryStorage from "./pages/InventoryStorage";
+import ContactPersons from "./pages/ContactPersons";
 
 function Router() {
   return (
@@ -44,6 +45,9 @@ function Router() {
             </Route>
             <Route path="inventorystorage">
               <Route path=":id" element={<InventoryStorage />} />
+            </Route>
+            <Route path="contactpersons">
+              <Route path=":id" element={<ContactPersons />} />
             </Route>
           </Route>
         </Route>
