@@ -68,7 +68,7 @@ export function AppSidebar({ id }: { id?: number }) {
       icon: House,
       subitems: [      
         { title: "Planstruktur", url: `/kioskmanager/${id}` },
-        { title: "Kontaktpersoner", url: `/settings/${id}` },
+        { title: "Kontaktpersoner", url: `/contactperson/${id}` },
         { title: "QR koder till kiosker", url: "#" },
         
       ],

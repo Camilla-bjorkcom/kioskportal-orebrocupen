@@ -1,6 +1,5 @@
 import { useAuth } from "react-oidc-context";
 import ChangePassword from "@/components/ChangePassword";
-import ContactPerson from "@/components/ContactPerson";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DeleteTournamentButton from "@/components/DeleteTournamentButton";
@@ -61,13 +60,7 @@ const SettingsPage = () => {
         </div>
         <div>
           <ChangePassword />
-        </div>
-        <h3 className=" mt-8 text-2xl pb-2 border-b border-b-slate-300">
-          Kontaktpersoner
-        </h3>
-        <div>
-          <ContactPerson />
-        </div>
+        </div>       
       <h3 className="text-2xl pt-5 pb-2 border-b border-b-slate-300">Turneringsdetaljer</h3>
       {tournament ? (
         <div>
