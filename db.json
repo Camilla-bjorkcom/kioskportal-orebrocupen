@@ -69,6 +69,30 @@
       "endDate": "2024-12-11T09:39:52.721Z"
     }
   ],
+  "facilities": [
+    {
+      "id": "4ed2",
+      "facilityname": "Rosta"
+    },
+    {
+      "id": "a7bb",
+      "facilityname": "Lillån"
+    }
+  ],
+  "kiosks": [
+    {
+      "id": "a8d6",
+      "kioskName": "Kiosk Mitten"
+    },
+    {
+      "id": "4feb",
+      "kioskName": "Kiosk Höger"
+    },
+    {
+      "id": "9041",
+      "kioskName": "Kiosk Vänster"
+    }
+  ],
   "products": [
     {
       "id": "eedc",
@@ -273,6 +297,10 @@
         {
           "id": "eedc",
           "productname": "Hamburgare"
+        },
+        {
+          "id": "9d9f",
+          "productname": "Kexchoklad"
         }
       ]
     },

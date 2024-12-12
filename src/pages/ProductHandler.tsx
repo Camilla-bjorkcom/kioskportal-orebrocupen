@@ -1,4 +1,3 @@
-
 import CreateProductButton from "@/components/CreateProductButton";
 
 import { TrashIcon } from "@radix-ui/react-icons";
@@ -100,11 +99,8 @@ const SaveProduct = async (productname: string) => {
           </div>
         </div>
       </div>
-    
-
     </section>
   );
 }
 
 export default ProductHandler;
-
