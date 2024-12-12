@@ -299,36 +299,36 @@
       "productlistname": "Kiosk med hamburgare",
       "products": [
         {
-          "id": "eedc",
-          "productname": "Hamburgare"
-        },
-        {
-          "id": "9d9f",
-          "productname": "Kexchoklad"
-        },
-        {
-          "id": "79dc",
-          "productname": "Powerade Mountain Blast"
-        },
-        {
-          "id": "d638",
-          "productname": "Coca Cola Zero"
-        },
-        {
           "id": "6312",
           "productname": "Coca Cola"
         },
         {
-          "id": "b361",
-          "productname": "Bonaqua Citron/lime"
+          "id": "0bad",
+          "productname": "Mer Päron"
         },
         {
           "id": "17e7",
           "productname": "Mer Apelsin"
         },
         {
-          "id": "0bad",
-          "productname": "Mer Päron"
+          "id": "b361",
+          "productname": "Bonaqua Citron/lime"
+        },
+        {
+          "id": "d638",
+          "productname": "Coca Cola Zero"
+        },
+        {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "id": "9d9f",
+          "productname": "Kexchoklad"
+        },
+        {
+          "id": "eedc",
+          "productname": "Hamburgare"
         },
         {
           "id": "c216",
@@ -395,11 +395,6 @@
           "productname": "Haribo Nappar Lakrits"
         }
       ]
-    },
-    {
-      "id": "3b2d",
-      "productlistname": "Test",
-      "products": []
     }
   ],
   "inventoryList": [

@@ -4,6 +4,17 @@ import { TrashIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Product {
   id: number;
@@ -17,12 +28,8 @@ interface ProductList {
 }
 
 function ProductListHandler() {
-  const { pathname } = useLocation();
-
-  // State för produktlistor
   const [productlists, setProductLists] = useState<ProductList[]>([]);
 
-  // Hämta produktlistor med React Query
   const { isLoading, error } = useQuery<ProductList[]>({
     queryKey: ["productslists"],
     queryFn: async () => {
@@ -112,10 +119,35 @@ function ProductListHandler() {
                     <p className="font-semibold text-lg flex">
                       {productlist.productlistname}
                     </p>
-                    <TrashIcon
-                      className="w-8 h-6 hover:text-red-500"
-                      onClick={() => DeleteProductsList(productlist.id)}
-                    ></TrashIcon>
+                    <div
+                      className="hover:text-red-500"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          <TrashIcon className="w-8 h-6"></TrashIcon>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Vill du radera listan?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Den här åtgärden kan inte ångras. Listan kommer
+                              att tas bort permanent.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => DeleteProductsList(productlist.id)}
+                            >
+                              Radera
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
                   </div>
                 </div>
               </HandleProductListButton>
