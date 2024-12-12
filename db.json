@@ -430,19 +430,18 @@
       ]
     },
     {
-      "id": "5a62",
-      "productlistname": "Test",
-      "products": []
-    },
-    {
       "id": "ad84",
       "productlistname": "Test",
-      "products": []
-    },
-    {
-      "id": "f855",
-      "productlistname": "Liten Skolens",
-      "products": []
+      "products": [
+        {
+          "id": "e3c0",
+          "productname": "Rullgrillskorv"
+        },
+        {
+          "id": "b56e",
+          "productname": "Sibyllia Hamburgerficka"
+        }
+      ]
     }
   ]
 }

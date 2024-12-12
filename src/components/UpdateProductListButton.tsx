@@ -19,15 +19,10 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "./ui/collapsible";
 import { Checkbox } from "./ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "./ui/button";
-import { Pencil, Save } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 
 interface ProductList {
   id: number;
@@ -149,11 +144,20 @@ function UpdateProductListButton({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
-      <DialogTrigger asChild>
-        <Button>
-          Redigera produktlista <Pencil />
-        </Button>
-      </DialogTrigger>
+      {productlist.products.length === 0 && (
+        <DialogTrigger asChild>
+          <Button>
+            Lägg till produkter <Plus />
+          </Button>
+        </DialogTrigger>
+      )}
+      {productlist.products.length >= 1 && (
+        <DialogTrigger asChild>
+          <Button>
+            Redigera produktlista <Pencil />
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Uppdatera produktlista</DialogTitle>
@@ -170,7 +174,7 @@ function UpdateProductListButton({
                 <FormItem>
                   <FormLabel>Produktlistnamn</FormLabel>
                   <FormControl>
-                    <Input 
+                    <Input
                       defaultValue={productlistForUpdate?.productlistname}
                       {...field}
                       onChange={(e) => {
@@ -186,47 +190,46 @@ function UpdateProductListButton({
                 </FormItem>
               )}
             />
-                <div>
-                  {products.map((product) => (
-                    <div
-                      key={product.id}
-                      className="flex items-center gap-2"
-                    >
-                      <Checkbox
-                        id={`product-${product.id}`}
-                        checked={
-                          productlistForUpdate?.products.some(
-                            (p) => p.id === product.id
-                          ) || false
-                        }
-                        onCheckedChange={(checked) => {
-                          if (productlistForUpdate) {
-                            const updatedProducts = checked
-                              ? [...productlistForUpdate.products, product]
-                              : productlistForUpdate.products.filter(
-                                  (p) => p.id !== product.id
-                                );
-                            setProductlistforUpdate(
-                              (prev) =>
-                                prev && { ...prev, products: updatedProducts }
+            <div>
+              {products.map((product) => (
+                <div key={product.id} className="flex items-center gap-2">
+                  <Checkbox
+                    id={`product-${product.id}`}
+                    checked={
+                      productlistForUpdate?.products.some(
+                        (p) => p.id === product.id
+                      ) || false
+                    }
+                    onCheckedChange={(checked) => {
+                      if (productlistForUpdate) {
+                        const updatedProducts = checked
+                          ? [...productlistForUpdate.products, product]
+                          : productlistForUpdate.products.filter(
+                              (p) => p.id !== product.id
                             );
-                          }
-                        }}
-                      />
-                      <label
-                        htmlFor={`product-${product.id}`}
-                        className="font-medium hover:text-slate-800 cursor-pointer"
-                      >
-                        {product.productname}
-                      </label>
-                    </div>
-                  ))}
+                        setProductlistforUpdate(
+                          (prev) =>
+                            prev && { ...prev, products: updatedProducts }
+                        );
+                      }
+                    }}
+                  />
+                  <label
+                    htmlFor={`product-${product.id}`}
+                    className="font-medium hover:text-slate-800 cursor-pointer"
+                  >
+                    {product.productname}
+                  </label>
                 </div>
-                <Button className="mx-auto w-full"
-                  onClick={() => saveChangesToProductList(productlistForUpdate)}>
-                  Spara 
-                </Button>
-           
+              ))}
+            </div>
+            <Button
+              className="mx-auto w-full"
+              onClick={() => saveChangesToProductList(productlistForUpdate)}
+            >
+              Spara
+            </Button>
+
             <FormMessage />
           </form>
         </Form>

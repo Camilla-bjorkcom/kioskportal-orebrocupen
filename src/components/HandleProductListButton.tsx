@@ -120,7 +120,7 @@ function HandleProductListButton({
             {productlist.productlistname}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Fyll i informationen för att 
+            Fyll i informationen för att
           </DialogDescription>
           <ul className="mt-4 gap-2 items-center list-inside">
             {productlist.products.map((product, index) => (
