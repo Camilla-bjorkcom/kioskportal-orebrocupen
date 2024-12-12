@@ -2,11 +2,8 @@
 
 import CreateProductListButton from "@/components/CreateProductListButton";
 import HandleProductListButton from "@/components/HandleProductListButton";
-
 import { TrashIcon } from "@radix-ui/react-icons";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
-
+import { useQuery } from "@tanstack/react-query";
 import  {useState} from "react";
 import { useLocation } from "react-router-dom";
 
@@ -38,7 +35,7 @@ function ProductListHandler() {
       }
       const data = await response.json();
       console.log(data);
-      setProductLists(data); // Uppdatera state när data hämtas
+      setProductLists(data);
  
       return data;
     },
@@ -101,20 +98,17 @@ function ProductListHandler() {
         <h2 className="font-bold text-4xl my-4">Produktlistor</h2>
 
         <CreateProductListButton onSave={SaveProductList}  />
-      <div className="mt-8">
+      <div className="mt-8 w-3/4">
           <h3 className="font-semibold text-2xl">Sparade produktlistor:</h3>
-          <div className="mt-4 flex gap-2">
+          <div className="mt-4 gap-3 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {productlists.map((productlist) =>  (
               <HandleProductListButton key={productlist.id} productlist={productlist} onUpdate={updateProductList} >
-              <div
-                
-                className="flex flex-col p-2 justify-between rounded-xl border-2
-                 bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32">
+              <div className="p-2 rounded-xl border-2 cursor-pointer aspect-video h-40 md:h-full
+                 shadow hover:bg-slate-800 hover:text-white text-black">
               <div className="flex justify-between">
-                <p className="font-semibold text-2xl flex">{productlist.productlistname}</p>
+                <p className="font-semibold text-lg flex">{productlist.productlistname}</p>
                 <button onClick={() => DeleteProductsList(productlist.id)}><TrashIcon className="w-8 h-6  hover:text-red-500 "></TrashIcon></button>
-                </div>
-                
+                </div>      
               </div>
               </HandleProductListButton>
             ))}
