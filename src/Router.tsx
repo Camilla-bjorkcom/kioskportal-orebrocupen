@@ -11,8 +11,6 @@ import InventoryStatus from "./pages/InventoryStatus";
 import InventoryStorage from "./pages/InventoryStorage";
 import ContactPerson from "./pages/ContactPerson";
 
-
-
 function Router() {
   return (
     <BrowserRouter>
@@ -23,34 +21,17 @@ function Router() {
             <Route path="/createtournament" element={<CreateTournament />} />
           </Route>
           <Route element={<SidebarLayout />}>
-            <Route path="tournaments">
-              <Route index element={<p>Not found</p>} />
-              <Route path="new" element={<p>New item</p>} />
-            </Route>
-            <Route path="dashboard">
-              <Route path=":id" element={<Dashboard />} />{" "}
-            </Route>
-            <Route path="producthandler">
-              <Route path=":id" element={<ProductHandler />} />
-            </Route>
-            <Route path="settings">
-              <Route path=":id" element={<SettingsPage />} />
-            </Route>
-            <Route path="kioskmanager">
-              <Route path=":id" element={<Kioskmanager />} />
-            </Route>
-            <Route path="productlisthandler">
-              <Route path=":id" element={<ProductListHandler />} />
-            </Route>
-            <Route path="inventorystatus">
-              <Route path=":id" element={<InventoryStatus />} />
-            </Route>
-            <Route path="inventorystorage">
-              <Route path=":id" element={<InventoryStorage />} />
-            </Route>
-            <Route path="contactperson">
-              <Route path=":id" element={<ContactPerson />} />
-            </Route>
+            <Route path="dashboard/:id" element={<Dashboard />} />
+            <Route path="producthandler/:id" element={<ProductHandler />} />
+            <Route path="settings/:id" element={<SettingsPage />} />
+            <Route path="kioskmanager/:id" element={<Kioskmanager />} />
+            <Route
+              path="productlisthandler/:id"
+              element={<ProductListHandler />}
+            />
+            <Route path="inventorystatus/:id" element={<InventoryStatus />} />
+            <Route path="inventorystorage/:id" element={<InventoryStorage />} />
+            <Route path="contactperson/:id" element={<ContactPerson />} />
           </Route>
         </Route>
       </Routes>
