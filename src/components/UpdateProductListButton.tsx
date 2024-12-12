@@ -158,7 +158,6 @@ function UpdateProductListButton({
           </Button>
         </DialogTrigger>
       )}
-
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Uppdatera produktlista</DialogTitle>
