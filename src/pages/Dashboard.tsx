@@ -9,7 +9,7 @@ function Dashboard() {
         <h2 className="font-bold text-4xl mb-24 pl-5">Din översikt</h2>
         <DashboardStats />
         <div className="flex justify-between items-center">
-        <DashboardLink />
+          <DashboardLink />
           <DaysLeftTourStat />
         </div>
       </div>
