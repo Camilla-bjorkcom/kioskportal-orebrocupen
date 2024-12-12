@@ -18,30 +18,45 @@ import {
 } from "@/components/ui/select";
 
 import { PlusIcon } from "@radix-ui/react-icons";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-type ProductListItem = {
-  productListName: string;
-  products: string[];
-};
-
-const productList: ProductListItem[] = [
-  { productListName: "Standard skola", products: ["Hamburgare", "Kexchoklad","Korv", "Banan", "Dressing", "Rostad lök", "Festis päron", "Festis hallon", "Loka naturell", "Loka citron", "Loka hallon", "Coca-cola", "Sprite", "Coca-cola zero", "Fanta", "Gurka", "Senap", "Ketchup", "Korvbröd", "Ost", "Festis citron", "Festis naturell"] },
-  { productListName: "Standard kiosk", products: ["Hamburgare", "Kexchoklad","Korv", "Banan", "Dressing", "Rostad lök", "Festis päron", "Festis hallon", "Loka naturell", "Loka citron", "Loka hallon", "Coca-cola", "Sprite", "Coca-cola zero", "Fanta", "Gurka", "Senap", "Ketchup", "Korvbröd", "Ost", "Festis citron", "Festis naturell"] },
-];
-
+interface ProductList {
+  id: number;
+  productlistname: string;
+  products: Product[];
+}
+interface Product {
+  id: number;
+  productname: string;
+}
 interface AddProductListButtonProps {
-  onSave: (productList: ProductListItem | undefined) => void;
+  onSave: (productlists: ProductList | undefined) => void;
 }
 
 function AddProductListButton({ onSave }: AddProductListButtonProps) {
   const [selectedValue, setSelectedValue] = useState<
-    ProductListItem | undefined
+  ProductList | undefined
   >();
 
-  const handleChange = (value: ProductListItem["productListName"]) => {
-    const selectedProductList = productList.find(
-      (product) => product.productListName === value
+  const [productlists, setProductLists] = useState<ProductList[]>([]);
+
+  useQuery<ProductList[]>({
+    queryKey: ["productslists"],
+    queryFn: async () => {
+      const response = await fetch( `http://localhost:3000/productslists`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch facilites");
+      }
+      const data = await response.json();
+      setProductLists(data);
+      return data;
+    },
+  });
+  
+  const handleChange = (value: ProductList["productlistname"]) => {
+    const selectedProductList = productlists.find(
+      (product) => product.productlistname === value
     );
     setSelectedValue(selectedProductList);
   };
@@ -72,9 +87,9 @@ function AddProductListButton({ onSave }: AddProductListButtonProps) {
             <SelectValue placeholder="Välj produktlista" />
           </SelectTrigger>
           <SelectContent>
-            {productList.map((product, index) => (
-              <SelectItem key={index} value={product.productListName}>
-                {product.productListName}
+            {productlists.map((product, index) => (
+              <SelectItem key={index} value={product.productlistname}>
+                {product.productlistname}
               </SelectItem>
             ))}
           </SelectContent>
