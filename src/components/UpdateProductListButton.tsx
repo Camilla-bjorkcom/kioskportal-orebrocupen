@@ -62,10 +62,25 @@ function UpdateProductListButton({
   const [products, setProducts] = useState<Product[]>([]);
   const [productlistForUpdate, setProductlistforUpdate] =
     useState<ProductList>(productlist);
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+ 
+  const allSelected:boolean = products.length > 0 && products.every((product) =>
+    productlistForUpdate?.products.some((p) => p.id === product.id)
+  );
 
-  const handleToggle = (open: boolean) => {
-    setIsOpen(open);
+  const toggleSelectAll = () => {
+    const allSelected = products.length > 0 && products.every((product) =>
+      productlistForUpdate?.products.some((p) => p.id === product.id)
+    );
+  
+    setProductlistforUpdate((prev) =>
+      prev
+        ? {
+            ...prev,
+            products: allSelected ? [] : products,
+          }
+        : prev
+    );
   };
 
   const { isLoading, error } = useQuery<Product[]>({
@@ -127,7 +142,7 @@ function UpdateProductListButton({
         });
 
         console.log("Updated list:", updatedList);
-        setIsOpen(false);
+        setOpen(false);
       } catch (error) {
         console.error("Failed to save changes", error);
       }
@@ -143,7 +158,7 @@ function UpdateProductListButton({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
+    <Dialog open={open} onOpenChange={(isOpen) => setOpen(isOpen)}>
       {productlist.products.length === 0 && (
         <DialogTrigger asChild>
           <Button>
@@ -191,6 +206,11 @@ function UpdateProductListButton({
               )}
             />
             <div>
+              <div className="mb-4 text-right">
+                <Button type="button" onClick={toggleSelectAll}>
+               {allSelected ? "Avmarkera alla" : "Markera alla"}
+                </Button>
+              </div>
               {products.map((product) => (
                 <div key={product.id} className="flex items-center gap-2">
                   <Checkbox

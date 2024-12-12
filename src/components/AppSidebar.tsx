@@ -131,10 +131,10 @@ export function AppSidebar({ id }: { id?: number }) {
                         <SidebarMenuSub>
                           {item.subitems.map((subitem) => (
                             <SidebarMenuSubItem
-                              className="font-medium hover:bg-neutral-100"
+                              className="font-medium hover:bg-neutral-100 w-full"
                               key={subitem.title}
                             >
-                              <a href={subitem.url}>{subitem.title}</a>
+                              <a href={subitem.url} className="w-full flex">{subitem.title}</a>
                             </SidebarMenuSubItem>
                           ))}
                         </SidebarMenuSub>

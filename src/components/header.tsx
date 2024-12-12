@@ -1,7 +1,4 @@
-import { useForm } from "react-hook-form";
-
 const Header: React.FC = () => {
-  const form = useForm();
   return (
     <header className="container mx-auto py-3 h-32">
       <div className="flex items-center pb-12 ">
