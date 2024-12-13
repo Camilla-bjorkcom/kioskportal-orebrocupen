@@ -116,7 +116,7 @@ function HandleProductListButton({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="font-semibold text-xl">
+          <DialogTitle className="text-lg">
             {productlist.productlistname}
           </DialogTitle>
           <DialogDescription className="sr-only">

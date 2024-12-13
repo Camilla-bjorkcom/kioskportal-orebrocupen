@@ -137,10 +137,10 @@ const ContactPersonComponent = ({
       ) : (
         <>
           <Button
-            className="mt-4 text-white px-4 py-2 rounded mb-4"
+            className="mt-4 text-white px-4 py-2 rounded mb-4 hover:bg-slate-700 hover:text-white"
             onClick={() => setShowInputs(true)}
           >
-            Lägg till <PlusIcon className="w-4 h-4 place-self-center" />
+            Lägg till <PlusIcon className="w-4 h-4 place-self-center " />
           </Button>
 
           {showInputs && (
@@ -187,7 +187,7 @@ const ContactPersonComponent = ({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    className="text-white px-4 py-2 rounded"
+                    className="text-white px-4 py-2 rounded hover:bg-slate-700 hover:text-white"
                     onClick={() =>
                       setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
                     }
@@ -223,7 +223,7 @@ const ContactPersonComponent = ({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
-                            className=" w-fit text-white px-2 py-1 rounded"
+                            className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white"
                             onClick={() => startEditing(person)}
                           >
                             <UserPenIcon />
@@ -237,7 +237,7 @@ const ContactPersonComponent = ({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button className=" w-fit text-white px-2 py-1 rounded">
+                          <Button className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white">
                             <BellRing />
                           </Button>
                         </TooltipTrigger>
@@ -250,7 +250,7 @@ const ContactPersonComponent = ({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
-                            className=" w-fit text-white px-2 py-1 rounded"
+                            className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white"
                             onClick={() => person.id && onDelete(person.id)}
                           >
                             <Trash />

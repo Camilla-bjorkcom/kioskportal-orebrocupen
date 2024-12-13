@@ -34,7 +34,7 @@ const InventoryStatusList = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="lg:w-3/4 w-full ml-2">
       <div className="flex justify-between items-center bg-gray-100 px-4 py-2 rounded-t-md">
         <h2 className="text-lg font-bold">{facilityName}</h2>
         <button onClick={toggleExpandAll} className="underline font-semibold">

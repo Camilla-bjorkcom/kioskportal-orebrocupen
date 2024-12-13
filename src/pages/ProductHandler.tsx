@@ -70,10 +70,10 @@ function ProductHandler() {
   return (
     <section>
       <div className="container mx-auto px-4 flex-row items-center">
-        <h2 className="font-bold text-4xl my-4">Produkthantering</h2>
+        <h2 className="mt-8 text-2xl pb-2 mb-4">Produkthantering</h2>
         <CreateProductButton onSave={SaveProduct} />
         <div className="mt-8">
-          <h3 className="font-semibold text-2xl">Sparade produkter:</h3>
+          <h3 className="text-lg">Sparade produkter:</h3>
           <div className="mt-4 space-y-2 mb-10">
             {products.map((product) => (
               <div
