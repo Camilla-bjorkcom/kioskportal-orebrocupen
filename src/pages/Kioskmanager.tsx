@@ -21,7 +21,6 @@ function Kioskmanager() {
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
 
-
   //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
     facility: number | null;
@@ -224,15 +223,19 @@ function Kioskmanager() {
                     className="flex gap-3"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <UpdateFacilityButton
-                      onSave={UpdateFacility}
-                      facility={facility}
-                    />
-                    <DeleteButton
-                      id={facility.id}
-                      type="Facility"
-                      onDelete={DeleteFacility}
-                    />
+                    {selectedOptions.facility === facility.id && (
+                      <>
+                        <UpdateFacilityButton
+                          onSave={UpdateFacility}
+                          facility={facility}
+                        />
+                        <DeleteButton
+                          id={facility.id}
+                          type="Facility"
+                          onDelete={DeleteFacility}
+                        />
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
@@ -260,14 +263,21 @@ function Kioskmanager() {
                       <p>{kiosk.kioskName}</p>
                       <div
                         className="flex gap-3"
-                        onClick={(e) => e.stopPropagation()} 
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <UpdateKioskButton onSave={UpdateKiosk} kiosk={kiosk} />
-                        <DeleteButton
-                          id={kiosk.id}
-                          type="Kiosk"
-                          onDelete={DeleteKiosk}
-                        />
+                        {selectedOptions.kiosk === kiosk.id && (
+                          <>
+                            <UpdateKioskButton
+                              onSave={UpdateKiosk}
+                              kiosk={kiosk}
+                            />
+                            <DeleteButton
+                              id={kiosk.id}
+                              type="Kiosk"
+                              onDelete={DeleteKiosk}
+                            />
+                          </>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -275,7 +285,6 @@ function Kioskmanager() {
               )}
             </div>
           </div>
-
         </div>
       </section>
     </>
