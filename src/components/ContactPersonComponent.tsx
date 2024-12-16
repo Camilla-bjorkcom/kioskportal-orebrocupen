@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { BellRing, PlusIcon, Trash, UserPenIcon } from "lucide-react";
+import {
+  ArrowDownUp,
+  BellRing,
+  PlusIcon,
+  Trash,
+  UserPenIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -169,13 +175,19 @@ const ContactPersonComponent = ({
               onChange={(e) => setFacility(e.target.value)}
               className="block border border-gray-300 rounded-md p-2 mb-2"
             />
-            <input
-              type="text"
-              placeholder="Roll"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="block border border-gray-300 rounded-md p-2 mb-2"
-            />
+            <Select onValueChange={(value) => setRole(value)}>
+              <SelectTrigger className="w-[213px] mb-4">
+                <SelectValue placeholder="Välj en roll" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Roll</SelectLabel>
+                  <SelectItem value="Huvudansvarig">Huvudansvarig</SelectItem>
+                  <SelectItem value="Planansvarig">Planansvarig</SelectItem>
+                  <SelectItem value="Kiosk">Kiosk</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
 
             <Button
               className="text-white px-4 py-2 rounded mt-2"
@@ -223,15 +235,17 @@ const ContactPersonComponent = ({
                   className="block border border-gray-300 rounded-md p-2 mb-2"
                 />
                 <Select onValueChange={(value) => setRole(value)}>
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-[213px] mb-4">
                     <SelectValue placeholder="Välj en roll" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Roll</SelectLabel>
-                      <SelectItem value="Huvudansvarig">Huvudansvarig</SelectItem>
+                      <SelectItem value="Huvudansvarig">
+                        Huvudansvarig
+                      </SelectItem>
                       <SelectItem value="Planansvarig">Planansvarig</SelectItem>
-                      <SelectItem value="Kiosk">Kiosk</SelectItem>            
+                      <SelectItem value="Kiosk">Kiosk</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -254,7 +268,7 @@ const ContactPersonComponent = ({
             {/* Grid eller kortlayout baserat på skärmstorlek */}
             <div className="mt-6 hidden sm:grid grid-cols-5 gap-4 font-bold border-b border-gray-300 pb-2">
               <span>Namn</span>
-              <span>Telefonnummer</span>
+              <span>Telefon</span>
               <span>Anläggning</span>
               <span>Roll</span>
               <span>Åtgärder</span>
