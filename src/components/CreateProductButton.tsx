@@ -13,6 +13,7 @@ import {
   import { PlusIcon } from "@radix-ui/react-icons";
   import { zodResolver } from "@hookform/resolvers/zod"
   import { useForm } from "react-hook-form"
+  import { useState } from "react";
 
 
 import { z } from "zod"
@@ -45,6 +46,8 @@ const formSchema = z.object({
   
   function CreateProductButton({onSave}: CreateProductButtonProps) {
 
+    const [savedMessage, setSavedMessage] = useState<string | null>(null);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -57,6 +60,10 @@ const formSchema = z.object({
         onSave(values.productname ,  values.amountPerPackage ?? 0)
         console.log(values);
         form.reset();
+        setSavedMessage("Produken har sparats");
+        setTimeout(() => {
+          setSavedMessage(null);
+        }, 3000);
       }
     return (
         <Dialog>
@@ -99,7 +106,10 @@ const formSchema = z.object({
                   <FormMessage /> 
                 </FormItem>
               )}
-              />   
+              /> 
+                  {savedMessage && (
+                  <div className="text-green-600 text-sm mt-4">{savedMessage}</div>
+                   )}  
             
             <div className="flex justify-end">
               <button type="submit" className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow">Spara Produkt</button>

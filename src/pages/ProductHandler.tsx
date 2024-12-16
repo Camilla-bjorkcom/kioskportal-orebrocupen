@@ -1,4 +1,5 @@
 import CreateProductButton from "@/components/CreateProductButton";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import UpdateProductButton from "@/components/UpdateProductButton";
 
 import { TrashIcon } from "@radix-ui/react-icons";
@@ -7,7 +8,7 @@ import { useState } from "react";
 
 
 interface Product {
-  id: number;
+  id: string;
   productname: string;
   amountPerPackage : number
 }
@@ -47,19 +48,38 @@ function ProductHandler() {
     }
   };
   
-  const UpdateProduct = async ( id: number, productname: string, amountPerPackage: number) => {
+  const UpdateProduct = async ( id: string, productname: string, amountPerPackage: number) => {
     try{
+
+      console.log("Skickar till API:", {
+        id,
+        productname,
+        amountPerPackage
+      });
+
       const response= await fetch(`http://localhost:3000/products/${id}`, {
-
-      })
-
+        method:"PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productname: productname, amountPerPackage : amountPerPackage }),
+      });
+      if(!response.ok) {
+        throw new Error("Failed to update product");
+      }
+      const updatedProduct = await response.json();
+      console.log("skickat till databas", updatedProduct)
+      setProducts((prev) =>
+        prev.map((product) =>
+          product.id === id ? { ...product, ...updatedProduct } : product
+        )
+      );
     }
-    catch(error) {
-
+    catch (error) {
+      console.error("Failed to update product:", error);
+      alert("Kunde inte uppdatera produkten. Försök igen.");
     }
   }
 
-  const DeleteProduct = async (id: number) => {
+  const DeleteProduct = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:3000/products/${id}`, {
         method: "DELETE",
@@ -104,9 +124,34 @@ function ProductHandler() {
                   <p className= "basis-1/4">{product.productname}</p>
                   <div className="flex justify-between basis-1/3">
                   <p className="mr-10 min-w-24">st/kolli: {displayAmount(product.amountPerPackage)}</p>
-                  <UpdateProductButton onUpdate={}></UpdateProductButton>
-                  <button  onClick={() => DeleteProduct(product.id)}>
-                    <TrashIcon className="w-8 h-6 hover:text-red-500 "></TrashIcon>
+                  <UpdateProductButton onUpdate={UpdateProduct}
+                   product={{ id: product.id, productname: product.productname, amountPerPackage: product.amountPerPackage }}></UpdateProductButton>
+                  <button  onClick= {(e) => e.stopPropagation()}>
+                    <AlertDialog>
+                        <AlertDialogTrigger>
+                        <TrashIcon className="w-8 h-6 hover:text-red-500 "></TrashIcon>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Vill du radera listan?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Den här åtgärden kan inte ångras. Listan kommer
+                              att tas bort permanent.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => DeleteProduct(product.id)}
+                            >
+                              Radera
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                  
                   </button>
 
                   </div>
