@@ -87,7 +87,7 @@ const ContactPersons = () => {
 
   return (
     <div className="container mx-auto">
-      <h3 className="mt-8 text-2xl pb-2">Kontaktpersoner</h3>
+      <h3 className="mt-8 text-2xl pb-2 ml-4">Kontaktpersoner</h3>
       <ContactPersonComponent
         contactPersons={contactPerson}
         onSave={SaveContactPerson}
