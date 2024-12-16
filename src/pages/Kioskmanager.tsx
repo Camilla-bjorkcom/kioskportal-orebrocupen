@@ -192,7 +192,7 @@ function Kioskmanager() {
         <div className="grid lg:grid-cols-3 gap-5 w-10/12">
           <div>
             <h3 className="text-xl mb-2">Anläggning</h3>
-            <div className="border border-solid lg:aspect-square border-black rounded-xl">
+            <div className="border border-solid lg:aspect-square pb-4 border-black rounded-xl">
               <AddFacilityButton onSave={CreateFacility} />
               {facility.map((facility) => (
                 <p
@@ -237,7 +237,7 @@ function Kioskmanager() {
 
           <div>
             <h3 className="text-xl mb-2">Kiosker</h3>
-            <div className="border border-solid lg:aspect-square border-black rounded-xl">
+            <div className="border border-solid lg:aspect-square border-black rounded-xl pb-4">
               {selectedFacility !== null && (
                 <div className="mt-4">
                   <AddKioskButton onSave={CreateKiosk} />

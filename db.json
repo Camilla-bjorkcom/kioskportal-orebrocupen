@@ -71,27 +71,15 @@
   ],
   "facilities": [
     {
-      "id": "4ed2",
+      "id": "a3d6",
       "facilityname": "Rosta"
     },
     {
-      "id": "caa9",
+      "id": "6c29",
       "facilityname": "Lillån"
     },
     {
-      "id": "c10e",
-      "facilityname": "Pettersberg"
-    },
-    {
-      "id": "48e0",
-      "facilityname": "Björkvallen"
-    },
-    {
-      "id": "b384",
-      "facilityname": "Adolfsberg"
-    },
-    {
-      "id": "b975",
+      "id": "6b83",
       "facilityname": "Trängen"
     }
   ],

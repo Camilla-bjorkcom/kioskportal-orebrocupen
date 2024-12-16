@@ -23,7 +23,6 @@ type KioskInventory = {
 interface Products {
   id: number;
   productName: string;
-  amountPieces: number;
   amountPackages: number;
 }
 
@@ -168,19 +167,6 @@ function InventoryStorage() {
                     )}
                   />
                   <div className="flex gap-5">
-                    <FormField
-                      key={product.id}
-                      control={form.control}
-                      name={`products.${index}.amountPieces`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Antal i styck</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
                     <FormField
                       key={index}
                       control={form.control}
