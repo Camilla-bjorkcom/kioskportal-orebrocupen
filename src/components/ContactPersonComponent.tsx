@@ -8,22 +8,30 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+
 type ContactPerson = {
   id: number;
   name: string;
   phone: string;
+  role: string;
   facility: string;
 };
 
 type Props = {
   contactPersons: ContactPerson[];
-  onSave: (name: string, facility: string, phone: string) => Promise<void>;
+  onSave: (
+    name: string,
+    facility: string,
+    phone: string,
+    role: string
+  ) => Promise<void>;
   onDelete: (id: number) => Promise<void>;
   onUpdate: (
     id: number,
     name: string,
     facility: string,
-    phone: string
+    phone: string,
+    role: string
   ) => Promise<void>;
 };
 
@@ -39,6 +47,7 @@ const ContactPersonComponent = ({
   );
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
+  const [role, setRole] = useState<string>("");
   const [facility, setFacility] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
@@ -46,6 +55,7 @@ const ContactPersonComponent = ({
     setEditingPerson(person);
     setName(person.name);
     setPhone(person.phone);
+    setRole(person.role);
     setFacility(person.facility);
   };
 
@@ -55,9 +65,10 @@ const ContactPersonComponent = ({
       return;
     }
 
-    await onSave(name, facility, phone);
+    await onSave(name, facility, phone, role);
     setName("");
     setPhone("");
+    setRole("");
     setFacility("");
     setShowInputs(false);
   };
@@ -70,10 +81,11 @@ const ContactPersonComponent = ({
       return;
     }
 
-    await onUpdate(editingPerson.id, name, facility, phone);
+    await onUpdate(editingPerson.id, name, facility, phone, role);
     setEditingPerson(null);
     setName("");
     setPhone("");
+    setRole("");
     setFacility("");
   };
 
@@ -81,6 +93,7 @@ const ContactPersonComponent = ({
     setEditingPerson(null);
     setName("");
     setPhone("");
+    setRole("");
     setFacility("");
   };
 
@@ -118,6 +131,13 @@ const ContactPersonComponent = ({
             placeholder="Anläggning"
             value={facility}
             onChange={(e) => setFacility(e.target.value)}
+            className="block border border-gray-300 rounded-md p-2 mb-2"
+          />
+          <input
+            type="text"
+            placeholder="Roll"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
             className="block border border-gray-300 rounded-md p-2 mb-2"
           />
 
@@ -166,6 +186,13 @@ const ContactPersonComponent = ({
                 onChange={(e) => setFacility(e.target.value)}
                 className="block border border-gray-300 rounded-md p-2 mb-2"
               />
+              <input
+                type="text"
+                placeholder="Roll"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="block border border-gray-300 rounded-md p-2 mb-2"
+              />
 
               <Button
                 className="text-white px-4 py-2 rounded mt-2"
@@ -202,10 +229,11 @@ const ContactPersonComponent = ({
             </TooltipProvider>
           </div>
 
-          <div className="grid grid-cols-4 gap-4 font-bold border-b border-gray-300 pb-2 mt-4">
+          <div className="grid grid-cols-5 gap-4 font-bold border-b border-gray-300 pb-2 mt-4">
             <span>Namn</span>
             <span>Telefonnummer</span>
             <span>Anläggning</span>
+            <span>Roll</span>
             <span>Åtgärder</span>
           </div>
           {sortedContactPersons.length > 0 ? (
@@ -213,11 +241,12 @@ const ContactPersonComponent = ({
               {sortedContactPersons.map((person: ContactPerson) => (
                 <li
                   key={person.id}
-                  className="grid grid-cols-4 gap-4 py-2 border-b border-gray-200 items-center"
+                  className="grid grid-cols-5 gap-4 py-2 border-b border-gray-200 items-center"
                 >
                   <span>{person.name}</span>
                   <span>{person.phone}</span>
                   <span>{person.facility}</span>
+                  <span>{person.role}</span>
                   <div className="flex gap-2">
                     <TooltipProvider>
                       <Tooltip>
