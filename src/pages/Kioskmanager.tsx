@@ -1,21 +1,7 @@
 import AddFacilityButton from "@/components/AddFacilityButton";
 import AddKioskButton from "@/components/AddKioskButton";
 import { useState } from "react";
-import { Pencil, TrashIcon } from "lucide-react";
-// import AddProductListButton from "@/components/AddProductListButton";
-// import AddProductsButton from "@/components/AddProductButton";
 import { useQuery } from "@tanstack/react-query";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import UpdateFacilityButton from "@/components/UpdateFacilityButton";
 import DeleteButton from "@/components/DeleteButton";
 import UpdateKioskButton from "@/components/UpdateKioskButton";
@@ -29,23 +15,12 @@ interface Kiosk {
   kioskName: string;
 }
 
-// interface ProductList {
-//   id: number;
-//   productlistname: string;
-//   products: Product[];
-// }
-// interface Product {
-//   id: number;
-//   productname: string;
-// }
-
 function Kioskmanager() {
   const [facility, setFacility] = useState<Facility[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
-  // const [productList, setProductList] = useState<ProductList | undefined>();
-  // const [products, setProducts] = useState<string[]>([]);
+
 
   //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
@@ -117,20 +92,6 @@ function Kioskmanager() {
       throw new Error("failed to create facility");
     }
   };
-
-  // const addProductList = (productList: ProductList | undefined) => {
-  //   setProductList(productList);
-  //   if (productList != undefined) {
-  //     setSelectedOptions((prev) => ({
-  //       ...prev,
-  //       productlist: productList.id,
-  //     }));
-  //   }
-  // };
-
-  // const addProduct = (productName: string) => {
-  //   setProducts((prev) => [...prev, productName]);
-  // };
 
   const UpdateFacility = async (facility: Facility) => {
     console.log("this is" + facility.facilityname + "id: " + facility.id);
@@ -218,7 +179,6 @@ function Kioskmanager() {
       prevSelectedFacility === facility.id ? null : facility.id
     );
 
-    // Återställ kiosk och uppdatera valda alternativ
     setSelectedKiosk(null);
     setSelectedOptions((prev) => ({
       ...prev,
@@ -232,7 +192,6 @@ function Kioskmanager() {
       prevSelectedKiosk === kiosk.id ? null : kiosk.id
     );
 
-    // Uppdatera valda alternativ
     setSelectedOptions((prev) => ({
       ...prev,
       kiosk: selectedKiosk === kiosk.id ? null : kiosk.id,
@@ -301,7 +260,7 @@ function Kioskmanager() {
                       <p>{kiosk.kioskName}</p>
                       <div
                         className="flex gap-3"
-                        onClick={(e) => e.stopPropagation()} // Hindrar klick på ikoner från att trigga kioskval
+                        onClick={(e) => e.stopPropagation()} 
                       >
                         <UpdateKioskButton onSave={UpdateKiosk} kiosk={kiosk} />
                         <DeleteButton
@@ -317,50 +276,6 @@ function Kioskmanager() {
             </div>
           </div>
 
-          {/* Produktlista */}
-          {/* <div>
-            <h3 className="text-xl font-bold mb-2">Produktlista</h3>
-            <div className="border border-solid lg:aspect-square border-black rounded-xl">
-              {selectedKiosk !== null && (
-                <div className="mt-4 flex flex-col gap-4 mb-5">
-                  {productList === undefined && (
-                    <AddProductListButton onSave={addProductList} />
-                  )}
-
-                  <ul className="ml-5">
-                    <div className="flex justify-between">
-                      <h3 className="font-semibold">
-                        {productList?.productlistname}
-                      </h3>
-                      {productList != undefined && (
-                        <TrashIcon className="mr-5 w-5 h-5 place-self-center cursor-pointer hover:text-red-500" />
-                      )}
-                    </div>
-                    {productList?.products.map((product, index) => (
-                      <li key={index} className="list-inside ml-4">
-                        {product.productname}
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/*                  
-                  <ul>
-                    {productList != undefined && (
-                      <AddProductsButton onSave={addProduct} />
-                    )}
-                    {products.map((product, index) => (
-                      <div className="flex justify-between">
-                        <li key={index} className="list-inside ml-9">
-                          {product}
-                        </li>
-                        <TrashIcon className="mr-5 w-4 h-4 place-self-center cursor-pointer hover:text-red-500" />
-                      </div>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div> */}
         </div>
       </section>
     </>

@@ -77,10 +77,6 @@
   ],
   "kiosks": [
     {
-      "id": "5b85",
-      "kioskName": "Kiosk Mittena"
-    },
-    {
       "id": "05bb",
       "kioskName": "Kiosk 2"
     },
