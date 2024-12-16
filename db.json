@@ -69,15 +69,28 @@
       "endDate": "2024-12-13T07:45:35.165Z"
     }
   ],
-  "facilities": [],
+  "facilities": [
+    {
+      "id": "f0fc",
+      "facilityname": "Lillåns"
+    }
+  ],
   "kiosks": [
     {
-      "id": "4feb",
-      "kioskName": "Kiosk Höger"
+      "id": "5b85",
+      "kioskName": "Kiosk Mittena"
     },
     {
-      "id": "9041",
-      "kioskName": "Kiosk Vänster"
+      "id": "05bb",
+      "kioskName": "Kiosk 2"
+    },
+    {
+      "id": "aade",
+      "kioskName": "Kiosk höger"
+    },
+    {
+      "id": "4286",
+      "kioskName": "Kiosk mitten"
     }
   ],
   "products": [
