@@ -1,25 +1,32 @@
 {
   "contactPersons": [
     {
-      "id": "0d61",
       "name": "Andreas",
       "facility": "Rosta gärde",
       "phone": "0703177812",
-      "role": "Planansvarig"
+      "role": "Kioskansvarig",
+      "id": "fde3"
     },
     {
       "name": "Camilla",
-      "facility": "Rosta gärde",
-      "phone": "070324545",
-      "role": "ansvarig kiosk1",
-      "id": "324d"
+      "facility": "Lillån",
+      "phone": "07814556484",
+      "role": "Planansvarig",
+      "id": "da47"
     },
     {
-      "id": "e92a",
-      "name": "Ludvig ",
-      "facility": "Lillån",
-      "phone": "0702154845",
+      "id": "da2b",
+      "name": "Ludvig",
+      "facility": "Pettersberg",
+      "phone": "075456541854",
       "role": "Planansvarig"
+    },
+    {
+      "name": "Johan",
+      "facility": "Lillån",
+      "phone": "07745485",
+      "role": "Planansvarig",
+      "id": "1bfe"
     }
   ],
   "tournaments": [

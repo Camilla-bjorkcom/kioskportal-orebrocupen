@@ -7,7 +7,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
+import { toast } from "@/hooks/use-toast";
+import { Toaster } from "./ui/toaster";
 
 type ContactPerson = {
   id: number;
@@ -66,6 +67,12 @@ const ContactPersonComponent = ({
     }
 
     await onSave(name, facility, phone, role);
+    toast({
+      className: "bg-green-200",
+      title: "Kontaktperson tillagd",
+      description: name + " är nu tillagd.",
+      duration: 5000,
+    });
     setName("");
     setPhone("");
     setRole("");
@@ -82,6 +89,12 @@ const ContactPersonComponent = ({
     }
 
     await onUpdate(editingPerson.id, name, facility, phone, role);
+    toast({
+      className: "bg-yellow-200",
+      title: "Kontaktperson uppdaterad",
+      description: name + " är nu uppdaterad.",
+      duration: 5000,
+    });
     setEditingPerson(null);
     setName("");
     setPhone("");
@@ -108,198 +121,215 @@ const ContactPersonComponent = ({
   });
 
   return (
-    <div className="container mx-auto">
-      {editingPerson ? (
-        <div className="mt-4">
-          <h3>Redigera kontaktperson</h3>
-          <input
-            type="text"
-            placeholder="Namn"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="block border border-gray-300 rounded-md p-2 mb-2"
-          />
-          <input
-            type="text"
-            placeholder="Telefonnummer"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="block border border-gray-300 rounded-md p-2 mb-2"
-          />
-          <input
-            type="text"
-            placeholder="Anläggning"
-            value={facility}
-            onChange={(e) => setFacility(e.target.value)}
-            className="block border border-gray-300 rounded-md p-2 mb-2"
-          />
-          <input
-            type="text"
-            placeholder="Roll"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="block border border-gray-300 rounded-md p-2 mb-2"
-          />
+    <>
+      <Toaster />
+      <div className="container mx-auto">
+        {editingPerson ? (
+          <div className="mt-4">
+            <h3>Redigera kontaktperson</h3>
+            <input
+              type="text"
+              placeholder="Namn"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="block border border-gray-300 rounded-md p-2 mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Telefonnummer"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="block border border-gray-300 rounded-md p-2 mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Anläggning"
+              value={facility}
+              onChange={(e) => setFacility(e.target.value)}
+              className="block border border-gray-300 rounded-md p-2 mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Roll"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="block border border-gray-300 rounded-md p-2 mb-2"
+            />
 
-          <Button
-            className="text-white px-4 py-2 rounded mt-2"
-            onClick={saveChanges}
-          >
-            Spara ändringar
-          </Button>
-          <Button
-            className="text-white px-4 py-2 rounded mt-2 ml-2"
-            onClick={cancelEditing}
-          >
-            Avbryt
-          </Button>
-        </div>
-      ) : (
-        <>
-          <Button
-            className="mt-4 text-white px-4 py-2 rounded mb-4 hover:bg-slate-700 hover:text-white"
-            onClick={() => setShowInputs(true)}
-          >
-            Lägg till <PlusIcon className="w-4 h-4 place-self-center " />
-          </Button>
-
-          {showInputs && (
-            <div className="mt-4">
-              <input
-                type="text"
-                placeholder="Namn"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="block border border-gray-300 rounded-md p-2 mb-2"
-              />
-              <input
-                type="text"
-                placeholder="Telefonnummer"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="block border border-gray-300 rounded-md p-2 mb-2"
-              />
-              <input
-                type="text"
-                placeholder="Anläggning"
-                value={facility}
-                onChange={(e) => setFacility(e.target.value)}
-                className="block border border-gray-300 rounded-md p-2 mb-2"
-              />
-              <input
-                type="text"
-                placeholder="Roll"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="block border border-gray-300 rounded-md p-2 mb-2"
-              />
-
-              <Button
-                className="text-white px-4 py-2 rounded mt-2"
-                onClick={addContactPerson}
-              >
-                Spara
-              </Button>
-              <Button
-                className="text-white px-4 py-2 rounded mt-2 ml-2"
-                onClick={() => setShowInputs(false)}
-              >
-                Avbryt
-              </Button>
-            </div>
-          )}
-
-          <div className="mt-6">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="text-white px-4 py-2 rounded hover:bg-slate-700 hover:text-white"
-                    onClick={() =>
-                      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
-                    }
-                  >
-                    {sortOrder === "asc" ? "A-Ö" : "Ö-A"}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Sortera på anläggningsnamn</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Button
+              className="text-white px-4 py-2 rounded mt-2"
+              onClick={saveChanges}
+            >
+              Spara ändringar
+            </Button>
+            <Button
+              className="text-white px-4 py-2 rounded mt-2 ml-2"
+              onClick={cancelEditing}
+            >
+              Avbryt
+            </Button>
           </div>
+        ) : (
+          <>
+            <Button
+              className="mt-4 text-white px-4 py-2 rounded mb-4 hover:bg-slate-700 hover:text-white"
+              onClick={() => setShowInputs(true)}
+            >
+              Lägg till <PlusIcon className="w-4 h-4 place-self-center " />
+            </Button>
 
-          <div className="grid grid-cols-5 gap-4 font-bold border-b border-gray-300 pb-2 mt-4">
-            <span>Namn</span>
-            <span>Telefonnummer</span>
-            <span>Anläggning</span>
-            <span>Roll</span>
-            <span>Åtgärder</span>
-          </div>
-          {sortedContactPersons.length > 0 ? (
-            <ul>
-              {sortedContactPersons.map((person: ContactPerson) => (
-                <li
-                  key={person.id}
-                  className="grid grid-cols-5 gap-4 py-2 border-b border-gray-200 items-center"
+            {showInputs && (
+              <div className="mt-4">
+                <input
+                  type="text"
+                  placeholder="Namn"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="block border border-gray-300 rounded-md p-2 mb-2"
+                />
+                <input
+                  type="text"
+                  placeholder="Telefonnummer"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="block border border-gray-300 rounded-md p-2 mb-2"
+                />
+                <input
+                  type="text"
+                  placeholder="Anläggning"
+                  value={facility}
+                  onChange={(e) => setFacility(e.target.value)}
+                  className="block border border-gray-300 rounded-md p-2 mb-2"
+                />
+                <input
+                  type="text"
+                  placeholder="Roll"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="block border border-gray-300 rounded-md p-2 mb-2"
+                />
+
+                <Button
+                  className="text-white px-4 py-2 rounded mt-2"
+                  onClick={addContactPerson}
                 >
-                  <span>{person.name}</span>
-                  <span>{person.phone}</span>
-                  <span>{person.facility}</span>
-                  <span>{person.role}</span>
-                  <div className="flex gap-2">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white"
-                            onClick={() => startEditing(person)}
-                          >
-                            <UserPenIcon />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Redigera kontaktperson</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white">
-                            <BellRing />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Skicka notis: Dags att inventera kiosk!</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white"
-                            onClick={() => person.id && onDelete(person.id)}
-                          >
-                            <Trash />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Ta bort kontaktperson</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-4">Inga kontaktpersoner tillagda ännu.</p>
-          )}
-        </>
-      )}
-    </div>
+                  Spara
+                </Button>
+                <Button
+                  className="text-white px-4 py-2 rounded mt-2 ml-2"
+                  onClick={() => setShowInputs(false)}
+                >
+                  Avbryt
+                </Button>
+              </div>
+            )}
+
+            <div className="mt-6">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      className="text-white px-4 py-2 rounded hover:bg-slate-700 hover:text-white"
+                      onClick={() =>
+                        setSortOrder((prev) =>
+                          prev === "asc" ? "desc" : "asc"
+                        )
+                      }
+                    >
+                      {sortOrder === "asc" ? "A-Ö" : "Ö-A"}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Sortera på anläggningsnamn</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+
+            <div className="grid grid-cols-5 gap-4 font-bold border-b border-gray-300 pb-2 mt-4">
+              <span>Namn</span>
+              <span>Telefonnummer</span>
+              <span>Anläggning</span>
+              <span>Roll</span>
+              <span>Åtgärder</span>
+            </div>
+            {sortedContactPersons.length > 0 ? (
+              <ul>
+                {sortedContactPersons.map((person: ContactPerson) => (
+                  <li
+                    key={person.id}
+                    className="grid grid-cols-5 gap-4 py-2 border-b border-gray-200 items-center"
+                  >
+                    <span>{person.name}</span>
+                    <span>{person.phone}</span>
+                    <span>{person.facility}</span>
+                    <span>{person.role}</span>
+                    <div className="flex gap-2">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white"
+                              onClick={() => startEditing(person)}
+                            >
+                              <UserPenIcon />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Redigera kontaktperson</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white">
+                              <BellRing />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Skicka notis: Dags att inventera kiosk!</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white"
+                              onClick={async () => {
+                                if (person.id) {
+                                  await onDelete(person.id);
+                                  toast({
+                                    className: "bg-red-200",
+                                    title: "Kontaktperson borttagen",
+                                    description:
+                                      { person }.person.name +
+                                      " är nu borttagen från listan.",
+                                    duration: 5000,
+                                  });
+                                }
+                              }}
+                            >
+                              <Trash />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Ta bort kontaktperson</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-4">Inga kontaktpersoner tillagda ännu.</p>
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
