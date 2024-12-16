@@ -4,15 +4,15 @@
       "name": "Andreas",
       "facility": "Rosta Gärde",
       "phone": "07073177812",
-      "role": "Planansvarig",
+      "role": "Kiosk",
       "id": "f578"
     },
     {
-      "id": "f3f4",
       "name": "Camilla",
       "facility": "Rosta gärde",
       "phone": "0455485584",
-      "role": "Planansvarig"
+      "role": "Kiosk",
+      "id": "f3f4"
     },
     {
       "name": "Ludvig",

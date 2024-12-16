@@ -1,7 +1,5 @@
 import { useState } from "react";
 import {
-  ArrowDownUp,
-  BellRing,
   PlusIcon,
   Trash,
   UserPenIcon,
