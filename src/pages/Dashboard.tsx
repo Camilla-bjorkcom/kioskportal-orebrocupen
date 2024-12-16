@@ -6,7 +6,7 @@ function Dashboard() {
   return (
     <>
       <div className="container mx-auto">
-        <h2 className="font-bold text-4xl mb-24 pl-5">Din översikt</h2>
+        <h2 className="mt-8 text-2xl pb-2">Din översikt</h2>
         <DashboardStats />
         <div className="flex justify-between items-center">
           <DashboardLink />

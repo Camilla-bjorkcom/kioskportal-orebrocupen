@@ -50,8 +50,8 @@ const SettingsPage = () => {
 
   return (
     <div className="container mx-auto">
-        <h2 className="font-bold text-4xl mb-24 pl-5">Inställningar</h2>
-        <h3 className=" text-2xl pb-2 border-b border-b-slate-300">
+        <h2 className="mt-8 text-2xl pb-2">Inställningar</h2>
+        <h3 className=" text-lg pb-2 border-b border-b-slate-300">
           Din profil
         </h3>
         <div className="flex mt-4">
@@ -61,7 +61,7 @@ const SettingsPage = () => {
         <div>
           <ChangePassword />
         </div>       
-      <h3 className="text-2xl pt-5 pb-2 border-b border-b-slate-300">Turneringsdetaljer</h3>
+      <h3 className="text-lg pt-5 pb-2 border-b border-b-slate-300">Turneringsdetaljer</h3>
       {tournament ? (
         <div>
           <p className="font-semibold mt-2">{tournament.tournamentName}</p>

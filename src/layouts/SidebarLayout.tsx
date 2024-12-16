@@ -48,7 +48,7 @@ function TournamentDetails() {
       <main className="w-full">
       <div className="p-1 shadow w-full flex items-center mb-8">
       <SidebarTrigger />      
-      <p className="mx-auto font-bold text-4xl">{tournament?.tournamentName}</p>
+      <p className="mx-auto font-semibold text-4xl">{tournament?.tournamentName}</p>
     </div>
         <Outlet />
       </main>

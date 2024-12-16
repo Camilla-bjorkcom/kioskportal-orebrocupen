@@ -84,10 +84,10 @@ function CreateTournament() {
       <Header />
 
       <div className="container mx-auto ">
-        <h2 className="font-bold text-4xl mb-24">Dina turneringar</h2>
+        <h2 className="mt-8 text-2xl pb-2">Dina turneringar</h2>
         <CreateTournamentBtn onSave={SaveTournament} />
         <div className="mt-8">
-          <h3 className="font-bold">Skapade turneringar</h3>
+          <h3 className="">Skapade turneringar</h3>
           <div className="mt-4 flex flex-wrap gap-4">
             {tournaments.length > 0 ? (
               tournaments.map((tournament, index) => (
@@ -101,16 +101,16 @@ function CreateTournament() {
                 className="flex flex-col p-2 justify-between rounded-xl border bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 relative"
               >
                 <div className="flex justify-between w-full">
-                  <p className="font-bold">{tournament.tournamentName}</p>
+                  <p className="">{tournament.tournamentName}</p>
                   <button
                     onClick={(e) => {
                       e.stopPropagation(); // Förhindra navigering vid radering
                       DeleteTournament(tournament.id);
                     }}
                   >
-                    <TrashIcon className="w-7 h-5 hover:text-red-500"></TrashIcon>
+                    
                   </button>
-                  <p className="text-xs font-bold absolute bottom-2 right-2">
+                  <p className="text-xs absolute bottom-2 right-2">
                     Skapad: {datetime}
                   </p>
                 </div>
@@ -125,7 +125,7 @@ function CreateTournament() {
           </div>
         </div>
 
-        <p className="pt-64 font-bold">Avslutade turneringar</p>
+        <p className="pt-64">Avslutade turneringar</p>
       </div>
     </>
   );

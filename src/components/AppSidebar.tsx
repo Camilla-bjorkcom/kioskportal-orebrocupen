@@ -192,11 +192,11 @@ export function AppSidebar({ id }: { id?: number }) {
                 <DropdownMenuGroup>
                 <DropdownMenuItem>
                     <BookHeart />
-                    <a href="/createtournament">Mina turneringar</a>
+                    <a href="/createtournament" className="w-full flex">Mina turneringar</a>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <BadgeCheck />
-                    <a href={`/settings/${id}`}>Inställningar</a>
+                    <a href={`/settings/${id}`} className="w-full flex">Inställningar</a>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

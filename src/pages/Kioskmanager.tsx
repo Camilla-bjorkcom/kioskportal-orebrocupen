@@ -188,10 +188,10 @@ function Kioskmanager() {
   return (
     <>
       <section className="container mx-auto px-5">
-        <h1 className="text-3xl font-bold mb-10">Skapa kiosker och utbud</h1>
+        <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa kiosker och utbud</h1>
         <div className="grid lg:grid-cols-3 gap-5 w-10/12">
           <div>
-            <h3 className="text-xl font-bold mb-2">Anläggning</h3>
+            <h3 className="text-xl mb-2">Anläggning</h3>
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
               <AddFacilityButton onSave={CreateFacility} />
               {facility.map((facility) => (
@@ -236,7 +236,7 @@ function Kioskmanager() {
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-2">Kiosker</h3>
+            <h3 className="text-xl mb-2">Kiosker</h3>
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
               {selectedFacility !== null && (
                 <div className="mt-4">

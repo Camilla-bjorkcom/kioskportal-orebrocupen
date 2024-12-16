@@ -100,10 +100,10 @@ function ProductListHandler() {
   return (
     <section>
       <div className="container mx-auto px-4 flex-row items-center">
-        <h2 className="font-bold text-4xl my-4">Produktlistor</h2>
+        <h2 className="mt-8 text-2xl pb-2 mb-4">Produktlistor</h2>
         <CreateProductListButton onSave={SaveProductList} />
         <div className="mt-8 w-3/4">
-          <h3 className="font-semibold text-2xl">Sparade produktlistor:</h3>
+          <h3 className="text-lg">Sparade produktlistor:</h3>
           <div className="mt-4 gap-3 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {productlists.map((productlist) => (
               <HandleProductListButton
@@ -116,7 +116,7 @@ function ProductListHandler() {
                  shadow hover:bg-slate-800 hover:text-white text-black"
                 >
                   <div className="flex justify-between">
-                    <p className="font-semibold text-lg flex">
+                    <p className="text-md flex">
                       {productlist.productlistname}
                     </p>
                     <div

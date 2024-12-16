@@ -134,7 +134,7 @@ function InventoryStorage() {
       <Toaster />
       <div className="container mx-auto p-3">
         <div className="rounded-xl border border-black border-solid text-black aspect-video">
-          <h2 className="text-lg lg:text-3xl text-center w-full mt-10 font-bold">
+          <h2 className="text-lg lg:text-2xl text-center w-full mt-10 font-semibold">
             Inventera lagret
           </h2>
           <div className="w-full place-items-center mt-5 gap-3 mb-16">
