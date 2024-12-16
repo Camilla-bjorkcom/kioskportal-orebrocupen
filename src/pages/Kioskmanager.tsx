@@ -5,6 +5,7 @@ import { TrashIcon } from "lucide-react";
 import AddProductListButton from "@/components/AddProductListButton";
 // import AddProductsButton from "@/components/AddProductButton";
 import { useQuery } from "@tanstack/react-query";
+import AddProductsButton from "@/components/AddProductButton";
 
 interface Facility {
   id: number;
@@ -31,7 +32,7 @@ function Kioskmanager() {
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
   const [productList, setProductList] = useState<ProductList | undefined>();
-  // const [products, setProducts] = useState<string[]>([]);
+  const [products, setProducts] = useState<string[]>([]);
 
   //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
@@ -116,9 +117,9 @@ function Kioskmanager() {
     }
   };
 
-  // const addProduct = (productName: string) => {
-  //   setProducts((prev) => [...prev, productName]);
-  // };
+  const addProduct = (productName: string) => {
+    setProducts((prev) => [...prev, productName]);
+  };
 
   const handleFacilityClick = (facility: Facility) => {
     setSelectedFacility((prevSelectedFacility) =>
@@ -260,7 +261,7 @@ function Kioskmanager() {
                     ))}
                   </ul>
                  
-{/*                  
+                 
                   <ul>
                     {productList != undefined && (
                       <AddProductsButton onSave={addProduct} />
@@ -273,7 +274,7 @@ function Kioskmanager() {
                         <TrashIcon className="mr-5 w-4 h-4 place-self-center cursor-pointer hover:text-red-500" />
                       </div>
                     ))}
-                  </ul> */}
+                  </ul>
 
 
                 </div>

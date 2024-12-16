@@ -13,12 +13,6 @@
       "phone": "062161584"
     },
     {
-      "id": "eaac",
-      "name": "Helene",
-      "facility": "Lugnet",
-      "phone": "0215251"
-    },
-    {
       "id": "bf09",
       "name": "Nisse",
       "facility": "Pettersberg",
@@ -55,6 +49,12 @@
       "phone": "0211515"
     },
     {
+      "id": "5c6c",
+      "name": "Peter",
+      "facility": "Lillån",
+      "phone": "02125151"
+    },
+    {
       "id": "71c2",
       "name": "Ludvig",
       "facility": "Pettersberg",
@@ -73,6 +73,12 @@
       "tournamentName": "Select cup",
       "startDate": "2024-12-13T07:45:35.165Z",
       "endDate": "2024-12-13T07:45:35.165Z"
+    },
+    {
+      "id": "ac7e",
+      "tournamentName": "ÖC 2025",
+      "startDate": "2024-12-13T09:04:53.216Z",
+      "endDate": "2024-12-13T09:04:53.216Z"
     }
   ],
   "facilities": [
@@ -91,12 +97,20 @@
     {
       "id": "6be6",
       "facilityname": "Pettersberg"
+    },
+    {
+      "id": "5487",
+      "facilityname": "Petterberg"
     }
   ],
   "kiosks": [
     {
       "id": "76b7",
       "kioskName": "Huvudkiosk"
+    },
+    {
+      "id": "f808",
+      "kioskName": "kiosk 3"
     }
   ],
   "products": [
@@ -195,6 +209,10 @@
     {
       "id": "1715",
       "productname": "Haribo Nappar Lakrits"
+    },
+    {
+      "id": "0f22",
+      "productname": "Fanta"
     }
   ],
   "productslists": [
@@ -485,20 +503,6 @@
         {
           "id": "1715",
           "productname": "Haribo Nappar Lakrits"
-        }
-      ]
-    },
-    {
-      "id": "6173",
-      "productlistname": "Camillas",
-      "products": [
-        {
-          "id": "6312",
-          "productname": "Coca Cola"
-        },
-        {
-          "id": "d638",
-          "productname": "Coca Cola Zero"
         }
       ]
     }
