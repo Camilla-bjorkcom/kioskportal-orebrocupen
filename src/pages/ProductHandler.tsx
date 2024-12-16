@@ -1,17 +1,19 @@
 import CreateProductButton from "@/components/CreateProductButton";
+import UpdateProductButton from "@/components/UpdateProductButton";
 
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+
 
 interface Product {
   id: number;
   productname: string;
+  amountPerPackage : number
 }
 
 function ProductHandler() {
-  const { pathname } = useLocation();
+ 
   const [products, setProducts] = useState<Product[]>([]);
 
   const { isLoading, error } = useQuery<Product[]>({
@@ -27,12 +29,12 @@ function ProductHandler() {
     },
   });
 
-  const SaveProduct = async (productname: string) => {
+  const SaveProduct = async (productname: string , amountPerPackage: number) => {
     try {
       const response = await fetch("http://localhost:3000/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productname: productname }),
+        body: JSON.stringify({ productname: productname, amountPerPackage : amountPerPackage }),
       });
       if (!response.ok) {
         throw new Error("Failed to save product");
@@ -44,6 +46,18 @@ function ProductHandler() {
       throw new Error("failed to save product");
     }
   };
+  
+  const UpdateProduct = async ( id: number, productname: string, amountPerPackage: number) => {
+    try{
+      const response= await fetch(`http://localhost:3000/products/${id}`, {
+
+      })
+
+    }
+    catch(error) {
+
+    }
+  }
 
   const DeleteProduct = async (id: number) => {
     try {
@@ -58,6 +72,12 @@ function ProductHandler() {
       console.error(error);
     }
   };
+  function displayAmount(amount?: number | null) {
+    if (amount === null || amount === undefined) {
+      return "N/A";
+    }
+    return amount === 0 ? "N/A" : amount;
+  }
 
   if (isLoading) {
     return <div>Loading products...</div>;
@@ -80,11 +100,17 @@ function ProductHandler() {
                 key={product.id}
                 className="p-4 border border-gray-200 rounded-md shadow w-3/4 hover:bg-gray-50"
               >
-                <div className="flex justify-between">
-                  {product.productname}
-                  <button onClick={() => DeleteProduct(product.id)}>
+                <div className="flex flex-row justify-between">
+                  <p className= "basis-1/4">{product.productname}</p>
+                  <div className="flex justify-between basis-1/3">
+                  <p className="mr-10 min-w-24">st/kolli: {displayAmount(product.amountPerPackage)}</p>
+                  <UpdateProductButton onUpdate={}></UpdateProductButton>
+                  <button  onClick={() => DeleteProduct(product.id)}>
                     <TrashIcon className="w-8 h-6 hover:text-red-500 "></TrashIcon>
                   </button>
+
+                  </div>
+                 
                 </div>
               </div>
             ))}
