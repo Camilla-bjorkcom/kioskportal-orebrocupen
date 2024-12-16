@@ -75,15 +75,27 @@
       "facilityname": "Rosta"
     },
     {
-      "id": "a7bb",
+      "id": "caa9",
       "facilityname": "Lillån"
+    },
+    {
+      "id": "c10e",
+      "facilityname": "Pettersberg"
+    },
+    {
+      "id": "48e0",
+      "facilityname": "Björkvallen"
+    },
+    {
+      "id": "b384",
+      "facilityname": "Adolfsberg"
+    },
+    {
+      "id": "b975",
+      "facilityname": "Trängen"
     }
   ],
   "kiosks": [
-    {
-      "id": "a8d6",
-      "kioskName": "Kiosk Mitten"
-    },
     {
       "id": "4feb",
       "kioskName": "Kiosk Höger"

@@ -5,6 +5,17 @@ import { TrashIcon } from "lucide-react";
 import AddProductListButton from "@/components/AddProductListButton";
 // import AddProductsButton from "@/components/AddProductButton";
 import { useQuery } from "@tanstack/react-query";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Facility {
   id: number;
@@ -30,18 +41,16 @@ function Kioskmanager() {
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
-  const [productList, setProductList] = useState<ProductList | undefined>();
+  // const [productList, setProductList] = useState<ProductList | undefined>();
   // const [products, setProducts] = useState<string[]>([]);
 
   //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
-    facility: number | undefined;
+    facility: number | null;
     kiosk: number | null;
-    productlist: number | undefined;
   }>({
-    facility: undefined,
+    facility: null,
     kiosk: null,
-    productlist: undefined,
   });
 
   useQuery<Facility[]>({
@@ -106,15 +115,15 @@ function Kioskmanager() {
     }
   };
 
-  const addProductList = (productList: ProductList | undefined) => {
-    setProductList(productList);
-    if (productList != undefined) {
-      setSelectedOptions((prev) => ({
-        ...prev,
-        productlist: productList.id,
-      }));
-    }
-  };
+  // const addProductList = (productList: ProductList | undefined) => {
+  //   setProductList(productList);
+  //   if (productList != undefined) {
+  //     setSelectedOptions((prev) => ({
+  //       ...prev,
+  //       productlist: productList.id,
+  //     }));
+  //   }
+  // };
 
   // const addProduct = (productName: string) => {
   //   setProducts((prev) => [...prev, productName]);
@@ -124,27 +133,25 @@ function Kioskmanager() {
     setSelectedFacility((prevSelectedFacility) =>
       prevSelectedFacility === facility.id ? null : facility.id
     );
-  
+
     // Återställ kiosk och uppdatera valda alternativ
     setSelectedKiosk(null);
     setSelectedOptions((prev) => ({
       ...prev,
-      facility: selectedFacility === facility.id ? undefined : facility.id,
+      facility: selectedFacility === facility.id ? null : facility.id,
       kiosk: null,
-      productlist: undefined,
     }));
   };
-  
+
   const handleKioskClick = (kiosk: Kiosk) => {
     setSelectedKiosk((prevSelectedKiosk) =>
       prevSelectedKiosk === kiosk.id ? null : kiosk.id
     );
-  
+
     // Uppdatera valda alternativ
     setSelectedOptions((prev) => ({
       ...prev,
       kiosk: selectedKiosk === kiosk.id ? null : kiosk.id,
-      productlist: prev.productlist,
     }));
   };
 
@@ -199,10 +206,30 @@ function Kioskmanager() {
                   onClick={() => handleFacilityClick(facility)}
                 >
                   {facility.facilityname}
-                  <TrashIcon
-                    onClick={() => DeleteFacility(facility.id)}
-                    className="mr-5 w-5 h-5 place-self-center hover:text-red-500"
-                  />
+                  <AlertDialog>
+                    <AlertDialogTrigger>
+                      <TrashIcon className="mr-5 w-5 h-5 place-self-center hover:text-red-500"></TrashIcon>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Vill du radera anläggningen och dess kiosker?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Den här åtgärden kan inte ångras. Anläggningen och
+                          dess kiosker kommer att tas bort permanent.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => DeleteFacility(facility.id)}
+                        >
+                          Radera
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </p>
               ))}
             </div>
@@ -226,8 +253,31 @@ function Kioskmanager() {
                 `}
                       onClick={() => handleKioskClick(kiosk)}
                     >
-                      {kiosk.kioskName}                 
-                      <TrashIcon onClick={() => DeleteKiosk(kiosk.id)} className="mr-7 w-5 h-5 place-self-center  hover:text-red-500" />
+                      {kiosk.kioskName}
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          <TrashIcon className="mr-7 w-5 h-5 place-self-center  hover:text-red-500" />
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Vill du radera kiosken?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Den här åtgärden kan inte ångras. Kiosken kommer
+                              att tas bort permanent.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => DeleteKiosk(kiosk.id)}
+                            >
+                              Radera
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </p>
                   ))}
                 </div>
@@ -235,7 +285,8 @@ function Kioskmanager() {
             </div>
           </div>
 
-          <div>
+{/* Produktlista */}
+          {/* <div>
             <h3 className="text-xl font-bold mb-2">Produktlista</h3>
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
               {selectedKiosk !== null && (
@@ -250,7 +301,7 @@ function Kioskmanager() {
                         {productList?.productlistname}
                       </h3>
                       {productList != undefined && (
-                        <TrashIcon  className="mr-5 w-5 h-5 place-self-center cursor-pointer hover:text-red-500" />
+                        <TrashIcon className="mr-5 w-5 h-5 place-self-center cursor-pointer hover:text-red-500" />
                       )}
                     </div>
                     {productList?.products.map((product, index) => (
@@ -259,8 +310,8 @@ function Kioskmanager() {
                       </li>
                     ))}
                   </ul>
-                 
-{/*                  
+
+                  {/*                  
                   <ul>
                     {productList != undefined && (
                       <AddProductsButton onSave={addProduct} />
@@ -273,13 +324,11 @@ function Kioskmanager() {
                         <TrashIcon className="mr-5 w-4 h-4 place-self-center cursor-pointer hover:text-red-500" />
                       </div>
                     ))}
-                  </ul> */}
-
-
+                  </ul>
                 </div>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
     </>
