@@ -18,7 +18,7 @@ function Home() {
       </div>
       <div className="flex flex-col place-items-center mt-7">
         <h2 className="font-bold lg:text-3xl pt-5 text-slate-800">
-          Logga in eller skapa ny användare
+          Logga in
         </h2>
         <button
           className="flex text-center justify-center items-center border border-solid text-slate-800 hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow w-2/3 lg:w-1/3"
