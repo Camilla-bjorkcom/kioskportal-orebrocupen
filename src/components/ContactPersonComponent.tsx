@@ -7,6 +7,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "./ui/toaster";
 
@@ -62,7 +71,13 @@ const ContactPersonComponent = ({
 
   const addContactPerson = async () => {
     if (!name.trim() || !phone.trim() || !facility.trim()) {
-      alert("Alla fält måste fyllas i!");
+      toast({
+        className: "bg-red-200 text-black",
+        title: "Fel",
+        description: "Alla fält måste fyllas i!",
+        variant: "destructive",
+        duration: 5000,
+      });
       return;
     }
 
@@ -70,7 +85,7 @@ const ContactPersonComponent = ({
     toast({
       className: "bg-green-200",
       title: "Kontaktperson tillagd",
-      description: name + " är nu tillagd.",
+      description: `${name} är nu tillagd.`,
       duration: 5000,
     });
     setName("");
@@ -84,15 +99,21 @@ const ContactPersonComponent = ({
     if (!editingPerson) return;
 
     if (!name.trim() || !phone.trim() || !facility.trim()) {
-      alert("Alla fält måste fyllas i!");
+      toast({
+        className: "bg-red-200 text-black",
+        title: "Fel",
+        description: "Alla fält måste fyllas i!",
+        variant: "destructive",
+        duration: 5000,
+      });
       return;
     }
 
     await onUpdate(editingPerson.id, name, facility, phone, role);
     toast({
       className: "bg-yellow-200",
-      title: "Kontaktperson uppdaterad",
-      description: name + " är nu uppdaterad.",
+      title: "Ändringar sparade",
+      description: `${editingPerson.name} har uppdaterats.`,
       duration: 5000,
     });
     setEditingPerson(null);
@@ -175,7 +196,7 @@ const ContactPersonComponent = ({
               className="mt-4 text-white px-4 py-2 rounded mb-4 hover:bg-slate-700 hover:text-white"
               onClick={() => setShowInputs(true)}
             >
-              Lägg till <PlusIcon className="w-4 h-4 place-self-center " />
+              Lägg till <PlusIcon className="w-4 h-4 place-self-center" />
             </Button>
 
             {showInputs && (
@@ -201,13 +222,19 @@ const ContactPersonComponent = ({
                   onChange={(e) => setFacility(e.target.value)}
                   className="block border border-gray-300 rounded-md p-2 mb-2"
                 />
-                <input
-                  type="text"
-                  placeholder="Roll"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="block border border-gray-300 rounded-md p-2 mb-2"
-                />
+                <Select onValueChange={(value) => setRole(value)}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Välj en roll" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Roll</SelectLabel>
+                      <SelectItem value="Huvudansvarig">Huvudansvarig</SelectItem>
+                      <SelectItem value="Planansvarig">Planansvarig</SelectItem>
+                      <SelectItem value="Kiosk">Kiosk</SelectItem>            
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
 
                 <Button
                   className="text-white px-4 py-2 rounded mt-2"
@@ -224,108 +251,128 @@ const ContactPersonComponent = ({
               </div>
             )}
 
-            <div className="mt-6">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      className="text-white px-4 py-2 rounded hover:bg-slate-700 hover:text-white"
-                      onClick={() =>
-                        setSortOrder((prev) =>
-                          prev === "asc" ? "desc" : "asc"
-                        )
-                      }
-                    >
-                      {sortOrder === "asc" ? "A-Ö" : "Ö-A"}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Sortera på anläggningsnamn</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-
-            <div className="grid grid-cols-5 gap-4 font-bold border-b border-gray-300 pb-2 mt-4">
+            {/* Grid eller kortlayout baserat på skärmstorlek */}
+            <div className="mt-6 hidden sm:grid grid-cols-5 gap-4 font-bold border-b border-gray-300 pb-2">
               <span>Namn</span>
               <span>Telefonnummer</span>
               <span>Anläggning</span>
               <span>Roll</span>
               <span>Åtgärder</span>
             </div>
-            {sortedContactPersons.length > 0 ? (
-              <ul>
-                {sortedContactPersons.map((person: ContactPerson) => (
-                  <li
-                    key={person.id}
-                    className="grid grid-cols-5 gap-4 py-2 border-b border-gray-200 items-center"
-                  >
-                    <span>{person.name}</span>
-                    <span>{person.phone}</span>
-                    <span>{person.facility}</span>
-                    <span>{person.role}</span>
-                    <div className="flex gap-2">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white"
-                              onClick={() => startEditing(person)}
-                            >
-                              <UserPenIcon />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Redigera kontaktperson</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white">
-                              <BellRing />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Skicka notis: Dags att inventera kiosk!</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              className=" w-fit text-white px-2 py-1 rounded hover:bg-slate-700 hover:text-white"
-                              onClick={async () => {
-                                if (person.id) {
-                                  await onDelete(person.id);
-                                  toast({
-                                    className: "bg-red-200",
-                                    title: "Kontaktperson borttagen",
-                                    description:
-                                      { person }.person.name +
-                                      " är nu borttagen från listan.",
-                                    duration: 5000,
-                                  });
-                                }
-                              }}
-                            >
-                              <Trash />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Ta bort kontaktperson</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-4">Inga kontaktpersoner tillagda ännu.</p>
-            )}
+            <div className="mt-4 sm:hidden grid gap-4">
+              {sortedContactPersons.map((person) => (
+                <div
+                  key={person.id}
+                  className="bg-white border border-gray-200 shadow-md rounded-md p-4"
+                >
+                  <h4 className="font-bold text-lg mb-2">{person.name}</h4>
+                  <p className="text-gray-600 mb-1">
+                    <strong>Telefon:</strong> {person.phone}
+                  </p>
+                  <p className="text-gray-600 mb-1">
+                    <strong>Anläggning:</strong> {person.facility}
+                  </p>
+                  <p className="text-gray-600">
+                    <strong>Roll:</strong> {person.role}
+                  </p>
+                  <div className="flex justify-between mt-4">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            className="w-fit text-white px-2 py-1 rounded hover:bg-slate-700"
+                            onClick={() => startEditing(person)}
+                          >
+                            <UserPenIcon />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Redigera kontaktperson</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            className="w-fit text-white px-2 py-1 rounded hover:bg-slate-700"
+                            onClick={async () => {
+                              await onDelete(person.id);
+                              toast({
+                                className: "bg-red-200",
+                                title: "Kontaktperson borttagen",
+                                description: `${person.name} är nu borttagen.`,
+                                duration: 5000,
+                              });
+                            }}
+                          >
+                            <Trash />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Ta bort kontaktperson</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop-layout */}
+            <ul className="hidden sm:block">
+              {sortedContactPersons.map((person: ContactPerson) => (
+                <li
+                  key={person.id}
+                  className="grid grid-cols-5 gap-4 py-2 border-b border-gray-200 items-center"
+                >
+                  <span>{person.name}</span>
+                  <span>{person.phone}</span>
+                  <span>{person.facility}</span>
+                  <span>{person.role}</span>
+                  <div className="flex gap-2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            className="w-fit text-white px-2 py-1 rounded hover:bg-slate-700"
+                            onClick={() => startEditing(person)}
+                          >
+                            <UserPenIcon />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Redigera kontaktperson</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            className="w-fit text-white px-2 py-1 rounded hover:bg-slate-700"
+                            onClick={async () => {
+                              await onDelete(person.id);
+                              toast({
+                                className: "bg-red-200",
+                                title: "Kontaktperson borttagen",
+                                description: `${person.name} är nu borttagen.`,
+                                duration: 5000,
+                              });
+                            }}
+                          >
+                            <Trash />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Ta bort kontaktperson</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </>
         )}
       </div>
