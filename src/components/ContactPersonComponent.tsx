@@ -148,7 +148,7 @@ const ContactPersonComponent = ({
   return (
     <>
       <Toaster />
-      <div className="container mx-auto ml-4">
+      <div className="container mx-auto md:ml-4 ml-1">
         {editingPerson ? (
           <div className="mt-4">
             <h3>Redigera kontaktperson</h3>
