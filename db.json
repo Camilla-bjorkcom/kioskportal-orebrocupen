@@ -69,20 +69,7 @@
       "endDate": "2024-12-13T07:45:35.165Z"
     }
   ],
-  "facilities": [
-    {
-      "id": "a3d6",
-      "facilityname": "Rosta"
-    },
-    {
-      "id": "6c29",
-      "facilityname": "Lillån"
-    },
-    {
-      "id": "6b83",
-      "facilityname": "Trängen"
-    }
-  ],
+  "facilities": [],
   "kiosks": [
     {
       "id": "4feb",

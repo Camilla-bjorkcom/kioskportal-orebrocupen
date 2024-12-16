@@ -1,8 +1,8 @@
 import AddFacilityButton from "@/components/AddFacilityButton";
 import AddKioskButton from "@/components/AddKioskButton";
 import { useState } from "react";
-import { TrashIcon } from "lucide-react";
-import AddProductListButton from "@/components/AddProductListButton";
+import { Pencil, PenIcon, TrashIcon } from "lucide-react";
+// import AddProductListButton from "@/components/AddProductListButton";
 // import AddProductsButton from "@/components/AddProductButton";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -16,6 +16,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import UpdateFacilityButton from "@/components/UpdateFacilityButton";
+import DeleteFacilityButton from "@/components/DeleteFacilityButton";
 
 interface Facility {
   id: number;
@@ -26,15 +28,15 @@ interface Kiosk {
   kioskName: string;
 }
 
-interface ProductList {
-  id: number;
-  productlistname: string;
-  products: Product[];
-}
-interface Product {
-  id: number;
-  productname: string;
-}
+// interface ProductList {
+//   id: number;
+//   productlistname: string;
+//   products: Product[];
+// }
+// interface Product {
+//   id: number;
+//   productname: string;
+// }
 
 function Kioskmanager() {
   const [facility, setFacility] = useState<Facility[]>([]);
@@ -129,30 +131,33 @@ function Kioskmanager() {
   //   setProducts((prev) => [...prev, productName]);
   // };
 
-  const handleFacilityClick = (facility: Facility) => {
-    setSelectedFacility((prevSelectedFacility) =>
-      prevSelectedFacility === facility.id ? null : facility.id
-    );
+  const UpdateFacility = async (facility: Facility) => {
+    console.log("this is" + facility.facilityname + "id: " + facility.id);
+    try {
+      const response = await fetch(
+        `http://localhost:3000/facilities/${facility.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: facility.id,
+            facilityname: facility.facilityname,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update facility");
+      }
+      const updatedFacility = await response.json();
+      console.log(updatedFacility);
 
-    // Återställ kiosk och uppdatera valda alternativ
-    setSelectedKiosk(null);
-    setSelectedOptions((prev) => ({
-      ...prev,
-      facility: selectedFacility === facility.id ? null : facility.id,
-      kiosk: null,
-    }));
-  };
-
-  const handleKioskClick = (kiosk: Kiosk) => {
-    setSelectedKiosk((prevSelectedKiosk) =>
-      prevSelectedKiosk === kiosk.id ? null : kiosk.id
-    );
-
-    // Uppdatera valda alternativ
-    setSelectedOptions((prev) => ({
-      ...prev,
-      kiosk: selectedKiosk === kiosk.id ? null : kiosk.id,
-    }));
+      setFacility((prev) =>
+        prev.map((f) => (f.id === updatedFacility.id ? updatedFacility : f))
+      );
+    } catch (error) {
+      console.error(error);
+      throw new Error("failed to create facility");
+    }
   };
 
   const DeleteFacility = async (id: number) => {
@@ -183,54 +188,68 @@ function Kioskmanager() {
     }
   };
 
+  const handleFacilityClick = (facility: Facility) => {
+    setSelectedFacility((prevSelectedFacility) =>
+      prevSelectedFacility === facility.id ? null : facility.id
+    );
+
+    // Återställ kiosk och uppdatera valda alternativ
+    setSelectedKiosk(null);
+    setSelectedOptions((prev) => ({
+      ...prev,
+      facility: selectedFacility === facility.id ? null : facility.id,
+      kiosk: null,
+    }));
+  };
+
+  const handleKioskClick = (kiosk: Kiosk) => {
+    setSelectedKiosk((prevSelectedKiosk) =>
+      prevSelectedKiosk === kiosk.id ? null : kiosk.id
+    );
+
+    // Uppdatera valda alternativ
+    setSelectedOptions((prev) => ({
+      ...prev,
+      kiosk: selectedKiosk === kiosk.id ? null : kiosk.id,
+    }));
+  };
+
   console.log(selectedOptions);
 
   return (
     <>
       <section className="container mx-auto px-5">
-        <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa kiosker och utbud</h1>
+        <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa kiosker</h1>
         <div className="grid lg:grid-cols-3 gap-5 w-10/12">
           <div>
             <h3 className="text-xl mb-2">Anläggning</h3>
             <div className="border border-solid lg:aspect-square pb-4 border-black rounded-xl">
               <AddFacilityButton onSave={CreateFacility} />
               {facility.map((facility) => (
-                <p
-                  key={facility.id}
+                <div
                   className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
-                 ${
-                   selectedFacility === facility.id
-                     ? "text-black border-black border rounded-xl h-fit w-11/12"
-                     : "text-black border-none w-11/12"
-                 }`}
+                  ${
+                    selectedFacility === facility.id
+                      ? "text-black border-black border rounded-xl h-fit w-11/12"
+                      : "text-black border-none w-11/12"
+                  }`}
                   onClick={() => handleFacilityClick(facility)}
                 >
-                  {facility.facilityname}
-                  <AlertDialog>
-                    <AlertDialogTrigger>
-                      <TrashIcon className="mr-5 w-5 h-5 place-self-center hover:text-red-500"></TrashIcon>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Vill du radera anläggningen och dess kiosker?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Den här åtgärden kan inte ångras. Anläggningen och
-                          dess kiosker kommer att tas bort permanent.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Avbryt</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => DeleteFacility(facility.id)}
-                        >
-                          Radera
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </p>
+                  <p>{facility.facilityname}</p>
+                  <div
+                    className="flex gap-3"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <UpdateFacilityButton
+                      onSave={UpdateFacility}
+                      facility={facility}
+                    />
+                    <DeleteFacilityButton
+                      id={facility.id}
+                      onDelete={DeleteFacility}
+                    />
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -254,30 +273,33 @@ function Kioskmanager() {
                       onClick={() => handleKioskClick(kiosk)}
                     >
                       {kiosk.kioskName}
-                      <AlertDialog>
-                        <AlertDialogTrigger>
-                          <TrashIcon className="mr-7 w-5 h-5 place-self-center  hover:text-red-500" />
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Vill du radera kiosken?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Den här åtgärden kan inte ångras. Kiosken kommer
-                              att tas bort permanent.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Avbryt</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => DeleteKiosk(kiosk.id)}
-                            >
-                              Radera
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                      <div className="flex gap-3">
+                        <Pencil className="w-5 h-5 hover:text-orange-n" />
+                        <AlertDialog>
+                          <AlertDialogTrigger>
+                            <TrashIcon className="mr-7 w-5 h-5 place-self-center  hover:text-red-500" />
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Vill du radera kiosken?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Den här åtgärden kan inte ångras. Kiosken kommer
+                                att tas bort permanent.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => DeleteKiosk(kiosk.id)}
+                              >
+                                Radera
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     </p>
                   ))}
                 </div>
@@ -285,7 +307,7 @@ function Kioskmanager() {
             </div>
           </div>
 
-{/* Produktlista */}
+          {/* Produktlista */}
           {/* <div>
             <h3 className="text-xl font-bold mb-2">Produktlista</h3>
             <div className="border border-solid lg:aspect-square border-black rounded-xl">
