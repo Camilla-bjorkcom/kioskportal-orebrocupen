@@ -53,6 +53,12 @@
       "name": "Viktor",
       "facility": "Rosta gärde",
       "phone": "0211515"
+    },
+    {
+      "id": "71c2",
+      "name": "Ludvig",
+      "facility": "Pettersberg",
+      "phone": "073333333"
     }
   ],
   "tournaments": [
@@ -81,16 +87,16 @@
     {
       "id": "942f",
       "facilityname": "Rost"
+    },
+    {
+      "id": "6be6",
+      "facilityname": "Pettersberg"
     }
   ],
   "kiosks": [
     {
-      "id": "4feb",
-      "kioskName": "Kiosk Höger"
-    },
-    {
-      "id": "9041",
-      "kioskName": "Kiosk Vänster"
+      "id": "76b7",
+      "kioskName": "Huvudkiosk"
     }
   ],
   "products": [
@@ -397,92 +403,6 @@
       ]
     },
     {
-      "id": "c8e1",
-      "productlistname": "Andreas Lista",
-      "products": [
-        {
-          "id": "eedc",
-          "productname": "Hamburgare"
-        },
-        {
-          "id": "9d9f",
-          "productname": "Kexchoklad"
-        },
-        {
-          "id": "79dc",
-          "productname": "Powerade Mountain Blast"
-        },
-        {
-          "id": "d638",
-          "productname": "Coca Cola Zero"
-        },
-        {
-          "id": "6312",
-          "productname": "Coca Cola"
-        },
-        {
-          "id": "b361",
-          "productname": "Bonaqua Citron/lime"
-        },
-        {
-          "id": "17e7",
-          "productname": "Mer Apelsin"
-        },
-        {
-          "id": "0bad",
-          "productname": "Mer Päron"
-        },
-        {
-          "id": "c216",
-          "productname": "Midnight Grown"
-        },
-        {
-          "id": "5f35",
-          "productname": "Pizza Kebab"
-        },
-        {
-          "id": "ecda",
-          "productname": "Pizza Vegetarisk"
-        },
-        {
-          "id": "e3c0",
-          "productname": "Rullgrillskorv"
-        },
-        {
-          "id": "b56e",
-          "productname": "Sibyllia Hamburgerficka"
-        },
-        {
-          "id": "7580",
-          "productname": "Johnnys Senap Sötstark"
-        },
-        {
-          "id": "6fd0",
-          "productname": "Pringels Original"
-        },
-        {
-          "id": "6791",
-          "productname": "Marabou Mjölkchoklad"
-        },
-        {
-          "id": "b368",
-          "productname": "Haribo Nappar Frukt 80g"
-        },
-        {
-          "id": "9d79",
-          "productname": "Haribo Nappar Sura 80g"
-        },
-        {
-          "id": "ebf0",
-          "productname": "Haribo Nappar Cola 80g"
-        },
-        {
-          "id": "1715",
-          "productname": "Haribo Nappar Lakrits"
-        }
-      ]
-    },
-    {
       "id": "3c6f",
       "productlistname": "Luddes",
       "products": [
@@ -565,6 +485,20 @@
         {
           "id": "1715",
           "productname": "Haribo Nappar Lakrits"
+        }
+      ]
+    },
+    {
+      "id": "6173",
+      "productlistname": "Camillas",
+      "products": [
+        {
+          "id": "6312",
+          "productname": "Coca Cola"
+        },
+        {
+          "id": "d638",
+          "productname": "Coca Cola Zero"
         }
       ]
     }
