@@ -588,6 +588,11 @@
           "productname": "Festis Kaktus/Lime"
         }
       ]
+    },
+    {
+      "id": "44cc",
+      "productlistname": "ny test",
+      "products": []
     }
   ],
   "inventoryList": [
