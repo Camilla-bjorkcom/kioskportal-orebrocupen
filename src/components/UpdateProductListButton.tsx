@@ -116,14 +116,12 @@ function UpdateProductListButton({
         body: JSON.stringify(sanitizedProductList),
       });
 
-      // Kolla om anropet lyckades
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Server response error:", errorText);
         throw new Error("Failed to update list");
       }
-
-      // Returnera den uppdaterade datan om allt gick bra
+      
       const data = await response.json();
       onUpdate(data);
     } catch (error) {

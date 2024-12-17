@@ -67,7 +67,7 @@ export function AppSidebar({ id }: { id?: number }) {
       url: "#",
       icon: House,
       subitems: [      
-        { title: "Skapa kiosker och utbud", url: `/kioskmanager/${id}` },
+        { title: "Skapa kiosker", url: `/kioskmanager/${id}` },
         { title: "Kontaktpersoner", url: `/contactperson/${id}` },
         { title: "QR koder till kiosker", url: "#" },
         

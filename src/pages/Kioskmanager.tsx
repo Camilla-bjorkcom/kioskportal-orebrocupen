@@ -1,11 +1,16 @@
 import AddFacilityButton from "@/components/AddFacilityButton";
 import AddKioskButton from "@/components/AddKioskButton";
 import { useState } from "react";
-import { TrashIcon } from "lucide-react";
-import AddProductListButton from "@/components/AddProductListButton";
-// import AddProductsButton from "@/components/AddProductButton";
 import { useQuery } from "@tanstack/react-query";
-import AddProductsButton from "@/components/AddProductButton";
+import UpdateFacilityButton from "@/components/UpdateFacilityButton";
+import DeleteButton from "@/components/DeleteButton";
+import UpdateKioskButton from "@/components/UpdateKioskButton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Facility {
   id: number;
@@ -16,33 +21,19 @@ interface Kiosk {
   kioskName: string;
 }
 
-interface ProductList {
-  id: number;
-  productlistname: string;
-  products: Product[];
-}
-interface Product {
-  id: number;
-  productname: string;
-}
-
 function Kioskmanager() {
   const [facility, setFacility] = useState<Facility[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
   const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
-  const [productList, setProductList] = useState<ProductList | undefined>();
-  const [products, setProducts] = useState<string[]>([]);
 
   //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
-    facility: number | undefined;
+    facility: number | null;
     kiosk: number | null;
-    productlist: number | undefined;
   }>({
-    facility: undefined,
+    facility: null,
     kiosk: null,
-    productlist: undefined,
   });
 
   useQuery<Facility[]>({
@@ -107,46 +98,57 @@ function Kioskmanager() {
     }
   };
 
-  const addProductList = (productList: ProductList | undefined) => {
-    setProductList(productList);
-    if (productList != undefined) {
-      setSelectedOptions((prev) => ({
-        ...prev,
-        productlist: productList.id,
-      }));
+  const UpdateFacility = async (facility: Facility) => {
+    console.log("this is" + facility.facilityname + "id: " + facility.id);
+    try {
+      const response = await fetch(
+        `http://localhost:3000/facilities/${facility.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: facility.id,
+            facilityname: facility.facilityname,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update facility");
+      }
+      const updatedFacility = await response.json();
+      console.log(updatedFacility);
+
+      setFacility((prev) =>
+        prev.map((f) => (f.id === updatedFacility.id ? updatedFacility : f))
+      );
+    } catch (error) {
+      console.error(error);
+      throw new Error("failed to create facility");
     }
   };
 
-  const addProduct = (productName: string) => {
-    setProducts((prev) => [...prev, productName]);
-  };
+  const UpdateKiosk = async (kiosk: Kiosk) => {
+    try {
+      const response = await fetch(`http://localhost:3000/kiosks/${kiosk.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: kiosk.id,
+          kioskName: kiosk.kioskName,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update facility");
+      }
+      const updatedKiosk = await response.json();
 
-  const handleFacilityClick = (facility: Facility) => {
-    setSelectedFacility((prevSelectedFacility) =>
-      prevSelectedFacility === facility.id ? null : facility.id
-    );
-  
-    // Återställ kiosk och uppdatera valda alternativ
-    setSelectedKiosk(null);
-    setSelectedOptions((prev) => ({
-      ...prev,
-      facility: selectedFacility === facility.id ? undefined : facility.id,
-      kiosk: null,
-      productlist: undefined,
-    }));
-  };
-  
-  const handleKioskClick = (kiosk: Kiosk) => {
-    setSelectedKiosk((prevSelectedKiosk) =>
-      prevSelectedKiosk === kiosk.id ? null : kiosk.id
-    );
-  
-    // Uppdatera valda alternativ
-    setSelectedOptions((prev) => ({
-      ...prev,
-      kiosk: selectedKiosk === kiosk.id ? null : kiosk.id,
-      productlist: prev.productlist,
-    }));
+      setKiosks((prev) =>
+        prev.map((f) => (f.id === updatedKiosk.id ? updatedKiosk : f))
+      );
+    } catch (error) {
+      console.error(error);
+      throw new Error("failed to create facility");
+    }
   };
 
   const DeleteFacility = async (id: number) => {
@@ -177,106 +179,150 @@ function Kioskmanager() {
     }
   };
 
+  const handleFacilityClick = (facility: Facility) => {
+    setSelectedFacility((prevSelectedFacility) =>
+      prevSelectedFacility === facility.id ? null : facility.id
+    );
+
+    setSelectedKiosk(null);
+    setSelectedOptions((prev) => ({
+      ...prev,
+      facility: selectedFacility === facility.id ? null : facility.id,
+      kiosk: null,
+    }));
+  };
+
+  const handleKioskClick = (kiosk: Kiosk) => {
+    setSelectedKiosk((prevSelectedKiosk) =>
+      prevSelectedKiosk === kiosk.id ? null : kiosk.id
+    );
+
+    setSelectedOptions((prev) => ({
+      ...prev,
+      kiosk: selectedKiosk === kiosk.id ? null : kiosk.id,
+    }));
+  };
+
   console.log(selectedOptions);
 
   return (
     <>
       <section className="container mx-auto px-5">
-        <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa kiosker och utbud</h1>
-        <div className="grid lg:grid-cols-3 gap-5 w-10/12">
+        <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa kiosker</h1>
+        <div className="grid xl:grid-cols-3 gap-5 w-10/12">
           <div>
             <h3 className="text-xl mb-2">Anläggning</h3>
-            <div className="border border-solid lg:aspect-square border-black rounded-xl">
+            <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
               <AddFacilityButton onSave={CreateFacility} />
               {facility.map((facility) => (
-                <p
-                  key={facility.id}
+                <div
                   className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
-                 ${
-                   selectedFacility === facility.id
-                     ? "text-black border-black border rounded-xl h-fit w-11/12"
-                     : "text-black border-none w-11/12"
-                 }`}
+                  ${
+                    selectedFacility === facility.id
+                      ? "text-black border-black border rounded-xl h-fit w-11/12"
+                      : "text-black border-none w-11/12"
+                  }`}
                   onClick={() => handleFacilityClick(facility)}
                 >
-                  {facility.facilityname}
-                  <TrashIcon
-                    onClick={() => DeleteFacility(facility.id)}
-                    className="mr-5 w-5 h-5 place-self-center hover:text-red-500"
-                  />
-                </p>
+                  <p>{facility.facilityname}</p>
+                  <div
+                    className="flex gap-3"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {selectedOptions.facility === facility.id && (
+                      <>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <UpdateFacilityButton
+                                onSave={UpdateFacility}
+                                facility={facility}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Redigera anläggning</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <DeleteButton
+                                id={facility.id}
+                                type="Facility"
+                                onDelete={DeleteFacility}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Radera</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </>
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
           </div>
 
           <div>
             <h3 className="text-xl mb-2">Kiosker</h3>
-            <div className="border border-solid lg:aspect-square border-black rounded-xl">
+            <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
               {selectedFacility !== null && (
                 <div className="mt-4">
                   <AddKioskButton onSave={CreateKiosk} />
-                  {kiosks.map((kiosk, index) => (
-                    <p
-                      key={index}
+                  {kiosks.map((kiosk) => (
+                    <div
+                      key={kiosk.id}
                       className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
-                        ${
-                          selectedKiosk === kiosk.id
-                            ? "text-black border-black border rounded-xl h-fit w-11/12"
-                            : "text-black border-none w-11/12"
-                        }            
-                `}
+              ${
+                selectedKiosk === kiosk.id
+                  ? "text-black border-black border rounded-xl h-fit w-11/12"
+                  : "text-black border-none w-11/12"
+              }            
+            `}
                       onClick={() => handleKioskClick(kiosk)}
                     >
-                      {kiosk.kioskName}                 
-                      <TrashIcon onClick={() => DeleteKiosk(kiosk.id)} className="mr-7 w-5 h-5 place-self-center  hover:text-red-500" />
-                    </p>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-xl mb-2">Produktlista</h3>
-            <div className="border border-solid lg:aspect-square border-black rounded-xl">
-              {selectedKiosk !== null && (
-                <div className="mt-4 flex flex-col gap-4 mb-5">
-                  {productList === undefined && (
-                    <AddProductListButton onSave={addProductList} />
-                  )}
-
-                  <ul className="ml-5">
-                    <div className="flex justify-between">
-                      <h3 className="font-semibold">
-                        {productList?.productlistname}
-                      </h3>
-                      {productList != undefined && (
-                        <TrashIcon  className="mr-5 w-5 h-5 place-self-center cursor-pointer hover:text-red-500" />
-                      )}
-                    </div>
-                    {productList?.products.map((product, index) => (
-                      <li key={index} className="list-inside ml-4">
-                        {product.productname}
-                      </li>
-                    ))}
-                  </ul>
-                 
-                 
-                  <ul>
-                    {productList != undefined && (
-                      <AddProductsButton onSave={addProduct} />
-                    )}
-                    {products.map((product, index) => (
-                      <div className="flex justify-between">
-                        <li key={index} className="list-inside ml-9">
-                          {product}
-                        </li>
-                        <TrashIcon className="mr-5 w-4 h-4 place-self-center cursor-pointer hover:text-red-500" />
+                      <p>{kiosk.kioskName}</p>
+                      <div
+                        className="flex gap-3"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {selectedOptions.kiosk === kiosk.id && (
+                          <>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <UpdateKioskButton
+                                    onSave={UpdateKiosk}
+                                    kiosk={kiosk}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Redigera kiosk</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <DeleteButton
+                                    id={kiosk.id}
+                                    type="Kiosk"
+                                    onDelete={DeleteKiosk}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Radera</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </>
+                        )}
                       </div>
-                    ))}
-                  </ul>
-
-
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
