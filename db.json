@@ -1,57 +1,25 @@
 {
   "contactPersons": [
     {
-      "id": "93f8",
+      "name": "Andreas",
+      "facility": "Rosta Gärde",
+      "phone": "07073177812",
+      "role": "Kiosk",
+      "id": "f578"
+    },
+    {
       "name": "Camilla",
-      "facility": "Lillån",
-      "phone": "021225"
-    },
-    {
-      "id": "6103",
-      "name": "Hans",
-      "facility": "Trängen",
-      "phone": "062161584"
-    },
-    {
-      "id": "bf09",
-      "name": "Nisse",
-      "facility": "Pettersberg",
-      "phone": "0561515"
-    },
-    {
-      "id": "807f",
-      "name": "Emma",
-      "facility": "Grönpepparparken",
-      "phone": "0251215"
-    },
-    {
-      "id": "6a01",
-      "name": "Klas",
-      "facility": "Heden",
-      "phone": "5151515"
-    },
-    {
-      "id": "6e53",
-      "name": "Mårten",
-      "facility": "Brickeberg",
-      "phone": "0215154"
-    },
-    {
-      "id": "07e0",
-      "name": "Julia",
       "facility": "Rosta gärde",
-      "phone": "021215"
+      "phone": "0455485584",
+      "role": "Kiosk",
+      "id": "f3f4"
     },
     {
-      "id": "7149",
-      "name": "Viktor",
-      "facility": "Rosta gärde",
-      "phone": "0211515"
-    },
-    {
-      "id": "5c6c",
-      "name": "Peter",
+      "name": "Ludvig",
       "facility": "Lillån",
+      "phone": "04165151",
+      "role": "Planansvarig",
+      "id": "a003"
       "phone": "02125151"
     },
     {

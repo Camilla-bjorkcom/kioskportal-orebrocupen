@@ -6,6 +6,7 @@ interface ContactPerson {
   name: string;
   facility: string;
   phone: string;
+  role: string;
 }
 
 const ContactPersons = () => {
@@ -26,14 +27,15 @@ const ContactPersons = () => {
   const SaveContactPerson = async (
     name: string,
     facility: string,
-    phone: string
+    phone: string,
+    role: string
   ) => {
     console.log(name, facility, phone);
     try {
       const response = await fetch("http://localhost:3000/contactPersons", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, facility, phone }),
+        body: JSON.stringify({ name, facility, phone, role }),
       });
       if (!response.ok) throw new Error("Failed to save contactPerson");
       refetch();
@@ -46,7 +48,8 @@ const ContactPersons = () => {
     id: number,
     name: string,
     facility: string,
-    phone: string
+    phone: string,
+    role: string
   ) => {
     try {
       const response = await fetch(
@@ -54,7 +57,7 @@ const ContactPersons = () => {
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, facility, phone }),
+          body: JSON.stringify({ name, facility, phone, role }),
         }
       );
       if (!response.ok) throw new Error("Failed to update contactPerson");
@@ -84,7 +87,7 @@ const ContactPersons = () => {
 
   return (
     <div className="container mx-auto">
-      <h3 className="mt-8 text-2xl pb-2">Kontaktpersoner</h3>
+      <h3 className="mt-8 text-2xl pb-2 md:ml-4 ml-1">Kontaktpersoner</h3>
       <ContactPersonComponent
         contactPersons={contactPerson}
         onSave={SaveContactPerson}
