@@ -44,16 +44,12 @@
   ],
   "facilities": [
     {
-      "id": "4ed2",
+      "id": "f0fc",
+      "facilityname": "Lillåns"
+    },
+    {
+      "id": "4b14",
       "facilityname": "Rosta"
-    },
-    {
-      "id": "a7bb",
-      "facilityname": "Lillån"
-    },
-    {
-      "id": "942f",
-      "facilityname": "Rost"
     },
     {
       "id": "6be6",
@@ -66,12 +62,24 @@
   ],
   "kiosks": [
     {
-      "id": "76b7",
-      "kioskName": "Huvudkiosk"
+      "id": "05bb",
+      "kioskName": "Kiosk Vänster"
     },
     {
-      "id": "f808",
-      "kioskName": "kiosk 3"
+      "id": "aade",
+      "kioskName": "Kiosk höger"
+    },
+    {
+      "id": "4286",
+      "kioskName": "Kiosk mitten"
+    },
+    {
+      "id": "d737",
+      "kioskName": "Kiosk 1"
+    },
+    {
+      "id": "a832",
+      "kioskName": "Kiosk 2"
     }
   ],
   "products": [

@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { useState } from "react";
+import { Button } from "./ui/button";
 
 
 const formSchema = z.object({
@@ -89,12 +90,12 @@ function AddFacilityButton({ onSave }: AddFacilityButtonProps) {
               )}
             />
             <div className="flex justify-end">
-              <button
+              <Button
                 type="submit"
                 className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
               >
                 Spara anläggning
-              </button>
+              </Button>
             </div>
           </form>
         </Form>
