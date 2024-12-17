@@ -1,17 +1,20 @@
 import CreateProductButton from "@/components/CreateProductButton";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import UpdateProductButton from "@/components/UpdateProductButton";
 
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+
 
 interface Product {
-  id: number;
+  id: string;
   productname: string;
+  amountPerPackage : number
 }
 
 function ProductHandler() {
-  const { pathname } = useLocation();
+ 
   const [products, setProducts] = useState<Product[]>([]);
 
   const { isLoading, error } = useQuery<Product[]>({
@@ -27,12 +30,12 @@ function ProductHandler() {
     },
   });
 
-  const SaveProduct = async (productname: string) => {
+  const SaveProduct = async (productname: string , amountPerPackage: number) => {
     try {
       const response = await fetch("http://localhost:3000/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productname: productname }),
+        body: JSON.stringify({ productname: productname, amountPerPackage : amountPerPackage }),
       });
       if (!response.ok) {
         throw new Error("Failed to save product");
@@ -44,8 +47,39 @@ function ProductHandler() {
       throw new Error("failed to save product");
     }
   };
+  
+  const UpdateProduct = async ( id: string, productname: string, amountPerPackage: number) => {
+    try{
 
-  const DeleteProduct = async (id: number) => {
+      console.log("Skickar till API:", {
+        id,
+        productname,
+        amountPerPackage
+      });
+
+      const response= await fetch(`http://localhost:3000/products/${id}`, {
+        method:"PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productname: productname, amountPerPackage : amountPerPackage }),
+      });
+      if(!response.ok) {
+        throw new Error("Failed to update product");
+      }
+      const updatedProduct = await response.json();
+      console.log("skickat till databas", updatedProduct)
+      setProducts((prev) =>
+        prev.map((product) =>
+          product.id === id ? { ...product, ...updatedProduct } : product
+        )
+      );
+    }
+    catch (error) {
+      console.error("Failed to update product:", error);
+      alert("Kunde inte uppdatera produkten. Försök igen.");
+    }
+  }
+
+  const DeleteProduct = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:3000/products/${id}`, {
         method: "DELETE",
@@ -58,6 +92,12 @@ function ProductHandler() {
       console.error(error);
     }
   };
+  function displayAmount(amount?: number | null) {
+    if (amount === null || amount === undefined) {
+      return "N/A";
+    }
+    return amount === 0 ? "N/A" : amount;
+  }
 
   if (isLoading) {
     return <div>Loading products...</div>;
@@ -80,11 +120,42 @@ function ProductHandler() {
                 key={product.id}
                 className="p-4 border border-gray-200 rounded-md shadow w-3/4 hover:bg-gray-50"
               >
-                <div className="flex justify-between">
-                  {product.productname}
-                  <button onClick={() => DeleteProduct(product.id)}>
-                    <TrashIcon className="w-8 h-6 hover:text-red-500 "></TrashIcon>
+                <div className="flex flex-row justify-between">
+                  <p className= "basis-1/4">{product.productname}</p>
+                  <div className="flex justify-between basis-1/3">
+                  <p className="mr-10 min-w-24">st/kolli: {displayAmount(product.amountPerPackage)}</p>
+                  <UpdateProductButton onUpdate={UpdateProduct}
+                   product={{ id: product.id, productname: product.productname, amountPerPackage: product.amountPerPackage }}></UpdateProductButton>
+                  <button  onClick= {(e) => e.stopPropagation()}>
+                    <AlertDialog>
+                        <AlertDialogTrigger>
+                        <TrashIcon className="w-8 h-6 hover:text-red-500 "></TrashIcon>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Vill du radera produkten?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Den här åtgärden kan inte ångras. Produkten kommer
+                              att tas bort permanent.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => DeleteProduct(product.id)}
+                            >
+                              Radera
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                  
                   </button>
+
+                  </div>
+                 
                 </div>
               </div>
             ))}

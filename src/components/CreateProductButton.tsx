@@ -13,6 +13,7 @@ import {
   import { PlusIcon } from "@radix-ui/react-icons";
   import { zodResolver } from "@hookform/resolvers/zod"
   import { useForm } from "react-hook-form"
+  import { useState } from "react";
 
 
 import { z } from "zod"
@@ -22,11 +23,22 @@ const formSchema = z.object({
     productname: z.string().min(2, {
       message: "Produktnamn måste ha minst 2 bokstäver",
     }),
-  })
+    
+    amountPerPackage: 
+    z.preprocess(
+      (val) => (val === "" ? undefined : Number(val)),
+    z
+    .number({ message:"Antal per paket måste anges med siffror"})
+    .positive({ message:"Antal per paket måste vara positivt"}) // Direkt felmeddelande för positiva värden
+    .optional()
+    ), 
+     
+});
+  
 
   
   interface CreateProductButtonProps {
-    onSave: (productName: string) => void; // Callback för att spara produktnamn
+    onSave: (productName: string , amountPerPackage: number ) => void; // Callback för att spara produktnamn
   }
 
 
@@ -34,17 +46,24 @@ const formSchema = z.object({
   
   function CreateProductButton({onSave}: CreateProductButtonProps) {
 
+    const [savedMessage, setSavedMessage] = useState<string | null>(null);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
           productname: "",
+          amountPerPackage : 0,
         },
       });
     
       function onSubmit(values: z.infer<typeof formSchema>) {
-        onSave(values.productname)
+        onSave(values.productname ,  values.amountPerPackage ?? 0)
         console.log(values);
         form.reset();
+        setSavedMessage("Produken har sparats");
+        setTimeout(() => {
+          setSavedMessage(null);
+        }, 3000);
       }
     return (
         <Dialog>
@@ -71,10 +90,27 @@ const formSchema = z.object({
                   <FormControl>
                     <Input placeholder="Skriv in produktnamn" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage /> 
                 </FormItem>
               )}
-            />     
+              />   
+              <FormField
+              control={form.control}
+              name="amountPerPackage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ange antal per förpackning (Valfritt)</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage /> 
+                </FormItem>
+              )}
+              /> 
+                  {savedMessage && (
+                  <div className="text-green-600 text-sm mt-4">{savedMessage}</div>
+                   )}  
+            
             <div className="flex justify-end">
               <button type="submit" className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow">Spara Produkt</button>
             </div>         
