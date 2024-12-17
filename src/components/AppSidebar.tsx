@@ -44,6 +44,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 
+
 // Menu items.
 
 
@@ -68,6 +69,7 @@ export function AppSidebar({ id }: { id?: number }) {
       icon: House,
       subitems: [      
         { title: "Skapa kiosker", url: `/kioskmanager/${id}` },
+        { title: "Lägg till produkter i kiosker", url: `/populatekiosks/${id}`},
         { title: "Kontaktpersoner", url: `/contactperson/${id}` },
         { title: "QR koder till kiosker", url: "#" },
         
