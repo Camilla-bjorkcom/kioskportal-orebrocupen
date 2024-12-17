@@ -4,7 +4,7 @@
       "name": "Andreas",
       "facility": "Rosta Gärde",
       "phone": "07073177812",
-      "role": "Kiosk",
+      "role": "Planansvarig",
       "id": "f578"
     },
     {
@@ -15,11 +15,11 @@
       "id": "f3f4"
     },
     {
-      "name": "Ludvig",
-      "facility": "Lillån",
-      "phone": "04165151",
+      "name": "Ludvig ",
+      "facility": "Pettersberg",
+      "phone": "070564545640",
       "role": "Planansvarig",
-      "id": "a003"
+      "id": "e1c5"
     }
   ],
   "tournaments": [
