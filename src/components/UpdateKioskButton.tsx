@@ -23,6 +23,9 @@ import {
 } from "./ui/form";
 import { useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
+import { Toaster } from "./ui/toaster";
+import { Button } from "./ui/button";
+import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
     kioskName: z.string().min(2, {
@@ -68,9 +71,11 @@ const UpdateKioskButton = ({ kiosk, onSave }: UpdateKioskButtonProps) => {
   }
 
   return (
+    <>
+    <Toaster />
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Pencil className="w-5 h-5 hover:text-orange-n" />
+        <Pencil className="w-5 h-5 hover:text-orange-n place-self-center" />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -95,17 +100,24 @@ const UpdateKioskButton = ({ kiosk, onSave }: UpdateKioskButtonProps) => {
               )}
             />
             <div className="flex justify-end">
-              <button
+              <Button
                 type="submit"
-                className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
+                className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow" onClick={() => {
+                  toast({
+                    className: "bg-orange-200",
+                    title: "Ändringen sparades",
+                    description: "Kiosken har uppdaterats",
+                  });
+                }}
               >
                 Spara
-              </button>
+              </Button>
             </div>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
+    </>
   );
 };
 

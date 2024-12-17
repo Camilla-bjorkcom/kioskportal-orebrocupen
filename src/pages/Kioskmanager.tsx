@@ -5,6 +5,12 @@ import { useQuery } from "@tanstack/react-query";
 import UpdateFacilityButton from "@/components/UpdateFacilityButton";
 import DeleteButton from "@/components/DeleteButton";
 import UpdateKioskButton from "@/components/UpdateKioskButton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Facility {
   id: number;
@@ -203,10 +209,10 @@ function Kioskmanager() {
     <>
       <section className="container mx-auto px-5">
         <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa kiosker</h1>
-        <div className="grid lg:grid-cols-3 gap-5 w-10/12">
+        <div className="grid xl:grid-cols-3 gap-5 w-10/12">
           <div>
             <h3 className="text-xl mb-2">Anläggning</h3>
-            <div className="border border-solid lg:aspect-square border-black rounded-xl pb-4">
+            <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
               <AddFacilityButton onSave={CreateFacility} />
               {facility.map((facility) => (
                 <div
@@ -225,15 +231,33 @@ function Kioskmanager() {
                   >
                     {selectedOptions.facility === facility.id && (
                       <>
-                        <UpdateFacilityButton
-                          onSave={UpdateFacility}
-                          facility={facility}
-                        />
-                        <DeleteButton
-                          id={facility.id}
-                          type="Facility"
-                          onDelete={DeleteFacility}
-                        />
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <UpdateFacilityButton
+                                onSave={UpdateFacility}
+                                facility={facility}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Redigera anläggning</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <DeleteButton
+                                id={facility.id}
+                                type="Facility"
+                                onDelete={DeleteFacility}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Radera</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </>
                     )}
                   </div>
@@ -244,7 +268,7 @@ function Kioskmanager() {
 
           <div>
             <h3 className="text-xl mb-2">Kiosker</h3>
-            <div className="border border-solid lg:aspect-square border-black rounded-xl pb-4">
+            <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
               {selectedFacility !== null && (
                 <div className="mt-4">
                   <AddKioskButton onSave={CreateKiosk} />
@@ -267,15 +291,33 @@ function Kioskmanager() {
                       >
                         {selectedOptions.kiosk === kiosk.id && (
                           <>
-                            <UpdateKioskButton
-                              onSave={UpdateKiosk}
-                              kiosk={kiosk}
-                            />
-                            <DeleteButton
-                              id={kiosk.id}
-                              type="Kiosk"
-                              onDelete={DeleteKiosk}
-                            />
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <UpdateKioskButton
+                                    onSave={UpdateKiosk}
+                                    kiosk={kiosk}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Redigera kiosk</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <DeleteButton
+                                    id={kiosk.id}
+                                    type="Kiosk"
+                                    onDelete={DeleteKiosk}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Radera</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           </>
                         )}
                       </div>

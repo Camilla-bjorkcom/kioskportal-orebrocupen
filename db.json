@@ -73,12 +73,16 @@
     {
       "id": "f0fc",
       "facilityname": "Lillåns"
+    },
+    {
+      "id": "4b14",
+      "facilityname": "Rosta"
     }
   ],
   "kiosks": [
     {
       "id": "05bb",
-      "kioskName": "Kiosk vönster"
+      "kioskName": "Kiosk Vänster"
     },
     {
       "id": "aade",
@@ -87,6 +91,14 @@
     {
       "id": "4286",
       "kioskName": "Kiosk mitten"
+    },
+    {
+      "id": "d737",
+      "kioskName": "Kiosk 1"
+    },
+    {
+      "id": "a832",
+      "kioskName": "Kiosk 2"
     }
   ],
   "products": [
