@@ -134,10 +134,10 @@ function ProductHandler() {
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>
-                              Vill du radera listan?
+                              Vill du radera produkten?
                             </AlertDialogTitle>
                             <AlertDialogDescription>
-                              Den här åtgärden kan inte ångras. Listan kommer
+                              Den här åtgärden kan inte ångras. Produkten kommer
                               att tas bort permanent.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
