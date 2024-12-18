@@ -8,6 +8,9 @@ import { Checkbox } from './ui/checkbox';
 import { Pencil2Icon } from '@radix-ui/react-icons';
 
 
+
+
+
 interface EditSelectedKioskButtonProps {
   kioskForEdit : Kiosk;
   onClick: (open :boolean) => void;
@@ -88,9 +91,9 @@ function EditSelectedKioskButton({kioskForEdit}: EditSelectedKioskButtonProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleEditClick}>
-      <DialogTrigger asChild>
+      <DialogTrigger >
         <button className="flex flex-col  hover:text-orange-n">
-               <Pencil2Icon className="w-8 h-6"  />
+               <Pencil2Icon className="w-8 h-6"/>
              </button>
       </DialogTrigger>
       <DialogContent className="w-full max-w-4xl">

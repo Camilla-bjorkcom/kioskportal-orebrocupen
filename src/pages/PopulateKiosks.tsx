@@ -1,7 +1,9 @@
 import EditSelectedKioskButton from '@/components/EditSelectedKioskButton';
 import SelectedKiosksButton from '@/components/SelectedKiosksButton';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Kiosk } from '@/interfaces';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Kiosk, Product } from '@/interfaces';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
@@ -20,6 +22,7 @@ function PopulateKiosks() {
       const response = await fetch('http://localhost:3000/kiosks');
       if (!response.ok) throw new Error('Failed to fetch kiosks');
       const data = await response.json();
+      console.log(data); // Logga datan för att se om products finns
       setKiosks(data);
       return data;
     },
@@ -53,24 +56,40 @@ function PopulateKiosks() {
                                  onClick={handleSubmit}/>
           </div>
 
-          <div className="mt-4 space-y-2 mb-10">
+          <Accordion type="single" collapsible className='w-3/4'>
             {kiosks.map((kiosk) => (
-              <div
+              <AccordionItem
                 key={kiosk.id}
-                className="p-4 border border-gray-200 rounded-md shadow w-3/4 hover:bg-gray-50"
+                value={kiosk.id}
               >
-                <div className="flex flex-row justify-between">
+                <AccordionTrigger  className="flex self-end">
+
+               <div className='w-full'>
+                <div className='flex justify-between'>
                   <label
                     htmlFor={`kiosk-${kiosk.id}`}
                     className="basis-1/4 font-medium hover:text-slate-800 cursor-pointer"
                   >
                     {kiosk.kioskName}
+                    
                   </label>
-                  <div className="flex gap-4 place-items-center">
+                  <div className="flex self-end gap-4 place-items-center mr-2">
+                  <p>
+                   Antal tillagda produkter: {Array.isArray(kiosk.products) ? kiosk.products.length : 0}
+                    </p>
+                  <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
                   <EditSelectedKioskButton
                   kioskForEdit={kiosk}
                   onClick={handleEdit}
                   ></EditSelectedKioskButton>
+                  </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Redigera kioskutbud</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   <Checkbox
                     id={`kiosk-${kiosk.id}`}
                     checked={kiosksForUpdate.some((k) => k.id === kiosk.id)}
@@ -86,9 +105,30 @@ function PopulateKiosks() {
                   />
                   </div>
                 </div>
-              </div>
+                </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                
+                  {kiosk.products && kiosk.products.length > 0 ? (
+                    <ul className="grid grid-cols-3 gap-4">
+                      {kiosk.products.map((product : Product, index: number) =>(
+                         <li key={index}>
+                         
+                         {product.productname} 
+                         
+                       </li>
+                       
+                      ) )}
+                      
+                    </ul>
+                  ): (
+                    <p className="text-gray-500">Inga produkter tillgängliga för denna kiosk.</p>
+                  )}
+                  
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         </div>
       </div>
     </section>
