@@ -1,5 +1,5 @@
+import EditSelectedKioskButton from '@/components/EditSelectedKioskButton';
 import SelectedKiosksButton from '@/components/SelectedKiosksButton';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Kiosk } from '@/interfaces';
 import { useQuery } from '@tanstack/react-query';
@@ -9,8 +9,9 @@ import React, { useState } from 'react';
 
 function PopulateKiosks() {
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
-  
+  const [open, setOpen] = useState(false);
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
+  const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
 
   // Fetch Kiosks
   useQuery<Kiosk[]>({
@@ -26,8 +27,8 @@ function PopulateKiosks() {
 
   
 
-  const handleSubmit = () => {
-    if (kiosksForUpdate.length === 0) {
+  const handleSubmit = (open: boolean) => {
+    if (open && kiosksForUpdate.length === 0) {
       alert('Du måste välja minst en kiosk!');
       return;
     }
@@ -35,6 +36,10 @@ function PopulateKiosks() {
     // Här kan du öppna en dialog eller skicka datan till en API-endpoint
     alert(`Du har valt ${kiosksForUpdate.length} kiosker.`);
   };
+
+  const handleEdit= async (isOpen: boolean) => {
+    setOpen(isOpen);
+  }
 
   return (
     <section>
@@ -61,6 +66,11 @@ function PopulateKiosks() {
                   >
                     {kiosk.kioskName}
                   </label>
+                  <div className="flex gap-4 place-items-center">
+                  <EditSelectedKioskButton
+                  kioskForEdit={kiosk}
+                  onClick={handleEdit}
+                  ></EditSelectedKioskButton>
                   <Checkbox
                     id={`kiosk-${kiosk.id}`}
                     checked={kiosksForUpdate.some((k) => k.id === kiosk.id)}
@@ -74,7 +84,7 @@ function PopulateKiosks() {
                       }
                     }}
                   />
-                  
+                  </div>
                 </div>
               </div>
             ))}
