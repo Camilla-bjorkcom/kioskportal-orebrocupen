@@ -65,7 +65,7 @@ function UpdateProductButton({onUpdate, product} : UpdateProductButtonProps) {
   return (
     <Dialog>
     <DialogTrigger asChild>
-      <button className="flex flex-col  hover:bg-slate-800 hover:text-white ">
+      <button className="flex flex-col  hover:text-orange-n">
         <Pencil2Icon className="w-8 h-6"  />
       </button>
     </DialogTrigger>
@@ -125,7 +125,7 @@ function UpdateProductButton({onUpdate, product} : UpdateProductButtonProps) {
         <div className="flex justify-end">
           <button  onClick={(e) => {
                 e.stopPropagation();
-                console.log("Knappen klickad!");
+                
                 }} 
             type="submit" className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"  >Spara ändringar</button>
         </div>         

@@ -10,6 +10,7 @@ import ProductListHandler from "./pages/ProductListHandler";
 import InventoryStatus from "./pages/InventoryStatus";
 import InventoryStorage from "./pages/InventoryStorage";
 import ContactPerson from "./pages/ContactPerson";
+import PopulateKiosks from "./pages/PopulateKiosks";
 
 function Router() {
   return (
@@ -32,6 +33,7 @@ function Router() {
             <Route path="inventorystatus/:id" element={<InventoryStatus />} />
             <Route path="inventorystorage/:id" element={<InventoryStorage />} />
             <Route path="contactperson/:id" element={<ContactPerson />} />
+            <Route path="populatekiosks/:id" element={<PopulateKiosks />} />
           </Route>
         </Route>
       </Routes>
