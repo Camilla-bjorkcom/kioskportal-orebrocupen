@@ -8,18 +8,21 @@ import { Checkbox } from './ui/checkbox';
 
 interface SelectedKiosksButtonProps {
   selectedKiosks: Kiosk[]; // Lista över valda kiosker
+  productLists: ProductList[]; // Produktlistor skickas från PopulateKiosks
+  products: Product[]; // Produkter skickas från PopulateKiosks
   onClick: (open :boolean) => void; 
 }
 
-function SelectedKiosksButton({ selectedKiosks }: SelectedKiosksButtonProps) {
-  const [productLists, setProductLists] = useState<ProductList[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+function SelectedKiosksButton({ selectedKiosks,
+  productLists,
+  products }: SelectedKiosksButtonProps) {
+  
   const [open, setOpen] = useState(false);
   const [selectedProductListId, setSelectedProductListId] = useState<string>('');
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
 
   // Fetch Product Lists
-  useQuery<ProductList[]>({
+  /* useQuery<ProductList[]>({
     queryKey: ['productlists'],
     queryFn: async () => {
       const response = await fetch('http://localhost:3000/productslists');
@@ -30,7 +33,7 @@ function SelectedKiosksButton({ selectedKiosks }: SelectedKiosksButtonProps) {
     },
   });
 
-  // Fetch Products
+
   useQuery<Product[]>({
     queryKey: ['products'],
     queryFn: async () => {
@@ -47,6 +50,7 @@ function SelectedKiosksButton({ selectedKiosks }: SelectedKiosksButtonProps) {
       return data;
     },
   });
+  */
 
   const handleDialogOpenChange = async (isOpen: boolean) => {
 
@@ -126,6 +130,7 @@ function SelectedKiosksButton({ selectedKiosks }: SelectedKiosksButtonProps) {
             const data = await response.json();
             console.log(data);
             alert("kioskerna har nu produkter tillagda")
+            setOpen(false);
 
       }
     };

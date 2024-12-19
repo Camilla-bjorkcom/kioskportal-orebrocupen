@@ -1,7 +1,9 @@
 import EditSelectedKioskButton from '@/components/EditSelectedKioskButton';
 import SelectedKiosksButton from '@/components/SelectedKiosksButton';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Kiosk } from '@/interfaces';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Kiosk, Product, ProductList } from '@/interfaces';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
@@ -12,7 +14,9 @@ function PopulateKiosks() {
   const [open, setOpen] = useState(false);
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
-
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const [productLists, setProductLists] = useState<ProductList[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   // Fetch Kiosks
   useQuery<Kiosk[]>({
     queryKey: ['kiosks'],
@@ -20,12 +24,40 @@ function PopulateKiosks() {
       const response = await fetch('http://localhost:3000/kiosks');
       if (!response.ok) throw new Error('Failed to fetch kiosks');
       const data = await response.json();
+      console.log(data); 
       setKiosks(data);
       return data;
     },
   });
 
+  useQuery<ProductList[]>({
+    queryKey: ['productlists'],
+    queryFn: async () => {
+      const response = await fetch('http://localhost:3000/productslists');
+      if (!response.ok) throw new Error('Failed to fetch product lists');
+      const data = await response.json();
+      setProductLists(data);
+      console.log("listor",data)
+      return data;
+    },
+    
+  });
+
+  // Fetch Products
+  useQuery<Product[]>({
+    queryKey: ['products'],
+    queryFn: async () => {
+      const response = await fetch('http://localhost:3000/products');
+      if (!response.ok) throw new Error('Failed to fetch products');
+      const data = await response.json();
+      setProducts(data);
+      console.log("varor",data)
+      return data;
+    },
+  });
   
+  
+
 
   const handleSubmit = (open: boolean) => {
     if (open && kiosksForUpdate.length === 0) {
@@ -37,9 +69,33 @@ function PopulateKiosks() {
     alert(`Du har valt ${kiosksForUpdate.length} kiosker.`);
   };
 
-  const handleEdit= async (isOpen: boolean) => {
-    setOpen(isOpen);
-  }
+  const handleEditClick = async (kiosk: Kiosk) => {
+    console.log("handleEditClick körs för kiosk:", kiosk);
+    console.log("produkter", products);
+    console.log("produktlistor" ,productLists)
+   
+      try {
+        setKioskForEdit(kiosk);
+        const response = await fetch(`http://localhost:3000/kiosks/${kiosk.id}`)
+        if (!response.ok) {
+          console.error("Failed to fetch kiosk products");
+         
+        } else {
+          const data = await response.json();
+          console.log(data)
+          setSelectedProducts(kiosk.products);  
+          console.log(selectedProducts)  
+          setOpen(true);
+           
+      }
+     
+    } catch (error) {
+      console.error("Error handling edit click:", error);
+    }
+    
+    }
+  
+  
 
   return (
     <section>
@@ -50,30 +106,52 @@ function PopulateKiosks() {
           <div className="flex justify-between w-3/4">
             <h5 className="text-base">Välj kiosker att lägga till produkter till:</h5>
             <SelectedKiosksButton selectedKiosks={kiosksForUpdate}
+                                  productLists={productLists} 
+                                  products={products} 
                                  onClick={handleSubmit}/>
           </div>
 
-          <div className="mt-4 space-y-2 mb-10">
+          <Accordion type="single" collapsible className='w-3/4'>
             {kiosks.map((kiosk) => (
-              <div
+              <AccordionItem
                 key={kiosk.id}
-                className="p-4 border border-gray-200 rounded-md shadow w-3/4 hover:bg-gray-50"
+                value={kiosk.id}
               >
-                <div className="flex flex-row justify-between">
+                <AccordionTrigger  className="flex self-end">
+
+               <div className='w-full'>
+                <div className='flex justify-between'>
                   <label
-                    htmlFor={`kiosk-${kiosk.id}`}
+                  
                     className="basis-1/4 font-medium hover:text-slate-800 cursor-pointer"
                   >
                     {kiosk.kioskName}
+                    
                   </label>
-                  <div className="flex gap-4 place-items-center">
+                  <div className="flex self-end gap-4 place-items-center mr-2">
+                  <p>
+                   Antal tillagda produkter: {Array.isArray(kiosk.products) ? kiosk.products.length : 0}
+                    </p>
+                  <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
                   <EditSelectedKioskButton
-                  kioskForEdit={kiosk}
-                  onClick={handleEdit}
-                  ></EditSelectedKioskButton>
+                 key={kiosk.id}
+                 kioskForEdit={kiosk}
+                 productLists={productLists}
+                 products={products}
+                 onEditClick={handleEditClick}
+                />
+                  </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Redigera kioskutbud</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   <Checkbox
                     id={`kiosk-${kiosk.id}`}
                     checked={kiosksForUpdate.some((k) => k.id === kiosk.id)}
+                    onClick={(e) => e.stopPropagation()}
                     onCheckedChange={(checked) => {
                       if (checked) {
                         // Lägg till kiosk i listan
@@ -86,9 +164,30 @@ function PopulateKiosks() {
                   />
                   </div>
                 </div>
-              </div>
+                </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                
+                  {kiosk.products && kiosk.products.length > 0 ? (
+                    <ul className="grid grid-cols-3 gap-4">
+                      {kiosk.products.map((product : Product, index: number) =>(
+                         <li key={index}>
+                         
+                         {product.productname} 
+                         
+                       </li>
+                       
+                      ) )}
+                      
+                    </ul>
+                  ): (
+                    <p className="text-gray-500">Inga produkter tillgängliga för denna kiosk.</p>
+                  )}
+                  
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         </div>
       </div>
     </section>
