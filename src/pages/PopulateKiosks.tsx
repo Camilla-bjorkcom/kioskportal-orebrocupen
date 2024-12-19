@@ -54,9 +54,10 @@ function PopulateKiosks() {
       console.log("varor",data)
       return data;
     },
-  
   });
   
+  
+
 
   const handleSubmit = (open: boolean) => {
     if (open && kiosksForUpdate.length === 0) {
