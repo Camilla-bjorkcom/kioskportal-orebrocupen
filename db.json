@@ -319,7 +319,7 @@
       "id": "a832"
     },
     {
-      "kioskName": "Huvudkiosk",
+      "id": "913e",
       "products": [
         {
           "id": "9d9f",
@@ -354,9 +354,14 @@
         {
           "id": "2e1f",
           "productname": "Johnnys Hamburgerdressing"
+        },
+        {
+          "productname": "Mer Apelsin",
+          "amountPerPackage": 12,
+          "id": "17e7"
         }
       ],
-      "id": "913e"
+      "kioskName": "Huvudkiosk"
     },
     {
       "kioskName": "Kiosk Höger",

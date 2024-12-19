@@ -35,6 +35,7 @@ function EditSelectedKioskButton({
   const handleDialogOpen = async (isOpen: boolean) => {
     if (isOpen) {
       await onEditClick(kioskForEdit); // Vänta på att `handleEditClick` körs
+      setSelectedProducts(kioskForEdit.products)
       setOpen(true); // Öppna dialogen
     } else {
       setOpen(false); // Stäng dialogen om det behövs

@@ -82,7 +82,8 @@ function PopulateKiosks() {
         } else {
           const data = await response.json();
           console.log(data)
-          setSelectedProducts(data.products || []);    
+          setSelectedProducts(kiosk.products);  
+          console.log(selectedProducts)  
           setOpen(true);
            
       }
