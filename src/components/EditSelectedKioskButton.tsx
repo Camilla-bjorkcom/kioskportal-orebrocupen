@@ -98,7 +98,7 @@ function EditSelectedKioskButton({
  
   return (
     <Dialog open={open} onOpenChange={handleDialogOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <div className="flex flex-col  hover:text-orange-n"role="button" tabIndex={0}  onClick={() => setOpen(true)}>
                <Pencil2Icon className="w-8 h-6"/>
              </div>

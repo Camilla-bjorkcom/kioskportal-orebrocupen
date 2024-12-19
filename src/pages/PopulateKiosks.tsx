@@ -24,11 +24,12 @@ function PopulateKiosks() {
       const response = await fetch('http://localhost:3000/kiosks');
       if (!response.ok) throw new Error('Failed to fetch kiosks');
       const data = await response.json();
-      console.log(data); // Logga datan för att se om products finns
+      console.log(data); 
       setKiosks(data);
       return data;
     },
   });
+
   useQuery<ProductList[]>({
     queryKey: ['productlists'],
     queryFn: async () => {
@@ -39,6 +40,7 @@ function PopulateKiosks() {
       console.log("listor",data)
       return data;
     },
+    
   });
 
   // Fetch Products
@@ -52,6 +54,7 @@ function PopulateKiosks() {
       console.log("varor",data)
       return data;
     },
+  
   });
   
 
@@ -101,6 +104,8 @@ function PopulateKiosks() {
           <div className="flex justify-between w-3/4">
             <h5 className="text-base">Välj kiosker att lägga till produkter till:</h5>
             <SelectedKiosksButton selectedKiosks={kiosksForUpdate}
+                                  productLists={productLists} 
+                                  products={products} 
                                  onClick={handleSubmit}/>
           </div>
 

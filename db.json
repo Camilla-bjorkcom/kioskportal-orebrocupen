@@ -359,12 +359,128 @@
       "id": "913e"
     },
     {
-      "id": "cb82",
-      "kioskName": "Kiosk Höger"
+      "kioskName": "Kiosk Höger",
+      "products": [
+        {
+          "id": "eedc",
+          "productname": "Hamburgare"
+        },
+        {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "id": "6312",
+          "productname": "Coca Cola"
+        },
+        {
+          "id": "17e7",
+          "productname": "Mer Apelsin"
+        },
+        {
+          "id": "c216",
+          "productname": "Midnight Grown"
+        },
+        {
+          "id": "ecda",
+          "productname": "Pizza Vegetarisk"
+        },
+        {
+          "id": "c660",
+          "productname": "Delicatoboll"
+        },
+        {
+          "id": "04b3",
+          "productname": "Pringles Sour Cream & Onion"
+        },
+        {
+          "id": "6fd0",
+          "productname": "Pringels Original"
+        },
+        {
+          "id": "6791",
+          "productname": "Marabou Mjölkchoklad"
+        },
+        {
+          "id": "b368",
+          "productname": "Haribo Nappar Frukt 80g"
+        },
+        {
+          "id": "9d79",
+          "productname": "Haribo Nappar Sura 80g"
+        },
+        {
+          "id": "ebf0",
+          "productname": "Haribo Nappar Cola 80g"
+        },
+        {
+          "id": "1715",
+          "productname": "Haribo Nappar Lakrits"
+        }
+      ],
+      "id": "cb82"
     },
     {
-      "id": "7465",
-      "kioskName": "Kiosk Norr"
+      "kioskName": "Kiosk Norr",
+      "products": [
+        {
+          "id": "eedc",
+          "productname": "Hamburgare"
+        },
+        {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "id": "6312",
+          "productname": "Coca Cola"
+        },
+        {
+          "id": "17e7",
+          "productname": "Mer Apelsin"
+        },
+        {
+          "id": "c216",
+          "productname": "Midnight Grown"
+        },
+        {
+          "id": "ecda",
+          "productname": "Pizza Vegetarisk"
+        },
+        {
+          "id": "c660",
+          "productname": "Delicatoboll"
+        },
+        {
+          "id": "04b3",
+          "productname": "Pringles Sour Cream & Onion"
+        },
+        {
+          "id": "6fd0",
+          "productname": "Pringels Original"
+        },
+        {
+          "id": "6791",
+          "productname": "Marabou Mjölkchoklad"
+        },
+        {
+          "id": "b368",
+          "productname": "Haribo Nappar Frukt 80g"
+        },
+        {
+          "id": "9d79",
+          "productname": "Haribo Nappar Sura 80g"
+        },
+        {
+          "id": "ebf0",
+          "productname": "Haribo Nappar Cola 80g"
+        },
+        {
+          "id": "1715",
+          "productname": "Haribo Nappar Lakrits"
+        }
+      ],
+      "id": "7465"
     }
   ],
   "products": [
