@@ -3,7 +3,7 @@ import SelectedKiosksButton from '@/components/SelectedKiosksButton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Kiosk, Product } from '@/interfaces';
+import { Kiosk, Product, ProductList } from '@/interfaces';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
@@ -14,7 +14,9 @@ function PopulateKiosks() {
   const [open, setOpen] = useState(false);
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
-
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const [productLists, setProductLists] = useState<ProductList[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   // Fetch Kiosks
   useQuery<Kiosk[]>({
     queryKey: ['kiosks'],
@@ -27,7 +29,30 @@ function PopulateKiosks() {
       return data;
     },
   });
+  useQuery<ProductList[]>({
+    queryKey: ['productlists'],
+    queryFn: async () => {
+      const response = await fetch('http://localhost:3000/productslists');
+      if (!response.ok) throw new Error('Failed to fetch product lists');
+      const data = await response.json();
+      setProductLists(data);
+      console.log("listor",data)
+      return data;
+    },
+  });
 
+  // Fetch Products
+  useQuery<Product[]>({
+    queryKey: ['products'],
+    queryFn: async () => {
+      const response = await fetch('http://localhost:3000/products');
+      if (!response.ok) throw new Error('Failed to fetch products');
+      const data = await response.json();
+      setProducts(data);
+      console.log("varor",data)
+      return data;
+    },
+  });
   
 
   const handleSubmit = (open: boolean) => {
@@ -40,9 +65,32 @@ function PopulateKiosks() {
     alert(`Du har valt ${kiosksForUpdate.length} kiosker.`);
   };
 
-  const handleEdit= async (isOpen: boolean) => {
-    setOpen(isOpen);
-  }
+  const handleEditClick = async (kiosk: Kiosk) => {
+    console.log("handleEditClick körs för kiosk:", kiosk);
+    console.log("produkter", products);
+    console.log("produktlistor" ,productLists)
+   
+      try {
+        setKioskForEdit(kiosk);
+        const response = await fetch(`http://localhost:3000/kiosks/${kiosk.id}`)
+        if (!response.ok) {
+          console.error("Failed to fetch kiosk products");
+         
+        } else {
+          const data = await response.json();
+          console.log(data)
+          setSelectedProducts(data.products || []);    
+          setOpen(true);
+           
+      }
+     
+    } catch (error) {
+      console.error("Error handling edit click:", error);
+    }
+    
+    }
+  
+  
 
   return (
     <section>
@@ -67,7 +115,7 @@ function PopulateKiosks() {
                <div className='w-full'>
                 <div className='flex justify-between'>
                   <label
-                    htmlFor={`kiosk-${kiosk.id}`}
+                  
                     className="basis-1/4 font-medium hover:text-slate-800 cursor-pointer"
                   >
                     {kiosk.kioskName}
@@ -79,11 +127,14 @@ function PopulateKiosks() {
                     </p>
                   <TooltipProvider>
                       <Tooltip>
-                        <TooltipTrigger>
+                        <TooltipTrigger asChild>
                   <EditSelectedKioskButton
-                  kioskForEdit={kiosk}
-                  onClick={handleEdit}
-                  ></EditSelectedKioskButton>
+                 key={kiosk.id}
+                 kioskForEdit={kiosk}
+                 productLists={productLists}
+                 products={products}
+                 onEditClick={handleEditClick}
+                />
                   </TooltipTrigger>
                         <TooltipContent>
                           <p>Redigera kioskutbud</p>
@@ -93,6 +144,7 @@ function PopulateKiosks() {
                   <Checkbox
                     id={`kiosk-${kiosk.id}`}
                     checked={kiosksForUpdate.some((k) => k.id === kiosk.id)}
+                    onClick={(e) => e.stopPropagation()}
                     onCheckedChange={(checked) => {
                       if (checked) {
                         // Lägg till kiosk i listan

@@ -62,7 +62,7 @@
   ],
   "kiosks": [
     {
-      "kioskName": "Kiosk mitten",
+      "id": "4286",
       "products": [
         {
           "id": "eedc",
@@ -73,48 +73,12 @@
           "productname": "Kexchoklad"
         },
         {
-          "id": "79dc",
-          "productname": "Powerade Mountain Blast"
-        },
-        {
-          "id": "d638",
-          "productname": "Coca Cola Zero"
-        },
-        {
-          "id": "6312",
-          "productname": "Coca Cola"
-        },
-        {
-          "id": "b361",
-          "productname": "Bonaqua Citron/lime"
-        },
-        {
           "id": "17e7",
           "productname": "Mer Apelsin"
         },
         {
-          "id": "0bad",
-          "productname": "Mer Päron"
-        },
-        {
           "id": "c216",
           "productname": "Midnight Grown"
-        },
-        {
-          "id": "5f35",
-          "productname": "Pizza Kebab"
-        },
-        {
-          "id": "ecda",
-          "productname": "Pizza Vegetarisk"
-        },
-        {
-          "id": "e3c0",
-          "productname": "Rullgrillskorv"
-        },
-        {
-          "id": "b56e",
-          "productname": "Sibyllia Hamburgerficka"
         },
         {
           "id": "7580",
@@ -165,14 +129,27 @@
           "productname": "Fanta"
         },
         {
-          "id": "5837",
-          "productname": "Festis Kaktus/Lime"
+          "id": "b56e",
+          "productname": "Sibyllia Hamburgerficka"
+        },
+        {
+          "id": "e3c0",
+          "productname": "Rullgrillskorv"
+        },
+        {
+          "id": "0bad",
+          "productname": "Mer Päron"
+        },
+        {
+          "productname": "Pizza Kebab",
+          "amountPerPackage": 12,
+          "id": "5f35"
         }
       ],
-      "id": "4286"
+      "kioskName": "Kiosk mitten"
     },
     {
-      "kioskName": "Kiosk 1",
+      "id": "d737",
       "products": [
         {
           "id": "eedc",
@@ -191,16 +168,19 @@
           "productname": "Coca Cola Zero"
         },
         {
-          "id": "6312",
-          "productname": "Coca Cola"
+          "productname": "Coca Cola",
+          "amountPerPackage": 24,
+          "id": "6312"
         },
         {
-          "id": "b361",
-          "productname": "Bonaqua Citron/lime"
+          "productname": "Bonaqua Citron/lime",
+          "amountPerPackage": 24,
+          "id": "b361"
         },
         {
-          "id": "17e7",
-          "productname": "Mer Apelsin"
+          "productname": "Mer Apelsin",
+          "amountPerPackage": 12,
+          "id": "17e7"
         },
         {
           "id": "0bad",
@@ -211,16 +191,18 @@
           "productname": "Midnight Grown"
         },
         {
-          "id": "5f35",
-          "productname": "Pizza Kebab"
+          "productname": "Pizza Kebab",
+          "amountPerPackage": 12,
+          "id": "5f35"
         },
         {
           "id": "ecda",
           "productname": "Pizza Vegetarisk"
         },
         {
-          "id": "e3c0",
-          "productname": "Rullgrillskorv"
+          "productname": "Rullgrillskorv",
+          "amountPerPackage": 40,
+          "id": "e3c0"
         },
         {
           "id": "b56e",
@@ -235,51 +217,28 @@
           "productname": "Johnnys Ketchup Original"
         },
         {
-          "id": "2e1f",
-          "productname": "Johnnys Hamburgerdressing"
-        },
-        {
           "id": "c660",
           "productname": "Delicatoboll"
-        },
-        {
-          "id": "04b3",
-          "productname": "Pringles Sour Cream & Onion"
         },
         {
           "id": "6fd0",
           "productname": "Pringels Original"
         },
         {
-          "id": "6791",
-          "productname": "Marabou Mjölkchoklad"
-        },
-        {
-          "id": "b368",
-          "productname": "Haribo Nappar Frukt 80g"
-        },
-        {
-          "id": "9d79",
-          "productname": "Haribo Nappar Sura 80g"
+          "productname": "Haribo Nappar Frukt 80g",
+          "amountPerPackage": 50,
+          "id": "b368"
         },
         {
           "id": "ebf0",
           "productname": "Haribo Nappar Cola 80g"
         },
         {
-          "id": "1715",
-          "productname": "Haribo Nappar Lakrits"
-        },
-        {
           "id": "0f22",
           "productname": "Fanta"
-        },
-        {
-          "id": "5837",
-          "productname": "Festis Kaktus/Lime"
         }
       ],
-      "id": "d737"
+      "kioskName": "Kiosk 1"
     },
     {
       "kioskName": "Kiosk 2",
@@ -293,48 +252,12 @@
           "productname": "Kexchoklad"
         },
         {
-          "id": "79dc",
-          "productname": "Powerade Mountain Blast"
-        },
-        {
-          "id": "d638",
-          "productname": "Coca Cola Zero"
-        },
-        {
-          "id": "6312",
-          "productname": "Coca Cola"
-        },
-        {
-          "id": "b361",
-          "productname": "Bonaqua Citron/lime"
-        },
-        {
           "id": "17e7",
           "productname": "Mer Apelsin"
         },
         {
-          "id": "0bad",
-          "productname": "Mer Päron"
-        },
-        {
           "id": "c216",
           "productname": "Midnight Grown"
-        },
-        {
-          "id": "5f35",
-          "productname": "Pizza Kebab"
-        },
-        {
-          "id": "ecda",
-          "productname": "Pizza Vegetarisk"
-        },
-        {
-          "id": "e3c0",
-          "productname": "Rullgrillskorv"
-        },
-        {
-          "id": "b56e",
-          "productname": "Sibyllia Hamburgerficka"
         },
         {
           "id": "7580",
@@ -379,6 +302,18 @@
         {
           "id": "1715",
           "productname": "Haribo Nappar Lakrits"
+        },
+        {
+          "id": "0f22",
+          "productname": "Fanta"
+        },
+        {
+          "id": "b56e",
+          "productname": "Sibyllia Hamburgerficka"
+        },
+        {
+          "id": "e3c0",
+          "productname": "Rullgrillskorv"
         }
       ],
       "id": "a832"
@@ -426,6 +361,10 @@
     {
       "id": "cb82",
       "kioskName": "Kiosk Höger"
+    },
+    {
+      "id": "7465",
+      "kioskName": "Kiosk Norr"
     }
   ],
   "products": [
