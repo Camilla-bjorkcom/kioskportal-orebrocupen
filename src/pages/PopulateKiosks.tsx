@@ -111,19 +111,20 @@ function PopulateKiosks() {
                                  onClick={handleSubmit}/>
           </div>
 
-          <Accordion type="single" collapsible className='w-3/4'>
+          <Accordion type="single" collapsible className='w-3/4 '>
             {kiosks.map((kiosk) => (
               <AccordionItem
                 key={kiosk.id}
                 value={kiosk.id}
+                className=' p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50'
               >
-                <AccordionTrigger  className="flex self-end">
+                <AccordionTrigger  className="flex self-end hover:no-underline">
 
-               <div className='w-full'>
+               <div className="w-full hover:no-underline">
                 <div className='flex justify-between'>
                   <label
                   
-                    className="basis-1/4 font-medium hover:text-slate-800 cursor-pointer"
+                    className="basis-1/4 font-medium hover:text-slate-800 "
                   >
                     {kiosk.kioskName}
                     
@@ -141,6 +142,7 @@ function PopulateKiosks() {
                  productLists={productLists}
                  products={products}
                  onEditClick={handleEditClick}
+                 
                 />
                   </TooltipTrigger>
                         <TooltipContent>
@@ -149,6 +151,7 @@ function PopulateKiosks() {
                       </Tooltip>
                     </TooltipProvider>
                   <Checkbox
+                    className='w-6 h-6 mr-4 ml-4'
                     id={`kiosk-${kiosk.id}`}
                     checked={kiosksForUpdate.some((k) => k.id === kiosk.id)}
                     onClick={(e) => e.stopPropagation()}
@@ -166,19 +169,14 @@ function PopulateKiosks() {
                 </div>
                 </div>
                 </AccordionTrigger>
-                <AccordionContent>
-                
+                <AccordionContent> 
                   {kiosk.products && kiosk.products.length > 0 ? (
                     <ul className="grid grid-cols-3 gap-4">
                       {kiosk.products.map((product : Product, index: number) =>(
                          <li key={index}>
-                         
-                         {product.productname} 
-                         
-                       </li>
-                       
-                      ) )}
-                      
+                         {product.productname}                          
+                       </li>                      
+                      ) )}                      
                     </ul>
                   ): (
                     <p className="text-gray-500">Inga produkter tillgängliga för denna kiosk.</p>
