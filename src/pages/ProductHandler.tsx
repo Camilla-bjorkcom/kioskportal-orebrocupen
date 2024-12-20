@@ -1,5 +1,6 @@
 import CreateProductButton from "@/components/CreateProductButton";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import UpdateProductButton from "@/components/UpdateProductButton";
 
 import { TrashIcon } from "@radix-ui/react-icons";
@@ -123,14 +124,37 @@ function ProductHandler() {
                 <div className="flex flex-row justify-between">
                   <p className= "basis-1/4">{product.productname}</p>
                   <div className="flex justify-between basis-1/3">
-                  <p className="mr-10 min-w-24">st/kolli: {displayAmount(product.amountPerPackage)}</p>
-                  <UpdateProductButton onUpdate={UpdateProduct}
-                   product={{ id: product.id, productname: product.productname, amountPerPackage: product.amountPerPackage }}></UpdateProductButton>
+                  <p className="mr-10 min-w-36">Antal per förp: {displayAmount(product.amountPerPackage)}</p>
+                 
                   <button  onClick= {(e) => e.stopPropagation()}>
+                  <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                        <UpdateProductButton onUpdate={UpdateProduct}
+                          product={{ id: product.id, productname: product.productname, 
+                          amountPerPackage: product.amountPerPackage }}></UpdateProductButton>
+                   
+                  </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Redigera produkt</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+
                     <AlertDialog>
-                        <AlertDialogTrigger>
-                        <TrashIcon className="w-8 h-6 hover:text-red-500 "></TrashIcon>
-                        </AlertDialogTrigger>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <AlertDialogTrigger>
+                            <TrashIcon className="w-8 h-6 hover:text-red-500" />
+                          </AlertDialogTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Radera produkt</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>

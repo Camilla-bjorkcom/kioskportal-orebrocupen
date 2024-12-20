@@ -115,7 +115,7 @@ const ContactPersonComponent = ({
 
     await onUpdate(editingPerson.id, name, facility, phone, role);
     toast({
-      className: "bg-yellow-200",
+      className: "bg-orange-200",
       title: "Ändringar sparade",
       description: `${editingPerson.name} har uppdaterats.`,
       duration: 5000,
