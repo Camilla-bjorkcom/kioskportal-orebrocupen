@@ -81,20 +81,30 @@ function Kioskmanager() {
   };
 
   const CreateKiosk = async (kioskName: string) => {
+    if (selectedFacility === null) {
+      console.error("No facility selected. Cannot create kiosk without facility.");
+      return;
+    }
+  
     try {
       const response = await fetch("http://localhost:3000/kiosks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kioskName: kioskName }),
+        body: JSON.stringify({ 
+          kioskName: kioskName,
+          facilityId: selectedFacility // Skicka med det valda facilityId
+        }),
       });
+  
       if (!response.ok) {
-        throw new Error("Failed to save product");
+        throw new Error("Failed to save kiosk");
       }
+  
       const newKiosk = await response.json();
       setKiosks((prev) => [...prev, newKiosk]);
     } catch (error) {
       console.error(error);
-      throw new Error("failed to create facility");
+      throw new Error("Failed to create kiosk");
     }
   };
 

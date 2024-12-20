@@ -486,6 +486,11 @@
         }
       ],
       "id": "7465"
+    },
+    {
+      "id": "cb74",
+      "kioskName": "TestKiosk",
+      "facilityId": "5487"
     }
   ],
   "products": [
