@@ -58,6 +58,26 @@
     {
       "id": "5487",
       "facilityname": "Petterberg"
+    },
+    {
+      "id": "54bb",
+      "facilityname": "Ekäng"
+    },
+    {
+      "id": "ea43",
+      "facilityname": "Pettersberg"
+    },
+    {
+      "id": "76c3",
+      "facilityname": "Ekäng"
+    },
+    {
+      "id": "cc4b",
+      "facilityname": "Pettersberg"
+    },
+    {
+      "id": "35ef",
+      "facilityname": "jjjjjjjj"
     }
   ],
   "kiosks": [
@@ -491,6 +511,40 @@
       "id": "cb74",
       "kioskName": "TestKiosk",
       "facilityId": "5487"
+    },
+    {
+      "kioskName": "Huvudkiosk",
+      "products": [
+        {
+          "id": "9d9f",
+          "productname": "Kexchoklad"
+        },
+        {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "id": "17e7",
+          "productname": "Mer Apelsin"
+        },
+        {
+          "id": "0bad",
+          "productname": "Mer Päron"
+        }
+      ],
+      "id": "c4f3"
+    },
+    {
+      "id": "2d25",
+      "kioskName": "test med products",
+      "facilityId": "54bb",
+      "products": []
+    },
+    {
+      "id": "1cb2",
+      "kioskName": "xxxxxx",
+      "facilityId": "35ef",
+      "products": []
     }
   ],
   "products": [
@@ -599,6 +653,11 @@
     {
       "id": "0f22",
       "productname": "Fanta"
+    },
+    {
+      "id": "37d9",
+      "productname": "banan",
+      "amountPerPackage": 25
     }
   ],
   "productslists": [
@@ -981,6 +1040,33 @@
     {
       "id": "44cc",
       "productlistname": "ny test",
+      "products": []
+    },
+    {
+      "id": "5215",
+      "productlistname": "Standard2",
+      "products": [
+        {
+          "id": "9d9f",
+          "productname": "Kexchoklad"
+        },
+        {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "id": "17e7",
+          "productname": "Mer Apelsin"
+        },
+        {
+          "id": "0bad",
+          "productname": "Mer Päron"
+        }
+      ]
+    },
+    {
+      "id": "e89f",
+      "productlistname": "kjbk",
       "products": []
     }
   ],

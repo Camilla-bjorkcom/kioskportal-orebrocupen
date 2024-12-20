@@ -26,17 +26,14 @@ import { Pencil } from "lucide-react";
 import { Toaster } from "./ui/toaster";
 import { Button } from "./ui/button";
 import { toast } from "@/hooks/use-toast";
-
+import { Kiosk } from '@/interfaces';
 const formSchema = z.object({
     kioskName: z.string().min(2, {
       message: "Kiosk namn måste ha minst 2 bokstäver",
     }),
   });
   
-interface Kiosk {
-    id: number;
-    kioskName: string;
-  }
+
 
 interface UpdateKioskButtonProps {
   kiosk: Kiosk;

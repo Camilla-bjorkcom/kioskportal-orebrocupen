@@ -12,9 +12,9 @@ import {
 import { TrashIcon } from "lucide-react";
 
 interface DeleteButtonProps {
-  id: number; // ID för objektet som ska raderas
+  id: string; // ID för objektet som ska raderas
   type: "Facility" | "Kiosk"; // Typ av objekt
-  onDelete: (id: number, type: "Facility" | "Kiosk") => void; // Callback för att radera
+  onDelete: (id: string, type: "Facility" | "Kiosk") => void; // Callback för att radera
 }
 
 const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {

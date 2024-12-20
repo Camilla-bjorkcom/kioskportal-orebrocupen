@@ -26,7 +26,7 @@ import { Pencil } from "lucide-react";
 import { Toaster } from "./ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "./ui/button";
-
+import { Facility, Kiosk, Product, ProductList } from '@/interfaces';
 const formSchema = z.object({
   facilityName: z.string().min(2, {
     message: "Anläggnings namn måste ha minst 2 bokstäver",
@@ -38,10 +38,7 @@ interface UpdateFacilityButtonProps {
   onSave: (facility: Facility) => void;
 }
 
-interface Facility {
-  id: number;
-  facilityname: string;
-}
+
 
 const UpdateFacilityButton = ({
   facility,

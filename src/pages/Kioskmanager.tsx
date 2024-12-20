@@ -11,30 +11,27 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Facility, Kiosk, Product } from '@/interfaces';
+ 
 
-interface Facility {
-  id: number;
-  facilityname: string;
-}
-interface Kiosk {
-  id: number;
-  kioskName: string;
-}
+ 
 
 function Kioskmanager() {
   const [facility, setFacility] = useState<Facility[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
-  const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
+  const [selectedFacility, setSelectedFacility] = useState<string >();
+  const [selectedKiosk, setSelectedKiosk] = useState<string>();
+  const[ kioskProducts, setKioskProducts] = useState<Product[]>([]);
 
   //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
-    facility: number | null;
-    kiosk: number | null;
+    facilityId?: string;
+    kioskId?: string;
   }>({
-    facility: null,
-    kiosk: null,
+    facilityId: "",
+    kioskId: "",
   });
+  
 
   useQuery<Facility[]>({
     queryKey: ["facilities"],
@@ -81,7 +78,7 @@ function Kioskmanager() {
   };
 
   const CreateKiosk = async (kioskName: string) => {
-    if (selectedFacility === null) {
+    if (!selectedFacility ) {
       console.error("No facility selected. Cannot create kiosk without facility.");
       return;
     }
@@ -92,7 +89,8 @@ function Kioskmanager() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           kioskName: kioskName,
-          facilityId: selectedFacility // Skicka med det valda facilityId
+          facilityId: selectedFacility, // Skicka med det valda facilityId
+          products : kioskProducts,
         }),
       });
   
@@ -161,7 +159,7 @@ function Kioskmanager() {
     }
   };
 
-  const DeleteFacility = async (id: number) => {
+  const DeleteFacility = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:3000/facilities/${id}`, {
         method: "DELETE",
@@ -175,7 +173,7 @@ function Kioskmanager() {
     }
   };
 
-  const DeleteKiosk = async (id: number) => {
+  const DeleteKiosk = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:3000/kiosks/${id}`, {
         method: "DELETE",
@@ -190,31 +188,28 @@ function Kioskmanager() {
   };
 
   const handleFacilityClick = (facility: Facility) => {
-    setSelectedFacility((prevSelectedFacility) =>
-      prevSelectedFacility === facility.id ? null : facility.id
-    );
-
-    setSelectedKiosk(null);
+    const newFacilityId = selectedFacility === facility.id ? "" : facility.id;
+  
+    setSelectedFacility(newFacilityId); // Uppdaterar selectedFacility
+  
     setSelectedOptions((prev) => ({
       ...prev,
-      facility: selectedFacility === facility.id ? null : facility.id,
-      kiosk: null,
+      facilityId: newFacilityId,
+      kioskId: "", // Rensar kiosk eftersom anläggning ändras
     }));
   };
-
+  
   const handleKioskClick = (kiosk: Kiosk) => {
-    setSelectedKiosk((prevSelectedKiosk) =>
-      prevSelectedKiosk === kiosk.id ? null : kiosk.id
-    );
-
+    const newKioskId = selectedKiosk === kiosk.id ? "" : kiosk.id;
+  
+    setSelectedKiosk(newKioskId); // Uppdaterar selectedKiosk
+  
     setSelectedOptions((prev) => ({
       ...prev,
-      kiosk: selectedKiosk === kiosk.id ? null : kiosk.id,
+      kioskId: newKioskId,
     }));
   };
-
-  console.log(selectedOptions);
-
+  
   return (
     <>
       <section className="container mx-auto px-5">
@@ -239,7 +234,7 @@ function Kioskmanager() {
                     className="flex gap-3"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {selectedOptions.facility === facility.id && (
+                    {selectedOptions?.facilityId === facility.id && (
                       <>
                         <TooltipProvider>
                           <Tooltip>
@@ -299,7 +294,7 @@ function Kioskmanager() {
                         className="flex gap-3"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        {selectedOptions.kiosk === kiosk.id && (
+                        {selectedOptions?.kioskId === kiosk.id && (
                           <>
                             <TooltipProvider>
                               <Tooltip>

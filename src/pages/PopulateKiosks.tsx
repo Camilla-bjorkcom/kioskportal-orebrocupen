@@ -106,7 +106,7 @@ function PopulateKiosks() {
           const data = await response.json();
           console.log(data)
           setSelectedProducts(kiosk.products);  
-          console.log(selectedProducts)  
+          
           setOpen(true);
            
       }
@@ -132,7 +132,7 @@ function PopulateKiosks() {
                                   products={products} 
                                  onClick={handleSubmit}/>
           </div>
-
+         
           <Accordion type="single" collapsible className='w-3/4 '>
             {kiosks.map((kiosk) => (
               <AccordionItem
