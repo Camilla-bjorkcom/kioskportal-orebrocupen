@@ -1,4 +1,4 @@
 export interface Facility {
     facilityName: string;
-    facilityId : string;
+    id : string;
 }

@@ -3,7 +3,7 @@ import SelectedKiosksButton from '@/components/SelectedKiosksButton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Kiosk, Product, ProductList } from '@/interfaces';
+import { Facility, Kiosk, Product, ProductList } from '@/interfaces';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
@@ -17,8 +17,26 @@ function PopulateKiosks() {
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [productLists, setProductLists] = useState<ProductList[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [facilities, setFacilities ]= useState<Facility[]>([]);
+  
+  
+  
+  useQuery<Facility[]>({
+      queryKey: ["facilities"],
+      queryFn: async () => {
+        const response = await fetch("http://localhost:3000/facilities");
+        if (!response.ok) {
+          throw new Error("Failed to fetch facilites");
+        }
+        const data = await response.json();
+        setFacilities(data);
+        return data;
+      },
+    });
+  
+  
   // Fetch Kiosks
-  useQuery<Kiosk[]>({
+    useQuery<Kiosk[]>({
     queryKey: ['kiosks'],
     queryFn: async () => {
       const response = await fetch('http://localhost:3000/kiosks');
@@ -56,7 +74,11 @@ function PopulateKiosks() {
     },
   });
   
-  
+  const kiosksByFacility = facilities.map((facility) => ({
+    ...facility,
+    kiosks: kiosks.filter((kiosk) => kiosk.facilityId === facility.id),
+  }));
+
 
 
   const handleSubmit = (open: boolean) => {
