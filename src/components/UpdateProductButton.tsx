@@ -12,6 +12,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
+import { Product } from '@/interfaces';
+
 const formSchema = z.object({
     productname: z.string().min(2, {
       message: "Produktnamn måste ha minst 2 bokstäver",
@@ -31,8 +33,8 @@ const formSchema = z.object({
 });
 
 interface UpdateProductButtonProps {
-    onUpdate: (id: string, productName: string , amountPerPackage: number ) => void;
-    product: { id: string; productname: string; amountPerPackage: number }; // Callback för att spara produktnamn
+    onUpdate: (updatedProduct : Product ) => void;
+    product: Product // Callback för att spara produktnamn
   }
 
   
@@ -52,9 +54,13 @@ function UpdateProductButton({onUpdate, product} : UpdateProductButtonProps) {
     
       function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Formulärvärden (innan konvertering):", values);
-       
+        const updatedProduct: Product = {
+          id: values.id,
+          productname: values.productname,
+          amountPerPackage: values.amountPerPackage ?? 0, // Hantera valfritt fält
+        };
 
-        onUpdate(values.id, values.productname ,  values.amountPerPackage ?? 0)
+        onUpdate(updatedProduct)
       
         console.log("Uppdaterade värden:",values);
         setUpdateMessage("Produkten har uppdaterats!");

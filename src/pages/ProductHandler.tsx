@@ -6,13 +6,9 @@ import UpdateProductButton from "@/components/UpdateProductButton";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { Product } from "@/interfaces";
 
 
-interface Product {
-  id: string;
-  productname: string;
-  amountPerPackage : number
-}
 
 function ProductHandler() {
  
@@ -49,36 +45,38 @@ function ProductHandler() {
     }
   };
   
-  const UpdateProduct = async ( id: string, productname: string, amountPerPackage: number) => {
-    try{
-
-      console.log("Skickar till API:", {
-        id,
-        productname,
-        amountPerPackage
-      });
-
-      const response= await fetch(`http://localhost:3000/products/${id}`, {
-        method:"PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productname: productname, amountPerPackage : amountPerPackage }),
-      });
-      if(!response.ok) {
+  const UpdateProduct = async (updatedProduct: Product) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/products/${updatedProduct.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedProduct), 
+        }
+      );
+  
+      if (!response.ok) {
         throw new Error("Failed to update product");
       }
-      const updatedProduct = await response.json();
-      console.log("skickat till databas", updatedProduct)
+  
+      const updatedProductFromApi = await response.json();
+  
+     
       setProducts((prev) =>
         prev.map((product) =>
-          product.id === id ? { ...product, ...updatedProduct } : product
+          product.id === updatedProductFromApi.id
+            ? updatedProductFromApi
+            : product
         )
       );
-    }
-    catch (error) {
+      console.log("Uppdaterad produkt:", updatedProductFromApi);
+    } catch (error) {
       console.error("Failed to update product:", error);
       alert("Kunde inte uppdatera produkten. Försök igen.");
     }
-  }
+  };
+  
 
   const DeleteProduct = async (id: string) => {
     try {
@@ -131,8 +129,8 @@ function ProductHandler() {
                       <Tooltip>
                         <TooltipTrigger>
                         <UpdateProductButton onUpdate={UpdateProduct}
-                          product={{ id: product.id, productname: product.productname, 
-                          amountPerPackage: product.amountPerPackage }}></UpdateProductButton>
+                         product={product}
+                          ></UpdateProductButton>
                    
                   </TooltipTrigger>
                         <TooltipContent>
