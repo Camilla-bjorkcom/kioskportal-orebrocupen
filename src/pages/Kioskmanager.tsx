@@ -17,7 +17,7 @@ import { Facility, Kiosk, Product } from '@/interfaces';
  
 
 function Kioskmanager() {
-  const [facility, setFacility] = useState<Facility[]>([]);
+  const [facilities, setFacility] = useState<Facility[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<string >();
   const [selectedKiosk, setSelectedKiosk] = useState<string>();
@@ -187,6 +187,11 @@ function Kioskmanager() {
     }
   };
 
+  const kiosksByFacility = facilities.map((facility) => ({
+    ...facility,
+    kiosks: kiosks.filter((kiosk) => kiosk.facilityId === facility.id),
+  }));
+
   const handleFacilityClick = (facility: Facility) => {
     const newFacilityId = selectedFacility === facility.id ? "" : facility.id;
   
@@ -198,6 +203,7 @@ function Kioskmanager() {
       kioskId: "", // Rensar kiosk eftersom anläggning ändras
     }));
   };
+
   
   const handleKioskClick = (kiosk: Kiosk) => {
     const newKioskId = selectedKiosk === kiosk.id ? "" : kiosk.id;
@@ -210,6 +216,9 @@ function Kioskmanager() {
     }));
   };
   
+
+
+  
   return (
     <>
       <section className="container mx-auto px-5">
@@ -219,7 +228,7 @@ function Kioskmanager() {
             <h3 className="text-xl mb-2">Anläggning</h3>
             <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
               <AddFacilityButton onSave={CreateFacility} />
-              {facility.map((facility) => (
+              {facilities.map((facility) => (
                 <div
                   className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
                   ${
@@ -272,66 +281,67 @@ function Kioskmanager() {
           </div>
 
           <div>
-            <h3 className="text-xl mb-2">Kiosker</h3>
-            <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
-              {selectedFacility !== null && (
-                <div className="mt-4">
-                  <AddKioskButton onSave={CreateKiosk} />
-                  {kiosks.map((kiosk) => (
-                    <div
-                      key={kiosk.id}
-                      className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
-              ${
-                selectedKiosk === kiosk.id
-                  ? "text-black border-black border rounded-xl h-fit w-11/12"
-                  : "text-black border-none w-11/12"
-              }            
-            `}
-                      onClick={() => handleKioskClick(kiosk)}
-                    >
-                      <p>{kiosk.kioskName}</p>
-                      <div
-                        className="flex gap-3"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {selectedOptions?.kioskId === kiosk.id && (
-                          <>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <UpdateKioskButton
-                                    onSave={UpdateKiosk}
-                                    kiosk={kiosk}
-                                  />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Redigera kiosk</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <DeleteButton
-                                    id={kiosk.id}
-                                    type="Kiosk"
-                                    onDelete={DeleteKiosk}
-                                  />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Radera</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+  <h3 className="text-xl mb-2">Kiosker</h3>
+  <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
+    {selectedFacility && (
+      <div className="mt-4">
+        <AddKioskButton onSave={CreateKiosk} />
+        {kiosksByFacility
+          .find((facility) => facility.id === selectedFacility) // Hämta den valda anläggningen
+          ?.kiosks.map((kiosk) => ( // Rendera kiosker för den valda anläggningen
+            <div
+              key={kiosk.id}
+              className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
+                ${
+                  selectedKiosk === kiosk.id
+                    ? "text-black border-black border rounded-xl h-fit w-11/12"
+                    : "text-black border-none w-11/12"
+                }`}
+              onClick={() => handleKioskClick(kiosk)}
+            >
+              <p>{kiosk.kioskName}</p>
+              <div
+                className="flex gap-3"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {selectedOptions?.kioskId === kiosk.id && (
+                  <>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <UpdateKioskButton
+                            onSave={UpdateKiosk}
+                            kiosk={kiosk}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Redigera kiosk</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <DeleteButton
+                            id={kiosk.id}
+                            type="Kiosk"
+                            onDelete={DeleteKiosk}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Radera</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
+          ))}
+      </div>
+    )}
+  </div>
+</div>;
         </div>
       </section>
     </>

@@ -119,14 +119,14 @@ function ProductHandler() {
             {products.map((product) => (
               <div
                 key={product.id}
-                className="p-4 border border-gray-200 rounded-md shadow w-3/4 hover:bg-gray-50"
+                className="p-4  pr-2 border border-gray-200 rounded-md shadow w-full 2xl:w-3/4 hover:bg-gray-50"
               >
-                <div className="flex flex-row justify-between">
-                  <p className= "basis-1/4">{product.productname}</p>
-                  <div className="flex justify-between basis-1/3">
-                  <p className="mr-10 min-w-36">Antal per förp: {displayAmount(product.amountPerPackage)}</p>
+                <div className="flex flex-row justify-between mr-0">
+                  <p className= "basis-2/4 md:basis-1/4">{product.productname}</p>
+                  <div className="flex justify-between 2xl:basis-1/3 lg:justify-between">
+                  <p className="hidden min-w-36 mr-4 lg:block self-center">Antal per förp: {displayAmount(product.amountPerPackage)}</p>
                  
-                  <button  onClick= {(e) => e.stopPropagation()}>
+                  <div className="flex items-center 2xl:basis-1/4 2xl:justify-between" onClick= {(e) => e.stopPropagation()}>
                   <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger>
@@ -147,7 +147,7 @@ function ProductHandler() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <AlertDialogTrigger>
-                            <TrashIcon className="w-8 h-6 hover:text-red-500" />
+                            <TrashIcon className="w-8 h-6 hover:text-red-500 flex ml-6 2xl:ml-2" />
                           </AlertDialogTrigger>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -176,7 +176,7 @@ function ProductHandler() {
                         </AlertDialogContent>
                       </AlertDialog>
                   
-                  </button>
+                  </div>
 
                   </div>
                  

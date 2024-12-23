@@ -116,6 +116,21 @@ function PopulateKiosks() {
     }
     
     }
+    const handleKioskUpdated = (updatedKiosk: Kiosk) => {
+      setKiosks((prevKiosks) =>
+        prevKiosks.map((kiosk) =>
+          kiosk.id === updatedKiosk.id ? updatedKiosk : kiosk
+        )
+      );
+    };
+  
+    const handleKiosksUpdated = (updatedKiosks: Kiosk[]) => {
+      setKiosks((prevKiosks) =>
+        prevKiosks.map((kiosk) =>
+          updatedKiosks.find((updatedKiosk) => updatedKiosk.id === kiosk.id) || kiosk
+        )
+      );
+    };
   
   
 
@@ -130,80 +145,99 @@ function PopulateKiosks() {
             <SelectedKiosksButton selectedKiosks={kiosksForUpdate}
                                   productLists={productLists} 
                                   products={products} 
-                                 onClick={handleSubmit}/>
+                                 onClick={handleSubmit}
+                                 onKiosksUpdated={handleKiosksUpdated} />
           </div>
-         
-          <Accordion type="single" collapsible className='w-3/4 '>
-            {kiosks.map((kiosk) => (
+          <Accordion type="single" collapsible className="w-3/4">
+            {kiosksByFacility.map((facility) => (
               <AccordionItem
-                key={kiosk.id}
-                value={kiosk.id}
-                className=' p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50'
+                key={facility.id}
+                value={facility.id}
+                className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
               >
-                <AccordionTrigger  className="flex self-end hover:no-underline">
-
-               <div className="w-full hover:no-underline">
-                <div className='flex justify-between'>
-                  <label
-                  
-                    className="basis-1/4 font-medium hover:text-slate-800 "
-                  >
-                    {kiosk.kioskName}
-                    
+                <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
+                <div className="flex justify-between w-full">
+                <label className="basis-1/4 font-medium hover:text-slate-800">
+                
+                  {facility.facilityname}
                   </label>
-                  <div className="flex self-end gap-4 place-items-center mr-2">
-                  <p>
-                   Antal tillagda produkter: {Array.isArray(kiosk.products) ? kiosk.products.length : 0}
-                    </p>
-                  <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                  <EditSelectedKioskButton
-                 key={kiosk.id}
-                 kioskForEdit={kiosk}
-                 productLists={productLists}
-                 products={products}
-                 onEditClick={handleEditClick}
-                 
-                />
-                  </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Redigera kioskutbud</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  <Checkbox
-                    className='w-6 h-6 mr-4 ml-4'
-                    id={`kiosk-${kiosk.id}`}
-                    checked={kiosksForUpdate.some((k) => k.id === kiosk.id)}
-                    onClick={(e) => e.stopPropagation()}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        // Lägg till kiosk i listan
-                        setKiosksforUpdate((prev) => [...prev, kiosk]);
-                      } else {
-                        // Ta bort kiosk från listan
-                        setKiosksforUpdate((prev) => prev.filter((k) => k.id !== kiosk.id));
-                      }
-                    }}
-                  />
-                  </div>
-                </div>
-                </div>
+                  <p className='basis-1/5'>
+                     Antal kiosker:{' '}
+                      {Array.isArray(facility.kiosks) ? facility.kiosks.length : 0}
+                       </p>
+                       </div>
                 </AccordionTrigger>
-                <AccordionContent> 
-                  {kiosk.products && kiosk.products.length > 0 ? (
-                    <ul className="grid grid-cols-3 gap-4">
-                      {kiosk.products.map((product : Product, index: number) =>(
-                         <li key={index}>
-                         {product.productname}                          
-                       </li>                      
-                      ) )}                      
-                    </ul>
-                  ): (
-                    <p className="text-gray-500">Inga produkter tillgängliga för denna kiosk.</p>
-                  )}
-                  
+                <AccordionContent>
+                  <Accordion type="single" collapsible>
+                    {facility.kiosks.map((kiosk) => (
+                      <AccordionItem
+                        key={kiosk.id}
+                        value={kiosk.id}
+                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+                      >
+                        <AccordionTrigger className="flex self-end hover:no-underline">
+                          <div className="w-full hover:no-underline">
+                            <div className="flex justify-between">
+                              <label className="basis-1/4 font-medium hover:text-slate-800">
+                                {kiosk.kioskName}
+                              </label>
+                              <div className="flex self-end gap-4 place-items-center mr-2">
+                                <p>
+                                  Antal tillagda produkter:{' '}
+                                  {Array.isArray(kiosk.products) ? kiosk.products.length : 0}
+                                </p>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger >
+                                      <EditSelectedKioskButton
+                                        key={kiosk.id}
+                                        kioskForEdit={kiosk}
+                                        productLists={productLists}
+                                        products={products}
+                                        onEditClick={handleEditClick}
+                                        onKioskUpdated={handleKioskUpdated}
+                                      />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Redigera kioskutbud</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                                <Checkbox
+                                  className="w-6 h-6 mr-4 ml-4"
+                                  id={`kiosk-${kiosk.id}`}
+                                  checked={kiosksForUpdate.some((k) => k.id === kiosk.id)}
+                                  onClick={(e) => e.stopPropagation()}
+                                  onCheckedChange={(checked) => {
+                                    if (checked) {
+                                      setKiosksforUpdate((prev) => [...prev, kiosk]);
+                                    } else {
+                                      setKiosksforUpdate((prev) =>
+                                        prev.filter((k) => k.id !== kiosk.id)
+                                      );
+                                    }
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          {kiosk.products && kiosk.products.length > 0 ? (
+                            <ul className="grid grid-cols-3 gap-4">
+                              {kiosk.products.map((product: Product, index: number) => (
+                                <li key={index}>{product.productname}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="text-gray-500">
+                              Inga produkter tillgängliga för denna kiosk.
+                            </p>
+                          )}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
                 </AccordionContent>
               </AccordionItem>
             ))}
