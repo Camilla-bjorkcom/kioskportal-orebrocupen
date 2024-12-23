@@ -131,6 +131,10 @@ function PopulateKiosks() {
         )
       );
     };
+
+    const clearSelectedKiosks = () => {
+      setKiosksforUpdate([]);
+    };
   
   
 
@@ -146,7 +150,8 @@ function PopulateKiosks() {
                                   productLists={productLists} 
                                   products={products} 
                                  onClick={handleSubmit}
-                                 onKiosksUpdated={handleKiosksUpdated} />
+                                 onKiosksUpdated={handleKiosksUpdated} 
+                                 onClearSelected={clearSelectedKiosks}/>
           </div>
           <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
             {kiosksByFacility.map((facility) => (

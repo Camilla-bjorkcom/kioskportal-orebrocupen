@@ -12,12 +12,12 @@ interface SelectedKiosksButtonProps {
   products: Product[]; // Produkter skickas från PopulateKiosks
   onClick: (open :boolean) => void; 
   onKiosksUpdated: (updatedKiosks: Kiosk[]) => void;
-  
+  onClearSelected: ()=> void;
 }
 
 function SelectedKiosksButton({ selectedKiosks,
   productLists,
-  products , onKiosksUpdated,}: SelectedKiosksButtonProps) {
+  products , onKiosksUpdated, onClearSelected}: SelectedKiosksButtonProps) {
   
   const [open, setOpen] = useState(false);
   const [selectedProductListId, setSelectedProductListId] = useState<string>('');
@@ -91,6 +91,7 @@ function SelectedKiosksButton({ selectedKiosks,
             
             updatedKioskList.push(updatedKiosk);
             onKiosksUpdated(updatedKioskList);
+            onClearSelected();
             setOpen(false);
            ;
 
