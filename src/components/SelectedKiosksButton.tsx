@@ -88,20 +88,21 @@ function SelectedKiosksButton({ selectedKiosks,
             }
             const updatedKiosk = await response.json();
             console.log(updatedKiosk);
-            alert("kioskerna har nu produkter tillagda")
+            
             updatedKioskList.push(updatedKiosk);
             onKiosksUpdated(updatedKioskList);
             setOpen(false);
            ;
 
       }
+      alert("kioskerna har nu produkter tillagda");
     };
     
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className='mt-2'>
           Kiosker valda att lägga till produkter till ({selectedKiosks.length})
         </Button>
       </DialogTrigger>

@@ -140,15 +140,15 @@ function PopulateKiosks() {
         <h2 className="mt-8 text-2xl pb-2 mb-4">Lägg till produktutbud i kiosker</h2>
         <div className="mt-8">
           <h3 className="text-lg">Skapade kiosker</h3>
-          <div className="flex justify-between w-3/4">
-            <h5 className="text-base">Välj kiosker att lägga till produkter till:</h5>
+          <div className="grid mb-4 lg:flex justify-between 2xl:w-3/4">
+            <h5 className="text-base self-center mt-2">Välj kiosker att lägga till produkter till:</h5>
             <SelectedKiosksButton selectedKiosks={kiosksForUpdate}
                                   productLists={productLists} 
                                   products={products} 
                                  onClick={handleSubmit}
                                  onKiosksUpdated={handleKiosksUpdated} />
           </div>
-          <Accordion type="single" collapsible className="w-3/4">
+          <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
             {kiosksByFacility.map((facility) => (
               <AccordionItem
                 key={facility.id}
@@ -161,7 +161,7 @@ function PopulateKiosks() {
                 
                   {facility.facilityname}
                   </label>
-                  <p className='basis-1/5'>
+                  <p className='basis-1/5 hidden lg:block lg:min-w-36'>
                      Antal kiosker:{' '}
                       {Array.isArray(facility.kiosks) ? facility.kiosks.length : 0}
                        </p>
@@ -182,7 +182,7 @@ function PopulateKiosks() {
                                 {kiosk.kioskName}
                               </label>
                               <div className="flex self-end gap-4 place-items-center mr-2">
-                                <p>
+                                <p className='hidden lg:block '>
                                   Antal tillagda produkter:{' '}
                                   {Array.isArray(kiosk.products) ? kiosk.products.length : 0}
                                 </p>
