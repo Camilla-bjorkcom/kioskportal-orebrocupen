@@ -58,10 +58,6 @@
     {
       "id": "5487",
       "facilityname": "Petterberg"
-    },
-    {
-      "id": "aed4",
-      "facilityname": "Andreas"
     }
   ],
   "kiosks": [
@@ -77,12 +73,48 @@
           "productname": "Kexchoklad"
         },
         {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "id": "d638",
+          "productname": "Coca Cola Zero"
+        },
+        {
+          "id": "6312",
+          "productname": "Coca Cola"
+        },
+        {
+          "id": "b361",
+          "productname": "Bonaqua Citron/lime"
+        },
+        {
           "id": "17e7",
           "productname": "Mer Apelsin"
         },
         {
+          "id": "0bad",
+          "productname": "Mer Päron"
+        },
+        {
           "id": "c216",
           "productname": "Midnight Grown"
+        },
+        {
+          "id": "5f35",
+          "productname": "Pizza Kebab"
+        },
+        {
+          "id": "ecda",
+          "productname": "Pizza Vegetarisk"
+        },
+        {
+          "id": "e3c0",
+          "productname": "Rullgrillskorv"
+        },
+        {
+          "id": "b56e",
+          "productname": "Sibyllia Hamburgerficka"
         },
         {
           "id": "7580",
@@ -133,21 +165,8 @@
           "productname": "Fanta"
         },
         {
-          "id": "b56e",
-          "productname": "Sibyllia Hamburgerficka"
-        },
-        {
-          "id": "e3c0",
-          "productname": "Rullgrillskorv"
-        },
-        {
-          "id": "0bad",
-          "productname": "Mer Päron"
-        },
-        {
-          "productname": "Pizza Kebab",
-          "amountPerPackage": 12,
-          "id": "5f35"
+          "id": "5837",
+          "productname": "Festis Kaktus/Lime"
         }
       ],
       "kioskName": "Kiosk mitten"

@@ -59,6 +59,7 @@ export function AppSidebar({ id }: { id?: number }) {
       subitems: [
         { title: "Produkthanterare", url:  `/producthandler/${id}` },
         { title: "Produktlista", url: `/productlisthandler/${id}` },
+        { title: "Lägg till produkter i kiosker", url: `/populatekiosks/${id}`},
         
       ],
     },
@@ -68,8 +69,7 @@ export function AppSidebar({ id }: { id?: number }) {
       url: "#",
       icon: House,
       subitems: [      
-        { title: "Skapa kiosker", url: `/kioskmanager/${id}` },
-        { title: "Lägg till produkter i kiosker", url: `/populatekiosks/${id}`},
+        { title: "Skapa kiosker", url: `/kioskmanager/${id}` },       
         { title: "Kontaktpersoner", url: `/contactperson/${id}` },
         { title: "QR koder till kiosker", url: "#" },
         
