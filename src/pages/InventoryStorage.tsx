@@ -36,9 +36,6 @@ function InventoryStorage() {
     products: z.array(
       z.object({
         productName: z.string().min(1, "Produktnamn är obligatoriskt"),
-        amountPieces: z.coerce
-          .number()
-          .min(0, "Antal stycken måste vara större än eller lika med 0"),
         amountPackages: z.coerce
           .number()
           .min(0, "Antal paket måste vara större än eller lika med 0"),
@@ -190,6 +187,7 @@ function InventoryStorage() {
                   className="w-full mt-10"
                   onClick={() => {
                     toast({
+                      className: "bg-green-200",
                       title: "Lyckat!",
                       description: "Inventering skickades iväg",
                     });

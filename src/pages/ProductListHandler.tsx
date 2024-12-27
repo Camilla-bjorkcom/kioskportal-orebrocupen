@@ -15,6 +15,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Product {
   id: number;
@@ -124,9 +125,19 @@ function ProductListHandler() {
                       onClick={(e) => e.stopPropagation()}
                     >
                       <AlertDialog>
-                        <AlertDialogTrigger>
-                          <TrashIcon className="w-8 h-6"></TrashIcon>
-                        </AlertDialogTrigger>
+                      <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <AlertDialogTrigger>
+                            <TrashIcon className="w-8 h-6 hover:text-red-500" />
+                          </AlertDialogTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Radera produktlista</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                        
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>

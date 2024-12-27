@@ -44,6 +44,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 
+
 // Menu items.
 
 
@@ -68,6 +69,7 @@ export function AppSidebar({ id }: { id?: number }) {
       icon: House,
       subitems: [      
         { title: "Skapa kiosker", url: `/kioskmanager/${id}` },
+        { title: "Lägg till produkter i kiosker", url: `/populatekiosks/${id}`},
         { title: "Kontaktpersoner", url: `/contactperson/${id}` },
         { title: "QR koder till kiosker", url: "#" },
         
@@ -80,7 +82,8 @@ export function AppSidebar({ id }: { id?: number }) {
       icon: SquareChartGantt,
       subitems: [
         { title: "Inventera lager", url: `/inventorystorage/${id}` },
-        { title: "Visa gjorda inventeringar", url: `/inventorystatus/${id}` },
+        { title: "Visa kioskernas inventeringar", url: `/inventorystatus/${id}` },
+        { title: "Visa lagrets inventering", url: `/inventorystatusstorage/${id}` },
       ],
     },
     {
