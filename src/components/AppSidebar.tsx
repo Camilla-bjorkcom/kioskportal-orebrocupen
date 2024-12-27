@@ -57,8 +57,8 @@ export function AppSidebar({ id }: { id?: number }) {
       url: "#",
       icon: ShoppingBasket,
       subitems: [
-        { title: "Produkthanterare", url:  `/producthandler/${id}` },
-        { title: "Produktlista", url: `/productlisthandler/${id}` },
+        { title: "Skapa produktutbud", url:  `/producthandler/${id}` },
+        { title: "Skapa produktlista", url: `/productlisthandler/${id}` },
         { title: "Lägg till produkter i kiosker", url: `/populatekiosks/${id}`},
         
       ],
