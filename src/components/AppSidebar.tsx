@@ -57,8 +57,9 @@ export function AppSidebar({ id }: { id?: number }) {
       url: "#",
       icon: ShoppingBasket,
       subitems: [
-        { title: "Produkthanterare", url:  `/producthandler/${id}` },
-        { title: "Produktlista", url: `/productlisthandler/${id}` },
+        { title: "Skapa produktutbud", url:  `/producthandler/${id}` },
+        { title: "Skapa produktlista", url: `/productlisthandler/${id}` },
+        { title: "Lägg till produkter i kiosker", url: `/populatekiosks/${id}`},
         
       ],
     },
@@ -68,8 +69,7 @@ export function AppSidebar({ id }: { id?: number }) {
       url: "#",
       icon: House,
       subitems: [      
-        { title: "Skapa kiosker", url: `/kioskmanager/${id}` },
-        { title: "Lägg till produkter i kiosker", url: `/populatekiosks/${id}`},
+        { title: "Skapa kiosker", url: `/kioskmanager/${id}` },       
         { title: "Kontaktpersoner", url: `/contactperson/${id}` },
         { title: "QR koder till kiosker", url: "#" },
         
@@ -82,7 +82,8 @@ export function AppSidebar({ id }: { id?: number }) {
       icon: SquareChartGantt,
       subitems: [
         { title: "Inventera lager", url: `/inventorystorage/${id}` },
-        { title: "Visa gjorda inventeringar", url: `/inventorystatus/${id}` },
+        { title: "Visa kioskernas inventeringar", url: `/inventorystatus/${id}` },
+        { title: "Visa lagrets inventering", url: `/inventorystatusstorage/${id}` },
       ],
     },
     {

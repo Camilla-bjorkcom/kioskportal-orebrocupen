@@ -104,7 +104,7 @@ const UpdateFacilityButton = ({
                   className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
                   onClick={() => {
                     toast({
-                      className: "bg-orange-200",
+                      className:"bg-orange-200",
                       title: "Ändringen sparades",
                       description: "Anläggningen har uppdaterats",
                     });
