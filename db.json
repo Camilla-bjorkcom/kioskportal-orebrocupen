@@ -58,6 +58,10 @@
     {
       "id": "5487",
       "facilityname": "Petterberg"
+    },
+    {
+      "id": "aed4",
+      "facilityname": "Andreas"
     }
   ],
   "kiosks": [
@@ -84,8 +88,9 @@
   ],
   "products": [
     {
-      "id": "eedc",
-      "productname": "Hamburgare"
+      "productname": "Hamburgare",
+      "amountPerPackage": 50,
+      "id": "eedc"
     },
     {
       "id": "9d9f",
