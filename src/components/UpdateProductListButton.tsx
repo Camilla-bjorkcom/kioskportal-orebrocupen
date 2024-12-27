@@ -23,17 +23,9 @@ import { Checkbox } from "./ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { Pencil, Plus } from "lucide-react";
+import { ProductList, Product } from "@/interfaces";
 
-interface ProductList {
-  id: number;
-  productlistname: string;
-  products: Product[];
-}
 
-interface Product {
-  id: number;
-  productname: string;
-}
 
 const formSchema = z.object({
   productlistname: z.string().min(2, {
@@ -43,15 +35,13 @@ const formSchema = z.object({
 
 interface UpdateProductListButtonProps {
   productlist: ProductList;
+  onUpdate: (updatedList: ProductList) => void;
 }
 
 function UpdateProductListButton({
   productlist,
   onUpdate,
-}: {
-  productlist: ProductList;
-  onUpdate: (updatedList: ProductList) => void;
-}) {
+}:  UpdateProductListButtonProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

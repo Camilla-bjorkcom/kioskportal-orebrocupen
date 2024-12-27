@@ -11,46 +11,19 @@ interface SelectedKiosksButtonProps {
   productLists: ProductList[]; // Produktlistor skickas från PopulateKiosks
   products: Product[]; // Produkter skickas från PopulateKiosks
   onClick: (open :boolean) => void; 
+  onKiosksUpdated: (updatedKiosks: Kiosk[]) => void;
+  onClearSelected: ()=> void;
 }
 
 function SelectedKiosksButton({ selectedKiosks,
   productLists,
-  products }: SelectedKiosksButtonProps) {
+  products , onKiosksUpdated, onClearSelected}: SelectedKiosksButtonProps) {
   
   const [open, setOpen] = useState(false);
   const [selectedProductListId, setSelectedProductListId] = useState<string>('');
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
 
-  // Fetch Product Lists
-  /* useQuery<ProductList[]>({
-    queryKey: ['productlists'],
-    queryFn: async () => {
-      const response = await fetch('http://localhost:3000/productslists');
-      if (!response.ok) throw new Error('Failed to fetch product lists');
-      const data = await response.json();
-      setProductLists(data);
-      return data;
-    },
-  });
-
-
-  useQuery<Product[]>({
-    queryKey: ['products'],
-    queryFn: async () => {
-      const response = await fetch('http://localhost:3000/products');
-      if (!response.ok) throw new Error('Failed to fetch products');
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        setProducts(data);
-      } else {
-        console.error("Fetched data is not an array:", data);
-        setProducts([]);
-      }
-      
-      return data;
-    },
-  });
-  */
+  
 
   const handleDialogOpenChange = async (isOpen: boolean) => {
 
@@ -60,26 +33,9 @@ function SelectedKiosksButton({ selectedKiosks,
       }
     setOpen(isOpen);
     setSelectedProducts([]); // Återställ om dialogen stängs eller inga kiosker finns
-
-
-   /* if (isOpen && selectedKiosks.length > 0) {
-      const firstKiosk = selectedKiosks[0]; // Ladda produkter för första kiosken
-      const response = await fetch(`http://localhost:3000/kiosks/${firstKiosk.id}`);
-  
-      if (!response.ok) {
-        console.error("Failed to fetch kiosk products");
-        setSelectedProducts([]); // Återställ vid fel
-      } else {
-        const data = await response.json();
-        setSelectedProducts(data.products || []); // Ladda befintliga produkter
-      }
-    } else {*/
-     
     
   };
 
-
-  
 
   const handleProductListChange = (value: string) => {
     setSelectedProductListId(value);
@@ -106,11 +62,13 @@ function SelectedKiosksButton({ selectedKiosks,
   };
 
   const saveProductsToKiosks = async () => {
+   
     if (selectedProducts.length === 0) {
         alert("Du måste välja minst en produkt!");
         return;
         
       }
+      const updatedKioskList = [];
 
     for (const kiosk of selectedKiosks) {
         const response = await fetch(`http://localhost:3000/kiosks/${kiosk.id}`, 
@@ -120,6 +78,7 @@ function SelectedKiosksButton({ selectedKiosks,
                body: JSON.stringify({
                 kioskName: kiosk.kioskName,
                 products: selectedProducts,
+                facilityId: kiosk.facilityId
               }),
             })
             if(!response.ok) {
@@ -127,19 +86,24 @@ function SelectedKiosksButton({ selectedKiosks,
                 console.error("Server response error:", errorText);
                 throw new Error("Failed to update list");
             }
-            const data = await response.json();
-            console.log(data);
-            alert("kioskerna har nu produkter tillagda")
+            const updatedKiosk = await response.json();
+            console.log(updatedKiosk);
+            
+            updatedKioskList.push(updatedKiosk);
+            onKiosksUpdated(updatedKioskList);
+            onClearSelected();
             setOpen(false);
+           ;
 
       }
+      alert("kioskerna har nu produkter tillagda");
     };
     
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className='mt-2'>
           Kiosker valda att lägga till produkter till ({selectedKiosks.length})
         </Button>
       </DialogTrigger>

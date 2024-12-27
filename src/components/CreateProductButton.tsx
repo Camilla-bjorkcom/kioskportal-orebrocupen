@@ -16,7 +16,7 @@ import {
   import { useState } from "react";
 
 
-import { z } from "zod"
+import {  z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 
 const formSchema = z.object({
@@ -24,14 +24,14 @@ const formSchema = z.object({
       message: "Produktnamn måste ha minst 2 bokstäver",
     }),
     
-    amountPerPackage: 
-    z.preprocess(
-      (val) => (val === "" ? undefined : Number(val)),
-    z
-    .number({ message:"Antal per paket måste anges med siffror"})
-    .positive({ message:"Antal per paket måste vara positivt"}) // Direkt felmeddelande för positiva värden
-    .optional()
-    ), 
+    amountPerPackage: z
+  .preprocess(
+    (val) => val === "" ? undefined : Number(val),
+    z.number({ message: "Antal per paket måste anges med siffror" })
+    .refine(val => val >= 0, { message: "Antal per paket måste vara 0 eller större" })
+      .optional() // Gör det till ett valfritt fält
+  ),
+
      
 });
   
@@ -52,7 +52,7 @@ const formSchema = z.object({
         resolver: zodResolver(formSchema),
         defaultValues: {
           productname: "",
-          amountPerPackage : 0,
+          amountPerPackage : 0 ,
         },
       });
     
@@ -101,7 +101,8 @@ const formSchema = z.object({
                 <FormItem>
                   <FormLabel>Ange antal per förpackning (Valfritt)</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input type="number" {...field} 
+                      value={field.value ?? 0}/>
                   </FormControl>
                   <FormMessage /> 
                 </FormItem>

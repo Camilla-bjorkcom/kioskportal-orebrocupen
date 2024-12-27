@@ -11,30 +11,27 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Facility, Kiosk, Product } from '@/interfaces';
+ 
 
-interface Facility {
-  id: number;
-  facilityname: string;
-}
-interface Kiosk {
-  id: number;
-  kioskName: string;
-}
+ 
 
 function Kioskmanager() {
-  const [facility, setFacility] = useState<Facility[]>([]);
+  const [facilities, setFacility] = useState<Facility[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<number | null>(null);
-  const [selectedKiosk, setSelectedKiosk] = useState<number | null>(null);
+  const [selectedFacility, setSelectedFacility] = useState<string >();
+  const [selectedKiosk, setSelectedKiosk] = useState<string>();
+  const[ kioskProducts, setKioskProducts] = useState<Product[]>([]);
 
   //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
   const [selectedOptions, setSelectedOptions] = useState<{
-    facility: number | null;
-    kiosk: number | null;
+    facilityId?: string;
+    kioskId?: string;
   }>({
-    facility: null,
-    kiosk: null,
+    facilityId: "",
+    kioskId: "",
   });
+  
 
   useQuery<Facility[]>({
     queryKey: ["facilities"],
@@ -81,20 +78,31 @@ function Kioskmanager() {
   };
 
   const CreateKiosk = async (kioskName: string) => {
+    if (!selectedFacility ) {
+      console.error("No facility selected. Cannot create kiosk without facility.");
+      return;
+    }
+  
     try {
       const response = await fetch("http://localhost:3000/kiosks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kioskName: kioskName }),
+        body: JSON.stringify({ 
+          kioskName: kioskName,
+          facilityId: selectedFacility, // Skicka med det valda facilityId
+          products : kioskProducts,
+        }),
       });
+  
       if (!response.ok) {
-        throw new Error("Failed to save product");
+        throw new Error("Failed to save kiosk");
       }
+  
       const newKiosk = await response.json();
       setKiosks((prev) => [...prev, newKiosk]);
     } catch (error) {
       console.error(error);
-      throw new Error("failed to create facility");
+      throw new Error("Failed to create kiosk");
     }
   };
 
@@ -151,7 +159,7 @@ function Kioskmanager() {
     }
   };
 
-  const DeleteFacility = async (id: number) => {
+  const DeleteFacility = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:3000/facilities/${id}`, {
         method: "DELETE",
@@ -165,7 +173,7 @@ function Kioskmanager() {
     }
   };
 
-  const DeleteKiosk = async (id: number) => {
+  const DeleteKiosk = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:3000/kiosks/${id}`, {
         method: "DELETE",
@@ -179,32 +187,38 @@ function Kioskmanager() {
     }
   };
 
+  const kiosksByFacility = facilities.map((facility) => ({
+    ...facility,
+    kiosks: kiosks.filter((kiosk) => kiosk.facilityId === facility.id),
+  }));
+
   const handleFacilityClick = (facility: Facility) => {
-    setSelectedFacility((prevSelectedFacility) =>
-      prevSelectedFacility === facility.id ? null : facility.id
-    );
-
-    setSelectedKiosk(null);
+    const newFacilityId = selectedFacility === facility.id ? "" : facility.id;
+  
+    setSelectedFacility(newFacilityId); // Uppdaterar selectedFacility
+  
     setSelectedOptions((prev) => ({
       ...prev,
-      facility: selectedFacility === facility.id ? null : facility.id,
-      kiosk: null,
+      facilityId: newFacilityId,
+      kioskId: "", // Rensar kiosk eftersom anläggning ändras
     }));
   };
 
+  
   const handleKioskClick = (kiosk: Kiosk) => {
-    setSelectedKiosk((prevSelectedKiosk) =>
-      prevSelectedKiosk === kiosk.id ? null : kiosk.id
-    );
-
+    const newKioskId = selectedKiosk === kiosk.id ? "" : kiosk.id;
+  
+    setSelectedKiosk(newKioskId); // Uppdaterar selectedKiosk
+  
     setSelectedOptions((prev) => ({
       ...prev,
-      kiosk: selectedKiosk === kiosk.id ? null : kiosk.id,
+      kioskId: newKioskId,
     }));
   };
+  
 
-  console.log(selectedOptions);
 
+  
   return (
     <>
       <section className="container mx-auto px-5">
@@ -214,7 +228,7 @@ function Kioskmanager() {
             <h3 className="text-xl mb-2">Anläggning</h3>
             <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
               <AddFacilityButton onSave={CreateFacility} />
-              {facility.map((facility) => (
+              {facilities.map((facility) => (
                 <div
                   className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
                   ${
@@ -229,7 +243,7 @@ function Kioskmanager() {
                     className="flex gap-3"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {selectedOptions.facility === facility.id && (
+                    {selectedOptions?.facilityId === facility.id && (
                       <>
                         <TooltipProvider>
                           <Tooltip>
@@ -267,66 +281,67 @@ function Kioskmanager() {
           </div>
 
           <div>
-            <h3 className="text-xl mb-2">Kiosker</h3>
-            <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
-              {selectedFacility !== null && (
-                <div className="mt-4">
-                  <AddKioskButton onSave={CreateKiosk} />
-                  {kiosks.map((kiosk) => (
-                    <div
-                      key={kiosk.id}
-                      className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
-              ${
-                selectedKiosk === kiosk.id
-                  ? "text-black border-black border rounded-xl h-fit w-11/12"
-                  : "text-black border-none w-11/12"
-              }            
-            `}
-                      onClick={() => handleKioskClick(kiosk)}
-                    >
-                      <p>{kiosk.kioskName}</p>
-                      <div
-                        className="flex gap-3"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {selectedOptions.kiosk === kiosk.id && (
-                          <>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <UpdateKioskButton
-                                    onSave={UpdateKiosk}
-                                    kiosk={kiosk}
-                                  />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Redigera kiosk</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <DeleteButton
-                                    id={kiosk.id}
-                                    type="Kiosk"
-                                    onDelete={DeleteKiosk}
-                                  />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Radera</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+  <h3 className="text-xl mb-2">Kiosker</h3>
+  <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
+    {selectedFacility && (
+      <div className="mt-4">
+        <AddKioskButton onSave={CreateKiosk} />
+        {kiosksByFacility
+          .find((facility) => facility.id === selectedFacility) // Hämta den valda anläggningen
+          ?.kiosks.map((kiosk) => ( // Rendera kiosker för den valda anläggningen
+            <div
+              key={kiosk.id}
+              className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
+                ${
+                  selectedKiosk === kiosk.id
+                    ? "text-black border-black border rounded-xl h-fit w-11/12"
+                    : "text-black border-none w-11/12"
+                }`}
+              onClick={() => handleKioskClick(kiosk)}
+            >
+              <p>{kiosk.kioskName}</p>
+              <div
+                className="flex gap-3"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {selectedOptions?.kioskId === kiosk.id && (
+                  <>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <UpdateKioskButton
+                            onSave={UpdateKiosk}
+                            kiosk={kiosk}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Redigera kiosk</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <DeleteButton
+                            id={kiosk.id}
+                            type="Kiosk"
+                            onDelete={DeleteKiosk}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Radera</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
+          ))}
+      </div>
+    )}
+  </div>
+</div>;
         </div>
       </section>
     </>

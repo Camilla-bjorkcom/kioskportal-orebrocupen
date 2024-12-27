@@ -12,27 +12,27 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
+import { Product } from '@/interfaces';
+
 const formSchema = z.object({
     productname: z.string().min(2, {
       message: "Produktnamn måste ha minst 2 bokstäver",
     }),
     
-    amountPerPackage: 
-    z.preprocess(
-      (val) => (val === "" ? undefined : Number(val)),
-    z
-    .number({ message:"Antal per paket måste anges med siffror"})
-    .positive({ message:"Antal per paket måste vara positivt"}) // Direkt felmeddelande för positiva värden
-    .optional()
-    ), 
-     
+    amountPerPackage: z
+     .preprocess(
+       (val) => val === "" ? undefined : Number(val),
+       z.number({ message: "Antal per paket måste anges med siffror" })
+       .refine(val => val >= 0, { message: "Antal per paket måste vara 0 eller större" })
+         .optional() // Gör det till ett valfritt fält
+     ),
     id: z.string().min(1, { message: "Id måste vara en giltig sträng" }),
      
 });
 
 interface UpdateProductButtonProps {
-    onUpdate: (id: string, productName: string , amountPerPackage: number ) => void;
-    product: { id: string; productname: string; amountPerPackage: number }; // Callback för att spara produktnamn
+    onUpdate: (updatedProduct : Product ) => void;
+    product: Product // Callback för att spara produktnamn
   }
 
   
@@ -52,9 +52,13 @@ function UpdateProductButton({onUpdate, product} : UpdateProductButtonProps) {
     
       function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Formulärvärden (innan konvertering):", values);
-       
+        const updatedProduct: Product = {
+          id: values.id,
+          productname: values.productname,
+          amountPerPackage: values.amountPerPackage ?? 0, // Hantera valfritt fält
+        };
 
-        onUpdate(values.id, values.productname ,  values.amountPerPackage ?? 0)
+        onUpdate(updatedProduct)
       
         console.log("Uppdaterade värden:",values);
         setUpdateMessage("Produkten har uppdaterats!");
