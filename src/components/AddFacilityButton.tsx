@@ -63,9 +63,9 @@ function AddFacilityButton({ onSave }: AddFacilityButtonProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen} >
       <DialogTrigger asChild>
-        <p className="m-5 flex w-fit gap-2 cursor-pointer font-semibold">
-          Lägg till <PlusIcon className="w-4 h-4 place-self-center" />
-        </p>
+        <Button className="m-5 flex w-fit gap-2 cursor-pointer font-semibold">
+          Lägg till anläggning <PlusIcon className="w-4 h-4 place-self-center" />
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

@@ -12,6 +12,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Facility, Kiosk, Product } from '@/interfaces';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
  
 
  
@@ -19,19 +21,11 @@ import { Facility, Kiosk, Product } from '@/interfaces';
 function Kioskmanager() {
   const [facilities, setFacility] = useState<Facility[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<string >();
-  const [selectedKiosk, setSelectedKiosk] = useState<string>();
+  const [selectedFacilityId, setSelectedFacilityId] = useState<string|null >(null);
+  const [selectedKioskId, setSelectedKioskId] = useState<string | null>(null);
   const[ kioskProducts, setKioskProducts] = useState<Product[]>([]);
 
-  //Sparar ned vad användaren valt för värden i UI i selectedOptions, ska ändras från string till id sen och skickas till databas för put och get
-  const [selectedOptions, setSelectedOptions] = useState<{
-    facilityId?: string;
-    kioskId?: string;
-  }>({
-    facilityId: "",
-    kioskId: "",
-  });
-  
+
 
   useQuery<Facility[]>({
     queryKey: ["facilities"],
@@ -78,18 +72,19 @@ function Kioskmanager() {
   };
 
   const CreateKiosk = async (kioskName: string) => {
-    if (!selectedFacility ) {
+    if (!selectedFacilityId ) {
       console.error("No facility selected. Cannot create kiosk without facility.");
       return;
     }
   
     try {
+      console.log(selectedFacilityId)
       const response = await fetch("http://localhost:3000/kiosks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           kioskName: kioskName,
-          facilityId: selectedFacility, // Skicka med det valda facilityId
+          facilityId: selectedFacilityId, // Skicka med det valda facilityId
           products : kioskProducts,
         }),
       });
@@ -143,6 +138,8 @@ function Kioskmanager() {
         body: JSON.stringify({
           id: kiosk.id,
           kioskName: kiosk.kioskName,
+          facilityId: kiosk.facilityId,
+          products : kiosk.products
         }),
       });
       if (!response.ok) {
@@ -192,29 +189,18 @@ function Kioskmanager() {
     kiosks: kiosks.filter((kiosk) => kiosk.facilityId === facility.id),
   }));
 
-  const handleFacilityClick = (facility: Facility) => {
-    const newFacilityId = selectedFacility === facility.id ? "" : facility.id;
-  
-    setSelectedFacility(newFacilityId); // Uppdaterar selectedFacility
-  
-    setSelectedOptions((prev) => ({
-      ...prev,
-      facilityId: newFacilityId,
-      kioskId: "", // Rensar kiosk eftersom anläggning ändras
-    }));
+  const handleFacilityClick = (facilityId: string) => {
+    setSelectedFacilityId((prev) => (prev === facilityId ? null : facilityId)); // Toggla val
+    setSelectedKioskId(null); // Rensa vald kiosk när anläggningen ändras
   };
+  
+  
 
   
-  const handleKioskClick = (kiosk: Kiosk) => {
-    const newKioskId = selectedKiosk === kiosk.id ? "" : kiosk.id;
-  
-    setSelectedKiosk(newKioskId); // Uppdaterar selectedKiosk
-  
-    setSelectedOptions((prev) => ({
-      ...prev,
-      kioskId: newKioskId,
-    }));
+  const handleKioskClick = (kioskId: string) => {
+    setSelectedKioskId((prev) => (prev === kioskId ? null : kioskId)); // Toggla val
   };
+  
   
 
 
@@ -222,8 +208,138 @@ function Kioskmanager() {
   return (
     <>
       <section className="container mx-auto px-5">
-        <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa kiosker</h1>
-        <div className="grid xl:grid-cols-3 gap-5 w-10/12">
+        <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa anläggningar och kiosker</h1>
+
+        <AddFacilityButton onSave={CreateFacility}/>
+
+        <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
+            {kiosksByFacility.map((facility) => (
+              <AccordionItem
+                key={facility.id}
+                value={facility.id}
+                className={`p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 ${
+                    selectedFacilityId === facility.id
+                      ? "text-black border-black border rounded-xl h-fit w-11/12"
+                      : "text-black border-none w-11/12"
+                }`
+                }
+                  onClick={() => handleFacilityClick(facility.id)}
+              >
+                <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
+                <div className="flex justify-between w-full">
+                <label className="basis-1/4 font-medium hover:text-slate-800">
+                
+                  {facility.facilityname}
+                  </label>
+                  <p className='basis-1/5 hidden lg:block lg:min-w-36'>
+                     Antal kiosker:{' '}
+                      {Array.isArray(facility.kiosks) ? facility.kiosks.length : 0}
+                       </p>
+                       <AddKioskButton onSave={CreateKiosk} 
+                       onFacilityClick={() => handleFacilityClick(facility.id)}
+
+                       />
+                        
+                      <>
+                          <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger onClick={(e) => {
+                                e.stopPropagation(); // Hindrar event från att bubbla upp till AccordionTrigger
+                                 }}>
+                              <UpdateFacilityButton
+                                onSave={UpdateFacility}
+                                facility={facility}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Redigera anläggning</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                         
+                           <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <DeleteButton
+                                id={facility.id}
+                                type="Facility"
+                                onDelete={DeleteFacility}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Radera</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                       
+                       </>
+                 
+                      </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Accordion type="single" collapsible>
+                    {facility.kiosks.map((kiosk) => (
+                      <AccordionItem
+                        key={kiosk.id}
+                        value={kiosk.id}
+                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+                      >
+                        <AccordionTrigger className="flex self-end hover:no-underline">
+                          <div className="w-full hover:no-underline">
+                            <div className="flex justify-between">
+                              <label className="basis-1/4 font-medium hover:text-slate-800">
+                                {kiosk.kioskName}
+                              </label>
+                              <div className="flex self-end gap-4 place-items-center mr-2">
+                              <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger 
+                         onClick={(e) => {
+                          e.stopPropagation(); // Hindrar event från att bubbla upp till AccordionTrigger
+                        }}
+                        >
+                          <UpdateKioskButton
+                            onSave={UpdateKiosk}
+                            kiosk={kiosk}
+                            onUpdateKioskClick={() => handleKioskClick(kiosk.id)}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Redigera kiosk</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <DeleteButton
+                            id={kiosk.id}
+                            type="Kiosk"
+                            onDelete={DeleteKiosk}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Radera</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                               
+                              </div>
+                            </div>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                         
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+
+       {/*  <div className="grid xl:grid-cols-3 gap-5 w-10/12">
           <div>
             <h3 className="text-xl mb-2">Anläggning</h3>
             <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
@@ -285,7 +401,7 @@ function Kioskmanager() {
   <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
     {selectedFacility && (
       <div className="mt-4">
-        <AddKioskButton onSave={CreateKiosk} />
+        
         {kiosksByFacility
           .find((facility) => facility.id === selectedFacility) // Hämta den valda anläggningen
           ?.kiosks.map((kiosk) => ( // Rendera kiosker för den valda anläggningen
@@ -312,6 +428,7 @@ function Kioskmanager() {
                           <UpdateKioskButton
                             onSave={UpdateKiosk}
                             kiosk={kiosk}
+                            onUpdateKioskClick={() => handleKioskClick(kiosk)}
                           />
                         </TooltipTrigger>
                         <TooltipContent>
@@ -343,6 +460,7 @@ function Kioskmanager() {
   </div>
 </div>;
         </div>
+         */}
       </section>
     </>
   );
