@@ -45,7 +45,7 @@
   "facilities": [
     {
       "id": "f0fc",
-      "facilityname": "Lillåns IP"
+      "facilityname": "Lillån"
     },
     {
       "id": "4b14",
@@ -54,10 +54,6 @@
     {
       "id": "6be6",
       "facilityname": "Pettersberg"
-    },
-    {
-      "id": "9c68",
-      "facilityname": "Ekäng"
     },
     {
       "id": "bacc",
@@ -71,32 +67,9 @@
       "kioskName": "Rosta Gärde 1"
     },
     {
-      "id": "ab71",
-      "kioskName": "Kiosk Vänster",
-      "facilityId": "9c68"
-    },
-    {
-      "id": "30de",
-      "kioskName": "TestKiosk",
-      "facilityId": "9c68",
-      "products": []
-    },
-    {
       "id": "4366",
       "kioskName": "Kiosk Söder",
       "facilityId": "4b14",
-      "products": []
-    },
-    {
-      "id": "147f",
-      "kioskName": "Kiosk Höger",
-      "facilityId": "9c68",
-      "products": []
-    },
-    {
-      "id": "e58c",
-      "kioskName": "Kiosk Norr",
-      "facilityId": "9c68",
       "products": []
     },
     {
@@ -118,24 +91,6 @@
       "products": []
     },
     {
-      "id": "5e83",
-      "kioskName": "xxxxxx",
-      "facilityId": "9c68",
-      "products": []
-    },
-    {
-      "id": "e897",
-      "kioskName": "Lilla Kiosken",
-      "facilityId": "bacc",
-      "products": []
-    },
-    {
-      "id": "c486",
-      "kioskName": "dra helvede",
-      "facilityId": "9c68",
-      "products": []
-    },
-    {
       "id": "bd2b",
       "kioskName": "Kiosk Norr",
       "facilityId": "4b14",
@@ -154,12 +109,6 @@
       "products": []
     },
     {
-      "id": "54cf",
-      "kioskName": "Kiosk Höger",
-      "facilityId": "9c68",
-      "products": []
-    },
-    {
       "id": "862f",
       "kioskName": "Kiosk Norr",
       "facilityId": "4b14",
@@ -167,7 +116,7 @@
     },
     {
       "id": "bd13",
-      "kioskName": "TestKiosk",
+      "kioskName": "Lalalal",
       "facilityId": "bacc",
       "products": []
     },
@@ -181,6 +130,36 @@
       "id": "c57c",
       "kioskName": "llll",
       "facilityId": "6be6",
+      "products": []
+    },
+    {
+      "id": "1af0",
+      "kioskName": "TestKiosk",
+      "facilityId": "f0fc",
+      "products": []
+    },
+    {
+      "id": "d8a9",
+      "kioskName": "Kiosk Höger32",
+      "facilityId": "f0fc",
+      "products": []
+    },
+    {
+      "id": "182a",
+      "kioskName": "dddddd",
+      "facilityId": "f0fc",
+      "products": []
+    },
+    {
+      "id": "a617",
+      "kioskName": "Kiosk Söder",
+      "facilityId": "f0fc",
+      "products": []
+    },
+    {
+      "id": "3d5e",
+      "kioskName": "sssssdvdvddvdvdvdd",
+      "facilityId": "f0fc",
       "products": []
     }
   ],

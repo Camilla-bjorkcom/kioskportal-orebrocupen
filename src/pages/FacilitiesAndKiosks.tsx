@@ -18,7 +18,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
  
 
-function Kioskmanager() {
+function FacilitiesAndKiosks() {
   const [facilities, setFacility] = useState<Facility[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [selectedFacilityId, setSelectedFacilityId] = useState<string|null >(null);
@@ -71,21 +71,15 @@ function Kioskmanager() {
     }
   };
 
-  const CreateKiosk = async (kioskName: string) => {
-    if (!selectedFacilityId ) {
-      console.error("No facility selected. Cannot create kiosk without facility.");
-      return;
-    }
-  
+  const CreateKiosk = async (kioskName: string, facilityId: string) => {
     try {
-      console.log(selectedFacilityId)
       const response = await fetch("http://localhost:3000/kiosks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           kioskName: kioskName,
-          facilityId: selectedFacilityId, // Skicka med det valda facilityId
-          products : kioskProducts,
+          facilityId: facilityId,
+          products: kioskProducts,
         }),
       });
   
@@ -100,6 +94,7 @@ function Kioskmanager() {
       throw new Error("Failed to create kiosk");
     }
   };
+  
 
   const UpdateFacility = async (facility: Facility) => {
     console.log("this is" + facility.facilityname + "id: " + facility.id);
@@ -190,7 +185,8 @@ function Kioskmanager() {
   }));
 
   const handleFacilityClick = (facilityId: string) => {
-    setSelectedFacilityId((prev) => (prev === facilityId ? null : facilityId)); // Toggla val
+    setSelectedFacilityId((prev) => (prev === facilityId ? null : facilityId)); 
+    console.log("ID facility handleFacilityClick", selectedFacilityId)// Toggla val
     setSelectedKioskId(null); // Rensa vald kiosk när anläggningen ändras
   };
   
@@ -226,20 +222,23 @@ function Kioskmanager() {
                   onClick={() => handleFacilityClick(facility.id)}
               >
                 <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
-                <div className="flex justify-between w-full">
+                <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
                 <label className="basis-1/4 font-medium hover:text-slate-800">
                 
                   {facility.facilityname}
                   </label>
-                  <p className='basis-1/5 hidden lg:block lg:min-w-36'>
+                  <p className='basis-1/5 ml-0 lg:block lg:min-w-36 2xl:ml-auto'>
                      Antal kiosker:{' '}
                       {Array.isArray(facility.kiosks) ? facility.kiosks.length : 0}
                        </p>
-                       <AddKioskButton onSave={CreateKiosk} 
-                       onFacilityClick={() => handleFacilityClick(facility.id)}
-
-                       />
+                       <AddKioskButton 
                         
+                         onSave={(kioskName) => CreateKiosk(kioskName, facility.id)} 
+                         facilityId={facility.id}
+                        
+                          />
+                       
+                       <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">  
                       <>
                           <TooltipProvider>
                           <Tooltip>
@@ -273,7 +272,7 @@ function Kioskmanager() {
                         </TooltipProvider>
                        
                        </>
-                 
+                 </div>
                       </div>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -290,7 +289,7 @@ function Kioskmanager() {
                               <label className="basis-1/4 font-medium hover:text-slate-800">
                                 {kiosk.kioskName}
                               </label>
-                              <div className="flex self-end gap-4 place-items-center mr-2">
+                              <div className="flex self-end gap-10 place-items-center mr-2">
                               <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger 
@@ -466,4 +465,4 @@ function Kioskmanager() {
   );
 }
 
-export default Kioskmanager;
+export default FacilitiesAndKiosks;

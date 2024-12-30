@@ -33,23 +33,25 @@ const formSchema = z.object({
 });
 
 interface AddKioskButtonProps {
-  onSave: (kioskname: string) => void; // Callback för att spara kiosknamn
-  onFacilityClick: () => void; // Callback för att välja anläggning
+  onSave: (kioskname: string, facilityId: string) => void; // Callback för att spara kiosknamn
+  facilityId: string;
+ 
 }
 
-function AddKioskButton({ onSave, onFacilityClick }: AddKioskButtonProps) {
+function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       kioskname: "",
+   
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    await onFacilityClick(); // Väljer anläggningen
-    onSave(values.kioskname); // Sparar kiosken
+   function onSubmit(values: z.infer<typeof formSchema>) {
+   
+    onSave(values.kioskname, facilityId); // Sparar kiosken
     setOpen(false); // Stänger dialogen
     form.reset(); // Återställer formuläret
   }
@@ -58,7 +60,7 @@ function AddKioskButton({ onSave, onFacilityClick }: AddKioskButtonProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          className="m-5 flex w-fit gap-2 cursor-pointer font-semibold"
+          className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto"
           onClick={(e) => e.stopPropagation()} // Stoppa eventbubbling
         >
           Lägg till kiosk <PlusIcon className="w-4 h-4 place-self-center" />
