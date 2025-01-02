@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import SidebarLayout from "./layouts/SidebarLayout";
 import ProductHandler from "./pages/ProductHandler";
 import CreateTournament from "./pages/CreateTournament";
-import Kioskmanager from "./pages/Kioskmanager";
+
 import SettingsPage from "./pages/SettingsPage";
 import ProductListHandler from "./pages/ProductListHandler";
 import InventoryStatus from "./pages/InventoryStatus";
@@ -12,6 +12,8 @@ import InventoryStorage from "./pages/InventoryStorage";
 import ContactPerson from "./pages/ContactPerson";
 import InventoryStatusStorage from "./pages/InventoryStatusStorage";
 import PopulateKiosks from "./pages/PopulateKiosks";
+import FacilitiesAndKiosks from "./pages/FacilitiesAndKiosks";
+import Kioskmanager from "./pages/KioskManager";
 
 function Router() {
   return (
@@ -26,7 +28,8 @@ function Router() {
             <Route path="dashboard/:id" element={<Dashboard />} />
             <Route path="producthandler/:id" element={<ProductHandler />} />
             <Route path="settings/:id" element={<SettingsPage />} />
-            <Route path="kioskmanager/:id" element={<Kioskmanager />} />
+            <Route path="kioskmanager/:id" element={<Kioskmanager />}/>
+            <Route path="facilitiesandkiosks/:id" element={<FacilitiesAndKiosks />} />
             <Route
               path="productlisthandler/:id"
               element={<ProductListHandler />}

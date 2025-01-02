@@ -26,7 +26,6 @@ import {
 import { useState } from "react";
 import { Button } from "./ui/button";
 
-
 const formSchema = z.object({
   kioskname: z.string().min(2, {
     message: "Kiosk namn måste ha minst 2 bokstäver",
@@ -34,35 +33,44 @@ const formSchema = z.object({
 });
 
 interface AddKioskButtonProps {
-  onSave: (kioskname: string) => void; // Callback för att spara kiosknamn
+  onSave: (kioskname: string, facilityId: string) => void; // Callback för att spara kiosknamn
+  facilityId: string;
+ 
 }
 
-function AddKioskButton({ onSave }: AddKioskButtonProps) {
-  
+function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       kioskname: "",
+   
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave(values.kioskname);
-    setOpen(false);
-    console.log(values);
-    form.reset();
+   function onSubmit(values: z.infer<typeof formSchema>) {
+   
+    onSave(values.kioskname, facilityId); // Sparar kiosken
+    setOpen(false); // Stänger dialogen
+    form.reset(); // Återställer formuläret
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen} >
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <p className="m-5 flex w-fit gap-2 cursor-pointer font-semibold">
-          Lägg till <PlusIcon className="w-4 h-4 place-self-center" />
-        </p>
+        <Button
+          className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto"
+          onClick={(e) => e.stopPropagation()} // Stoppa eventbubbling
+        >
+          Lägg till kiosk <PlusIcon className="w-4 h-4 place-self-center" />
+        </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent
+        onClick={(e) => {
+          e.stopPropagation(); // Hindrar event från att bubbla upp till AccordionTrigger
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Skapa Kiosk</DialogTitle>
           <DialogDescription className="sr-only">
@@ -88,7 +96,7 @@ function AddKioskButton({ onSave }: AddKioskButtonProps) {
             <div className="flex justify-end">
               <Button
                 type="submit"
-                className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
+                className="border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
               >
                 Spara kiosk
               </Button>

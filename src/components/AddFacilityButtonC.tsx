@@ -42,7 +42,7 @@ interface AddFacilityButtonProps {
 
 
 
-function AddFacilityButton({ onSave }: AddFacilityButtonProps) {
+function AddFacilityButtonC({ onSave }: AddFacilityButtonProps) {
   
   const [open, setOpen] = useState(false);
   
@@ -63,9 +63,9 @@ function AddFacilityButton({ onSave }: AddFacilityButtonProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen} >
       <DialogTrigger asChild>
-        <Button className="m-3 flex w-fit gap-2 cursor-pointer font-semibold">
-          Lägg till anläggning <PlusIcon className="w-4 h-4 place-self-center" />
-        </Button>
+        <p className="m-5 flex w-fit gap-2 cursor-pointer font-semibold">
+          Lägg till <PlusIcon className="w-4 h-4 place-self-center" />
+        </p>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -104,4 +104,4 @@ function AddFacilityButton({ onSave }: AddFacilityButtonProps) {
   );
 }
 
-export default AddFacilityButton;
+export default AddFacilityButtonC;

@@ -38,12 +38,11 @@ const formSchema = z.object({
 interface UpdateKioskButtonProps {
   kiosk: Kiosk;
   onSave: (kiosk: Kiosk) => void;
-  onUpdateKioskClick: () => void;
 }
 
 
 
-const UpdateKioskButton = ({ kiosk, onSave, onUpdateKioskClick }: UpdateKioskButtonProps) => {
+const UpdateKioskButtonC = ({ kiosk, onSave }: UpdateKioskButtonProps) => {
 
 
   const [open, setOpen] = useState(false);
@@ -62,7 +61,6 @@ const UpdateKioskButton = ({ kiosk, onSave, onUpdateKioskClick }: UpdateKioskBut
   }, [kiosk, form]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onUpdateKioskClick();
     const updatedKiosk = { ...kiosk, kioskName: values.kioskName };
     onSave(updatedKiosk); 
     setOpen(false);
@@ -120,4 +118,4 @@ const UpdateKioskButton = ({ kiosk, onSave, onUpdateKioskClick }: UpdateKioskBut
   );
 };
 
-export default UpdateKioskButton;
+export default UpdateKioskButtonC;

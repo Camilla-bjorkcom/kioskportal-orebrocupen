@@ -45,32 +45,7 @@
   "facilities": [
     {
       "id": "f0fc",
-      "facilityname": "Lillåns"
-    },
-    {
-      "id": "4b14",
-      "facilityname": "Rosta"
-    },
-    {
-      "id": "6be6",
-      "facilityname": "Pettersberg"
-    },
-    {
-      "id": "5487",
-      "facilityname": "Petterberg"
-    }
-  ],
-  "kiosks": [
-    {
-      "id": "160c",
-      "products": [],
-      "kioskName": "Rosta Gärde 1"
-    },
-    {
-      "id": "acab",
-      "kioskName": "Kiosk 1",
-      "facilityId": "f0fc",
-      "products": []
+
     }
   ],
   "products": [
@@ -669,6 +644,11 @@
           "productname": "Fanta"
         }
       ]
+    },
+    {
+      "id": "5be6",
+      "productlistname": "ggdfdfgfgd",
+      "products": []
     }
   ],
   "inventoryList": [

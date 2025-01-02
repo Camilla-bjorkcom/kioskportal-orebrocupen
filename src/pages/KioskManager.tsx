@@ -1,10 +1,8 @@
-import AddFacilityButton from "@/components/AddFacilityButton";
-import AddKioskButton from "@/components/AddKioskButton";
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import UpdateFacilityButton from "@/components/UpdateFacilityButton";
 import DeleteButton from "@/components/DeleteButton";
-import UpdateKioskButton from "@/components/UpdateKioskButton";
 import {
   Tooltip,
   TooltipContent,
@@ -12,6 +10,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Facility, Kiosk, Product } from '@/interfaces';
+import AddKioskButtonC from "@/components/AddKioskButtonC";
+import UpdateKioskButtonC from "@/components/UpdataKioskButtonC";
+import AddFacilityButtonC from "@/components/AddFacilityButtonC";
  
 
  
@@ -227,7 +228,7 @@ function Kioskmanager() {
           <div>
             <h3 className="text-xl mb-2">Anläggning</h3>
             <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
-              <AddFacilityButton onSave={CreateFacility} />
+              <AddFacilityButtonC onSave={CreateFacility} />
               {facilities.map((facility) => (
                 <div
                   className={`ml-3 pl-3 cursor-pointer mb-2 flex justify-between 
@@ -285,7 +286,7 @@ function Kioskmanager() {
   <div className="border border-solid aspect-square sm:w-3/4 xl:w-full border-black rounded-xl pb-4">
     {selectedFacility && (
       <div className="mt-4">
-        <AddKioskButton onSave={CreateKiosk} />
+        <AddKioskButtonC onSave={CreateKiosk} />
         {kiosksByFacility
           .find((facility) => facility.id === selectedFacility) // Hämta den valda anläggningen
           ?.kiosks.map((kiosk) => ( // Rendera kiosker för den valda anläggningen
@@ -309,7 +310,7 @@ function Kioskmanager() {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger>
-                          <UpdateKioskButton
+                          <UpdateKioskButtonC
                             onSave={UpdateKiosk}
                             kiosk={kiosk}
                           />
