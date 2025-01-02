@@ -13,6 +13,7 @@ import ContactPerson from "./pages/ContactPerson";
 import InventoryStatusStorage from "./pages/InventoryStatusStorage";
 import PopulateKiosks from "./pages/PopulateKiosks";
 import FacilitiesAndKiosks from "./pages/FacilitiesAndKiosks";
+import Kioskmanager from "./pages/KioskManager";
 
 function Router() {
   return (
@@ -27,7 +28,7 @@ function Router() {
             <Route path="dashboard/:id" element={<Dashboard />} />
             <Route path="producthandler/:id" element={<ProductHandler />} />
             <Route path="settings/:id" element={<SettingsPage />} />
-           
+            <Route path="kioskmanager/:id" element={<Kioskmanager />}/>
             <Route path="facilitiesandkiosks/:id" element={<FacilitiesAndKiosks />} />
             <Route
               path="productlisthandler/:id"

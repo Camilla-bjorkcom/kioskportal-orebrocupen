@@ -45,6 +45,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 
 
+
 // Menu items.
 
 
@@ -73,6 +74,7 @@ export function AppSidebar({ id }: { id?: number }) {
         { title: "Skapa anläggningar och kiosker", url: `/facilitiesandkiosks/${id}` },      
         { title: "Kontaktpersoner", url: `/contactperson/${id}` },
         { title: "QR koder till kiosker", url: "#" },
+        { title: "Skapa kiosker", url: `/kioskmanager/${id}`},
         
       ],
     },
