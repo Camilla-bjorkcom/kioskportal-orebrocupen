@@ -1,6 +1,9 @@
+import { Product } from "./product";
+
 export interface Tournament {
-    id: number;
+    id: string;
     tournamentName: string;
     startDate: Date;
     endDate: Date;
+    products: Product[];
   }

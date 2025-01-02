@@ -49,7 +49,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 // Menu items.
 
 
-export function AppSidebar({ id }: { id?: number }) {
+export function AppSidebar({ id }: { id?: string }) {
 
   const items = [
   

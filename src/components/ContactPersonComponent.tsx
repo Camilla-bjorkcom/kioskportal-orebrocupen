@@ -22,28 +22,24 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "./ui/toaster";
+import { ContactPerson, Facility } from "@/interfaces";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
-type ContactPerson = {
-  id: number;
-  name: string;
-  phone: string;
-  role: string;
-  facility: string;
-};
 
 type Props = {
   contactPersons: ContactPerson[];
   onSave: (
     name: string,
-    facility: string,
+    facilityName: string,
     phone: string,
     role: string
   ) => Promise<void>;
-  onDelete: (id: number) => Promise<void>;
+  onDelete: (id: string) => Promise<void>;
   onUpdate: (
-    id: number,
+    id: string,
     name: string,
-    facility: string,
+    facilityName: string,
     phone: string,
     role: string
   ) => Promise<void>;
@@ -62,19 +58,44 @@ const ContactPersonComponent = ({
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [role, setRole] = useState<string>("");
-  const [facility, setFacility] = useState<string>("");
+  const [facilityName, setFacilityName] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [facility, setFacility] = useState<Facility[]>([]);
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
+
+  useQuery<Facility[]>({
+    queryKey: ["facilities"],
+    queryFn: async () => {
+      const response = await fetch("http://localhost:3000/facilities");
+      if (!response.ok) {
+        throw new Error("Failed to fetch facilites");
+      }
+      const data = await response.json();
+      setFacility(data);
+      return data;
+    },
+  });
+
+  const facilitiesByTournament = facility.filter((facility) => facility.tournamentId === tournamentId);
+
+  const contactPersonByFacility = facilitiesByTournament.map((facility) => ({
+    ...facility,
+    contactPersons: contactPersons.filter((contactPerson) => contactPerson.facilityName === facility.facilityname),
+  }));
 
   const startEditing = (person: ContactPerson) => {
     setEditingPerson(person);
     setName(person.name);
     setPhone(person.phone);
     setRole(person.role);
-    setFacility(person.facility);
+    setFacilityName(person.facilityName);
   };
 
+
+
   const addContactPerson = async () => {
-    if (!name.trim() || !phone.trim() || !facility.trim()) {
+    if (!name.trim() || !phone.trim() || !facilityName.trim()) {
       toast({
         className: "bg-red-200 text-black",
         title: "Fel",
@@ -85,7 +106,7 @@ const ContactPersonComponent = ({
       return;
     }
 
-    await onSave(name, facility, phone, role);
+    await onSave(name, facilityName, phone, role);
     toast({
       className: "bg-green-200",
       title: "Kontaktperson tillagd",
@@ -95,14 +116,14 @@ const ContactPersonComponent = ({
     setName("");
     setPhone("");
     setRole("");
-    setFacility("");
+    setFacilityName("");
     setShowInputs(false);
   };
 
   const saveChanges = async () => {
     if (!editingPerson) return;
 
-    if (!name.trim() || !phone.trim() || !facility.trim()) {
+    if (!name.trim() || !phone.trim() || !facilityName.trim()) {
       toast({
         className: "bg-red-200 text-black",
         title: "Fel",
@@ -113,7 +134,7 @@ const ContactPersonComponent = ({
       return;
     }
 
-    await onUpdate(editingPerson.id, name, facility, phone, role);
+    await onUpdate(editingPerson.id, name, facilityName, phone, role);
     toast({
       className: "bg-orange-200",
       title: "Ändringar sparade",
@@ -124,7 +145,7 @@ const ContactPersonComponent = ({
     setName("");
     setPhone("");
     setRole("");
-    setFacility("");
+    setFacilityName("");
   };
 
   const cancelEditing = () => {
@@ -132,14 +153,14 @@ const ContactPersonComponent = ({
     setName("");
     setPhone("");
     setRole("");
-    setFacility("");
+    setFacilityName("");
   };
 
   const sortedContactPersons = [...contactPersons].sort((a, b) => {
-    if (a.facility.toLowerCase() < b.facility.toLowerCase()) {
+    if (a.facilityName.toLowerCase() < b.facilityName.toLowerCase()) {
       return sortOrder === "asc" ? -1 : 1;
     }
-    if (a.facility.toLowerCase() > b.facility.toLowerCase()) {
+    if (a.facilityName.toLowerCase() > b.facilityName.toLowerCase()) {
       return sortOrder === "asc" ? 1 : -1;
     }
     return 0;
@@ -169,8 +190,8 @@ const ContactPersonComponent = ({
             <input
               type="text"
               placeholder="Anläggning"
-              value={facility}
-              onChange={(e) => setFacility(e.target.value)}
+              value={facilityName}
+              onChange={(e) => setFacilityName(e.target.value)}
               className="block border border-gray-300 rounded-md p-2 mb-2"
             />
             <Select onValueChange={(value) => setRole(value)}>
@@ -228,8 +249,8 @@ const ContactPersonComponent = ({
                 <input
                   type="text"
                   placeholder="Anläggning"
-                  value={facility}
-                  onChange={(e) => setFacility(e.target.value)}
+                  value={facilityName}
+                  onChange={(e) => setFacilityName(e.target.value)}
                   className="block border border-gray-300 rounded-md p-2 mb-2"
                 />
                 <Select onValueChange={(value) => setRole(value)}>
@@ -282,7 +303,7 @@ const ContactPersonComponent = ({
                     <strong>Telefon:</strong> {person.phone}
                   </p>
                   <p className="text-gray-600 mb-1">
-                    <strong>Anläggning:</strong> {person.facility}
+                    <strong>Anläggning:</strong> {person.facilityName}
                   </p>
                   <p className="text-gray-600">
                     <strong>Roll:</strong> {person.role}
@@ -340,7 +361,7 @@ const ContactPersonComponent = ({
                 >
                   <span>{person.name}</span>
                   <span>{person.phone}</span>
-                  <span>{person.facility}</span>
+                  <span>{person.facilityName}</span>
                   <span>{person.role}</span>
                   <div className="flex gap-2">
                     <TooltipProvider>

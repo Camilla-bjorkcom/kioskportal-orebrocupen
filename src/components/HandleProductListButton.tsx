@@ -12,18 +12,9 @@ import { z } from "zod";
 import { PropsWithChildren, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
-
+import { ProductList, Product } from "@/interfaces";
 import UpdateProductListButton from "./UpdateProductListButton";
 
-interface ProductList {
-  id: number;
-  productlistname: string;
-  products: Product[];
-}
-interface Product {
-  id: number;
-  productname: string;
-}
 
 const formSchema = z.object({
   productlistname: z.string().min(2, {
@@ -35,9 +26,11 @@ function HandleProductListButton({
   children,
   productlist,
   onUpdate,
+  tournamentId, // Lägg till tournamentId här
 }: PropsWithChildren & {
   productlist: ProductList;
   onUpdate: (updatedList: ProductList) => void;
+  tournamentId: string; // Definiera typen
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,40 +48,8 @@ function HandleProductListButton({
     useState<ProductList>(productlist);
   // const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
 
-  const UpdateListButton = async (productlist: ProductList) => {
-    const url = `http://localhost:3000/productslists/${productlist.id}`;
-    console.log("Request URL:", url);
+  
 
-    const sanitizedProductList = {
-      id: Number(productlist.id),
-      productlistname: productlist.productlistname,
-      products: productlist.products.map((product) => ({
-        id: product.id || "temp-id", // Fyll i ett temporärt id om saknas
-        productname: product.productname,
-      })),
-    };
-
-    console.log("Payload sent to server:", sanitizedProductList);
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(productlist),
-      });
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Server response error:", errorText);
-        throw new Error("failed to update list");
-      }
-      const data = await response.json();
-      console.log("Update successful:", data);
-      setProductlistforUpdate(data);
-      return data;
-    } catch (error) {
-      console.error("Update failed:", error);
-      throw error;
-    }
-  };
 
   const { isLoading, error } = useQuery<Product[]>({
     queryKey: ["products"],
@@ -134,6 +95,7 @@ function HandleProductListButton({
         <UpdateProductListButton
           productlist={productlist}
           onUpdate={onUpdate}
+         
         />
       </DialogContent>
     </Dialog>
