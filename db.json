@@ -85,10 +85,25 @@
       "products": []
     },
     {
-      "id": "2855",
       "kioskName": "TestKiosk",
+      "products": [
+        {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "productname": "Coca Cola",
+          "amountPerPackage": 24,
+          "id": "6312"
+        },
+        {
+          "productname": "Mer Apelsin",
+          "amountPerPackage": 12,
+          "id": "17e7"
+        }
+      ],
       "facilityId": "f0fc",
-      "products": []
+      "id": "2855"
     },
     {
       "id": "bd2b",
@@ -97,10 +112,25 @@
       "products": []
     },
     {
-      "id": "9b6d",
       "kioskName": "TestKiosk",
+      "products": [
+        {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "productname": "Coca Cola",
+          "amountPerPackage": 24,
+          "id": "6312"
+        },
+        {
+          "productname": "Mer Apelsin",
+          "amountPerPackage": 12,
+          "id": "17e7"
+        }
+      ],
       "facilityId": "4b14",
-      "products": []
+      "id": "9b6d"
     },
     {
       "id": "bbaf",
@@ -121,16 +151,188 @@
       "products": []
     },
     {
-      "id": "00e4",
       "kioskName": "TestKiosk",
+      "products": [
+        {
+          "productname": "Hamburgare",
+          "amountPerPackage": 50,
+          "id": "eedc"
+        },
+        {
+          "id": "9d9f",
+          "productname": "Kexchoklad"
+        },
+        {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "id": "d638",
+          "productname": "Coca Cola Zero"
+        },
+        {
+          "productname": "Coca Cola",
+          "amountPerPackage": 24,
+          "id": "6312"
+        },
+        {
+          "productname": "Bonaqua Citron/lime",
+          "amountPerPackage": 24,
+          "id": "b361"
+        },
+        {
+          "productname": "Mer Apelsin",
+          "amountPerPackage": 12,
+          "id": "17e7"
+        },
+        {
+          "id": "0bad",
+          "productname": "Mer Päron"
+        },
+        {
+          "id": "c216",
+          "productname": "Midnight Grown"
+        },
+        {
+          "id": "ecda",
+          "productname": "Pizza Vegetarisk"
+        },
+        {
+          "id": "b56e",
+          "productname": "Sibyllia Hamburgerficka"
+        },
+        {
+          "id": "4b07",
+          "productname": "Johnnys Ketchup Original"
+        },
+        {
+          "id": "c660",
+          "productname": "Delicatoboll"
+        },
+        {
+          "id": "6fd0",
+          "productname": "Pringels Original"
+        },
+        {
+          "id": "6791",
+          "productname": "Marabou Mjölkchoklad"
+        },
+        {
+          "productname": "Haribo Nappar Frukt 80g",
+          "amountPerPackage": 50,
+          "id": "b368"
+        },
+        {
+          "id": "9d79",
+          "productname": "Haribo Nappar Sura 80g"
+        },
+        {
+          "id": "ebf0",
+          "productname": "Haribo Nappar Cola 80g"
+        },
+        {
+          "id": "1715",
+          "productname": "Haribo Nappar Lakrits"
+        },
+        {
+          "id": "0f22",
+          "productname": "Fanta"
+        }
+      ],
       "facilityId": "6be6",
-      "products": []
+      "id": "00e4"
     },
     {
-      "id": "c57c",
       "kioskName": "llll",
+      "products": [
+        {
+          "productname": "Hamburgare",
+          "amountPerPackage": 50,
+          "id": "eedc"
+        },
+        {
+          "id": "9d9f",
+          "productname": "Kexchoklad"
+        },
+        {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "id": "d638",
+          "productname": "Coca Cola Zero"
+        },
+        {
+          "productname": "Coca Cola",
+          "amountPerPackage": 24,
+          "id": "6312"
+        },
+        {
+          "productname": "Bonaqua Citron/lime",
+          "amountPerPackage": 24,
+          "id": "b361"
+        },
+        {
+          "productname": "Mer Apelsin",
+          "amountPerPackage": 12,
+          "id": "17e7"
+        },
+        {
+          "id": "0bad",
+          "productname": "Mer Päron"
+        },
+        {
+          "id": "c216",
+          "productname": "Midnight Grown"
+        },
+        {
+          "id": "ecda",
+          "productname": "Pizza Vegetarisk"
+        },
+        {
+          "id": "b56e",
+          "productname": "Sibyllia Hamburgerficka"
+        },
+        {
+          "id": "4b07",
+          "productname": "Johnnys Ketchup Original"
+        },
+        {
+          "id": "c660",
+          "productname": "Delicatoboll"
+        },
+        {
+          "id": "6fd0",
+          "productname": "Pringels Original"
+        },
+        {
+          "id": "6791",
+          "productname": "Marabou Mjölkchoklad"
+        },
+        {
+          "productname": "Haribo Nappar Frukt 80g",
+          "amountPerPackage": 50,
+          "id": "b368"
+        },
+        {
+          "id": "9d79",
+          "productname": "Haribo Nappar Sura 80g"
+        },
+        {
+          "id": "ebf0",
+          "productname": "Haribo Nappar Cola 80g"
+        },
+        {
+          "id": "1715",
+          "productname": "Haribo Nappar Lakrits"
+        },
+        {
+          "id": "0f22",
+          "productname": "Fanta"
+        }
+      ],
       "facilityId": "6be6",
-      "products": []
+      "id": "c57c"
     },
     {
       "id": "1af0",
@@ -161,6 +363,214 @@
       "kioskName": "sssssdvdvddvdvdvdd",
       "facilityId": "f0fc",
       "products": []
+    },
+    {
+      "id": "219b",
+      "products": [
+        {
+          "id": "9d9f",
+          "productname": "Kexchoklad"
+        },
+        {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "id": "d638",
+          "productname": "Coca Cola Zero"
+        },
+        {
+          "productname": "Coca Cola",
+          "amountPerPackage": 24,
+          "id": "6312"
+        },
+        {
+          "productname": "Bonaqua Citron/lime",
+          "amountPerPackage": 24,
+          "id": "b361"
+        },
+        {
+          "productname": "Mer Apelsin",
+          "amountPerPackage": 12,
+          "id": "17e7"
+        },
+        {
+          "id": "0bad",
+          "productname": "Mer Päron"
+        },
+        {
+          "id": "c216",
+          "productname": "Midnight Grown"
+        },
+        {
+          "productname": "Pizza Kebab",
+          "amountPerPackage": 12,
+          "id": "5f35"
+        },
+        {
+          "id": "ecda",
+          "productname": "Pizza Vegetarisk"
+        },
+        {
+          "id": "b56e",
+          "productname": "Sibyllia Hamburgerficka"
+        },
+        {
+          "id": "7580",
+          "productname": "Johnnys Senap Sötstark"
+        },
+        {
+          "id": "4b07",
+          "productname": "Johnnys Ketchup Original"
+        },
+        {
+          "id": "2e1f",
+          "productname": "Johnnys Hamburgerdressing"
+        },
+        {
+          "id": "c660",
+          "productname": "Delicatoboll"
+        },
+        {
+          "id": "04b3",
+          "productname": "Pringles Sour Cream & Onion"
+        },
+        {
+          "id": "6fd0",
+          "productname": "Pringels Original"
+        },
+        {
+          "id": "6791",
+          "productname": "Marabou Mjölkchoklad"
+        },
+        {
+          "productname": "Haribo Nappar Frukt 80g",
+          "amountPerPackage": 50,
+          "id": "b368"
+        },
+        {
+          "id": "9d79",
+          "productname": "Haribo Nappar Sura 80g"
+        },
+        {
+          "id": "ebf0",
+          "productname": "Haribo Nappar Cola 80g"
+        },
+        {
+          "id": "1715",
+          "productname": "Haribo Nappar Lakrits"
+        },
+        {
+          "id": "0f22",
+          "productname": "Fanta"
+        }
+      ],
+      "kioskName": "torsdag",
+      "facilityId": "6be6"
+    },
+    {
+      "id": "7808",
+      "products": [
+        {
+          "productname": "Hamburgare",
+          "amountPerPackage": 50,
+          "id": "eedc"
+        },
+        {
+          "id": "9d9f",
+          "productname": "Kexchoklad"
+        },
+        {
+          "id": "79dc",
+          "productname": "Powerade Mountain Blast"
+        },
+        {
+          "id": "d638",
+          "productname": "Coca Cola Zero"
+        },
+        {
+          "productname": "Coca Cola",
+          "amountPerPackage": 24,
+          "id": "6312"
+        },
+        {
+          "productname": "Bonaqua Citron/lime",
+          "amountPerPackage": 24,
+          "id": "b361"
+        },
+        {
+          "productname": "Mer Apelsin",
+          "amountPerPackage": 12,
+          "id": "17e7"
+        },
+        {
+          "id": "0bad",
+          "productname": "Mer Päron"
+        },
+        {
+          "id": "c216",
+          "productname": "Midnight Grown"
+        },
+        {
+          "id": "ecda",
+          "productname": "Pizza Vegetarisk"
+        },
+        {
+          "id": "b56e",
+          "productname": "Sibyllia Hamburgerficka"
+        },
+        {
+          "id": "7580",
+          "productname": "Johnnys Senap Sötstark"
+        },
+        {
+          "id": "4b07",
+          "productname": "Johnnys Ketchup Original"
+        },
+        {
+          "id": "2e1f",
+          "productname": "Johnnys Hamburgerdressing"
+        },
+        {
+          "id": "c660",
+          "productname": "Delicatoboll"
+        },
+        {
+          "id": "04b3",
+          "productname": "Pringles Sour Cream & Onion"
+        },
+        {
+          "id": "6fd0",
+          "productname": "Pringels Original"
+        },
+        {
+          "id": "6791",
+          "productname": "Marabou Mjölkchoklad"
+        },
+        {
+          "productname": "Haribo Nappar Frukt 80g",
+          "amountPerPackage": 50,
+          "id": "b368"
+        },
+        {
+          "id": "9d79",
+          "productname": "Haribo Nappar Sura 80g"
+        },
+        {
+          "id": "ebf0",
+          "productname": "Haribo Nappar Cola 80g"
+        },
+        {
+          "id": "1715",
+          "productname": "Haribo Nappar Lakrits"
+        },
+        {
+          "id": "0f22",
+          "productname": "Fanta"
+        }
+      ],
+      "kioskName": "torsdag",
+      "facilityId": "bacc"
     }
   ],
   "products": [
@@ -759,6 +1169,11 @@
           "productname": "Fanta"
         }
       ]
+    },
+    {
+      "id": "5be6",
+      "productlistname": "ggdfdfgfgd",
+      "products": []
     }
   ],
   "inventoryList": [
