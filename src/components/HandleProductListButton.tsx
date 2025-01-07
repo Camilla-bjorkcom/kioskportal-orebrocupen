@@ -26,11 +26,11 @@ function HandleProductListButton({
   children,
   productlist,
   onUpdate,
-  tournamentId, // Lägg till tournamentId här
+   // Lägg till tournamentId här
 }: PropsWithChildren & {
   productlist: ProductList;
   onUpdate: (updatedList: ProductList) => void;
-  tournamentId: string; // Definiera typen
+  // Definiera typen
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,6 +42,7 @@ function HandleProductListButton({
   console.log("Product List ID:", productlist.id);
   console.log("productname", productlist.productlistname);
   console.log("products", productlist.products);
+  console.log("Turnering", productlist.tournamentId);
 
   const [products, setProducts] = useState<Product[]>([]);
   const [productlistForUpdate, setProductlistforUpdate] =
