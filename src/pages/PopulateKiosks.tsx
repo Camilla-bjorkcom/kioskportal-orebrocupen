@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Facility, Kiosk, Product, ProductList } from '@/interfaces';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 
 
@@ -18,7 +19,8 @@ function PopulateKiosks() {
   const [productLists, setProductLists] = useState<ProductList[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [facilities, setFacilities ]= useState<Facility[]>([]);
-  
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
   
   
   useQuery<Facility[]>({
@@ -74,7 +76,9 @@ function PopulateKiosks() {
     },
   });
   
-  const kiosksByFacility = facilities.map((facility) => ({
+  const facilitiesByTournament = facilities.filter((facility) => facility.tournamentId === tournamentId);
+
+  const kiosksByFacility = facilitiesByTournament.map((facility) => ({
     ...facility,
     kiosks: kiosks.filter((kiosk) => kiosk.facilityId === facility.id),
   }));

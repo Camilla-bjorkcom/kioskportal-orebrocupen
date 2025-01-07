@@ -6,4 +6,5 @@ export interface Kiosk {
     kioskName: string;
     products: Product[];
     facilityId: string;
+    tournamentId:string;
   }

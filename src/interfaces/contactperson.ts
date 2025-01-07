@@ -1,7 +1,8 @@
 export interface ContactPerson {
-    id: number;
+    id: string;
     name: string;
-    facility: string;
+    facilityName: string;
     phone: string;
     role: string;
+    tournamentId: string;
   }

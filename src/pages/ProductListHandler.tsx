@@ -3,7 +3,6 @@ import HandleProductListButton from "@/components/HandleProductListButton";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,20 +15,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import{Product, ProductList} from "@/interfaces/index";
+import { useParams } from "react-router-dom";
 
-interface Product {
-  id: number;
-  productname: string;
-}
 
-interface ProductList {
-  id: number;
-  productlistname: string;
-  products: Product[];
-}
 
 function ProductListHandler() {
   const [productlists, setProductLists] = useState<ProductList[]>([]);
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
 
   const { isLoading, error } = useQuery<ProductList[]>({
     queryKey: ["productslists"],
@@ -53,13 +47,14 @@ function ProductListHandler() {
   };
 
   // Spara ny produktlista (POST)
-  const SaveProductList = async (productListName: string) => {
+  const SaveProductList = async (productListName: string, tournamentId: string) => {
     try {
       const response = await fetch("http://localhost:3000/productslists", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           productlistname: productListName,
+          tournamentId: tournamentId,
           products: [],
         }),
       });
@@ -74,7 +69,7 @@ function ProductListHandler() {
   };
 
   // Ta bort produktlista (DELETE)
-  const DeleteProductsList = async (id: number) => {
+  const DeleteProductsList = async (id: string) => {
     try {
       const response = await fetch(
         `http://localhost:3000/productslists/${id}`,
@@ -98,22 +93,31 @@ function ProductListHandler() {
   if (error) {
     return <div>Error: {String(error)}</div>;
   }
+
+
+  const productListsByTournament = productlists.filter((productlist) => productlist.tournamentId === tournamentId);
+
+  
   return (
     <section>
       <div className="container mx-auto px-4 flex-row items-center">
         <h2 className="mt-8 text-2xl pb-2 mb-4">Produktlistor</h2>
-        <CreateProductListButton onSave={SaveProductList} />
+        <CreateProductListButton onSave={(productListName, tournamentId) =>{
+          SaveProductList(productListName,tournamentId)
+        }}
+        tournamentId={tournamentId ||""} />
         <div className="mt-8 w-3/4">
           <h3 className="text-lg">Sparade produktlistor:</h3>
           <div className="mt-4 gap-3 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {productlists.map((productlist) => (
+            {productListsByTournament.map((productlist) => (
               <HandleProductListButton
                 key={productlist.id}
                 productlist={productlist}
                 onUpdate={updateProductList}
+                tournamentId={tournamentId || ""}
               >
                 <div
-                  className="p-2 rounded-xl border-2 cursor-pointer aspect-video h-40 md:h-full
+                  className="relative p-2 rounded-xl border-2 cursor-pointer aspect-video h-40 md:h-full
                  shadow hover:bg-slate-800 hover:text-white text-black"
                 >
                   <div className="flex justify-between">
@@ -159,8 +163,14 @@ function ProductListHandler() {
                         </AlertDialogContent>
                       </AlertDialog>
                     </div>
+                    
                   </div>
+                  <p className='absolute bottom-2 left-2 text-sm"  lg:block lg:min-w-36 2xl:ml-auto'>
+                     Antal produkter:{' '}
+                      {Array.isArray(productlist.products) ? productlist.products.length : 0}
+                       </p>
                 </div>
+                
               </HandleProductListButton>
             ))}
           </div>

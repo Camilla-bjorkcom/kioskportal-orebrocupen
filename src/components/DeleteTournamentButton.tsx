@@ -12,8 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface DeleteTournamentButtonProps {
-  tournamentId: number; // ID för turneringen som ska tas bort
-  onDelete: (id: number) => void; // Callback-funktion som körs efter lyckad borttagning
+  tournamentId: string; // ID för turneringen som ska tas bort
+  onDelete: (id: string) => void; // Callback-funktion som körs efter lyckad borttagning
 }
 
 const DeleteTournamentButton = ({ tournamentId, onDelete }: DeleteTournamentButtonProps) => {

@@ -4,13 +4,9 @@ import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DeleteTournamentButton from "@/components/DeleteTournamentButton";
 import { useQuery } from "@tanstack/react-query";
+import {Tournament} from "@/interfaces/tournament"
 
-interface Tournament {
-  id: number;
-  tournamentName: string;
-  startDate: Date;
-  endDate: Date;
-}
+
 
 const SettingsPage = () => {
   const auth = useAuth();

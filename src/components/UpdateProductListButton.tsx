@@ -93,6 +93,7 @@ function UpdateProductListButton({
     const sanitizedProductList = {
       id: productlist.id,
       productlistname: productlist.productlistname,
+      tournamentId: productlist.tournamentId ,
       products: productlist.products.map((product) => ({
         id: product.id,
         productname: product.productname,

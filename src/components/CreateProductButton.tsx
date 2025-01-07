@@ -32,38 +32,48 @@ const formSchema = z.object({
       .optional() // Gör det till ett valfritt fält
   ),
 
+    tournamentId: z.string().min(2, {
+      message: "TurneringsId måste finnas",
+    }),
      
 });
   
 
   
-  interface CreateProductButtonProps {
-    onSave: (productName: string , amountPerPackage: number ) => void; // Callback för att spara produktnamn
-  }
-
+interface CreateProductButtonProps {
+  tournamentId: string; // Lägg till id här
+  onSave: (productName: string, amountPerPackage: number, tournamentId: string) => void;
+}
 
 
   
-  function CreateProductButton({onSave}: CreateProductButtonProps) {
+  function CreateProductButton({onSave, tournamentId }: CreateProductButtonProps) {
 
     const [savedMessage, setSavedMessage] = useState<string | null>(null);
 
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-          productname: "",
-          amountPerPackage : 0 ,
-        },
-      });
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        productname: "",
+        amountPerPackage: 0,
+        tournamentId, // Använd id från props
+      },
+    });
     
       function onSubmit(values: z.infer<typeof formSchema>) {
-        onSave(values.productname ,  values.amountPerPackage ?? 0)
+        console.log("Form values:", values);
+        if (!values.tournamentId) {
+          console.error("Tournament ID saknas!");
+          return;
+        }
+        onSave(values.productname, values.amountPerPackage ?? 0, values.tournamentId); // Skicka vidare `id`
         console.log(values);
         form.reset();
-        setSavedMessage("Produken har sparats");
+        setSavedMessage("Produkten har sparats");
         setTimeout(() => {
           setSavedMessage(null);
         }, 3000);
+      
       }
     return (
         <Dialog>
@@ -107,7 +117,8 @@ const formSchema = z.object({
                   <FormMessage /> 
                 </FormItem>
               )}
-              /> 
+              />
+                
                   {savedMessage && (
                   <div className="text-green-600 text-sm mt-4">{savedMessage}</div>
                    )}  
