@@ -27,22 +27,27 @@ const formSchema = z.object({
   productlistname: z.string().min(2, {
     message: "Produktlistnamnet måste ha minst 2 bokstäver",
   }),
+  tournamentId: z.string().min(2, {
+    message: "TurneringsId måste finnas",
+  }),
 });
 
 interface CreateProductListButtonProps {
-  onSave: (productListName: string) => void; // Callback för att spara produktnamn
+  onSave: (productListName: string ,tournamentId:string) => void; // Callback för att spara produktnamn
+  tournamentId:string;
 }
 
-function CreateProductListButton({ onSave }: CreateProductListButtonProps) {
+function CreateProductListButton({ onSave,tournamentId }: CreateProductListButtonProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       productlistname: "",
+      tournamentId
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave(values.productlistname);
+    onSave(values.productlistname, values.tournamentId);
     setOpen(false);
     console.log(values);
     form.reset();

@@ -2,15 +2,10 @@ import CreateTournamentBtn from "@/components/CreateTournamentBtn";
 import Header from "@/components/header";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TrashIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {Tournament} from "@/interfaces/tournament"
 
-interface Tournament {
-  id: number;
-  tournamentName: string;
-  startDate: Date;
-  endDate: Date;
-}
+
 
 function CreateTournament() {
   const navigate = useNavigate();
@@ -58,7 +53,7 @@ function CreateTournament() {
     }
   };
 
-  const DeleteTournament = async (id: number) => {
+  const DeleteTournament = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:3000/tournaments/${id}`, {
         method: "DELETE",

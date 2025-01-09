@@ -13,7 +13,8 @@ import ContactPerson from "./pages/ContactPerson";
 import InventoryStatusStorage from "./pages/InventoryStatusStorage";
 import PopulateKiosks from "./pages/PopulateKiosks";
 import FacilitiesAndKiosks from "./pages/FacilitiesAndKiosks";
-import Kioskmanager from "./pages/KioskManager";
+import Kioskmanager from "./pages/Kioskmanager";
+
 
 function Router() {
   return (

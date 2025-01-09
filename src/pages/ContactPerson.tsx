@@ -1,15 +1,10 @@
 import ContactPersonComponent from "@/components/ContactPersonComponent";
 import { useQuery } from "@tanstack/react-query";
+import { ContactPerson } from "@/interfaces";
 
-interface ContactPerson {
-  id: number;
-  name: string;
-  facility: string;
-  phone: string;
-  role: string;
-}
 
 const ContactPersons = () => {
+  
   const {
     data: contactPerson = [],
     isLoading,
@@ -26,16 +21,16 @@ const ContactPersons = () => {
 
   const SaveContactPerson = async (
     name: string,
-    facility: string,
+    facilityName: string,
     phone: string,
     role: string
   ) => {
-    console.log(name, facility, phone);
+    console.log(name, facilityName, phone);
     try {
       const response = await fetch("http://localhost:3000/contactPersons", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, facility, phone, role }),
+        body: JSON.stringify({ name, facilityName, phone, role }),
       });
       if (!response.ok) throw new Error("Failed to save contactPerson");
       refetch();
@@ -45,9 +40,9 @@ const ContactPersons = () => {
   };
 
   const UpdateContactPerson = async (
-    id: number,
+    id: string,
     name: string,
-    facility: string,
+    facilityName: string,
     phone: string,
     role: string
   ) => {
@@ -57,7 +52,7 @@ const ContactPersons = () => {
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, facility, phone, role }),
+          body: JSON.stringify({ name, facilityName, phone, role }),
         }
       );
       if (!response.ok) throw new Error("Failed to update contactPerson");
@@ -67,7 +62,7 @@ const ContactPersons = () => {
     }
   };
 
-  const DeleteContactPerson = async (id: number) => {
+  const DeleteContactPerson = async (id: string) => {
     try {
       const response = await fetch(
         `http://localhost:3000/contactPersons/${id}`,
@@ -84,12 +79,19 @@ const ContactPersons = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {String(error)}</div>;
+  const validContactPersons = contactPerson.filter(
+    (person) => person.name && person.facilityName && person.phone && person.role
+  );
+
+  if (validContactPersons.length === 0) {
+    return <div>Inga kontaktpersoner hittades.</div>;
+  }
 
   return (
     <div className="container mx-auto">
       <h3 className="mt-8 text-2xl pb-2 md:ml-4 ml-1">Kontaktpersoner</h3>
       <ContactPersonComponent
-        contactPersons={contactPerson}
+        contactPersons={validContactPersons}
         onSave={SaveContactPerson}
         onDelete={DeleteContactPerson}
         onUpdate={UpdateContactPerson}

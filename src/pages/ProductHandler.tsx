@@ -7,12 +7,15 @@ import { TrashIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Product } from "@/interfaces";
+import { useParams } from "react-router-dom";
 
 
 
 function ProductHandler() {
- 
+  const { id } = useParams<{ id: string }>(); 
   const [products, setProducts] = useState<Product[]>([]);
+  const tournamentId = id;
+  
 
   const { isLoading, error } = useQuery<Product[]>({
     queryKey: ["products"],
@@ -22,17 +25,18 @@ function ProductHandler() {
         throw new Error("Failed to fetch products");
       }
       const data = await response.json();
+      console.log("TurneringsID", tournamentId)
       setProducts(data);
       return data;
     },
   });
 
-  const SaveProduct = async (productname: string , amountPerPackage: number) => {
+  const SaveProduct = async (productname: string , amountPerPackage: number, tournamentId: string) => {
     try {
       const response = await fetch("http://localhost:3000/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productname: productname, amountPerPackage : amountPerPackage }),
+        body: JSON.stringify({ productname: productname, amountPerPackage : amountPerPackage , tournamentId : tournamentId}),
       });
       if (!response.ok) {
         throw new Error("Failed to save product");
@@ -106,15 +110,26 @@ function ProductHandler() {
     return <div>Error: {String(error)}</div>;
   }
 
+  const productsByTournament = products.filter((product) => product.tournamentId === tournamentId);
+ 
+
+
   return (
     <section>
       <div className="container mx-auto px-4 flex-row items-center">
         <h2 className="mt-8 text-2xl pb-2 mb-4">Produktutbud</h2>
-        <CreateProductButton onSave={SaveProduct} />
+        <CreateProductButton
+              onSave={(productname, amountPerPackage, tournamentId) =>
+                SaveProduct(productname, amountPerPackage, tournamentId)
+              }
+              tournamentId={tournamentId || ""} // Skicka id till knappen
+            />
+
+
         <div className="mt-8">
           <h3 className="text-lg">Sparade produkter:</h3>
           <div className="mt-4 space-y-2 mb-10">
-            {products.map((product) => (
+            {productsByTournament.map((product) => (
               <div
                 key={product.id}
                 className="p-4  pr-2 border border-gray-200 rounded-md shadow w-full 2xl:w-3/4 hover:bg-gray-50"

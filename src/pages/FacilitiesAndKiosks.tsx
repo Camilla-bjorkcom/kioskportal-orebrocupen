@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Facility, Kiosk, Product } from '@/interfaces';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useParams } from "react-router-dom";
 
  
 
@@ -24,7 +25,8 @@ function FacilitiesAndKiosks() {
   const [selectedFacilityId, setSelectedFacilityId] = useState<string|null >(null);
   const [selectedKioskId, setSelectedKioskId] = useState<string | null>(null);
   const[ kioskProducts, setKioskProducts] = useState<Product[]>([]);
-
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
 
 
   useQuery<Facility[]>({
@@ -53,15 +55,15 @@ function FacilitiesAndKiosks() {
     },
   });
 
-  const CreateFacility = async (facilityname: string) => {
+  const CreateFacility = async (facilityname: string ,tournamentId: string) => {
     try {
       const response = await fetch("http://localhost:3000/facilities", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ facilityname: facilityname }),
+        body: JSON.stringify({ facilityname: facilityname, tournamentId: tournamentId }),
       });
       if (!response.ok) {
-        throw new Error("Failed to save product");
+        throw new Error("Failed to save facility");
       }
       const newFacility = await response.json();
       setFacility((prev) => [...prev, newFacility]);
@@ -107,6 +109,7 @@ function FacilitiesAndKiosks() {
           body: JSON.stringify({
             id: facility.id,
             facilityname: facility.facilityname,
+            tournamentId: facility.tournamentId
           }),
         }
       );
@@ -179,7 +182,9 @@ function FacilitiesAndKiosks() {
     }
   };
 
-  const kiosksByFacility = facilities.map((facility) => ({
+  const facilitiesByTournament = facilities.filter((facility) => facility.tournamentId === tournamentId);
+
+  const kiosksByFacility = facilitiesByTournament.map((facility) => ({
     ...facility,
     kiosks: kiosks.filter((kiosk) => kiosk.facilityId === facility.id),
   }));
@@ -206,7 +211,12 @@ function FacilitiesAndKiosks() {
       <section className="container mx-auto px-5">
         <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa anläggningar och kiosker</h1>
 
-        <AddFacilityButton onSave={CreateFacility}/>
+        <AddFacilityButton onSave={(facilityname, tournamentId) =>{
+          CreateFacility(facilityname,tournamentId)
+        }} 
+        tournamentId={tournamentId ||""}
+        
+        />
 
         <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
             {kiosksByFacility.map((facility) => (

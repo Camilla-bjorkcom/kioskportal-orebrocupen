@@ -27,6 +27,7 @@ const formSchema = z.object({
          .optional() // Gör det till ett valfritt fält
      ),
     id: z.string().min(1, { message: "Id måste vara en giltig sträng" }),
+    tournamentId: z.string().min(1, { message: "Id måste vara en giltig sträng" }),
      
 });
 
@@ -47,6 +48,7 @@ function UpdateProductButton({onUpdate, product} : UpdateProductButtonProps) {
             id: product.id,
             productname: product.productname,
             amountPerPackage : product.amountPerPackage ?? 0,
+            tournamentId: product.tournamentId
         },
       });
     
@@ -55,7 +57,8 @@ function UpdateProductButton({onUpdate, product} : UpdateProductButtonProps) {
         const updatedProduct: Product = {
           id: values.id,
           productname: values.productname,
-          amountPerPackage: values.amountPerPackage ?? 0, // Hantera valfritt fält
+          amountPerPackage: values.amountPerPackage ?? 0,
+          tournamentId: values.tournamentId,
         };
 
         onUpdate(updatedProduct)
@@ -69,9 +72,9 @@ function UpdateProductButton({onUpdate, product} : UpdateProductButtonProps) {
   return (
     <Dialog>
     <DialogTrigger asChild>
-      <button className="flex flex-col  hover:text-orange-n">
-        <Pencil2Icon className="w-8 h-6"  />
-      </button>
+    <span className="flex flex-col hover:text-orange-n">
+    <Pencil2Icon className="w-8 h-6" />
+  </span>
     </DialogTrigger>
     <DialogContent>
       <DialogHeader>
