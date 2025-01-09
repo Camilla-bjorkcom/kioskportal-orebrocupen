@@ -31,7 +31,7 @@ function CreateTournament() {
     },
   });
 
-  const SaveTournament = async ({
+  const CreateTournament = async ({
     tournamentName,
     startDate,
     endDate,
@@ -41,11 +41,12 @@ function CreateTournament() {
     endDate: Date;
   }) => {
     try {
-      const response = await fetch("http://localhost:3000/tournaments", {
-        method: "POST",
+      const response = await fetch("https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments", {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tournamentName, startDate, endDate }),
       });
+      console.log(response)
       if (!response.ok) {
         throw new Error("Failed to save tournament");
       }
@@ -85,7 +86,7 @@ function CreateTournament() {
 
       <div className="container mx-auto ">
         <h2 className="mt-8 text-2xl pb-2">Dina turneringar</h2>
-        <CreateTournamentBtn onSave={SaveTournament} />
+        <CreateTournamentBtn onSave={CreateTournament} />
         <div className="mt-8">
           <h3 className="">Skapade turneringar</h3>
           <div className="mt-4 flex flex-wrap gap-4">
