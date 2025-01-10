@@ -60,6 +60,7 @@ function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
+          variant="outline"
           className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto"
           onClick={(e) => e.stopPropagation()} // Stoppa eventbubbling
         >

@@ -11,30 +11,31 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Facility, Kiosk, Product } from '@/interfaces';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ContactPerson, Facility, Kiosk, Product } from "@/interfaces";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { useParams } from "react-router-dom";
-
- 
-
- 
+import AddContactPersonButton from "@/components/AddContactPersonButton";
 
 function FacilitiesAndKiosks() {
   const [facilities, setFacility] = useState<Facility[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
-  const [selectedFacilityId, setSelectedFacilityId] = useState<string|null >(null);
-  const [selectedKioskId, setSelectedKioskId] = useState<string | null>(null);
-  const[ kioskProducts, setKioskProducts] = useState<Product[]>([]);
+  const [contactPersons, setContactPersons] = useState<ContactPerson[]>([]);
+  const [selectedFacilityId, setSelectedFacilityId] = useState<string | null>(null);
+  const [kioskProducts, setKioskProducts] = useState<Product[]>([]);
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
-
 
   useQuery<Facility[]>({
     queryKey: ["facilities"],
     queryFn: async () => {
       const response = await fetch("http://localhost:3000/facilities");
       if (!response.ok) {
-        throw new Error("Failed to fetch facilites");
+        throw new Error("Failed to fetch facilities");
       }
       const data = await response.json();
       setFacility(data);
@@ -47,7 +48,7 @@ function FacilitiesAndKiosks() {
     queryFn: async () => {
       const response = await fetch("http://localhost:3000/kiosks");
       if (!response.ok) {
-        throw new Error("Failed to fetch facilites");
+        throw new Error("Failed to fetch kiosks");
       }
       const data = await response.json();
       setKiosks(data);
@@ -55,12 +56,25 @@ function FacilitiesAndKiosks() {
     },
   });
 
-  const CreateFacility = async (facilityname: string ,tournamentId: string) => {
+  useQuery<ContactPerson[]>({
+    queryKey: ["contactpersons"],
+    queryFn: async () => {
+      const response = await fetch("http://localhost:3000/contactPersons");
+      if (!response.ok) {
+        throw new Error("Failed to fetch contact persons");
+      }
+      const data = await response.json();
+      setContactPersons(data);
+      return data;
+    },
+  });
+
+  const CreateFacility = async (facilityname: string, tournamentId: string) => {
     try {
       const response = await fetch("http://localhost:3000/facilities", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ facilityname: facilityname, tournamentId: tournamentId }),
+        body: JSON.stringify({ facilityname, tournamentId }),
       });
       if (!response.ok) {
         throw new Error("Failed to save facility");
@@ -69,7 +83,43 @@ function FacilitiesAndKiosks() {
       setFacility((prev) => [...prev, newFacility]);
     } catch (error) {
       console.error(error);
-      throw new Error("failed to create facility");
+    }
+  };
+
+  const UpdateFacility = async (facility: Facility) => {
+    try {
+      const response = await fetch(`http://localhost:3000/facilities/${facility.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: facility.id,
+          facilityname: facility.facilityname,
+          tournamentId: facility.tournamentId,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update facility");
+      }
+      const updatedFacility = await response.json();
+      setFacility((prev) =>
+        prev.map((f) => (f.id === updatedFacility.id ? updatedFacility : f))
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const DeleteFacility = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/facilities/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete facility");
+      }
+      setFacility((prev) => prev.filter((f) => f.id !== id));
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -78,53 +128,15 @@ function FacilitiesAndKiosks() {
       const response = await fetch("http://localhost:3000/kiosks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          kioskName: kioskName,
-          facilityId: facilityId,
-          products: kioskProducts,
-        }),
+        body: JSON.stringify({ kioskName, facilityId, products: kioskProducts }),
       });
-  
       if (!response.ok) {
         throw new Error("Failed to save kiosk");
       }
-  
       const newKiosk = await response.json();
       setKiosks((prev) => [...prev, newKiosk]);
     } catch (error) {
       console.error(error);
-      throw new Error("Failed to create kiosk");
-    }
-  };
-  
-
-  const UpdateFacility = async (facility: Facility) => {
-    console.log("this is" + facility.facilityname + "id: " + facility.id);
-    try {
-      const response = await fetch(
-        `http://localhost:3000/facilities/${facility.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: facility.id,
-            facilityname: facility.facilityname,
-            tournamentId: facility.tournamentId
-          }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to update facility");
-      }
-      const updatedFacility = await response.json();
-      console.log(updatedFacility);
-
-      setFacility((prev) =>
-        prev.map((f) => (f.id === updatedFacility.id ? updatedFacility : f))
-      );
-    } catch (error) {
-      console.error(error);
-      throw new Error("failed to create facility");
     }
   };
 
@@ -137,32 +149,16 @@ function FacilitiesAndKiosks() {
           id: kiosk.id,
           kioskName: kiosk.kioskName,
           facilityId: kiosk.facilityId,
-          products : kiosk.products
+          products: kiosk.products,
         }),
       });
       if (!response.ok) {
-        throw new Error("Failed to update facility");
+        throw new Error("Failed to update kiosk");
       }
       const updatedKiosk = await response.json();
-
       setKiosks((prev) =>
         prev.map((f) => (f.id === updatedKiosk.id ? updatedKiosk : f))
       );
-    } catch (error) {
-      console.error(error);
-      throw new Error("failed to create facility");
-    }
-  };
-
-  const DeleteFacility = async (id: string) => {
-    try {
-      const response = await fetch(`http://localhost:3000/facilities/${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("failed to delete product");
-      }
-      setFacility((prev) => prev.filter((list) => list.id !== id));
     } catch (error) {
       console.error(error);
     }
@@ -174,182 +170,191 @@ function FacilitiesAndKiosks() {
         method: "DELETE",
       });
       if (!response.ok) {
-        throw new Error("failed to delete product");
+        throw new Error("Failed to delete kiosk");
       }
-      setKiosks((prev) => prev.filter((list) => list.id !== id));
+      setKiosks((prev) => prev.filter((k) => k.id !== id));
     } catch (error) {
       console.error(error);
     }
   };
 
-  const facilitiesByTournament = facilities.filter((facility) => facility.tournamentId === tournamentId);
+  const CreateContactPerson = async (
+    name: string,
+    phone: string,
+    role: string,
+    facilityId: string
+  ) => {
+    try {
+      const response = await fetch("http://localhost:3000/contactPersons", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, role, facilityId }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to save contact person");
+      }
+      const newContactPerson = await response.json();
+      setContactPersons((prev) => [...prev, newContactPerson]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const facilitiesByTournament = facilities.filter(
+    (facility) => facility.tournamentId === tournamentId
+  );
 
   const kiosksByFacility = facilitiesByTournament.map((facility) => ({
     ...facility,
     kiosks: kiosks.filter((kiosk) => kiosk.facilityId === facility.id),
+    contactPersons: contactPersons.filter(
+      (contactPerson) => contactPerson.facilityId === facility.id
+    ),
   }));
 
-  const handleFacilityClick = (facilityId: string) => {
-    setSelectedFacilityId((prev) => (prev === facilityId ? null : facilityId)); 
-    console.log("ID facility handleFacilityClick", selectedFacilityId)// Toggla val
-    setSelectedKioskId(null); // Rensa vald kiosk när anläggningen ändras
-  };
-  
-  
-
-  
-  const handleKioskClick = (kioskId: string) => {
-    setSelectedKioskId((prev) => (prev === kioskId ? null : kioskId)); // Toggla val
-  };
-  
-  
-
-
-  
   return (
-    <>
-      <section className="container mx-auto px-5">
-        <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa anläggningar och kiosker</h1>
+    <section className="container mx-auto px-5">
+      <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa anläggningar och kiosker</h1>
 
-        <AddFacilityButton onSave={(facilityname, tournamentId) =>{
-          CreateFacility(facilityname,tournamentId)
-        }} 
-        tournamentId={tournamentId ||""}
-        
-        />
+      <AddFacilityButton
+        onSave={(facilityname, tournamentId) => {
+          CreateFacility(facilityname, tournamentId);
+        }}
+        tournamentId={tournamentId || ""}
+      />
 
-        <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
-            {kiosksByFacility.map((facility) => (
-              <AccordionItem
-                key={facility.id}
-                value={facility.id}
-                className={`p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 ${
-                    selectedFacilityId === facility.id
-                      ? "text-black border-black border rounded-xl h-fit w-11/12"
-                      : "text-black border-none w-11/12"
-                }`
-                }
-                  onClick={() => handleFacilityClick(facility.id)}
-              >
-                <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
-                <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
+      <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
+        {kiosksByFacility.map((facility) => (
+          <AccordionItem
+            key={facility.id}
+            value={facility.id}
+            className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+          >
+            <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
+              <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
                 <label className="basis-1/4 font-medium hover:text-slate-800">
-                
                   {facility.facilityname}
-                  </label>
-                  <p className='basis-1/5 ml-0 lg:block lg:min-w-36 2xl:ml-auto'>
-                     Antal kiosker:{' '}
-                      {Array.isArray(facility.kiosks) ? facility.kiosks.length : 0}
-                       </p>
-                       <AddKioskButton 
-                        
-                         onSave={(kioskName) => CreateKiosk(kioskName, facility.id)} 
-                         facilityId={facility.id}
-                        
-                          />
-                       
-                       <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">  
-                      <>
-                          <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger onClick={(e) => {
-                                e.stopPropagation(); // Hindrar event från att bubbla upp till AccordionTrigger
-                                 }}>
-                              <UpdateFacilityButton
-                                onSave={UpdateFacility}
-                                facility={facility}
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Redigera anläggning</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                         
-                           <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <DeleteButton
-                                id={facility.id}
-                                type="Facility"
-                                onDelete={DeleteFacility}
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Radera</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                       
-                       </>
-                 </div>
-                      </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <Accordion type="single" collapsible>
+                </label>
+                <AddKioskButton
+                  onSave={(kioskName) => CreateKiosk(kioskName, facility.id)}
+                  facilityId={facility.id}
+                />
+                <AddContactPersonButton
+                  onSave={(name, phone, role) =>
+                    CreateContactPerson(name, phone, role, facility.id)
+                  }
+                  facilityId={facility.id}
+                />
+                <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <UpdateFacilityButton
+                          onSave={(updatedFacility) => UpdateFacility(updatedFacility)}
+                          facility={facility}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Redigera anläggning</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <DeleteButton
+                          id={facility.id}
+                          type="Facility"
+                          onDelete={() => DeleteFacility(facility.id)}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Radera anläggning</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <Accordion type="single" collapsible>
+                <AccordionItem
+                  value={"kiosks" + facility.id}
+                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+                >
+                  <AccordionTrigger className="text-lg font-medium hover:no-underline">
+                    Kiosker ({facility.kiosks.length})
+                  </AccordionTrigger>
+                  <AccordionContent>
                     {facility.kiosks.map((kiosk) => (
-                      <AccordionItem
+                      <div
                         key={kiosk.id}
-                        value={kiosk.id}
                         className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
                       >
-                        <AccordionTrigger className="flex self-end hover:no-underline">
-                          <div className="w-full hover:no-underline">
-                            <div className="flex justify-between">
-                              <label className="basis-1/4 font-medium hover:text-slate-800">
-                                {kiosk.kioskName}
-                              </label>
-                              <div className="flex self-end gap-10 place-items-center mr-2">
-                              <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger 
-                         onClick={(e) => {
-                          e.stopPropagation(); // Hindrar event från att bubbla upp till AccordionTrigger
-                        }}
-                        >
-                          <UpdateKioskButton
-                            onSave={UpdateKiosk}
-                            kiosk={kiosk}
-                            onUpdateKioskClick={() => handleKioskClick(kiosk.id)}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Redigera kiosk</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <DeleteButton
-                            id={kiosk.id}
-                            type="Kiosk"
-                            onDelete={DeleteKiosk}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Radera</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                               
-                              </div>
-                            </div>
+                        <div className="flex justify-between">
+                          <p>{kiosk.kioskName}</p>
+                          <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit">
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <UpdateKioskButton
+                                    onSave={(updatedKiosk) => UpdateKiosk(updatedKiosk)}
+                                    kiosk={kiosk}
+                                    onUpdateKioskClick={() => {}}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Redigera kiosk</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <DeleteButton
+                                    id={kiosk.id}
+                                    type="Kiosk"
+                                    onDelete={() => DeleteKiosk(kiosk.id)}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Radera kiosk</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                         
-                        </AccordionContent>
-                      </AccordionItem>
+                        </div>
+                      </div>
                     ))}
-                  </Accordion>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+                  </AccordionContent>
+                </AccordionItem>
 
-      </section>
-    </>
+                <AccordionItem
+                  value={"contactPersons" + facility.id}
+                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+                >
+                  <AccordionTrigger className="text-lg font-medium hover:no-underline">
+                    Kontaktpersoner ({facility.contactPersons.length})
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {facility.contactPersons.map((contactPerson) => (
+                      <div
+                        key={contactPerson.id}
+                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+                      >
+                        <p>
+                          {contactPerson.name} - {contactPerson.role} - {contactPerson.phone}
+                        </p>
+                      </div>
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </section>
   );
 }
 
