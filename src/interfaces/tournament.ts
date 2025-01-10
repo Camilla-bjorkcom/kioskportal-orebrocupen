@@ -1,6 +1,8 @@
 export interface Tournament {
-    id: string;
-    tournamentName: string;
-    startDate: Date;
-    endDate: Date;
-  }
+  sk: string;
+  tournamentName: string;
+  startDate: string;
+  endDate: string;
+  id: string;
+  created: string;
+}

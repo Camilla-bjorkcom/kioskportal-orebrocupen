@@ -70,7 +70,6 @@ export function AppSidebar({ id }: { id?: string }) {
       url: "#",
       icon: House,
       subitems: [      
-       // { title: "Skapa kiosker", url: `/kioskmanager/${id}` },  
         { title: "Skapa anläggningar och kiosker", url: `/facilitiesandkiosks/${id}` },      
         { title: "Kontaktpersoner", url: `/contactperson/${id}` },
         { title: "QR koder till kiosker", url: "#" },
@@ -198,7 +197,7 @@ export function AppSidebar({ id }: { id?: string }) {
                 <DropdownMenuGroup>
                 <DropdownMenuItem>
                     <BookHeart />
-                    <a href="/createtournament" className="w-full flex">Mina turneringar</a>
+                    <a href="/tournaments" className="w-full flex">Mina turneringar</a>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <BadgeCheck />

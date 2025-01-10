@@ -54,7 +54,7 @@ export function SignUpForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    navigate("/home"); // Logga värden
+    navigate("/tournaments"); // Logga värden
     form.reset(); // Återställ formuläret
   }
 

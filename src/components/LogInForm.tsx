@@ -36,7 +36,7 @@ export function LogInForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    navigate("/createtournament"); // Logga värden
+    navigate("/tournaments"); // Logga värden
     form.reset(); // Återställ formuläret
   }
 
