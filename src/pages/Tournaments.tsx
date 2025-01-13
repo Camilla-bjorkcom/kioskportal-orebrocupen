@@ -20,14 +20,6 @@ function Tournaments() {
       }
       const dataloading = await response.json();
 
-      // const transformedData = dataloading.map((tournament: Tournament) => ({
-      //   ...tournament,
-      //   id: cleanId(tournament.sk),
-      //   startDate: new Date(tournament.startDate), 
-      //   endDate: new Date(tournament.endDate),    
-      //   created: new Date(tournament.created),    
-      // }));
-     
       return dataloading || [];
     },
   });
@@ -61,7 +53,6 @@ function Tournaments() {
       throw new Error("Failed to save tournament");
     }
   };
-  
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -86,7 +77,7 @@ function Tournaments() {
                 <button
                   onClick={() =>
                     navigate(`/dashboard/${tournament.id}`, {
-                      state: { tournament }, // Skicka turneringsinformationen här
+                      state: { tournament },
                     })
                   }
                   key={index}

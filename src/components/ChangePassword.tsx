@@ -50,13 +50,11 @@ import {
     };
   
     return (
-      <div className="flex">
-        <h2 className="font-semibold mr-2">Byt lösenord:</h2>
         <div className="flex flex-col">
           <label>
             Nuvarande lösenord
             <Input
-              className="mt-2"
+              className="mt-2 w-1/2"
               type="password"
               value={previousPassword}
               onChange={(e) => setPreviousPassword(e.target.value)}
@@ -67,7 +65,7 @@ import {
           <label>
             Nytt lösenord
             <Input
-              className="mt-2"
+              className="mt-2 w-1/2"
               type="password"
               value={proposedPassword}
               onChange={(e) => setProposedPassword(e.target.value)}
@@ -75,7 +73,7 @@ import {
             />
           </label>
           <br />
-          <Button onClick={handlePasswordChange}>Ändra lösenord</Button>
+          <Button onClick={handlePasswordChange} className="w-1/2">Ändra lösenord</Button>
           {statusMessage && (
             <p
               className={`mt-4 ${
@@ -90,7 +88,6 @@ import {
             </p>
           )}
         </div>
-      </div>
     );
   };
   
