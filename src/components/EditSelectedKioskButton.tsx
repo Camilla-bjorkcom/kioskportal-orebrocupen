@@ -139,12 +139,12 @@ function EditSelectedKioskButton({
       <Toaster />
       <DialogTrigger>
         <div
-          className="flex flex-col hover:text-orange-n"
+          className="flex flex-col place-self-center hover:text-orange-n"
           role="button"
           tabIndex={0}
           onClick={() => setOpen(true)}
         >
-          <Pencil2Icon className="w-8 h-6" />
+          <Pencil2Icon className="mr-0.5 2xl:mr-5 w-[20px] h-[20px] items-center mt-1" />
         </div>
       </DialogTrigger>
       <DialogContent className="w-full max-w-4xl">
