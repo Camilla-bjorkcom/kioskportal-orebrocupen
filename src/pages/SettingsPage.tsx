@@ -105,7 +105,7 @@ const SettingsPage = () => {
             Turneringsdetaljer
           </h3>
           {data ? (
-            <div>
+            <div className="pl-3">
               <p className="font-semibold mt-2">{data.tournamentName}</p>
               <p>Skapad: {new Date(data.created).toLocaleDateString()}</p>
               <p>Startdatum: {new Date(data.startDate).toLocaleDateString()}</p>
