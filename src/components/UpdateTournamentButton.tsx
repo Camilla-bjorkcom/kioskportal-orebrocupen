@@ -22,7 +22,6 @@ import {
 import { UpdateTournament } from "@/interfaces";
 import { DatePicker } from "./DatePicker";
 import { Button } from "./ui/button";
-import { toast } from "@/hooks/use-toast";
 import { Toaster } from "./ui/toaster";
 
 interface UpdateTournamentButtonProps {
@@ -36,7 +35,6 @@ const UpdateTournamentButton = ({
 }: UpdateTournamentButtonProps) => {
   const [open, setOpen] = useState(false);
 
-  
   const formSchema = z.object({
     tournamentName: z
       .string()
@@ -49,7 +47,6 @@ const UpdateTournamentButton = ({
       .optional(),
   });
 
-  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,79 +66,79 @@ const UpdateTournamentButton = ({
   };
 
   return (
-     <>
-     <Toaster />
+    <>
+      <Toaster />
 
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>Uppdatera turnering</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Uppdatera turnering</DialogTitle>
-          <DialogDescription>
-            Ändra information för turneringen nedan.
-          </DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="tournamentName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Turneringsnamn</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Skriv in turneringsnamn" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="startDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="mr-3">Startdatum</FormLabel>
-                  <FormControl>
-                    <DatePicker selected={field.value} onChange={field.onChange} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="endDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="mr-3">Slutdatum</FormLabel>
-                  <FormControl>
-                    <DatePicker selected={field.value} onChange={field.onChange} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex justify-end">
-              <button 
-                type="submit"
-                className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"onClick={() => {
-                toast({
-                    className: "bg-orange-200",
-                    title: "Ändringen sparades",
-                    description: "Turneringen har uppdaterats",
-                  });
-                }}
-              >
-                Uppdatera Turnering
-              </button>
-            </div>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button>Uppdatera turnering</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Uppdatera turnering</DialogTitle>
+            <DialogDescription>
+              Ändra information för turneringen nedan.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="tournamentName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Turneringsnamn</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Skriv in turneringsnamn" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="startDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="mr-3">Startdatum</FormLabel>
+                    <FormControl>
+                      <DatePicker
+                        selected={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="endDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="mr-3">Slutdatum</FormLabel>
+                    <FormControl>
+                      <DatePicker
+                        selected={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
+                >
+                  Uppdatera Turnering
+                </button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

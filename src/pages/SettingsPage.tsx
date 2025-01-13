@@ -5,6 +5,7 @@ import DeleteTournamentButton from "@/components/DeleteTournamentButton";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tournament, UpdateTournament } from "@/interfaces/tournament";
 import UpdateTournamentButton from "@/components/UpdateTournamentButton";
+import { toast } from "@/hooks/use-toast";
 
 const SettingsPage = () => {
   const auth = useAuth();
@@ -67,11 +68,20 @@ const SettingsPage = () => {
       queryClient.invalidateQueries({queryKey: ["tournament", id]})
 
       const updatedTournamentFromApi = await response.json();
-
+      toast({
+        className: "bg-orange-200",
+        title: "Ändringen sparades",
+        description: "Turneringen har uppdaterats",
+      });
+      
       console.log("Uppdaterad turnering:", updatedTournamentFromApi);
     } catch (error) {
       console.error("Failed to update torunament:", error);
-      alert("Kunde inte uppdatera turneringen. Försök igen.");
+      toast({
+        title: "Error",
+        description: "Misslyckades med att spara ändringar.",
+        className: "bg-red-200",
+      });
     }
   };
 
