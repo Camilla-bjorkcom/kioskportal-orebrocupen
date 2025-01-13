@@ -54,9 +54,6 @@ function Tournaments() {
     }
   };
 
-  
-  
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -80,7 +77,7 @@ function Tournaments() {
                 <button
                   onClick={() =>
                     navigate(`/dashboard/${tournament.id}`, {
-                      state: { tournament }, // Skicka turneringsinformationen här
+                      state: { tournament },
                     })
                   }
                   key={index}

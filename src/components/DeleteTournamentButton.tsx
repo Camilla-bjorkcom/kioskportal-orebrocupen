@@ -12,8 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface DeleteTournamentButtonProps {
-  tournamentId: string; // ID för turneringen som ska tas bort
-  onDelete: (id: string) => void; // Callback-funktion som körs efter lyckad borttagning
+  tournamentId: string; 
+  onDelete: (id: string) => void; 
 }
 
 const DeleteTournamentButton = ({ tournamentId, onDelete }: DeleteTournamentButtonProps) => {
@@ -25,7 +25,7 @@ const DeleteTournamentButton = ({ tournamentId, onDelete }: DeleteTournamentButt
       if (!response.ok) {
         throw new Error("Failed to delete tournament");
       }
-      onDelete(tournamentId); // Uppdaterar SettingsPage efter borttagning
+      onDelete(tournamentId); 
     } catch (error) {
       console.error("Error:", error);
     }
