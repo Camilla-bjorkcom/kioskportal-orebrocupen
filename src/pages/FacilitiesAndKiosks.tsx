@@ -204,7 +204,7 @@ function FacilitiesAndKiosks() {
     (facility) => facility.tournamentId === tournamentId
   );
 
-  const kiosksByFacility = facilitiesByTournament.map((facility) => ({
+  const propsByFacility = facilitiesByTournament.map((facility) => ({
     ...facility,
     kiosks: kiosks.filter((kiosk) => kiosk.facilityId === facility.id),
     contactPersons: contactPersons.filter(
@@ -224,7 +224,7 @@ function FacilitiesAndKiosks() {
       />
 
       <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
-        {kiosksByFacility.map((facility) => (
+        {propsByFacility.map((facility) => (
           <AccordionItem
             key={facility.id}
             value={facility.id}
