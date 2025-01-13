@@ -11,9 +11,10 @@ import InventoryStatus from "./pages/InventoryStatus";
 import InventoryStorage from "./pages/InventoryStorage";
 import ContactPerson from "./pages/ContactPerson";
 import InventoryStatusStorage from "./pages/InventoryStatusStorage";
-import PopulateKiosks from "./pages/PopulateKiosks";
+// import PopulateKiosks from "./pages/PopulateKiosks";
 import FacilitiesAndKiosks from "./pages/FacilitiesAndKiosks";
-import Kioskmanager from "./pages/Kioskmanager";
+import Kioskmanager from "./pages/KioskManager";
+
 
 
 function Router() {
@@ -38,8 +39,8 @@ function Router() {
             <Route path="inventorystatus/:id" element={<InventoryStatus />} />
             <Route path="inventorystorage/:id" element={<InventoryStorage />} />
             <Route path="inventorystatusstorage/:id" element={<InventoryStatusStorage />} />
-            <Route path="contactperson/:id" element={<ContactPerson />} />
-            <Route path="populatekiosks/:id" element={<PopulateKiosks />} />
+            {/* <Route path="contactperson/:id" element={<ContactPerson />} /> */}
+            {/* <Route path="populatekiosks/:id" element={<PopulateKiosks />} /> */}
           </Route>
         </Route>
       </Routes>
