@@ -34,7 +34,7 @@ const DeleteTournamentButton = ({ tournamentId, onDelete }: DeleteTournamentButt
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button>Ta bort turnering</Button>
+        <Button variant={"destructive"}>Ta bort turnering</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

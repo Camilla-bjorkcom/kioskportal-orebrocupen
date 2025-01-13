@@ -6,3 +6,9 @@ export interface Tournament {
   id: string;
   created: string;
 }
+
+export interface UpdateTournament {
+  tournamentName?: string;
+  startDate?: Date;
+  endDate?: Date;
+}
