@@ -27,6 +27,15 @@ import { Toaster } from "./ui/toaster";
 import { Button } from "./ui/button";
 import { toast } from "@/hooks/use-toast";
 import { ContactPerson } from "@/interfaces";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -137,7 +146,26 @@ const UpdadeContactPersonButton = ({
                   <FormItem>
                     <FormLabel>Roll</FormLabel>
                     <FormControl>
-                      <Input placeholder="Skriv in roll" {...field} />
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Välj en roll" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Roller</SelectLabel>
+                            <SelectItem value="Huvudansvarig">
+                              Huvudansvarig
+                            </SelectItem>
+                            <SelectItem value="Planansvarig">
+                              Planansvarig
+                            </SelectItem>
+                            <SelectItem value="Kiosk">Kiosk</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

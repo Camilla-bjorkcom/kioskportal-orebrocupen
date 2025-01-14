@@ -280,6 +280,23 @@ function FacilitiesAndKiosks() {
     }
   };
 
+  const DeleteContactPerson = async (id: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/contactPersons/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to delete contact person");
+      }
+      setContactPersons((prev) => prev.filter((c) => c.id !== id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const facilitiesByTournament = facilities.filter(
     (facility) => facility.tournamentId === tournamentId
   );
@@ -435,25 +452,11 @@ function FacilitiesAndKiosks() {
                         key={kiosk.id}
                         className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
                       >
-                        <div className="flex justify-between items-center">                        
-                          <p className="font-semibold">{kiosk.kioskName}</p>
+                        <div className="flex justify-between items-center">
+                          <p className="font-semibold text-lg">
+                            {kiosk.kioskName}
+                          </p>
                           <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit items-center">
-                            {/* <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <UpdateKioskButton
-                                    onSave={(updatedKiosk) =>
-                                      UpdateKiosk(updatedKiosk)
-                                    }
-                                    kiosk={kiosk}
-                                    onUpdateKioskClick={() => {}}
-                                  />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Redigera kiosk</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider> */}
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger>
@@ -508,7 +511,7 @@ function FacilitiesAndKiosks() {
                               }}
                             />
                           </div>
-                        </div>                                               
+                        </div>
                         <div className="flex mt-5 font-semibold">Produkter</div>
                         {kiosk.products && kiosk.products.length > 0 ? (
                           <ul className="grid grid-cols-3 gap-4 mt-2">
@@ -523,9 +526,8 @@ function FacilitiesAndKiosks() {
                             Inga produkter tillagda för denna kiosk.
                           </p>
                         )}
-                      </div>                    
+                      </div>
                     ))}
-                    
                   </AccordionContent>
                 </AccordionItem>
 
@@ -535,18 +537,51 @@ function FacilitiesAndKiosks() {
                 >
                   <AccordionTrigger className="text-lg font-medium hover:no-underline">
                     Kontaktpersoner ({facility.contactPersons.length})
-                    
                   </AccordionTrigger>
                   <AccordionContent>
                     {facility.contactPersons.map((contactPerson) => (
                       <div
                         key={contactPerson.id}
-                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 flex justify-between"
                       >
                         <p>
                           {contactPerson.name} - {contactPerson.role} -{" "}
                           {contactPerson.phone}
                         </p>
+                        <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit items-center">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <UpdateContactPersonButton
+                                  onSave={(updatedContactPerson) =>
+                                    UpdateContactPerson(updatedContactPerson)
+                                  }
+                                  contactPerson={contactPerson}
+                                  onUpdateContactPersonClick={() => {}}
+                                />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Redigera kontaktperson</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <DeleteButton
+                                  id={contactPerson.id}
+                                  type="ContactPerson"
+                                  onDelete={() =>
+                                    DeleteContactPerson(contactPerson.id)
+                                  }
+                                />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Radera kontaktperson</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
                       </div>
                     ))}
                   </AccordionContent>
