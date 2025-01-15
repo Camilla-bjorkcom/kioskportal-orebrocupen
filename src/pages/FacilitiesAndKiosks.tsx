@@ -14,10 +14,12 @@ import {
 import { Facility, Kiosk, Product } from '@/interfaces';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useParams } from "react-router-dom";
-
- 
-
- 
+import AddContactPersonButton from "@/components/AddContactPersonButton";
+import SelectedKiosksButton from "@/components/SelectedKiosksButton";
+import { Checkbox } from "@/components/ui/checkbox";
+import EditSelectedKioskButton from "@/components/EditSelectedKioskButton";
+import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
 
 function FacilitiesAndKiosks() {
   const [facilities, setFacility] = useState<Facility[]>([]);
@@ -32,7 +34,7 @@ function FacilitiesAndKiosks() {
   useQuery<Facility[]>({
     queryKey: ["facilities"],
     queryFn: async () => {
-      const response = await fetch("http://localhost:3000/facilities");
+      const response = await fetchWithAuth(`/facilities/${id}`);
       if (!response.ok) {
         throw new Error("Failed to fetch facilites");
       }
@@ -55,12 +57,49 @@ function FacilitiesAndKiosks() {
     },
   });
 
-  const CreateFacility = async (facilityname: string ,tournamentId: string) => {
+  useQuery<ContactPerson[]>({
+    queryKey: ["contactpersons"],
+    queryFn: async () => {
+      const response = await fetch("http://localhost:3000/contactPersons");
+      if (!response.ok) {
+        throw new Error("Failed to fetch contact persons");
+      }
+      const data = await response.json();
+      setContactPersons(data);
+      return data;
+    },
+  });
+  useQuery<ProductList[]>({
+    queryKey: ["productlists"],
+    queryFn: async () => {
+      const response = await fetch("http://localhost:3000/productslists");
+      if (!response.ok) throw new Error("Failed to fetch product lists");
+      const data = await response.json();
+      setProductLists(data);
+      console.log("listor", data);
+      return data;
+    },
+  });
+
+  // Fetch Products
+  useQuery<Product[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const response = await fetch("http://localhost:3000/products");
+      if (!response.ok) throw new Error("Failed to fetch products");
+      const data = await response.json();
+      setProducts(data);
+      console.log("varor", data);
+      return data;
+    },
+  });
+
+  const CreateFacility = async (facilityName: string) => {
     try {
-      const response = await fetch("http://localhost:3000/facilities", {
-        method: "POST",
+      const response = await fetchWithAuth(`/facilities/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ facilityname: facilityname, tournamentId: tournamentId }),
+        body: JSON.stringify({ facilityName }),
       });
       if (!response.ok) {
         throw new Error("Failed to save facility");
@@ -124,7 +163,41 @@ function FacilitiesAndKiosks() {
       );
     } catch (error) {
       console.error(error);
-      throw new Error("failed to create facility");
+    }
+  };
+
+  const DeleteFacility = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/facilities/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete facility");
+      }
+      setFacility((prev) => prev.filter((f) => f.id !== id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const CreateKiosk = async (kioskName: string, facilityId: string) => {
+    try {
+      const response = await fetch("http://localhost:3000/kiosks", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kioskName,
+          facilityId,
+          products: kioskProducts,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to save kiosk");
+      }
+      const newKiosk = await response.json();
+      setKiosks((prev) => [...prev, newKiosk]);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -207,15 +280,23 @@ function FacilitiesAndKiosks() {
 
   
   return (
-    <>
-      <section className="container mx-auto px-5">
-        <h1 className="mt-8 text-2xl pb-2 mb-4">Skapa anläggningar och kiosker</h1>
-
-        <AddFacilityButton onSave={(facilityname, tournamentId) =>{
-          CreateFacility(facilityname,tournamentId)
-        }} 
-        tournamentId={tournamentId ||""}
-        
+    <section className="container mx-auto px-5">
+      <h1 className="mt-8 text-2xl pb-2 mb-4">
+        Hantera kiosker och produktutbud
+      </h1>
+      <div className="flex justify-between w-full 2xl:w-3/4 items-center mb-3">
+        <AddFacilityButton
+          onSave={(facilityname) => {
+            CreateFacility(facilityname);
+          }}
+        />
+        <SelectedKiosksButton
+          selectedKiosks={kiosksForUpdate}
+          productLists={productLists}
+          products={products}
+          onClick={handleSubmit}
+          onKiosksUpdated={handleKiosksUpdated}
+          onClearSelected={clearSelectedKiosks}
         />
 
         <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
