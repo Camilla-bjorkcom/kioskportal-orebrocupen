@@ -3,18 +3,20 @@ import Header from "@/components/header";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Tournament } from "@/interfaces/tournament";
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
+
+
 
 function Tournaments() {
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 
-  const { isLoading, error, data,isSuccess } = useQuery<Tournament[]>({
+  const { isLoading, error, data, isSuccess } = useQuery<Tournament[]>({
     queryKey: ["tournaments"],
     queryFn: async () => {
-      const response = await fetch(
-        "https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments"
-      );
+      const response = await fetchWithAuth("/tournaments");
+
       if (!response.ok) {
         throw new Error("Failed to fetch tournaments");
       }
@@ -34,8 +36,8 @@ function Tournaments() {
     endDate: Date;
   }) => {
     try {
-      const response = await fetch(
-        "https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments",
+      const response = await fetchWithAuth(
+        "tournaments",
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -45,9 +47,8 @@ function Tournaments() {
       if (!response.ok) {
         throw new Error("Failed to save tournament");
       }
-      
-      queryClient.invalidateQueries({queryKey: ["tournaments"]})
 
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
     } catch (error) {
       console.error(error);
       throw new Error("Failed to save tournament");
@@ -60,7 +61,6 @@ function Tournaments() {
   if (!isSuccess) {
     return <div>Error: {String(error)}</div>;
   }
-
 
   return (
     <>
@@ -86,7 +86,8 @@ function Tournaments() {
                   <div className="flex justify-between w-full">
                     <p className="">{tournament.tournamentName}</p>
                     <p className="text-xs absolute bottom-2 right-2">
-                    Skapad: {new Date(tournament.created).toLocaleDateString()}
+                      Skapad:{" "}
+                      {new Date(tournament.created).toLocaleDateString()}
                     </p>
                   </div>
                 </button>
