@@ -30,6 +30,7 @@ import SelectedKiosksButton from "@/components/SelectedKiosksButton";
 import { Checkbox } from "@/components/ui/checkbox";
 import EditSelectedKioskButton from "@/components/EditSelectedKioskButton";
 import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
 
 function FacilitiesAndKiosks() {
   const [facilities, setFacility] = useState<Facility[]>([]);
@@ -51,7 +52,7 @@ function FacilitiesAndKiosks() {
   useQuery<Facility[]>({
     queryKey: ["facilities"],
     queryFn: async () => {
-      const response = await fetch("http://localhost:3000/facilities");
+      const response = await fetchWithAuth(`/facilities/${id}`);
       if (!response.ok) {
         throw new Error("Failed to fetch facilities");
       }
@@ -111,12 +112,12 @@ function FacilitiesAndKiosks() {
     },
   });
 
-  const CreateFacility = async (facilityname: string, tournamentId: string) => {
+  const CreateFacility = async (facilityName: string) => {
     try {
-      const response = await fetch("http://localhost:3000/facilities", {
-        method: "POST",
+      const response = await fetchWithAuth(`/facilities/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ facilityname, tournamentId }),
+        body: JSON.stringify({ facilityName }),
       });
       if (!response.ok) {
         throw new Error("Failed to save facility");
@@ -171,7 +172,7 @@ function FacilitiesAndKiosks() {
   const CreateKiosk = async (kioskName: string, facilityId: string) => {
     try {
       const response = await fetch("http://localhost:3000/kiosks", {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           kioskName,
@@ -368,10 +369,9 @@ function FacilitiesAndKiosks() {
       </h1>
       <div className="flex justify-between w-full 2xl:w-3/4 items-center mb-3">
         <AddFacilityButton
-          onSave={(facilityname, tournamentId) => {
-            CreateFacility(facilityname, tournamentId);
+          onSave={(facilityname) => {
+            CreateFacility(facilityname);
           }}
-          tournamentId={tournamentId || ""}
         />
         <SelectedKiosksButton
           selectedKiosks={kiosksForUpdate}
