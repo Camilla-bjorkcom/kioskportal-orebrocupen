@@ -49,68 +49,43 @@ function FacilitiesAndKiosks() {
   const [products, setProducts] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
 
-  useQuery<Facility[]>({
+  const { isLoading, error, data, isSuccess } = useQuery<Facility[]>({
     queryKey: ["facilities"],
     queryFn: async () => {
       const response = await fetchWithAuth(`/facilities/${id}`);
       if (!response.ok) {
         throw new Error("Failed to fetch facilities");
       }
-      const data = await response.json();
-      setFacility(data);
-      return data;
+      const dataResponse = await response.json();
+      
+      return dataResponse || [];
     },
   });
 
-  useQuery<Kiosk[]>({
-    queryKey: ["kiosks"],
-    queryFn: async () => {
-      const response = await fetch("http://localhost:3000/kiosks");
-      if (!response.ok) {
-        throw new Error("Failed to fetch kiosks");
-      }
-      const data = await response.json();
-      setKiosks(data);
-      return data;
-    },
-  });
+  // useQuery<ProductList[]>({
+  //   queryKey: ["productlists"],
+  //   queryFn: async () => {
+  //     const response = await fetch("http://localhost:3000/productslists");
+  //     if (!response.ok) throw new Error("Failed to fetch product lists");
+  //     const data = await response.json();
+  //     setProductLists(data);
+  //     console.log("listor", data);
+  //     return data;
+  //   },
+  // });
 
-  useQuery<ContactPerson[]>({
-    queryKey: ["contactpersons"],
-    queryFn: async () => {
-      const response = await fetch("http://localhost:3000/contactPersons");
-      if (!response.ok) {
-        throw new Error("Failed to fetch contact persons");
-      }
-      const data = await response.json();
-      setContactPersons(data);
-      return data;
-    },
-  });
-  useQuery<ProductList[]>({
-    queryKey: ["productlists"],
-    queryFn: async () => {
-      const response = await fetch("http://localhost:3000/productslists");
-      if (!response.ok) throw new Error("Failed to fetch product lists");
-      const data = await response.json();
-      setProductLists(data);
-      console.log("listor", data);
-      return data;
-    },
-  });
-
-  // Fetch Products
-  useQuery<Product[]>({
-    queryKey: ["products"],
-    queryFn: async () => {
-      const response = await fetch("http://localhost:3000/products");
-      if (!response.ok) throw new Error("Failed to fetch products");
-      const data = await response.json();
-      setProducts(data);
-      console.log("varor", data);
-      return data;
-    },
-  });
+  // // Fetch Products
+  // useQuery<Product[]>({
+  //   queryKey: ["products"],
+  //   queryFn: async () => {
+  //     const response = await fetch("http://localhost:3000/products");
+  //     if (!response.ok) throw new Error("Failed to fetch products");
+  //     const data = await response.json();
+  //     setProducts(data);
+  //     console.log("varor", data);
+  //     return data;
+  //   },
+  // });
 
   const CreateFacility = async (facilityName: string) => {
     try {
@@ -138,8 +113,7 @@ function FacilitiesAndKiosks() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             id: facility.id,
-            facilityname: facility.facilityname,
-            tournamentId: facility.tournamentId,
+            facilityName: facility.facilityName,
           }),
         }
       );
@@ -228,87 +202,86 @@ function FacilitiesAndKiosks() {
     }
   };
 
-  const CreateContactPerson = async (
-    name: string,
-    phone: string,
-    role: string,
-    facilityId: string
-  ) => {
-    try {
-      const response = await fetch("http://localhost:3000/contactPersons", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, role, facilityId }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to save contact person");
-      }
-      const newContactPerson = await response.json();
-      setContactPersons((prev) => [...prev, newContactPerson]);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const CreateContactPerson = async (
+  //   name: string,
+  //   phone: string,
+  //   role: string,
+  //   facilityId: string
+  // ) => {
+  //   try {
+  //     const response = await fetch("http://localhost:3000/contactPersons", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ name, phone, role, facilityId }),
+  //     });
+  //     if (!response.ok) {
+  //       throw new Error("Failed to save contact person");
+  //     }
+  //     const newContactPerson = await response.json();
+  //     setContactPersons((prev) => [...prev, newContactPerson]);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  const UpdateContactPerson = async (contactPerson: ContactPerson) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/contactPersons/${contactPerson.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: contactPerson.id,
-            name: contactPerson.name,
-            phone: contactPerson.phone,
-            role: contactPerson.role,
-            facilityId: contactPerson.facilityId,
-            tournamentId: contactPerson.tournamentId,
-          }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to update contact person");
-      }
-      const updatedContactPerson = await response.json();
-      setContactPersons((prev) =>
-        prev.map((f) =>
-          f.id === updatedContactPerson.id ? updatedContactPerson : f
-        )
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const UpdateContactPerson = async (contactPerson: ContactPerson) => {
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:3000/contactPersons/${contactPerson.id}`,
+  //       {
+  //         method: "PUT",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({
+  //           id: contactPerson.id,
+  //           name: contactPerson.name,
+  //           phone: contactPerson.phone,
+  //           role: contactPerson.role,
+  //           facilityId: contactPerson.facilityId,
+  //           tournamentId: contactPerson.tournamentId,
+  //         }),
+  //       }
+  //     );
+  //     if (!response.ok) {
+  //       throw new Error("Failed to update contact person");
+  //     }
+  //     const updatedContactPerson = await response.json();
+  //     setContactPersons((prev) =>
+  //       prev.map((f) =>
+  //         f.id === updatedContactPerson.id ? updatedContactPerson : f
+  //       )
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  const DeleteContactPerson = async (id: string) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/contactPersons/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to delete contact person");
-      }
-      setContactPersons((prev) => prev.filter((c) => c.id !== id));
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const DeleteContactPerson = async (id: string) => {
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:3000/contactPersons/${id}`,
+  //       {
+  //         method: "DELETE",
+  //       }
+  //     );
+  //     if (!response.ok) {
+  //       throw new Error("Failed to delete contact person");
+  //     }
+  //     setContactPersons((prev) => prev.filter((c) => c.id !== id));
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  const facilitiesByTournament = facilities.filter(
-    (facility) => facility.tournamentId === tournamentId
-  );
 
-  const propsByFacility = facilitiesByTournament.map((facility) => ({
+  
+  const propsByFacility = data?.map((facility) => ({
     ...facility,
-    kiosks: kiosks.filter((kiosk) => kiosk.facilityId === facility.id),
-    contactPersons: contactPersons.filter(
-      (contactPerson) => contactPerson.facilityId === facility.id
-    ),
+    kiosks: kiosks.filter((kiosk) => kiosk.facilityId === facility.id) || [], 
+    contactPersons: contactPersons.filter((contactPerson) => contactPerson.facilityId === facility.id) || [],
   }));
+  
+  
+  
   const handleSubmit = (open: boolean) => {
     if (open && kiosksForUpdate.length === 0) {
       alert("Du måste välja minst en kiosk!");
@@ -332,7 +305,7 @@ function FacilitiesAndKiosks() {
       } else {
         const data = await response.json();
         console.log(data);
-        setSelectedProducts(kiosk.products);
+        // setSelectedProducts(kiosk.products);
 
         setOpen(true);
       }
@@ -340,6 +313,7 @@ function FacilitiesAndKiosks() {
       console.error("Error handling edit click:", error);
     }
   };
+
   const handleKioskUpdated = (updatedKiosk: Kiosk) => {
     setKiosks((prevKiosks) =>
       prevKiosks.map((kiosk) =>
@@ -362,6 +336,14 @@ function FacilitiesAndKiosks() {
     setKiosksforUpdate([]);
   };
 
+  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (!isSuccess) {
+    return <div>Error: {String(error)}</div>;
+  }
+
   return (
     <section className="container mx-auto px-5">
       <h1 className="mt-8 text-2xl pb-2 mb-4">
@@ -383,7 +365,7 @@ function FacilitiesAndKiosks() {
         />
       </div>
       <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
-        {propsByFacility.map((facility) => (
+        {data.map((facility) => (
           <AccordionItem
             key={facility.id}
             value={facility.id}
@@ -392,18 +374,18 @@ function FacilitiesAndKiosks() {
             <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
               <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
                 <label className="basis-1/4 font-medium hover:text-slate-800">
-                  {facility.facilityname}
+                  {facility.facilityName}
                 </label>
                 <AddKioskButton
                   onSave={(kioskName) => CreateKiosk(kioskName, facility.id)}
                   facilityId={facility.id}
                 />
-                <AddContactPersonButton
+                {/* <AddContactPersonButton
                   onSave={(name, phone, role) =>
                     CreateContactPerson(name, phone, role, facility.id)
                   }
                   facilityId={facility.id}
-                />
+                /> */}
                 <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
                   <TooltipProvider>
                     <Tooltip>
@@ -444,10 +426,10 @@ function FacilitiesAndKiosks() {
                   className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
                 >
                   <AccordionTrigger className="text-lg font-medium hover:no-underline">
-                    Kiosker ({facility.kiosks.length})
+                    Kiosker ({facility.kiosks?.length})
                   </AccordionTrigger>
                   <AccordionContent>
-                    {facility.kiosks.map((kiosk) => (
+                    {facility.kiosks?.map((kiosk) => (
                       <div
                         key={kiosk.id}
                         className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
@@ -517,7 +499,7 @@ function FacilitiesAndKiosks() {
                           <ul className="grid grid-cols-3 gap-4 mt-2">
                             {kiosk.products.map(
                               (product: Product, index: number) => (
-                                <li key={index}>{product.productname}</li>
+                                <li key={index}>{product.productName}</li>
                               )
                             )}
                           </ul>
@@ -536,10 +518,10 @@ function FacilitiesAndKiosks() {
                   className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
                 >
                   <AccordionTrigger className="text-lg font-medium hover:no-underline">
-                    Kontaktpersoner ({facility.contactPersons.length})
+                    Kontaktpersoner ({facility.contactPersons?.length})
                   </AccordionTrigger>
                   <AccordionContent>
-                    {facility.contactPersons.map((contactPerson) => (
+                    {facility.contactPersons?.map((contactPerson) => (
                       <div
                         key={contactPerson.id}
                         className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 flex justify-between"
@@ -552,13 +534,13 @@ function FacilitiesAndKiosks() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger>
-                                <UpdateContactPersonButton
+                                {/* <UpdateContactPersonButton
                                   onSave={(updatedContactPerson) =>
                                     UpdateContactPerson(updatedContactPerson)
                                   }
                                   contactPerson={contactPerson}
                                   onUpdateContactPersonClick={() => {}}
-                                />
+                                /> */}
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>Redigera kontaktperson</p>
@@ -568,13 +550,13 @@ function FacilitiesAndKiosks() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger>
-                                <DeleteButton
+                                {/* <DeleteButton
                                   id={contactPerson.id}
                                   type="ContactPerson"
                                   onDelete={() =>
                                     DeleteContactPerson(contactPerson.id)
                                   }
-                                />
+                                /> */}
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>Radera kontaktperson</p>

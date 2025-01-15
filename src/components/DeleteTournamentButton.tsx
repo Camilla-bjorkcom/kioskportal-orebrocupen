@@ -1,3 +1,4 @@
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +20,7 @@ interface DeleteTournamentButtonProps {
 const DeleteTournamentButton = ({ tournamentId, onDelete }: DeleteTournamentButtonProps) => {
   const handleDeleteTournament = async () => {
     try {
-      const response = await fetch(`https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments/${tournamentId}`, {
+      const response = await fetchWithAuth(`tournaments/${tournamentId}`, {
         method: "DELETE",
       });
       if (!response.ok) {

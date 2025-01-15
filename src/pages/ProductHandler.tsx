@@ -17,17 +17,17 @@ function ProductHandler() {
   const tournamentId = id;
   
 
-  const { isLoading, error } = useQuery<Product[]>({
+  const { isLoading, error, data } = useQuery<Product[]>({
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetch("http://localhost:3000/products");
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
-      const data = await response.json();
+      const dataResponse = await response.json();
       console.log("TurneringsID", tournamentId)
-      setProducts(data);
-      return data;
+      // setProducts(data);
+      return dataResponse;
     },
   });
 
@@ -110,7 +110,7 @@ function ProductHandler() {
     return <div>Error: {String(error)}</div>;
   }
 
-  const productsByTournament = products.filter((product) => product.tournamentId === tournamentId);
+  // const productsByTournament = products.filter((product) => product.tournamentId === tournamentId);
  
 
 
@@ -129,13 +129,13 @@ function ProductHandler() {
         <div className="mt-8">
           <h3 className="text-lg">Sparade produkter:</h3>
           <div className="mt-4 space-y-2 mb-10">
-            {productsByTournament.map((product) => (
+            {data?.map((product) => (
               <div
                 key={product.id}
                 className="p-4  pr-2 border border-gray-200 rounded-md shadow w-full 2xl:w-3/4 hover:bg-gray-50"
               >
                 <div className="flex flex-row justify-between mr-0">
-                  <p className= "basis-2/4 md:basis-1/4">{product.productname}</p>
+                  <p className= "basis-2/4 md:basis-1/4">{product.productName}</p>
                   <div className="flex justify-between 2xl:basis-1/3 lg:justify-between">
                   <p className="hidden min-w-36 mr-4 lg:block self-center">Antal per förp: {displayAmount(product.amountPerPackage)}</p>
                  
