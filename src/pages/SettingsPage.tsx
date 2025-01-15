@@ -6,7 +6,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tournament, UpdateTournament } from "@/interfaces/tournament";
 import UpdateTournamentButton from "@/components/UpdateTournamentButton";
 import { toast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
 
 const SettingsPage = () => {
   const auth = useAuth();
