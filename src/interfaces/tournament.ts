@@ -1,9 +1,14 @@
-import { Product } from "./product";
-
 export interface Tournament {
-    id: string;
-    tournamentName: string;
-    startDate: Date;
-    endDate: Date;
-    products: Product[];
-  }
+  sk: string;
+  tournamentName: string;
+  startDate: string;
+  endDate: string;
+  id: string;
+  created: string;
+}
+
+export interface UpdateTournament {
+  tournamentName?: string;
+  startDate?: Date;
+  endDate?: Date;
+}

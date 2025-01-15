@@ -3,8 +3,6 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import SidebarLayout from "./layouts/SidebarLayout";
 import ProductHandler from "./pages/ProductHandler";
-import CreateTournament from "./pages/CreateTournament";
-
 import SettingsPage from "./pages/SettingsPage";
 import ProductListHandler from "./pages/ProductListHandler";
 import InventoryStatus from "./pages/InventoryStatus";
@@ -13,8 +11,7 @@ import ContactPerson from "./pages/ContactPerson";
 import InventoryStatusStorage from "./pages/InventoryStatusStorage";
 // import PopulateKiosks from "./pages/PopulateKiosks";
 import FacilitiesAndKiosks from "./pages/FacilitiesAndKiosks";
-import Kioskmanager from "./pages/KioskManager";
-
+import Tournaments from "./pages/Tournaments";
 
 
 function Router() {
@@ -23,14 +20,13 @@ function Router() {
       <Routes>
         <Route path="/">
           <Route index element={<Home />} />
-          <Route path="createtournament">
-            <Route path="/createtournament" element={<CreateTournament />} />
+          <Route path="tournaments">
+            <Route path="/tournaments" element={<Tournaments />} />
           </Route>
           <Route element={<SidebarLayout />}>
             <Route path="dashboard/:id" element={<Dashboard />} />
             <Route path="producthandler/:id" element={<ProductHandler />} />
             <Route path="settings/:id" element={<SettingsPage />} />
-            <Route path="kioskmanager/:id" element={<Kioskmanager />}/>
             <Route path="facilitiesandkiosks/:id" element={<FacilitiesAndKiosks />} />
             <Route
               path="productlisthandler/:id"
