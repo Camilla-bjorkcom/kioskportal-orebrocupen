@@ -31,22 +31,18 @@ const formSchema = z.object({
   facilityName: z.string().min(2, {
     message: "Anläggnings namn måste ha minst 2 bokstäver",
   }),
-  tournamentId: z.string().min(2, {
-    message: "TurneringsId måste finnas",
-  }),
 });
 
 
 
 
 interface AddFacilityButtonProps {
-  onSave: (facilityname: string, tournamentId: string) => void; 
-  tournamentId: string;
+  onSave: (facilityName: string) => void; 
 }
 
 
 
-function AddFacilityButton({ onSave, tournamentId }: AddFacilityButtonProps) {
+function AddFacilityButton({ onSave}: AddFacilityButtonProps) {
   
   const [open, setOpen] = useState(false);
   
@@ -54,13 +50,12 @@ function AddFacilityButton({ onSave, tournamentId }: AddFacilityButtonProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       facilityName: "",
-      tournamentId
       
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave(values.facilityName, values.tournamentId);
+    onSave(values.facilityName);
     setOpen(false);
     form.reset();
   }

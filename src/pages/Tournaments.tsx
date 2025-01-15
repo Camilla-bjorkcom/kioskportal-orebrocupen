@@ -83,11 +83,13 @@ function Tournaments() {
                   key={index}
                   className="flex flex-col p-2 justify-between rounded-xl border bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 relative"
                 >
-                  <div className="flex justify-between w-full">
-                    <p className="">{tournament.tournamentName}</p>
-                    <p className="text-xs absolute bottom-2 right-2">
-                      Skapad:{" "}
-                      {new Date(tournament.created).toLocaleDateString()}
+                  <div className="flex w-full justify-between">
+                    <p className="text-left">{tournament.tournamentName}</p>
+                    <p className="text-xs absolute bottom-1 left-2">
+                      Spelas:
+                    </p>
+                    <p className="text-xs absolute bottom-1 right-2">
+                    {new Date(tournament.startDate).toLocaleDateString()} - {new Date(tournament.endDate).toLocaleDateString()}
                     </p>
                   </div>
                 </button>

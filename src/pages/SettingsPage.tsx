@@ -6,7 +6,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tournament, UpdateTournament } from "@/interfaces/tournament";
 import UpdateTournamentButton from "@/components/UpdateTournamentButton";
 import { toast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
 
 const SettingsPage = () => {
   const auth = useAuth();
@@ -105,7 +104,7 @@ const SettingsPage = () => {
             Turneringsdetaljer
           </h3>
           {data ? (
-            <div>
+            <div className="pl-3">
               <p className="font-semibold mt-2">{data.tournamentName}</p>
               <p>Skapad: {new Date(data.created).toLocaleDateString()}</p>
               <p>Startdatum: {new Date(data.startDate).toLocaleDateString()}</p>
