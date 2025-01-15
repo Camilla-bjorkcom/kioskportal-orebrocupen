@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { Tournament } from "@/interfaces";
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
 
 function TournamentDetails() {
   const { id } = useParams<{ id: string }>();
@@ -15,7 +16,7 @@ function TournamentDetails() {
       if (!id) {
         throw new Error("No tournament ID provided");
       }
-      const response = await fetch(`https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments/${id}`);
+      const response = await fetchWithAuth(`tournaments/${id}`);
       if (!response.ok) {
         throw new Error("Failed to fetch tournament");
       }

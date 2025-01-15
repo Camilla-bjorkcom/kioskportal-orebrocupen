@@ -4,6 +4,8 @@ import { ChevronRight } from "lucide-react";
 function Home() {
   const auth = useAuth();
 
+  auth.user?.id_token;
+
   return (
     <section className="container mx-auto gap-5 h-screen w-screen">
       <div className="bg-orange-n p-5 rounded-xl relative w-full">

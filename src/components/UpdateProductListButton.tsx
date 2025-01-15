@@ -162,7 +162,7 @@ function UpdateProductListButton({
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent>
+      <DialogContent className="w-full max-w-4xl">
         <DialogHeader>
           <DialogTitle>Uppdatera produktlista</DialogTitle>
           <DialogDescription className="sr-only">
@@ -200,6 +200,7 @@ function UpdateProductListButton({
                {allSelected ? "Avmarkera alla" : "Markera alla"}
                 </Button>
               </div>
+              <div className="grid grid-cols-2 gap-4">
               {products.map((product) => (
                 <div key={product.id} className="flex items-center gap-2">
                   <Checkbox
@@ -230,7 +231,9 @@ function UpdateProductListButton({
                     {product.productname}
                   </label>
                 </div>
+                
               ))}
+              </div>
             </div>
             <Button
               className="mx-auto w-full"
