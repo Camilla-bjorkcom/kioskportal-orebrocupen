@@ -13,8 +13,8 @@ import { TrashIcon } from "lucide-react";
 
 interface DeleteButtonProps {
   id: string; // ID för objektet som ska raderas
-  type: "Facility" | "Kiosk"; // Typ av objekt
-  onDelete: (id: string, type: "Facility" | "Kiosk") => void; // Callback för att radera
+  type: "Facility" | "Kiosk" | "ContactPerson"; // Typ av objekt
+  onDelete: (id: string, type: "Facility" | "Kiosk" | "ContactPerson") => void; // Callback för att radera
 }
 
 const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
@@ -31,6 +31,12 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
           title: "Vill du radera kiosken?",
           description:
             "Den här åtgärden kan inte ångras. Kiosken kommer att tas bort permanent.",
+        };
+        case "ContactPerson":
+        return {
+          title: "Vill du radera kontaktpersonen?",
+          description:
+            "Den här åtgärden kan inte ångras. Kontaktpersonen kommer att tas bort permanent.",
         };
       default:
         return {
