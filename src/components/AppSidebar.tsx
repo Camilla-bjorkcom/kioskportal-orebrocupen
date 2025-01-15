@@ -99,6 +99,10 @@ export function AppSidebar({ id }: { id?: string }) {
     },
   ];
   const auth = useAuth();
+
+
+  
+
   return (
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarContent>
@@ -166,7 +170,7 @@ export function AppSidebar({ id }: { id?: string }) {
                     <AvatarFallback className="rounded-lg bg-amber-500 font-bold">KP</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate text-xs">{auth.user?.profile.email}</span>
+                    <span className="truncate text-xs"> {auth.user?.profile["cognito:username"] as string}</span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4" />
                 </SidebarMenuButton>
@@ -185,7 +189,7 @@ export function AppSidebar({ id }: { id?: string }) {
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate text-xs">
-                        {auth.user?.profile.email}
+                        {auth.user?.profile["cognito:username"] as string}
                       </span>
                     </div>
                   </div>
