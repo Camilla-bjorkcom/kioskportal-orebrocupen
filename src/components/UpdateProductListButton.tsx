@@ -24,6 +24,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { Pencil, Plus } from "lucide-react";
 import { ProductList, Product } from "@/interfaces";
+import { useParams } from "react-router-dom";
 
 
 
@@ -36,11 +37,13 @@ const formSchema = z.object({
 interface UpdateProductListButtonProps {
   productlist: ProductList;
   onUpdate: (updatedList: ProductList) => void;
+  tournamentProducts: Product[];
 }
 
 function UpdateProductListButton({
   productlist,
   onUpdate,
+  tournamentProducts,
 }:  UpdateProductListButtonProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,17 +52,19 @@ function UpdateProductListButton({
     },
   });
 
-  const [products, setProducts] = useState<Product[]>([]);
+ 
   const [productlistForUpdate, setProductlistforUpdate] =
     useState<ProductList>(productlist);
   const [open, setOpen] = useState(false);
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
  
-  const allSelected:boolean = products.length > 0 && products.every((product) =>
+  const allSelected:boolean = tournamentProducts.length > 0 && tournamentProducts.every((product) =>
     productlistForUpdate?.products.some((p) => p.id === product.id)
   );
 
   const toggleSelectAll = () => {
-    const allSelected = products.length > 0 && products.every((product) =>
+    const allSelected = tournamentProducts.length > 0 && tournamentProducts.every((product) =>
       productlistForUpdate?.products.some((p) => p.id === product.id)
     );
   
@@ -67,24 +72,13 @@ function UpdateProductListButton({
       prev
         ? {
             ...prev,
-            products: allSelected ? [] : products,
+            products: allSelected ? [] : tournamentProducts,
           }
         : prev
     );
   };
 
-  const { isLoading, error } = useQuery<Product[]>({
-    queryKey: ["products"],
-    queryFn: async () => {
-      const response = await fetch("http://localhost:3000/products");
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
-      }
-      const data = await response.json();
-      setProducts(data);
-      return data;
-    },
-  });
+ 
 
   const saveChangesToProductList = async (productlist: ProductList) => {
     const url = `http://localhost:3000/productslists/${productlist.id}`;
@@ -138,14 +132,8 @@ function UpdateProductListButton({
     }
   });
 
-  if (isLoading) {
-    return <div>Loading products...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {String(error)}</div>;
-  }
-
+ 
+  
   return (
     <Dialog open={open} onOpenChange={(isOpen) => setOpen(isOpen)}>
       {productlist.products.length === 0 && (
@@ -195,13 +183,14 @@ function UpdateProductListButton({
               )}
             />
             <div>
-              <div className="mb-4 text-right">
+              <div className="flex justify-between items-center mb-4 text-right">
+                <p className="font-semibold">Välj produkter att lägga till :</p>
                 <Button type="button" onClick={toggleSelectAll}>
                {allSelected ? "Avmarkera alla" : "Markera alla"}
                 </Button>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-              {products.map((product) => (
+              <div className="grid grid-cols-3 gap-4">
+              {tournamentProducts.map((product) => (
                 <div key={product.id} className="flex items-center gap-2">
                   <Checkbox
                     id={`product-${product.id}`}

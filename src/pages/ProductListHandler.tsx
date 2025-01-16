@@ -114,7 +114,7 @@ function ProductListHandler() {
                 key={productlist.id}
                 productlist={productlist}
                 onUpdate={updateProductList}
-                tournamentId={tournamentId || ""}
+               
               >
                 <div
                   className="relative p-2 rounded-xl border-2 cursor-pointer aspect-video h-40 md:h-full
