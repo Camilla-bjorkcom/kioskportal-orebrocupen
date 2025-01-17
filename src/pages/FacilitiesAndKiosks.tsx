@@ -1,7 +1,7 @@
 import AddFacilityButton from "@/components/AddFacilityButton";
 import AddKioskButton from "@/components/AddKioskButton";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import UpdateFacilityButton from "@/components/UpdateFacilityButton";
 import DeleteButton from "@/components/DeleteButton";
 import UpdateKioskButton from "@/components/UpdateKioskButton";
@@ -31,28 +31,36 @@ import { Checkbox } from "@/components/ui/checkbox";
 import EditSelectedKioskButton from "@/components/EditSelectedKioskButton";
 import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
+import { toast } from "@/hooks/use-toast";
 
 function FacilitiesAndKiosks() {
+
+  const queryClient = useQueryClient();
+  
   const [facilities, setFacility] = useState<Facility[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [contactPersons, setContactPersons] = useState<ContactPerson[]>([]);
   const [selectedFacilityId, setSelectedFacilityId] = useState<string | null>(
     null
   );
+
   const [kioskProducts, setKioskProducts] = useState<Product[]>([]);
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
+
+
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [productLists, setProductLists] = useState<ProductList[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
+  
 
   const { isLoading, error, data, isSuccess } = useQuery<Facility[]>({
     queryKey: ["facilities"],
     queryFn: async () => {
-      const response = await fetchWithAuth(`/facilities/${id}`);
+      const response = await fetchWithAuth(`facilities/${tournamentId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch facilities");
       }
@@ -89,7 +97,7 @@ function FacilitiesAndKiosks() {
 
   const CreateFacility = async (facilityName: string) => {
     try {
-      const response = await fetchWithAuth(`/facilities/${id}`, {
+      const response = await fetchWithAuth(`facilities/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ facilityName }),
@@ -97,10 +105,20 @@ function FacilitiesAndKiosks() {
       if (!response.ok) {
         throw new Error("Failed to save facility");
       }
-      const newFacility = await response.json();
-      setFacility((prev) => [...prev, newFacility]);
+      //uppdaterar data
+     queryClient.invalidateQueries({ queryKey: ["facilities"] });
+     toast({
+      className: "bg-green-200",
+      title: "Lyckat",
+      description: `${facilityName} anläggning skapades`,
+    });
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att skapa anläggning.",
+        className: "bg-red-200",
+      });
     }
   };
 
@@ -129,17 +147,27 @@ function FacilitiesAndKiosks() {
     }
   };
 
-  const DeleteFacility = async (id: string) => {
+  const DeleteFacility = async (FId: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/facilities/${id}`, {
+      const response = await fetchWithAuth(`facilities/${tournamentId}/${FId}`, {
         method: "DELETE",
       });
       if (!response.ok) {
         throw new Error("Failed to delete facility");
       }
-      setFacility((prev) => prev.filter((f) => f.id !== id));
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Anläggningen och dess kiosker raderades`,
+      });
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att radera anläggningen och dess kiosker.",
+        className: "bg-red-200",
+      });
     }
   };
 
@@ -202,27 +230,27 @@ function FacilitiesAndKiosks() {
     }
   };
 
-  // const CreateContactPerson = async (
-  //   name: string,
-  //   phone: string,
-  //   role: string,
-  //   facilityId: string
-  // ) => {
-  //   try {
-  //     const response = await fetch("http://localhost:3000/contactPersons", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ name, phone, role, facilityId }),
-  //     });
-  //     if (!response.ok) {
-  //       throw new Error("Failed to save contact person");
-  //     }
-  //     const newContactPerson = await response.json();
-  //     setContactPersons((prev) => [...prev, newContactPerson]);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const CreateContactPerson = async (
+    name: string,
+    phone: string,
+    role: string,
+    facilityId: string
+  ) => {
+    try {
+      const response = await fetch("http://localhost:3000/contactPersons", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, role, facilityId }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to save contact person");
+      }
+      const newContactPerson = await response.json();
+      setContactPersons((prev) => [...prev, newContactPerson]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // const UpdateContactPerson = async (contactPerson: ContactPerson) => {
   //   try {
@@ -380,12 +408,12 @@ function FacilitiesAndKiosks() {
                   onSave={(kioskName) => CreateKiosk(kioskName, facility.id)}
                   facilityId={facility.id}
                 />
-                {/* <AddContactPersonButton
+                <AddContactPersonButton
                   onSave={(name, phone, role) =>
                     CreateContactPerson(name, phone, role, facility.id)
                   }
                   facilityId={facility.id}
-                /> */}
+                />
                 <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
                   <TooltipProvider>
                     <Tooltip>
