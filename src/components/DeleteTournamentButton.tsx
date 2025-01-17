@@ -23,6 +23,9 @@ const DeleteTournamentButton = ({ tournamentId, onDelete }: DeleteTournamentButt
       const response = await fetchWithAuth(`tournaments/${tournamentId}`, {
         method: "DELETE",
       });
+      if (!response) {
+        throw new Error("Failed to fetch");
+      }
       if (!response.ok) {
         throw new Error("Failed to delete tournament");
       }

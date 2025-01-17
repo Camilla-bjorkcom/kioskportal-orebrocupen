@@ -24,6 +24,9 @@ const SettingsPage = () => {
       const response = await fetchWithAuth(
         `tournaments/${id}`
       );
+      if (!response) {
+        throw new Error("Failed to fetch");
+      }
       if (!response.ok) {
         throw new Error("Failed to fetch tournament");
       }
@@ -58,7 +61,9 @@ const SettingsPage = () => {
           body: JSON.stringify(updatedTournament),
         }
       );
-
+      if (!response) {
+        throw new Error("Failed to fetch");
+      }
       if (!response.ok) {
         throw new Error("Failed to update product");
       }
