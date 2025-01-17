@@ -22,6 +22,8 @@ import {
   FormMessage,
 } from "./ui/form";
 import { useState } from "react";
+import { Button } from "./ui/button";
+import { Plus } from "lucide-react";
 
 const formSchema = z.object({
   productlistname: z.string().min(2, {
@@ -57,10 +59,9 @@ function CreateProductListButton({ onSave,tournamentId }: CreateProductListButto
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="flex flex-col p-2 justify-between rounded-xl border-2 border-dashed bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32">
-          <PlusIcon className=" w-32 h-32 mx-auto" />
-          <p className="text-center w-full mb-4 ">Skapa Produktlista</p>
-        </button>
+      <Button className="text-md">
+           Skapa Produktlista <Plus/>
+          </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

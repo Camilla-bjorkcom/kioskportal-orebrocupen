@@ -18,6 +18,8 @@ import {
 
 import {  z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { Button } from "./ui/button";
+import { Plus } from "lucide-react";
 
 const formSchema = z.object({
     productname: z.string().min(2, {
@@ -78,10 +80,9 @@ interface CreateProductButtonProps {
     return (
         <Dialog>
         <DialogTrigger asChild>
-          <button className="flex flex-col p-2 justify-between rounded-xl border-2 border-dashed bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32">
-            <PlusIcon className=" w-32 h-32 mx-auto" />
-            <p className="text-center w-full mb-4 ">Skapa Produkt</p>
-          </button>
+          <Button className="text-md">
+           Skapa Produkt <Plus/>
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>

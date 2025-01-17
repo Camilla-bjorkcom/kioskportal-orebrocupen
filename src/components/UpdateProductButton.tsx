@@ -1,15 +1,19 @@
 import React from 'react'
 import { z } from 'zod';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { Pencil2Icon } from '@radix-ui/react-icons';
+import { Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Input } from './ui/input';
+import {Button} from './ui/button';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
 import { Product } from '@/interfaces';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
+
 
 const formSchema = z.object({
     productname: z.string().min(2, {
@@ -31,13 +35,16 @@ const formSchema = z.object({
 interface UpdateProductButtonProps {
     onUpdate: (updatedProduct : Product ) => void;
     product: Product // Callback för att spara produktnamn
+    onDelete: (id:string) => void;
   }
 
   
 
-function UpdateProductButton({onUpdate, product} : UpdateProductButtonProps) {
+function UpdateProductButton({onUpdate, product, onDelete} : UpdateProductButtonProps) {
 
     const [updateMessage, setUpdateMessage] = useState<string | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const productName = product.productname
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -64,14 +71,21 @@ function UpdateProductButton({onUpdate, product} : UpdateProductButtonProps) {
         setUpdateMessage("Produkten har uppdaterats!");
        
       }
+      const handleDelete = () => {
+        onDelete(product.id); // Använd `onDelete` för att radera produkten
+        setIsDialogOpen(false); // Stäng dialogen efter borttagning
+      };
 
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
     <DialogTrigger asChild>
-    <span className="flex flex-col hover:text-orange-n">
-    <Pencil2Icon className="w-8 h-6" />
+    
+
+    <span className="flex border-2 border-transparent hover:border-solid hover:border-1 rounded-md  hover:text-white hover:bg-black">
+    <p className='ml-2'>{productName}</p>
   </span>
+ 
     </DialogTrigger>
     <DialogContent>
       <DialogHeader>
@@ -126,15 +140,44 @@ function UpdateProductButton({onUpdate, product} : UpdateProductButtonProps) {
             {updateMessage && (
             <div className="text-green-600 text-sm mt-4">{updateMessage}</div>
             )}
-        <div className="flex justify-end">
-          <button  onClick={(e) => {
+        <div className="flex justify-between">
+         
+             <AlertDialog>
+                          <AlertDialogTrigger>
+                            <Button  className="border border-solid rounded-xl p-2 shadow hover:bg-red-600 hover:text-white">
+                              <p>Radera produkt</p>
+                              </Button>
+                          </AlertDialogTrigger>
+                        
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Vill du radera produkten?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Den här åtgärden kan inte ångras. Produkten kommer
+                              att tas bort permanent.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={handleDelete}
+                            >
+                              Radera
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                      <Button  onClick={(e) => {
                 e.stopPropagation();
                 
                 }} 
-            type="submit" className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"  >Spara ändringar</button>
+            type="submit" className=" border border-solid hover:bg-secondary hover:text-black rounded-xl p-2 shadow" >Spara ändringar</Button>
         </div>         
       </form>
       </Form>
+     
     </DialogContent>
   </Dialog>
 )
