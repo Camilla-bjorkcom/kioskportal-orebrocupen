@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tournament, UpdateTournament } from "@/interfaces/tournament";
 import UpdateTournamentButton from "@/components/UpdateTournamentButton";
 import { toast } from "@/hooks/use-toast";
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
 
 const SettingsPage = () => {
   const auth = useAuth();
@@ -20,8 +21,8 @@ const SettingsPage = () => {
       if (!id) {
         throw new Error("No tournament ID provided");
       }
-      const response = await fetch(
-        `https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments/${id}`
+      const response = await fetchWithAuth(
+        `tournaments/${id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch tournament");
@@ -49,8 +50,8 @@ const SettingsPage = () => {
 
   const UpdateTournament = async (updatedTournament: UpdateTournament) => {
     try {
-      const response = await fetch(
-        `https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments/${id}`,
+      const response = await fetchWithAuth(
+        `tournaments/${id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
