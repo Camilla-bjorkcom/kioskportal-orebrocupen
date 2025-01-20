@@ -34,9 +34,8 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { toast } from "@/hooks/use-toast";
 
 function FacilitiesAndKiosks() {
-
   const queryClient = useQueryClient();
-  
+
   const [facilities, setFacility] = useState<Facility[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [contactPersons, setContactPersons] = useState<ContactPerson[]>([]);
@@ -48,14 +47,12 @@ function FacilitiesAndKiosks() {
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
 
-
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [productLists, setProductLists] = useState<ProductList[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
-  
 
   const { isLoading, error, data, isSuccess } = useQuery<Facility[]>({
     queryKey: ["facilities"],
@@ -68,7 +65,7 @@ function FacilitiesAndKiosks() {
         throw new Error("Failed to fetch facilities");
       }
       const dataResponse = await response.json();
-      
+
       return dataResponse || [];
     },
   });
@@ -112,12 +109,12 @@ function FacilitiesAndKiosks() {
         throw new Error("Failed to save facility");
       }
       //uppdaterar data
-     queryClient.invalidateQueries({ queryKey: ["facilities"] });
-     toast({
-      className: "bg-green-200",
-      title: "Lyckat",
-      description: `Anläggning ${facilityName} skapades`,
-    });
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Anläggning ${facilityName} skapades`,
+      });
     } catch (error) {
       console.error(error);
       toast({
@@ -130,13 +127,17 @@ function FacilitiesAndKiosks() {
 
   const UpdateFacility = async (facility: Facility) => {
     try {
-      const response = await fetchWithAuth(`facilities/${tournamentId}/${facility.id}`, {
-        method: "PUT",
+      const response = await fetchWithAuth(
+        `facilities/${tournamentId}/${facility.id}`,
+        {
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             facilityName: facility.facilityName,
+            operation: "updateFacility",
           }),
-      });
+        }
+      );
       if (!response) {
         toast({
           title: "Fel",
@@ -144,7 +145,6 @@ function FacilitiesAndKiosks() {
           className: "bg-red-200",
         });
         throw new Error("Failed to fetch");
-        
       }
       if (!response.ok) {
         toast({
@@ -162,7 +162,7 @@ function FacilitiesAndKiosks() {
       });
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      }, 1500);   
+      }, 1500);
     } catch (error) {
       console.error(error);
       toast({
@@ -175,9 +175,12 @@ function FacilitiesAndKiosks() {
 
   const DeleteFacility = async (FId: string) => {
     try {
-      const response = await fetchWithAuth(`facilities/${tournamentId}/${FId}`, {
-        method: "DELETE",
-      });
+      const response = await fetchWithAuth(
+        `facilities/${tournamentId}/${FId}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!response) {
         throw new Error("Failed to fetch");
       }
@@ -191,14 +194,13 @@ function FacilitiesAndKiosks() {
       });
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      }, 1500); 
-      
-     
+      }, 1500);
     } catch (error) {
       console.error(error);
       toast({
         title: "Fel",
-        description: "Misslyckades med att radera anläggningen och dess kiosker.",
+        description:
+          "Misslyckades med att radera anläggningen och dess kiosker.",
         className: "bg-red-200",
       });
     }
@@ -270,79 +272,158 @@ function FacilitiesAndKiosks() {
     facilityId: string
   ) => {
     try {
-      const response = await fetch("http://localhost:3000/contactPersons", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, role, facilityId }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to save contact person");
+      const response = await fetchWithAuth(
+        `facilities/${tournamentId}/${facilityId}/contactpersons`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            phone,
+            role,
+            facilityId,
+            operation: "createContactPerson",
+          }),
+        }
+      );
+
+      if (!response) {
+        toast({
+          title: "Fel",
+          description:
+            "Misslyckades med att lägga till kontaktperson till anläggningen.",
+          className: "bg-red-200",
+        });
+        throw new Error("Failed to fetch");
       }
-      const newContactPerson = await response.json();
-      setContactPersons((prev) => [...prev, newContactPerson]);
+      if (!response.ok) {
+        toast({
+          title: "Fel",
+          description:
+            "Misslyckades med att lägga till kontaktperson till anläggningen.",
+          className: "bg-red-200",
+        });
+        throw new Error("Failed to update facility");
+      }
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Kontaktperson lades till`,
+      });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      }, 1500);
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att uppdatera anläggningen.",
+        className: "bg-red-200",
+      });
     }
   };
 
-  // const UpdateContactPerson = async (contactPerson: ContactPerson) => {
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:3000/contactPersons/${contactPerson.id}`,
-  //       {
-  //         method: "PUT",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify({
-  //           id: contactPerson.id,
-  //           name: contactPerson.name,
-  //           phone: contactPerson.phone,
-  //           role: contactPerson.role,
-  //           facilityId: contactPerson.facilityId,
-  //           tournamentId: contactPerson.tournamentId,
-  //         }),
-  //       }
-  //     );
-  //     if (!response.ok) {
-  //       throw new Error("Failed to update contact person");
-  //     }
-  //     const updatedContactPerson = await response.json();
-  //     setContactPersons((prev) =>
-  //       prev.map((f) =>
-  //         f.id === updatedContactPerson.id ? updatedContactPerson : f
-  //       )
-  //     );
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const UpdateContactPerson = async (contactPerson: ContactPerson) => {
+    try {
+      const response = await fetchWithAuth(
+        `facilities/${tournamentId}/${contactPerson.facilityId}/contactpersons`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: contactPerson.id,
+            name: contactPerson.name,
+            phone: contactPerson.phone,
+            role: contactPerson.role,
+            facilityId: contactPerson.facilityId,
+            operation: "updateContactPerson",
+          }),
+        }
+      );
+      if (!response) {
+        toast({
+          title: "Fel",
+          description: "Misslyckades med att uppdatera kontaktperson.",
+          className: "bg-red-200",
+        });
+        throw new Error("Failed to update contact person");
+      }
+      if (!response.ok) {
+        toast({
+          title: "Fel",
+          description: "Misslyckades med att uppdatera kontaktperson.",
+          className: "bg-red-200",
+        });
+        throw new Error("Failed to update contact person");
+      }
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Kontaktperson uppdaterades`,
+      });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      }, 1500);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att uppdatera kontaktperson.",
+        className: "bg-red-200",
+      });
+    }
+  };
 
-  // const DeleteContactPerson = async (id: string) => {
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:3000/contactPersons/${id}`,
-  //       {
-  //         method: "DELETE",
-  //       }
-  //     );
-  //     if (!response.ok) {
-  //       throw new Error("Failed to delete contact person");
-  //     }
-  //     setContactPersons((prev) => prev.filter((c) => c.id !== id));
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const DeleteContactPerson = async (
+    contactPersonId: string,
+    facilityId: string
+  ) => {
+    try {
+      const response = await fetchWithAuth(
+        `facilities/${tournamentId}/${facilityId}/contactpersons`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: contactPersonId,
+            operation: "deleteContactPerson",
+          }),
+        }
+      );
+      if (!response) {
+        toast({
+          title: "Fel",
+          description: "Misslyckades med att radera kontaktperson.",
+          className: "bg-red-200",
+        });
+        throw new Error("Failed to fetch");
+      }
+      if (!response.ok) {
+        toast({
+          title: "Fel",
+          description: "Misslyckades med att radera kontaktperson.",
+          className: "bg-red-200",
+        });
+        throw new Error("Failed to update facility");
+      }
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Kontaktperson raderades`,
+      });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      }, 1500);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att radera kontaktperson.",
+        className: "bg-red-200",
+      });
+    }
+  };
 
-
-  
-  const propsByFacility = data?.map((facility) => ({
-    ...facility,
-    kiosks: kiosks.filter((kiosk) => kiosk.facilityId === facility.id) || [], 
-    contactPersons: contactPersons.filter((contactPerson) => contactPerson.facilityId === facility.id) || [],
-  }));
-  
-  
-  
   const handleSubmit = (open: boolean) => {
     if (open && kiosksForUpdate.length === 0) {
       alert("Du måste välja minst en kiosk!");
@@ -397,7 +478,6 @@ function FacilitiesAndKiosks() {
     setKiosksforUpdate([]);
   };
 
-  
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -595,13 +675,13 @@ function FacilitiesAndKiosks() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger>
-                                {/* <UpdateContactPersonButton
+                                <UpdateContactPersonButton
                                   onSave={(updatedContactPerson) =>
                                     UpdateContactPerson(updatedContactPerson)
                                   }
                                   contactPerson={contactPerson}
                                   onUpdateContactPersonClick={() => {}}
-                                /> */}
+                                />
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>Redigera kontaktperson</p>
@@ -611,13 +691,16 @@ function FacilitiesAndKiosks() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger>
-                                {/* <DeleteButton
+                                <DeleteButton
                                   id={contactPerson.id}
                                   type="ContactPerson"
                                   onDelete={() =>
-                                    DeleteContactPerson(contactPerson.id)
+                                    DeleteContactPerson(
+                                      contactPerson.id,
+                                      facility.id
+                                    )
                                   }
-                                /> */}
+                                />
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>Radera kontaktperson</p>
