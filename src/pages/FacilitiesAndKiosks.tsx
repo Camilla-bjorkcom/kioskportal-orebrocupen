@@ -130,26 +130,46 @@ function FacilitiesAndKiosks() {
 
   const UpdateFacility = async (facility: Facility) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/facilities/${facility.id}`,
-        {
-          method: "PUT",
+      const response = await fetchWithAuth(`facilities/${tournamentId}/${facility.id}`, {
+        method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            id: facility.id,
             facilityName: facility.facilityName,
           }),
-        }
-      );
+      });
+      if (!response) {
+        toast({
+          title: "Fel",
+          description: "Misslyckades med att uppdatera anläggningen.",
+          className: "bg-red-200",
+        });
+        throw new Error("Failed to fetch");
+        
+      }
       if (!response.ok) {
+        toast({
+          title: "Fel",
+          description: "Misslyckades med att uppdatera anläggningen.",
+          className: "bg-red-200",
+        });
         throw new Error("Failed to update facility");
       }
-      const updatedFacility = await response.json();
-      setFacility((prev) =>
-        prev.map((f) => (f.id === updatedFacility.id ? updatedFacility : f))
-      );
+
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Anläggningen uppdaterades`,
+      });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      }, 1500);   
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att uppdatera anläggningen.",
+        className: "bg-red-200",
+      });
     }
   };
 
@@ -171,7 +191,7 @@ function FacilitiesAndKiosks() {
       });
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      }, 1500); // 3000 ms = 3 sekunders delay
+      }, 1500); 
       
      
     } catch (error) {
