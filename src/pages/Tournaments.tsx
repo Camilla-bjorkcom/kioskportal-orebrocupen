@@ -16,7 +16,9 @@ function Tournaments() {
     queryKey: ["tournaments"],
     queryFn: async () => {
       const response = await fetchWithAuth("/tournaments");
-
+      if (!response) {
+        throw new Error("Failed to fetch");
+      }
       if (!response.ok) {
         throw new Error("Failed to fetch tournaments");
       }
@@ -44,6 +46,9 @@ function Tournaments() {
           body: JSON.stringify({ tournamentName, startDate, endDate }),
         }
       );
+      if (!response) {
+        throw new Error("Failed to fetch");
+      }
       if (!response.ok) {
         throw new Error("Failed to save tournament");
       }

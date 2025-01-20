@@ -4,5 +4,4 @@ export interface ContactPerson {
     facilityId: string;
     phone: string;
     role: string;
-    tournamentId: string;
   }

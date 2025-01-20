@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "./ui/input";
 import {
   Dialog,
@@ -11,7 +9,6 @@ import {
 } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
 import { z } from "zod";
 import {
   Form,
@@ -24,9 +21,8 @@ import {
 import { useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
 import { Toaster } from "./ui/toaster";
-import { toast } from "@/hooks/use-toast";
 import { Button } from "./ui/button";
-import { Facility } from '@/interfaces';
+import { Facility } from "@/interfaces";
 const formSchema = z.object({
   facilityName: z.string().min(2, {
     message: "Anläggnings namn måste ha minst 2 bokstäver",
@@ -38,8 +34,6 @@ interface UpdateFacilityButtonProps {
   onSave: (facility: Facility) => void;
 }
 
-
-
 const UpdateFacilityButton = ({
   facility,
   onSave,
@@ -49,18 +43,18 @@ const UpdateFacilityButton = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      facilityName: facility.facilityname,
+      facilityName: facility.facilityName,
     },
   });
 
   useEffect(() => {
     if (facility) {
-      form.reset({ facilityName: facility.facilityname });
+      form.reset({ facilityName: facility.facilityName });
     }
   }, [facility, form]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const updatedFacility = { ...facility, facilityname: values.facilityName };
+    const updatedFacility = { ...facility, facilityName: values.facilityName };
     onSave(updatedFacility);
     setOpen(false);
     form.reset();
@@ -102,13 +96,6 @@ const UpdateFacilityButton = ({
                 <Button
                   type="submit"
                   className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
-                  onClick={() => {
-                    toast({
-                      className:"bg-orange-200",
-                      title: "Ändringen sparades",
-                      description: "Anläggningen har uppdaterats",
-                    });
-                  }}
                 >
                   Spara
                 </Button>
