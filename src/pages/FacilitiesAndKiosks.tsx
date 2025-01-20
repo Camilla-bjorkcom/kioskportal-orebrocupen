@@ -116,7 +116,7 @@ function FacilitiesAndKiosks() {
      toast({
       className: "bg-green-200",
       title: "Lyckat",
-      description: `${facilityName} anläggning skapades`,
+      description: `Anläggning ${facilityName} skapades`,
     });
     } catch (error) {
       console.error(error);
@@ -158,19 +158,22 @@ function FacilitiesAndKiosks() {
       const response = await fetchWithAuth(`facilities/${tournamentId}/${FId}`, {
         method: "DELETE",
       });
-      console.log(`THIS IS THE RESPOSNE ${response}`);
       if (!response) {
         throw new Error("Failed to fetch");
       }
       if (!response.ok) {
         throw new Error("Failed to delete facility");
       }
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
       toast({
         className: "bg-green-200",
         title: "Lyckat",
         description: `Anläggningen och dess kiosker raderades`,
       });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      }, 1500); // 3000 ms = 3 sekunders delay
+      
+     
     } catch (error) {
       console.error(error);
       toast({
