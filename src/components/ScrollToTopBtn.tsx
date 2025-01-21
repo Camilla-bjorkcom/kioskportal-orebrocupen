@@ -20,7 +20,7 @@ const ScrolltoTopBtn = () => {
 
     return (
         <button
-            className={`hover:bg-gray-200 fixed bottom-6 right-5 h-16 w-16 z-[999] text-lg border-none rounded-2xl bg-gray-100 transition ease-in-out duration-300 delay-100 ${position < 100 ? 'hidden' : ''}`}
+            className={`hover:bg-gray-100 fixed bottom-6 right-5 h-16 w-16 z-[999] text-lg border-none rounded-2xl bg-gray-200 transition ease-in-out duration-300 delay-100 ${position < 100 ? 'hidden' : ''}`}
             onClick={scrollToTop}
         >
             <ArrowUp className='place-self-center'/>
