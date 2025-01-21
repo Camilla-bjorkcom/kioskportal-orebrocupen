@@ -513,7 +513,7 @@ function FacilitiesAndKiosks() {
             <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
               <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
                 <label className="basis-1/4 font-medium hover:text-slate-800">
-                  {facility.facilityName}
+                  {facility.facilityName} 
                 </label>
                 <AddKioskButton
                   onSave={(kioskName) => CreateKiosk(kioskName, facility.id)}
