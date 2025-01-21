@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { Tournament } from "@/interfaces";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
+import WeatherComponent from "@/components/WeatherComponent";
 
 function Dashboard() {
   const { id } = useParams<{ id: string }>();
@@ -53,7 +54,7 @@ function Dashboard() {
 
   return (
     <div className="container mx-auto px-5">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between">
         <h2 className="mt-8 text-2xl pb-2">Din översikt</h2>
         <div>
           <p className="text-s mt-2">
@@ -72,6 +73,9 @@ function Dashboard() {
               Turneringen har redan börjat eller är avslutad.
             </p>
           )}
+          <div className="mt-4 border-t border-gray-300 pt-4">
+            <WeatherComponent lat={59.2753} lon={15.2134} />
+          </div>
         </div>
       </div>
     </div>
