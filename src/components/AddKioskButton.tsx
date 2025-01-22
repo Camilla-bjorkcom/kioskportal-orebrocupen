@@ -35,7 +35,6 @@ const formSchema = z.object({
 interface AddKioskButtonProps {
   onSave: (kioskName: string, facilityId: string) => void; // Callback för att spara kiosknamn
   facilityId: string;
- 
 }
 
 function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
@@ -45,12 +44,10 @@ function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       kioskName: "",
-   
     },
   });
 
-   function onSubmit(values: z.infer<typeof formSchema>) {
-   
+  function onSubmit(values: z.infer<typeof formSchema>) {
     onSave(values.kioskName, facilityId); // Sparar kiosken
     setOpen(false); // Stänger dialogen
     form.reset(); // Återställer formuläret
