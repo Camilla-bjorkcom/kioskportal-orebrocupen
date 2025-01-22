@@ -7,4 +7,6 @@ export interface Kiosk {
   products: Product[] | []; 
   facilityId: string;
   facilityName: string;
+  inventoryDate: string;
 }
+
