@@ -202,7 +202,6 @@ function FacilitiesAndKiosks() {
     }
   };
 
-  
   const CreateContactPerson = async (
     name: string,
     phone: string,
@@ -362,24 +361,46 @@ function FacilitiesAndKiosks() {
     }
   };
 
-
   const CreateKiosk = async (kioskName: string, facilityId: string) => {
     try {
-      const response = await fetch("http://localhost:3000/kiosks", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          kioskName,
-          facilityId,
-          products: kioskProducts,
-        }),
-      });
-      if (!response.ok) {
+      const response = await fetchWithAuth(
+        `facilities/${tournamentId}/${facilityId}/kiosks`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            kioskName: kioskName,
+          }),
+        }
+      );
+      if (!response) {
+        toast({
+          title: "Fel",
+          description: "Misslyckades med att radera kontaktperson.",
+          className: "bg-red-200",
+        });
         throw new Error("Failed to save kiosk");
       }
-      const newKiosk = await response.json();
-      setKiosks((prev) => [...prev, newKiosk]);
+      if (!response.ok) {
+        toast({
+          title: "Fel",
+          description: "Misslyckades med att radera kontaktperson.",
+          className: "bg-red-200",
+        });
+        throw new Error("Failed to save kiosk");
+      }
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: ` ${kioskName} skapades`,
+      });
     } catch (error) {
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att radera kontaktperson.",
+        className: "bg-red-200",
+      });
       console.error(error);
     }
   };
