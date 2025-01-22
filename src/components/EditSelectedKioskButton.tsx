@@ -1,33 +1,50 @@
-import React, { useEffect, useState } from 'react'
-import { Kiosk, Product, ProductList } from '@/interfaces';
-import { useQuery } from '@tanstack/react-query';
-import { Button } from './ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Checkbox } from './ui/checkbox';
-import { Pencil2Icon } from '@radix-ui/react-icons';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import React, { useEffect, useState } from "react";
+import { Kiosk, Product, ProductList } from "@/interfaces";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Checkbox } from "./ui/checkbox";
+import { Pencil2Icon } from "@radix-ui/react-icons";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
-import { Input } from './ui/input';
-import { Toaster } from './ui/toaster';
-import { toast } from '@/hooks/use-toast';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { Input } from "./ui/input";
+import { Toaster } from "./ui/toaster";
+import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-    kioskName: z.string().min(2, {
-      message: "Kiosk namn måste ha minst 2 bokstäver",
-    }),
-  });
-
-
+  kioskName: z.string().min(2, {
+    message: "Kiosk namn måste ha minst 2 bokstäver",
+  }),
+});
 
 interface EditSelectedKioskButtonProps {
   kioskForEdit: Kiosk;
   productLists: ProductList[];
   products: Product[];
-  onKioskUpdated: (updatedkiosk: Kiosk) =>void;
-  
+  onKioskUpdated: (updatedkiosk: Kiosk) => void;
+
   onEditClick: (kiosk: Kiosk) => void;
   onSave: (kiosk: Kiosk) => void;
   onUpdateKioskClick: () => void;
@@ -39,13 +56,12 @@ function EditSelectedKioskButton({
   onKioskUpdated,
   onEditClick,
   onSave,
-  onUpdateKioskClick
+  onUpdateKioskClick,
 }: EditSelectedKioskButtonProps) {
   const [open, setOpen] = useState(false);
-  const [selectedProductListId, setSelectedProductListId] = useState<string>('');
+  const [selectedProductListId, setSelectedProductListId] =
+    useState<string>("");
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-
-   
 
   const handleDialogOpen = async (isOpen: boolean) => {
     if (isOpen) {
@@ -54,7 +70,7 @@ function EditSelectedKioskButton({
       setOpen(true);
     } else {
       setOpen(false);
-      setSelectedProductListId('');
+      setSelectedProductListId("");
       setSelectedProducts([]);
     }
   };
@@ -65,35 +81,44 @@ function EditSelectedKioskButton({
       setSelectedProductListId(value);
       setSelectedProducts(selectedList.products);
     } else {
-      setSelectedProductListId('');
+      setSelectedProductListId("");
       setSelectedProducts([]);
     }
   };
 
   const toggleSelectAll = () => {
-    if (products.every((product) => selectedProducts.some((p) => p.id === product.id))) {
+    if (
+      products.every((product) =>
+        selectedProducts.some((p) => p.id === product.id)
+      )
+    ) {
       setSelectedProducts([]); // Avmarkera alla
     } else {
       setSelectedProducts(products); // Markera alla
     }
   };
 
-  const allSelected = products.length > 0 && products.every((product) =>
-    selectedProducts.some((p) => p.id === product.id)
-  );
+  const allSelected =
+    products.length > 0 &&
+    products.every((product) =>
+      selectedProducts.some((p) => p.id === product.id)
+    );
 
   const editKiosk = async (kioskForEdit: Kiosk) => {
     try {
-      const response = await fetch(`http://localhost:3000/kiosks/${kioskForEdit.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: kioskForEdit.id,
-          products: selectedProducts,
-          kioskName: kioskForEdit.kioskName,
-          facilityId: kioskForEdit.facilityId,
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:3000/kiosks/${kioskForEdit.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: kioskForEdit.id,
+            products: selectedProducts,
+            kioskName: kioskForEdit.kioskName,
+            facilityId: kioskForEdit.facilityId,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update kiosk");
@@ -112,29 +137,27 @@ function EditSelectedKioskButton({
   if (!kioskForEdit || !productLists || !products) {
     return null; // Rendera inte om data saknas
   }
-  
 
-   const form = useForm<z.infer<typeof formSchema>>({
-      resolver: zodResolver(formSchema),
-      defaultValues: {
-        kioskName: kioskForEdit.kioskName,
-      },
-    });
-    useEffect(() => {
-      if (kioskForEdit) {
-        form.reset({ kioskName: kioskForEdit.kioskName });
-      }
-    }, [kioskForEdit, form]);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      kioskName: kioskForEdit.kioskName,
+    },
+  });
+  useEffect(() => {
+    if (kioskForEdit) {
+      form.reset({ kioskName: kioskForEdit.kioskName });
+    }
+  }, [kioskForEdit, form]);
 
-     function onSubmit(values: z.infer<typeof formSchema>) {
-        onUpdateKioskClick();
-        const updatedKiosk = { ...kioskForEdit, kioskName: values.kioskName };
-        onSave(updatedKiosk); 
-        setOpen(false);
-        form.reset();
-      }
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    onUpdateKioskClick();
+    const updatedKiosk = { ...kioskForEdit, kioskName: values.kioskName };
+    onSave(updatedKiosk);
+    setOpen(false);
+    form.reset();
+  }
   return (
-    
     <Dialog open={open} onOpenChange={handleDialogOpen}>
       <Toaster />
       <DialogTrigger>
@@ -150,42 +173,40 @@ function EditSelectedKioskButton({
       <DialogContent className="w-full max-w-4xl">
         <DialogHeader>
           <DialogTitle className="text-lg">
-            Vald kiosk: {kioskForEdit ? kioskForEdit.kioskName : "Ingen kiosk vald"}
+            Vald kiosk:{" "}
+            {kioskForEdit ? kioskForEdit.kioskName : "Ingen kiosk vald"}
           </DialogTitle>
           <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="kioskName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Namn på kiosk</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Skriv in kiosks namn" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow" onClick={() => {
-                  toast({
-                    className: "bg-orange-200",
-                    title: "Ändringen sparades",
-                    description: "Kiosken har uppdaterats",
-                  });
-                }}
-              >
-                Spara
-              </Button>
-            </div>
-          </form>
-        </Form>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="kioskName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Namn på kiosk</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Skriv in kiosks namn" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end">
+                <Button
+                  type="submit"
+                  className=" border border-solid hover:bg-slate-800 hover:text-white p-2  shadow"
+                >
+                  Uppdatera kiosknamn
+                </Button>
+              </div>
+            </form>
+          </Form>
         </DialogHeader>
 
-        <Select value={selectedProductListId} onValueChange={handleProductListChange}>
+        <Select
+          value={selectedProductListId}
+          onValueChange={handleProductListChange}
+        >
           <SelectTrigger className="w-auto">
             <SelectValue placeholder="Lägg till produkter från produktlista" />
           </SelectTrigger>
@@ -218,8 +239,11 @@ function EditSelectedKioskButton({
                   )
                 }
               />
-              <label htmlFor={`product-${product.id}`} className="font-medium cursor-pointer">
-                {product.productname}
+              <label
+                htmlFor={`product-${product.id}`}
+                className="font-medium cursor-pointer"
+              >
+                {product.productName}
               </label>
             </div>
           ))}
@@ -230,7 +254,6 @@ function EditSelectedKioskButton({
         </Button>
       </DialogContent>
     </Dialog>
- 
   );
 }
 
