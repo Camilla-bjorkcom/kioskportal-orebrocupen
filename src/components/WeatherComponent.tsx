@@ -65,7 +65,6 @@ const WeatherComponent: React.FC<WeatherComponentProps> = ({ lat, lon }) => {
   if (loading) return <p>Hämtar väderdata...</p>;
   if (error) return <p>Fel: {error}</p>;
 
-  // Hämta relevant data
   const temperature =
     weatherData?.properties?.timeseries[0]?.data?.instant?.details
       ?.air_temperature;
@@ -76,7 +75,6 @@ const WeatherComponent: React.FC<WeatherComponentProps> = ({ lat, lon }) => {
     weatherData?.properties?.timeseries[0]?.data?.next_1_hours?.details
       ?.precipitation_amount;
 
-  // Översättning av symbol_code till text
   const weatherDescriptions = {
     clearsky: "Soligt",
     cloudy: "Molnigt",
