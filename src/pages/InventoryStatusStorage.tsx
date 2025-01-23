@@ -81,9 +81,12 @@ const mockStorageInventory: StorageInventory[] = [
   },
 ];
 
-const mockdata = true;
 
-const InventoryStatusStorage = () => {;
+
+const InventoryStatusStorage = () => {
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const mockdata = true;
+
   const { data, isLoading, error, isSuccess } = useQuery<StorageInventory[]>({
     queryKey: ["inventoryList"],
     queryFn: async () => {
@@ -91,7 +94,6 @@ const InventoryStatusStorage = () => {;
         const mockData = mockStorageInventory
         return mockData;
       }
-
 
       const response = await fetchWithAuth(`tournaments/{tid}/storage`);
       if(!response){
@@ -115,7 +117,7 @@ const InventoryStatusStorage = () => {;
   if (error) {
     return <div>Error: {String(error)}</div>;
   }
- const [expandedItems, setExpandedItems] = useState<string[]>([]);
+ 
  
   const toggleExpandAll = () => {
     if (!isSuccess || !data) {
