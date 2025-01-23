@@ -114,7 +114,9 @@ const InventoryStatusList = () => {
     if (expandedItems.length === 0) {
       const allItems = data.map((facility) => facility.id);
       setExpandedItems(allItems);
-      setInventoryStatus([]);
+      setTimeout(() => {
+        setInventoryStatus([]);
+      }, 2000); 
     } else {
       setExpandedItems([]);
     }
@@ -129,9 +131,17 @@ const InventoryStatusList = () => {
 
   const getKioskClasses = (id: string) => {
     return kioskStatus[id]?.some((x) => x.hasNewData)
-      ? "text-orange-400 font-bold"
-      : "font-medium";
+      ? "text-orange-400 font-bold transition-all delay-150 duration-300 ease-in-out"
+      : "font-medium transition-all delay-150 duration-300 ease-in-out"; 
   };
+  
+
+  const getFacilityClasses = (id: string) => {
+    return facilityStatus[id]?.some((x) => x.hasNewData)
+      ? "ml-auto mr-5 bg-orange-400 w-4 h-4 rounded-full opacity-100 transition-opacity delay-150 duration-500 ease-in-out"
+      : "ml-auto mr-5 bg-orange-400 w-4 h-4 rounded-full opacity-0 transition-opacity delay-150 duration-500 ease-in-out";
+  };
+  
 
   return (
     <div className=" 2xl:w-3/4 w-full ml-2">
@@ -159,15 +169,11 @@ const InventoryStatusList = () => {
                   setInventoryStatus((prev) =>
                     prev.filter((item) => item.facilityId !== id)
                   );
-                }, 1500)
+                }, 2000)
               }
             >
               <p>{facilityName}</p>
-              {facilityStatus[id]?.some((x) => x.hasNewData) ? (
-                <div className="ml-auto mr-5 bg-orange-400 w-4 h-4 rounded-full"></div>
-              ) : (
-                <p></p>
-              )}
+              <div className={`${getFacilityClasses(id)}`}></div>
             </AccordionTrigger>
             <AccordionContent>
               {sortKiosksByInventoryDate(kiosks).map((kiosk) => (
