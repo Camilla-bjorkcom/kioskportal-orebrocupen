@@ -1542,7 +1542,7 @@ const InventoryStatusList = () => {
     setInventoryStatus(newInventory);
   };
 
-  const [hasNewData, setHasNewData] = useState(false);
+  // const [hasNewData, setHasNewData] = useState(false);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
   function calculateTotal(product: Product) {
@@ -1563,25 +1563,10 @@ const InventoryStatusList = () => {
     });
   }
 
-  // Funktion för att gruppera kiosker per facility
-  // const groupByFacility = (data: InventoryStatusKiosks[]) => {
-  //   return data.reduce((acc, kiosk) => {
-  //     if (!acc[kiosk.facilityId]) {
-  //       acc[kiosk.facilityId] = {
-  //         facilityName: kiosk.facilityName,
-  //         kiosks: [],
-  //       };
-  //     }
-  //     acc[kiosk.facilityId].kiosks.push(kiosk);
-  //     return acc;
-  //   }, {} as Record<string, { facilityName: string; kiosks: InventoryStatusKiosks[] }>);
-  // };
-
-  // const groupedData = groupByFacility(data);
-
   const facilityStatus = groupBy(inventoryStatus, (x) => x.facilityId);
 
-  console.log(facilityStatus);
+  console.log(`facilityStatus: ${facilityStatus}`);
+  
   const sortKiosksByInventoryDate = (kiosks: Kiosk[]) => {
     return kiosks.sort((a, b) => {
       const dateA = new Date(a.inventoryDate!);
@@ -1591,13 +1576,19 @@ const InventoryStatusList = () => {
   };
 
   const toggleExpandAll = () => {
+    if (!isSuccess || !data) {
+      return; // Gör inget om isSuccess är false eller data saknas
+    }
     if (expandedItems.length === 0) {
-      const allItems = Object.keys(data!).map((id) => `facility-${id}`);
+      const allItems = data.map((facility) => facility.id);
       setExpandedItems(allItems);
+      setInventoryStatus([])
     } else {
       setExpandedItems([]);
     }
   };
+
+  console.log(`ExpandedItems: ${expandedItems}`);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -1622,16 +1613,16 @@ const InventoryStatusList = () => {
         {data.map(({ id, facilityName, kiosks }) => (
           <AccordionItem
             key={id}
-            value={`facility-${id}`}
+            value={id}
             className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50"
           >
-            <AccordionTrigger className="text-lg font-medium hover:text-slate-800">
+            <AccordionTrigger className="text-lg font-medium hover:text-slate-800" onClick={() => setInventoryStatus([])}>
               <p>{facilityName}</p>
-              <p className="ml-auto mr-5">
-                {facilityStatus[id]?.some((x) => x.hasNewData)
-                  ? "has new"
-                  : "no"}
-              </p>
+              {facilityStatus[id]?.some((x) => x.hasNewData) ? (
+                <div className="ml-auto mr-5 bg-orange-400 w-4 h-4 rounded-full"></div> 
+              ) : (
+                <p></p>
+              )}
             </AccordionTrigger>
             <AccordionContent>
               {sortKiosksByInventoryDate(kiosks).map((kiosk) => (
