@@ -80,7 +80,7 @@ export function AppSidebar({ id }: { id?: string }) {
       subitems: [
         { title: "Inventera lager", url: `/inventorystorage/${id}` },
         { title: "Visa kioskernas inventeringar", url: `/inventorystatus/${id}` },
-        { title: "Visa lagrets inventering", url: `/inventorystatusstorage/${id}` },
+        { title: "Visa lagrets inventeringar", url: `/inventorystatusstorage/${id}` },
       ],
     },
     {
