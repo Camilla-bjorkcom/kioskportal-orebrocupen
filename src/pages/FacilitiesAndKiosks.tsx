@@ -459,7 +459,7 @@ function FacilitiesAndKiosks() {
       toast({
         className: "bg-green-200",
         title: "Lyckat",
-        description: ` Kiosk raderades`,
+        description: `Kiosk raderades`,
       });
     } catch (error) {
       toast({

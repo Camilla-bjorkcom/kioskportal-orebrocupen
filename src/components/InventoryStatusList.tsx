@@ -1564,9 +1564,10 @@ const InventoryStatusList = () => {
   }
 
   const facilityStatus = groupBy(inventoryStatus, (x) => x.facilityId);
+  const kioskStatus = groupBy(inventoryStatus, (x) => x.id);
 
   console.log(`facilityStatus: ${facilityStatus}`);
-  
+
   const sortKiosksByInventoryDate = (kiosks: Kiosk[]) => {
     return kiosks.sort((a, b) => {
       const dateA = new Date(a.inventoryDate!);
@@ -1582,7 +1583,7 @@ const InventoryStatusList = () => {
     if (expandedItems.length === 0) {
       const allItems = data.map((facility) => facility.id);
       setExpandedItems(allItems);
-      setInventoryStatus([])
+      setInventoryStatus([]);
     } else {
       setExpandedItems([]);
     }
@@ -1596,6 +1597,14 @@ const InventoryStatusList = () => {
   if (!isSuccess) {
     return <div>Error: {String(error)}</div>;
   }
+
+  const getKioskClasses = (id: string) => {
+    return kioskStatus[id]?.some((x) => x.hasNewData)
+      ? "text-orange-400 font-bold"
+      : "font-medium";
+  };
+
+
 
   return (
     <div className=" 2xl:w-3/4 w-full ml-2">
@@ -1616,19 +1625,35 @@ const InventoryStatusList = () => {
             value={id}
             className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50"
           >
-            <AccordionTrigger className="text-lg font-medium hover:text-slate-800" onClick={() => setInventoryStatus([])}>
+            <AccordionTrigger
+              className="text-lg font-medium hover:text-slate-800"
+              onClick={() =>
+                setTimeout(() => {
+                  setInventoryStatus((prev) =>
+                    prev.filter((item) => item.facilityId !== id)
+                  );
+                }, 1500)
+              }
+            >
               <p>{facilityName}</p>
               {facilityStatus[id]?.some((x) => x.hasNewData) ? (
-                <div className="ml-auto mr-5 bg-orange-400 w-4 h-4 rounded-full"></div> 
+                <div className="ml-auto mr-5 bg-orange-400 w-4 h-4 rounded-full"></div>
               ) : (
                 <p></p>
               )}
             </AccordionTrigger>
             <AccordionContent>
               {sortKiosksByInventoryDate(kiosks).map((kiosk) => (
+                
                 <div key={kiosk.id} className="mb-7">
                   <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2">
-                    <h3 className="font-medium">{kiosk.kioskName}</h3>
+                  <h3
+  className={`${getKioskClasses(kiosk.id)}`}
+>
+  {kiosk.kioskName}
+</h3>
+
+                    
                     <h2 className="">
                       Senast inventering:{" "}
                       {new Intl.DateTimeFormat("sv-SE", {
