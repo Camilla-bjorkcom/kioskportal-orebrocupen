@@ -175,13 +175,6 @@ const UpdadeContactPersonButton = ({
                 <Button
                   type="submit"
                   className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
-                  onClick={() => {
-                    toast({
-                      className: "bg-orange-200",
-                      title: "Ändringen sparades",
-                      description: "Kontaktpersonen har uppdaterats",
-                    });
-                  }}
                 >
                   Spara
                 </Button>

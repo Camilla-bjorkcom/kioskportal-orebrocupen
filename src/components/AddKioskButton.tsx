@@ -27,15 +27,14 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 
 const formSchema = z.object({
-  kioskname: z.string().min(2, {
+  kioskName: z.string().min(2, {
     message: "Kiosk namn måste ha minst 2 bokstäver",
   }),
 });
 
 interface AddKioskButtonProps {
-  onSave: (kioskname: string, facilityId: string) => void; // Callback för att spara kiosknamn
+  onSave: (kioskName: string, facilityId: string) => void; // Callback för att spara kiosknamn
   facilityId: string;
- 
 }
 
 function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
@@ -44,14 +43,12 @@ function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      kioskname: "",
-   
+      kioskName: "",
     },
   });
 
-   function onSubmit(values: z.infer<typeof formSchema>) {
-   
-    onSave(values.kioskname, facilityId); // Sparar kiosken
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    onSave(values.kioskName, facilityId); // Sparar kiosken
     setOpen(false); // Stänger dialogen
     form.reset(); // Återställer formuläret
   }
@@ -82,7 +79,7 @@ function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="kioskname"
+              name="kioskName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Namn på kiosk</FormLabel>

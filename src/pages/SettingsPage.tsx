@@ -24,6 +24,9 @@ const SettingsPage = () => {
       const response = await fetchWithAuth(
         `tournaments/${id}`
       );
+      if (!response) {
+        throw new Error("Failed to fetch");
+      }
       if (!response.ok) {
         throw new Error("Failed to fetch tournament");
       }
@@ -58,7 +61,9 @@ const SettingsPage = () => {
           body: JSON.stringify(updatedTournament),
         }
       );
-
+      if (!response) {
+        throw new Error("Failed to fetch");
+      }
       if (!response.ok) {
         throw new Error("Failed to update product");
       }
@@ -67,7 +72,7 @@ const SettingsPage = () => {
 
       const updatedTournamentFromApi = await response.json();
       toast({
-        className: "bg-orange-200",
+        className: "bg-green-200",
         title: "Ändringen sparades",
         description: "Turneringen har uppdaterats",
       });
@@ -76,7 +81,7 @@ const SettingsPage = () => {
     } catch (error) {
       console.error("Failed to update torunament:", error);
       toast({
-        title: "Error",
+        title: "Fel",
         description: "Misslyckades med att spara ändringar.",
         className: "bg-red-200",
       });
