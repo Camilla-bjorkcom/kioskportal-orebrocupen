@@ -80,11 +80,11 @@ export function InventoryGraph({ tournament }: InventoryGraphProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>📊 Inventeringar per dag</CardTitle>
+        <CardTitle>Inventeringar per dag</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="bg-gradient-to-r from-slate-200 via-white to-slate-200 p-4 rounded-lg shadow-lg">
-          <ResponsiveContainer width="100%" height={260}>
+        <div className=" rounded-lg shadow-lg">
+          <ResponsiveContainer width="100%" height={290}>
             <LineChart
               data={chartData}
               margin={{
