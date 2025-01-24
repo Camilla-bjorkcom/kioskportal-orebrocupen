@@ -37,7 +37,7 @@ function Dashboard() {
 
   return (
     <div className="container mx-auto px-5">
-      <div className="flex justify-between">
+      <div className="flex justify-between ">
         <h2 className="mt-8 text-2xl pb-2">Din översikt</h2>
         <div>
           <Countdown startDate={tournament.startDate} />
