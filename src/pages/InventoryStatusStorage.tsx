@@ -81,8 +81,6 @@ const mockStorageInventory: StorageInventory[] = [
   },
 ];
 
-
-
 const InventoryStatusStorage = () => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const mockdata = true;
@@ -113,7 +111,6 @@ const InventoryStatusStorage = () => {
   if (!isSuccess) {
     return <div>Error: {String(error)}</div>;
   }
-
   if (error) {
     return <div>Error: {String(error)}</div>;
   }

@@ -83,6 +83,8 @@ const InventoryStatusList = () => {
     product.total = amountPieces! + amountPackages! * amountPerPackage!;
     return product.total;
   }
+
+
   if (isSuccess) {
     data.forEach((item) => {
       item.kiosks.forEach((kiosk) => {
@@ -215,7 +217,7 @@ const InventoryStatusList = () => {
                           className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 ${
                             productIndex % 2 === 0 ? "bg-gray-100" : "bg-white"
                           }`}
-                        >
+                        >{product.id}
                           <p
                             className={
                               isOutOfStock ? "text-red-500 font-semibold" : ""
