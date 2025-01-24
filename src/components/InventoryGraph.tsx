@@ -44,10 +44,10 @@ const inventories = [
   { id: 14, date: "2025-07-12" },
   { id: 15, date: "2025-07-12" },
   { id: 6, date: "2025-07-12" },
-  { id: 6, date: "2025-07-12" },
-  { id: 6, date: "2025-07-12" },
-  { id: 6, date: "2025-07-12" },
-  { id: 6, date: "2025-07-12" },
+  { id: 6, date: "2025-03-05" },
+  { id: 6, date: "2025-03-05" },
+  { id: 6, date: "2025-03-05" },
+  { id: 6, date: "2025-03-07" },
 ];
 
 export function InventoryGraph({ tournament }: InventoryGraphProps) {
@@ -81,11 +81,10 @@ export function InventoryGraph({ tournament }: InventoryGraphProps) {
     <Card>
       <CardHeader>
         <CardTitle>📊 Inventeringar per dag</CardTitle>
-        <CardDescription>Statistik för turneringsperioden</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50 p-4 rounded-lg shadow-lg">
-          <ResponsiveContainer width="100%" height={300}>
+        <div className="bg-gradient-to-r from-slate-200 via-white to-slate-200 p-4 rounded-lg shadow-lg">
+          <ResponsiveContainer width="100%" height={260}>
             <LineChart
               data={chartData}
               margin={{
