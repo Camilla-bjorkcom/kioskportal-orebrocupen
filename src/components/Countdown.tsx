@@ -30,7 +30,7 @@ function Countdown({ startDate }: { startDate: string }) {
   }, [startDate]);
 
   return (
-    <div className="mt-8 p-5 rounded shadow-md">
+    <div className="p-5 rounded shadow-md">
       <h3 className="text-xl font-semibold text-gray-800">
         Turneringsstart ⏳
       </h3>

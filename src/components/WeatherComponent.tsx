@@ -87,7 +87,7 @@ const WeatherComponent: React.FC<WeatherComponentProps> = ({ lat, lon }) => {
   const weatherText = weatherDescriptions[weatherSymbol] || "Okänt väder";
 
   return (
-    <div className="max-w-sm mx-auto bg-white shadow-md rounded-lg p-6 mb-6">
+    <div className="max-w-full mx-auto bg-white shadow-md rounded-lg p-6 mb-6">
       <h3 className="text-xl font-semibold text-gray-800 mb-2">
         Dagens väderprognos
       </h3>
