@@ -16,7 +16,7 @@ import {
   Facility,
   Kiosk,
   Product,
-  ProductList,
+  Productlist,
 } from "@/interfaces";
 import {
   Accordion,
@@ -44,7 +44,7 @@ function FacilitiesAndKiosks() {
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const [productLists, setProductLists] = useState<ProductList[]>([]);
+  const [productLists, setProductLists] = useState<Productlist[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
 

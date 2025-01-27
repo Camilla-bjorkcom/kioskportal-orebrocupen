@@ -108,7 +108,7 @@ function Kioskmanager() {
   };
 
   const UpdateFacility = async (facility: Facility) => {
-    console.log("this is" + facility.facilityname + "id: " + facility.id);
+    console.log("this is" + facility.facilityName + "id: " + facility.id);
     try {
       const response = await fetch(
         `http://localhost:3000/facilities/${facility.id}`,
@@ -117,7 +117,7 @@ function Kioskmanager() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             id: facility.id,
-            facilityname: facility.facilityname,
+            facilityname: facility.facilityName,
           }),
         }
       );
@@ -239,7 +239,7 @@ function Kioskmanager() {
                   }`}
                   onClick={() => handleFacilityClick(facility)}
                 >
-                  <p>{facility.facilityname}</p>
+                  <p>{facility.facilityName}</p>
                   <div
                     className="flex gap-3"
                     onClick={(e) => e.stopPropagation()}

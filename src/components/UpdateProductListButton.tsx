@@ -23,7 +23,7 @@ import { Checkbox } from "./ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { Pencil, Plus } from "lucide-react";
-import { ProductList, Product } from "@/interfaces";
+import { Productlist, Product } from "@/interfaces";
 import { useParams } from "react-router-dom";
 
 
@@ -35,8 +35,8 @@ const formSchema = z.object({
 });
 
 interface UpdateProductListButtonProps {
-  productlist: ProductList;
-  onUpdate: (updatedList: ProductList) => void;
+  productlist: Productlist;
+  onUpdate: (updatedList: Productlist) => void;
   tournamentProducts: Product[];
 }
 
@@ -48,13 +48,13 @@ function UpdateProductListButton({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      productlistname: productlist.productlistname,
+      productlistname: productlist.productlistName,
     },
   });
 
  
   const [productlistForUpdate, setProductlistforUpdate] =
-    useState<ProductList>(productlist);
+    useState<Productlist>(productlist);
   const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
@@ -80,17 +80,16 @@ function UpdateProductListButton({
 
  
 
-  const saveChangesToProductList = async (productlist: ProductList) => {
+  const saveChangesToProductList = async (productlist: Productlist) => {
     const url = `http://localhost:3000/productslists/${productlist.id}`;
 
     // Skapa en sanerad version av produktlistan
     const sanitizedProductList = {
       id: productlist.id,
-      productlistname: productlist.productlistname,
-      tournamentId: productlist.tournamentId ,
+      productlistname: productlist.productlistName,
       products: productlist.products.map((product) => ({
         id: product.id,
-        productname: product.productname,
+        productname: product.productName,
       })),
     };
 
@@ -121,7 +120,7 @@ function UpdateProductListButton({
         // Sätt produktlistan med de nya värdena
         const updatedList = await saveChangesToProductList({
           ...productlistForUpdate,
-          productlistname: values.productlistname,
+          productlistName: values.productlistname,
         });
 
         console.log("Updated list:", updatedList);
@@ -167,7 +166,7 @@ function UpdateProductListButton({
                   <FormLabel>Produktlistnamn</FormLabel>
                   <FormControl>
                     <Input
-                      defaultValue={productlistForUpdate?.productlistname}
+                      defaultValue={productlistForUpdate?.productlistName}
                       {...field}
                       onChange={(e) => {
                         field.onChange(e);
@@ -217,7 +216,7 @@ function UpdateProductListButton({
                     htmlFor={`product-${product.id}`}
                     className="font-medium hover:text-slate-800 cursor-pointer"
                   >
-                    {product.productname}
+                    {product.productName}
                   </label>
                 </div>
                 
