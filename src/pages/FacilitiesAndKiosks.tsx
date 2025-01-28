@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import UpdateFacilityButton from "@/components/UpdateFacilityButton";
 import DeleteButton from "@/components/DeleteButton";
-import UpdateKioskButton from "@/components/UpdateKioskButton";
 import {
   Tooltip,
   TooltipContent,
@@ -39,13 +38,8 @@ function FacilitiesAndKiosks() {
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
 
- 
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
-  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const [productLists, setProductLists] = useState<Productlist[]>([]);
- 
-  const [open, setOpen] = useState(false);
 
   const { isLoading, error, data, isSuccess } = useQuery<Facility[]>({
     queryKey: ["facilities"],
@@ -63,10 +57,7 @@ function FacilitiesAndKiosks() {
     },
   });
 
-  const {
-    data: products,
-    
-  } = useQuery<Product[]>({
+  const { data: products } = useQuery<Product[]>({
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetchWithAuth(`products/${tournamentId}`);
@@ -79,9 +70,7 @@ function FacilitiesAndKiosks() {
     },
   });
 
-  const {
-    data: productlists,
-  } = useQuery<Productlist[]>({
+  const { data: productlists } = useQuery<Productlist[]>({
     queryKey: ["productlists"],
     queryFn: async () => {
       const response = await fetchWithAuth(`productlists/${tournamentId}`);
@@ -94,8 +83,6 @@ function FacilitiesAndKiosks() {
       return data || [];
     },
   });
-
-  
 
   const CreateFacility = async (facilityName: string) => {
     try {
