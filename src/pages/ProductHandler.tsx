@@ -258,7 +258,7 @@ function ProductHandler() {
         <div className="mt-8">
           <h3 className="text-lg mb-7">Sparade produkter:</h3>
 
-          <div className="grid grid-cols-4 mb-10 gap-2">
+          <div className="grid grid-cols-4 mb-10 gap-2 ">
             {products?.map((product) => (
               <TooltipProvider key={product.id}>
                 <Tooltip>
@@ -285,16 +285,19 @@ function ProductHandler() {
           }}
         />
         <div className="mt-8">
-          <Accordion type="multiple" className=" w-full 2xl:w-3/4">
+          <Accordion
+            type="multiple"
+            className=" w-full 2xl:w-3/4 dark:bg-slate-900"
+          >
             {productlists?.map((productlist) => (
               <AccordionItem
                 key={productlist.id}
                 value={productlist.id}
-                className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+                className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
               >
                 <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
                   <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                    <label className="basis-1/4 font-medium hover:text-slate-800">
+                    <label className="basis-1/4 font-medium  ">
                       {productlist.productlistName}
                     </label>
                     {/* <HandleProductListButton
@@ -332,10 +335,10 @@ function ProductHandler() {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="flex mt-5 font-semibold">Produkter</div>
+                  <div className="flex mt-5 font-semibold ml-4">Produkter</div>
                   {productlist.products && productlist.products.length > 0 ? (
                     <ul
-                      className="grid grid-cols-3 gap-4 mt-2"
+                      className="grid grid-cols-3 gap-4 mt-2 p-4"
                       key={productlist.id}
                     >
                       {productlist.products.map(
@@ -345,7 +348,7 @@ function ProductHandler() {
                       )}
                     </ul>
                   ) : (
-                    <p className="text-gray-500">
+                    <p className="text-gray-500 dark:text-gray-300 ml-4">
                       Inga produkter tillagda i denna produktlista.
                     </p>
                   )}
