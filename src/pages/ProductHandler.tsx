@@ -72,31 +72,7 @@ function ProductHandler() {
       },
     });
 
-  // const SaveProduct = async (
-  //   productName: string,
-  //   amountPerPackage: number,
-    
-  // ) => {
-  //   try {
-  //     const response = await fetch("http://localhost:3000/products", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         productName: productName,
-  //         amountPerPackage: amountPerPackage,
-          
-  //       }),
-  //     });
-  //     if (!response.ok) {
-  //       throw new Error("Failed to save product");
-  //     }
-  //     const newProduct = await response.json();
-  //     setProducts((prev) => [...prev, newProduct]);
-  //   } catch (error) {
-  //     console.error(error);
-  //     throw new Error("failed to save product");
-  //   }
-  // };
+ 
 
   const CreateProduct = async (productName: string, amountPerPackage: number) => {
     try {
@@ -202,7 +178,7 @@ function ProductHandler() {
    
   };
 
-  // Spara ny produktlista (POST)
+  // Spara ny produktlista (PUT)
   const SaveProductList = async (
     productlistName: string,
     
@@ -231,13 +207,12 @@ function ProductHandler() {
   // Ta bort produktlista (DELETE)
   const DeleteProductsList = async (id: string) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/productslists/${id}`,
+      const response = await fetchWithAuth(`productlists/${tournamentId}/${id}`,
         {
           method: "DELETE",
         }
       );
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Failed to delete product list");
       }
       queryClient.invalidateQueries({ queryKey: ["productslists"] });

@@ -25,6 +25,7 @@ import { Button } from "./ui/button";
 import { Pencil, Plus } from "lucide-react";
 import { Productlist, Product } from "@/interfaces";
 import { useParams } from "react-router-dom";
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
 
 
 
@@ -81,30 +82,31 @@ function UpdateProductListButton({
  
 
   const saveChangesToProductList = async (productlist: Productlist) => {
-    const url = `http://localhost:3000/productslists/${productlist.id}`;
+   ;
 
     // Skapa en sanerad version av produktlistan
     const sanitizedProductList = {
       id: productlist.id,
-      productlistname: productlist.productlistName,
+      productlistName: productlist.productlistName,
       products: productlist.products.map((product) => ({
         id: product.id,
-        productname: product.productName,
+        productName: product.productName,
       })),
     };
 
     try {
-      const response = await fetch(url, {
+      const response = await fetchWithAuth(`productlists/${tournamentId}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(sanitizedProductList),
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Server response error:", errorText);
+      if (!response) {
         throw new Error("Failed to update list");
       }
+
+      const errorText = await response.text();
+      console.error("Server response error:", errorText);
       
       const data = await response.json();
       onUpdate(data);

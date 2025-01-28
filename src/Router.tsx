@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import SidebarLayout from "./layouts/SidebarLayout";
 import ProductHandler from "./pages/ProductHandler";
 import SettingsPage from "./pages/SettingsPage";
-import ProductListHandler from "./pages/ProductListHandler";
+
 import InventoryStatus from "./pages/InventoryStatus";
 import InventoryStorage from "./pages/InventoryStorage";
 import ContactPerson from "./pages/ContactPerson";
@@ -28,10 +28,7 @@ function Router() {
             <Route path="producthandler/:id" element={<ProductHandler />} />
             <Route path="settings/:id" element={<SettingsPage />} />
             <Route path="facilitiesandkiosks/:id" element={<FacilitiesAndKiosks />} />
-            <Route
-              path="productlisthandler/:id"
-              element={<ProductListHandler />}
-            />
+           
             <Route path="inventorystatus/:id" element={<InventoryStatus />} />
             <Route path="inventorystorage/:id" element={<InventoryStorage />} />
             <Route path="inventorystatusstorage/:id" element={<InventoryStatusStorage />} />
