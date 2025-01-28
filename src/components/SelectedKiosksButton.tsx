@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { useQuery } from '@tanstack/react-query';
-import { Kiosk, Product, ProductList } from '@/interfaces';
+import { Kiosk, Product, Productlist } from '@/interfaces';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Checkbox } from './ui/checkbox';
 
 interface SelectedKiosksButtonProps {
   selectedKiosks: Kiosk[]; // Lista över valda kiosker
-  productLists: ProductList[]; // Produktlistor skickas från PopulateKiosks
+  productlists: Productlist[]; // Produktlistor skickas från PopulateKiosks
   products: Product[]; // Produkter skickas från PopulateKiosks
   onClick: (open :boolean) => void; 
   onKiosksUpdated: (updatedKiosks: Kiosk[]) => void;
@@ -16,7 +16,7 @@ interface SelectedKiosksButtonProps {
 }
 
 function SelectedKiosksButton({ selectedKiosks,
-  productLists,
+  productlists,
   products , onKiosksUpdated, onClearSelected}: SelectedKiosksButtonProps) {
   
   const [open, setOpen] = useState(false);
@@ -39,7 +39,7 @@ function SelectedKiosksButton({ selectedKiosks,
 
   const handleProductListChange = (value: string) => {
     setSelectedProductListId(value);
-    const selectedList = productLists.find((list) => list.id === value);
+    const selectedList = productlists.find((list) => list.id === value);
 
     if (selectedList) {
       setSelectedProducts(selectedList.products);
@@ -123,9 +123,9 @@ function SelectedKiosksButton({ selectedKiosks,
             <SelectValue placeholder="Lägg till produkter från produktlista" />
           </SelectTrigger>
           <SelectContent>
-            {productLists.map((productList) => (
-              <SelectItem key={productList.id} value={productList.id}>
-                {productList.productlistname}
+            {productlists.map((productlist) => (
+              <SelectItem key={productlist.id} value={productlist.id}>
+                {productlist.productlistName}
               </SelectItem>
             ))}
           </SelectContent>
@@ -154,7 +154,7 @@ function SelectedKiosksButton({ selectedKiosks,
                 }}
               />
               <label htmlFor={`product-${product.id}`} className="font-medium cursor-pointer">
-                {product.productname}
+                {product.productName}
               </label>
             </div>
           ))}

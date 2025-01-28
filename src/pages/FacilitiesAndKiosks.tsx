@@ -39,13 +39,12 @@ function FacilitiesAndKiosks() {
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
 
-  const [kiosks, setKiosks] = useState<Kiosk[]>([]);
-  const [kioskProducts, setKioskProducts] = useState<Product[]>([]);
+ 
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [productLists, setProductLists] = useState<Productlist[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+ 
   const [open, setOpen] = useState(false);
 
   const { isLoading, error, data, isSuccess } = useQuery<Facility[]>({
@@ -64,30 +63,39 @@ function FacilitiesAndKiosks() {
     },
   });
 
-  // useQuery<ProductList[]>({
-  //   queryKey: ["productlists"],
-  //   queryFn: async () => {
-  //     const response = await fetch("http://localhost:3000/productslists");
-  //     if (!response.ok) throw new Error("Failed to fetch product lists");
-  //     const data = await response.json();
-  //     setProductLists(data);
-  //     console.log("listor", data);
-  //     return data;
-  //   },
-  // });
+  const {
+    data: products,
+    
+  } = useQuery<Product[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const response = await fetchWithAuth(`products/${tournamentId}`);
+      if (!response) {
+        throw new Error("Failed to fetch products");
+      }
+      const data = await response.json();
 
-  // // Fetch Products
-  // useQuery<Product[]>({
-  //   queryKey: ["products"],
-  //   queryFn: async () => {
-  //     const response = await fetch("http://localhost:3000/products");
-  //     if (!response.ok) throw new Error("Failed to fetch products");
-  //     const data = await response.json();
-  //     setProducts(data);
-  //     console.log("varor", data);
-  //     return data;
-  //   },
-  // });
+      return data;
+    },
+  });
+
+  const {
+    data: productlists,
+  } = useQuery<Productlist[]>({
+    queryKey: ["productlists"],
+    queryFn: async () => {
+      const response = await fetchWithAuth(`productlists/${tournamentId}`);
+      if (!response) {
+        throw new Error("Failed to fetch product lists");
+      }
+      const data = await response.json();
+      console.log(data);
+
+      return data || [];
+    },
+  });
+
+  
 
   const CreateFacility = async (facilityName: string) => {
     try {
@@ -545,8 +553,8 @@ function FacilitiesAndKiosks() {
         />
         <SelectedKiosksButton
           selectedKiosks={kiosksForUpdate}
-          productLists={productLists}
-          products={products}
+          productlists={productlists || []}
+          products={products || []}
           onClick={handleSubmit}
           onKiosksUpdated={handleKiosksUpdated}
           onClearSelected={clearSelectedKiosks}
@@ -633,8 +641,8 @@ function FacilitiesAndKiosks() {
                                   <EditSelectedKioskButton
                                     key={kiosk.id}
                                     kioskForEdit={kiosk}
-                                    productLists={productLists}
-                                    products={products}
+                                    productLists={productlists || []}
+                                    products={products || []}
                                     onEditClick={handleEditClick}
                                     onKioskUpdated={handleKioskUpdated}
                                     onSave={UpdateKiosk}

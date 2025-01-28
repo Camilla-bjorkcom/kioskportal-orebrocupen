@@ -213,7 +213,7 @@ function EditSelectedKioskButton({
           <SelectContent>
             {productLists.map((productList) => (
               <SelectItem key={productList.id} value={productList.id}>
-                {productList.productlistname}
+                {productList.productlistName}
               </SelectItem>
             ))}
           </SelectContent>
