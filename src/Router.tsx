@@ -7,7 +7,6 @@ import SettingsPage from "./pages/SettingsPage";
 
 import InventoryStatus from "./pages/InventoryStatus";
 import InventoryStorage from "./pages/InventoryStorage";
-import ContactPerson from "./pages/ContactPerson";
 import InventoryStatusStorage from "./pages/InventoryStatusStorage";
 // import PopulateKiosks from "./pages/PopulateKiosks";
 import FacilitiesAndKiosks from "./pages/FacilitiesAndKiosks";
