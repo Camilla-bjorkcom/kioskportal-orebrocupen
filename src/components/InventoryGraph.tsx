@@ -13,7 +13,6 @@ import {
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -80,7 +79,7 @@ export function InventoryGraph({ tournament }: InventoryGraphProps) {
     const end = new Date(tournament.endDate);
     const days = [];
 
-    let currentDate = new Date(
+    const currentDate = new Date(
       Date.UTC(start.getFullYear(), start.getMonth(), start.getDate())
     );
     const endDate = new Date(

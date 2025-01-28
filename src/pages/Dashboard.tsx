@@ -5,19 +5,9 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import WeatherComponent from "@/components/WeatherComponent";
 import Countdown from "@/components/Countdown";
 import { InventoryGraph } from "@/components/InventoryGraph";
-import ThemeToggle from "@/components/ThemeToggle";
 
 function Dashboard() {
   const { id } = useParams<{ id: string }>();
-
-  if (!id) {
-    return (
-      <div className="container mx-auto px-5 py-10">
-        <h2 className="text-2xl font-bold">Ingen turnerings-ID angiven</h2>
-        <p>Återvänd till startsidan och välj en turnering.</p>
-      </div>
-    );
-  }
 
   const {
     isLoading,
@@ -30,7 +20,17 @@ function Dashboard() {
       if (!response) throw new Error("Failed to fetch tournament");
       return response.json();
     },
+    enabled: !!id,
   });
+
+  if (!id) {
+    return (
+      <div className="container mx-auto px-5 py-10">
+        <h2 className="text-2xl font-bold">Ingen turnerings-ID angiven</h2>
+        <p>Återvänd till startsidan och välj en turnering.</p>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

@@ -35,7 +35,7 @@ function Countdown({ startDate }: { startDate: string }) {
         Turneringsstart
       </h3>
       <p
-        className="text-orange-600 text-lg"
+        className="text-orange-600 text-lg dark:text-orange-400"
         style={{ width: "300px", whiteSpace: "nowrap" }}
       >
         {timeLeft}

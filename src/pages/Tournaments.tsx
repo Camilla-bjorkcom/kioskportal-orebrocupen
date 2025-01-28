@@ -81,7 +81,7 @@ function Tournaments() {
                     })
                   }
                   key={index}
-                  className="flex flex-col p-2 justify-between rounded-xl border bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 relative dark:bg-slate-900 dark:hover:bg-slate-600 dark:text-gray-200"
+                  className="flex flex-col p-2 justify-between rounded-xl border bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 relative dark:bg-slate-900 dark:hover:bg-slate-600 dark:text-gray-200 dark:border-slate-500"
                 >
                   <div className="flex w-full justify-between">
                     <p className="text-left">{tournament.tournamentName}</p>
