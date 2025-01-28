@@ -4,6 +4,6 @@ import { ContactPerson } from './contactperson';
 export interface Facility {
     facilityName: string;
     id: string;
-    kiosks: Kiosk[] | null;  
-    contactPersons: ContactPerson[] | null;  
+    kiosks: Kiosk[] | [];  
+    contactPersons: ContactPerson[] | [];  
 }
