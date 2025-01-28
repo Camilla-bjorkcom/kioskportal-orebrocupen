@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import UpdateFacilityButton from "@/components/UpdateFacilityButton";
 import DeleteButton from "@/components/DeleteButton";
-import UpdateKioskButton from "@/components/UpdateKioskButton";
 import {
   Tooltip,
   TooltipContent,
@@ -39,13 +38,8 @@ function FacilitiesAndKiosks() {
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
 
- 
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
-  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const [productLists, setProductLists] = useState<Productlist[]>([]);
- 
-  const [open, setOpen] = useState(false);
 
   const { isLoading, error, data, isSuccess } = useQuery<Facility[]>({
     queryKey: ["facilities"],
@@ -63,10 +57,7 @@ function FacilitiesAndKiosks() {
     },
   });
 
-  const {
-    data: products,
-    
-  } = useQuery<Product[]>({
+  const { data: products } = useQuery<Product[]>({
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetchWithAuth(`products/${tournamentId}`);
@@ -79,9 +70,7 @@ function FacilitiesAndKiosks() {
     },
   });
 
-  const {
-    data: productlists,
-  } = useQuery<Productlist[]>({
+  const { data: productlists } = useQuery<Productlist[]>({
     queryKey: ["productlists"],
     queryFn: async () => {
       const response = await fetchWithAuth(`productlists/${tournamentId}`);
@@ -94,8 +83,6 @@ function FacilitiesAndKiosks() {
       return data || [];
     },
   });
-
-  
 
   const CreateFacility = async (facilityName: string) => {
     try {
@@ -542,7 +529,7 @@ function FacilitiesAndKiosks() {
 
   return (
     <section className="container mx-auto px-5">
-      <h1 className="mt-8 text-2xl pb-2 mb-4">
+      <h1 className="mt-8 text-2xl pb-2 mb-4 ">
         Hantera kiosker och produktutbud
       </h1>
       <div className="flex justify-between w-full 2xl:w-3/4 items-center mb-3">
@@ -565,12 +552,12 @@ function FacilitiesAndKiosks() {
           <AccordionItem
             key={facility.id}
             value={facility.id}
-            className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+            className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:bg-slate-900 dark:hover:bg-slate-800 dark:text-gray-200 dark:hover:text-gray-200 dark:border-slate-500"
           >
             <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
               <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                <label className="basis-1/4 font-medium hover:text-slate-800">
-                  {facility.facilityName} 
+                <label className="basis-1/4 font-medium ">
+                  {facility.facilityName}
                 </label>
                 <AddKioskButton
                   onSave={(kioskName) => CreateKiosk(kioskName, facility.id)}
@@ -582,7 +569,7 @@ function FacilitiesAndKiosks() {
                   }
                   facilityId={facility.id}
                 />
-                <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
+                <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12 ">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
@@ -619,7 +606,7 @@ function FacilitiesAndKiosks() {
               <Accordion type="single" collapsible>
                 <AccordionItem
                   value={"kiosks" + facility.id}
-                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
                 >
                   <AccordionTrigger className="text-lg font-medium hover:no-underline">
                     Kiosker ({facility.kiosks?.length})
@@ -628,7 +615,7 @@ function FacilitiesAndKiosks() {
                     {facility.kiosks?.map((kiosk) => (
                       <div
                         key={kiosk.id}
-                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-600 dark:border-slate-500"
                       >
                         <div className="flex justify-between items-center">
                           <p className="font-semibold text-lg">
@@ -702,7 +689,7 @@ function FacilitiesAndKiosks() {
                             )}
                           </ul>
                         ) : (
-                          <p className="text-gray-500">
+                          <p className="text-gray-500 dark:text-gray-200">
                             Inga produkter tillagda för denna kiosk.
                           </p>
                         )}
@@ -713,7 +700,7 @@ function FacilitiesAndKiosks() {
 
                 <AccordionItem
                   value={"contactPersons" + facility.id}
-                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
                 >
                   <AccordionTrigger className="text-lg font-medium hover:no-underline">
                     Kontaktpersoner ({facility.contactPersons?.length})
@@ -722,7 +709,7 @@ function FacilitiesAndKiosks() {
                     {facility.contactPersons?.map((contactPerson) => (
                       <div
                         key={contactPerson.id}
-                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 flex justify-between"
+                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-600 flex justify-between dark:border-slate-500"
                       >
                         <p>
                           {contactPerson.name} - {contactPerson.role} -{" "}

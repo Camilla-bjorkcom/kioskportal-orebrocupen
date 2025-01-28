@@ -84,7 +84,6 @@ const InventoryStatusList = () => {
     return product.total;
   }
 
-
   if (isSuccess) {
     data.forEach((item) => {
       item.kiosks.forEach((kiosk) => {
@@ -118,7 +117,7 @@ const InventoryStatusList = () => {
       setExpandedItems(allItems);
       setTimeout(() => {
         setInventoryStatus([]);
-      }, 2000); 
+      }, 2000);
     } else {
       setExpandedItems([]);
     }
@@ -134,16 +133,14 @@ const InventoryStatusList = () => {
   const getKioskClasses = (id: string) => {
     return kioskStatus[id]?.some((x) => x.hasNewData)
       ? "text-orange-400 font-bold transition-all delay-150 duration-300 ease-in-out"
-      : "font-medium transition-all delay-150 duration-300 ease-in-out"; 
+      : "font-medium transition-all delay-150 duration-300 ease-in-out";
   };
-  
 
   const getFacilityClasses = (id: string) => {
     return facilityStatus[id]?.some((x) => x.hasNewData)
       ? "bg-orange-400 w-2 h-2 rounded-full opacity-100 transition-all delay-150 duration-500 ease-in-out absolute -right-3 top-3"
       : "bg-orange-400  w-2 h-2 opacity-0 rounded-full transition-all delay-150 duration-500 ease-in-out absolute -right-3 top-[10px]";
   };
-  
 
   return (
     <div className=" 2xl:w-3/4 w-full ml-2">
@@ -156,16 +153,16 @@ const InventoryStatusList = () => {
         type="multiple"
         value={expandedItems}
         onValueChange={(newValue) => setExpandedItems(newValue)}
-        className="flex flex-col gap-3 mb-7"
+        className="flex flex-col  mb-7 dark:bg-slate-900  "
       >
         {data.map(({ id, facilityName, kiosks }) => (
           <AccordionItem
             key={id}
             value={id}
-            className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+            className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:border-slate-500 dark:hover:bg-slate-900 "
           >
             <AccordionTrigger
-              className="text-lg font-medium hover:text-slate-800"
+              className="text-lg font-medium"
               onClick={() =>
                 setTimeout(() => {
                   setInventoryStatus((prev) =>
@@ -175,14 +172,14 @@ const InventoryStatusList = () => {
               }
             >
               <div className="flex relative">
-              <p>{facilityName}</p>
-              <div className={`${getFacilityClasses(id)}`}></div>
+                <p>{facilityName}</p>
+                <div className={`${getFacilityClasses(id)}`}></div>
               </div>
             </AccordionTrigger>
             <AccordionContent>
               {sortKiosksByInventoryDate(kiosks).map((kiosk) => (
                 <div key={kiosk.id} className="mb-7">
-                  <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2">
+                  <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2 dark:bg-slate-800 dark:border-slate-500">
                     <h3 className={`${getKioskClasses(kiosk.id)} `}>
                       {kiosk.kioskName}
                     </h3>
@@ -200,7 +197,7 @@ const InventoryStatusList = () => {
                   </div>
                   <div className="w-full mt-2">
                     {/* Rubriker för kolumner */}
-                    <div className="grid grid-cols-4 gap-4 font-bold text-gray-600 py-2 px-4">
+                    <div className="grid grid-cols-4 gap-4 font-bold text-gray-600 py-2 px-4 dark:text-gray-300">
                       <p>Namn</p>
                       <p>Styckvaror</p>
                       <p>Obrutna förpackningar</p>
@@ -216,10 +213,13 @@ const InventoryStatusList = () => {
                       return (
                         <div
                           key={product.id}
-                          className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 ${
-                            productIndex % 2 === 0 ? "bg-gray-100" : "bg-white"
+                          className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 dark:bg-slate-900 dark:text-gray-300 dark:border-slate-500 ${
+                            productIndex % 2 === 0
+                              ? "bg-gray-100"
+                              : "bg-white dark:bg-slate-800"
                           }`}
-                        >{product.id}
+                        >
+                          {product.id}
                           <p
                             className={
                               isOutOfStock ? "text-red-500 font-semibold" : ""

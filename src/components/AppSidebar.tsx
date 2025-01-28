@@ -43,66 +43,70 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-
-
-
 // Menu items.
-export function AppSidebar({ id }: { id?: string }) {
 
+export function AppSidebar({ id }: { id?: string }) {
   const items = [
-  
     {
       title: "Produkter",
       url: "#",
       icon: ShoppingBasket,
       subitems: [
-        { title: "Skapa produktutbud", url:  `/producthandler/${id}` },
+        { title: "Skapa produktutbud", url: `/producthandler/${id}` },
         { title: "Skapa produktlista", url: `/productlisthandler/${id}` },
-        { title: "Lägg till produkter i kiosker", url: `/populatekiosks/${id}`},
-        
+        {
+          title: "Lägg till produkter i kiosker",
+          url: `/populatekiosks/${id}`,
+        },
       ],
     },
-    
+
     {
       title: "Anläggningar",
       url: "#",
       icon: House,
-      subitems: [      
-        { title: "Skapa anläggningar och kiosker", url: `/facilitiesandkiosks/${id}` },      
-        { title: "QR koder till kiosker", url: "#" },  
+      subitems: [
+        {
+          title: "Skapa anläggningar och kiosker",
+          url: `/facilitiesandkiosks/${id}`,
+        },
+        { title: "QR koder till kiosker", url: "#" },
       ],
     },
-  
+
     {
       title: "Inventering",
       url: "#",
       icon: SquareChartGantt,
       subitems: [
         { title: "Inventera lager", url: `/inventorystorage/${id}` },
-        { title: "Visa kioskernas inventeringar", url: `/inventorystatus/${id}` },
-        { title: "Visa lagrets inventeringar", url: `/inventorystatusstorage/${id}` },
+        {
+          title: "Visa kioskernas inventeringar",
+          url: `/inventorystatus/${id}`,
+        },
+        {
+          title: "Visa lagrets inventeringar",
+          url: `/inventorystatusstorage/${id}`,
+        },
       ],
     },
     {
       title: "Statistik",
       url: "#",
       icon: ChartSpline,
-      subitems: [
-        { title: "Din översikt", url: `/dashboard/${id}` },
-        
-      ],
+      subitems: [{ title: "Din översikt", url: `/dashboard/${id}` }],
     },
   ];
   const auth = useAuth();
 
-
-  
-
   return (
-    <Sidebar variant="sidebar" collapsible="icon">
+    <Sidebar variant="sidebar" collapsible="icon" className="dark:bg-slate-900">
       <SidebarContent>
         <SidebarHeader>
-          <img src="../src/assets/images/sidebarLogo.svg" alt="kiosk portal logo" />
+          <img
+            src="../src/assets/images/sidebarLogo.svg"
+            alt="kiosk portal logo"
+          />
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Meny</SidebarGroupLabel>
@@ -135,10 +139,12 @@ export function AppSidebar({ id }: { id?: string }) {
                         <SidebarMenuSub>
                           {item.subitems.map((subitem) => (
                             <SidebarMenuSubItem
-                              className="font-medium hover:bg-neutral-100 w-full"
+                              className="font-medium hover:bg-gray-100 dark:hover:bg-zinc-800 w-full"
                               key={subitem.title}
                             >
-                              <a href={subitem.url} className="w-full flex">{subitem.title}</a>
+                              <a href={subitem.url} className="w-full flex">
+                                {subitem.title}
+                              </a>
                             </SidebarMenuSubItem>
                           ))}
                         </SidebarMenuSub>
@@ -162,25 +168,32 @@ export function AppSidebar({ id }: { id?: string }) {
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage src={"user.avatar"} alt={"username"} />
-                    <AvatarFallback className="rounded-lg bg-amber-500 font-bold">KP</AvatarFallback>
+                    <AvatarFallback className="rounded-lg bg-amber-500 font-bold">
+                      KP
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate text-xs"> {auth.user?.profile["cognito:username"] as string}</span>
+                    <span className="truncate text-xs">
+                      {" "}
+                      {auth.user?.profile["cognito:username"] as string}
+                    </span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg dark:bg-slate-900 "
                 align="end"
                 sideOffset={4}
-                side={useIsMobile() ? "top" : "right"}           
+                side={useIsMobile() ? "top" : "right"}
               >
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
                       <AvatarImage src={"user.avatar"} alt={"username"} />
-                      <AvatarFallback className="rounded-lg bg-amber-500 font-bold">KP</AvatarFallback>
+                      <AvatarFallback className="rounded-lg bg-amber-500 font-bold">
+                        KP
+                      </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate text-xs">
@@ -190,26 +203,27 @@ export function AppSidebar({ id }: { id?: string }) {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuGroup>    
-                </DropdownMenuGroup>
+                <DropdownMenuGroup></DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                <DropdownMenuItem>
+                  <DropdownMenuItem>
                     <BookHeart />
-                    <a href="/tournaments" className="w-full flex">Mina turneringar</a>
+                    <a href="/tournaments" className="w-full flex">
+                      Mina turneringar
+                    </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <BadgeCheck />
-                    <a href={`/settings/${id}`} className="w-full flex">Inställningar</a>
+                    <a href={`/settings/${id}`} className="w-full flex">
+                      Inställningar
+                    </a>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <button  onClick={() => auth.removeUser()} className="w-full">                    
+                  <button onClick={() => auth.removeUser()} className="w-full">
                     <LogOut />
-                    <a href="/">
-                    Logga ut
-                    </a>
+                    <a href="/">Logga ut</a>
                   </button>
                 </DropdownMenuItem>
               </DropdownMenuContent>

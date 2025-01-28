@@ -5,8 +5,6 @@
 // import { useNavigate } from "react-router-dom";
 // import {Tournament} from "@/interfaces/tournament"
 
-
-
 // function CreateTournament() {
 //   const navigate = useNavigate();
 //   const [tournaments, setTournaments] = useState<Tournament[]>([]);
@@ -104,14 +102,14 @@
 //                       DeleteTournament(tournament.id);
 //                     }}
 //                   >
-                    
+
 //                   </button>
 //                   <p className="text-xs absolute bottom-2 right-2">
 //                     Skapad: {datetime}
 //                   </p>
 //                 </div>
 //               </button>
-              
+
 //               ))
 //             ) : (
 //               <p className="text-gray-500">
