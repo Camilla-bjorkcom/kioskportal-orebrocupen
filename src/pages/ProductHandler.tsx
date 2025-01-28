@@ -324,7 +324,7 @@ function ProductHandler() {
                           <ul className="grid grid-cols-3 gap-4 mt-2">
                             {productList.products.map(
                               (product: Product, index: number) => (
-                                <li key={index}>{product.productname}</li>
+                                <li key={index}>{product.productName}</li>
                               )
                             )}
                           </ul>

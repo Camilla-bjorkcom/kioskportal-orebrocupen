@@ -47,8 +47,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 
 // Menu items.
-
-
 export function AppSidebar({ id }: { id?: string }) {
 
   const items = [
@@ -71,10 +69,7 @@ export function AppSidebar({ id }: { id?: string }) {
       icon: House,
       subitems: [      
         { title: "Skapa anläggningar och kiosker", url: `/facilitiesandkiosks/${id}` },      
-        { title: "Kontaktpersoner", url: `/contactperson/${id}` },
-        { title: "QR koder till kiosker", url: "#" },
-        { title: "Skapa kiosker", url: `/kioskmanager/${id}`},
-        
+        { title: "QR koder till kiosker", url: "#" },  
       ],
     },
   
@@ -85,7 +80,7 @@ export function AppSidebar({ id }: { id?: string }) {
       subitems: [
         { title: "Inventera lager", url: `/inventorystorage/${id}` },
         { title: "Visa kioskernas inventeringar", url: `/inventorystatus/${id}` },
-        { title: "Visa lagrets inventering", url: `/inventorystatusstorage/${id}` },
+        { title: "Visa lagrets inventeringar", url: `/inventorystatusstorage/${id}` },
       ],
     },
     {
