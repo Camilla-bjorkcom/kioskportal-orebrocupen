@@ -87,23 +87,23 @@ const WeatherComponent: React.FC<WeatherComponentProps> = ({ lat, lon }) => {
   const weatherText = weatherDescriptions[weatherSymbol] || "Okänt väder";
 
   return (
-    <div className="max-w-full mx-auto bg-white shadow-md rounded-lg p-6 mb-6">
-      <h3 className="text-xl font-semibold text-gray-800 mb-2">
+    <div className="max-w-full mx-auto bg-white dark:bg-slate-900 shadow-md rounded-lg p-6 mb-6">
+      <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
         Dagens väderprognos
       </h3>
-      <p className="text-gray-600">
+      <p className="text-gray-600 dark:text-gray-300">
         Temperatur: <span className="font-medium">{temperature} °C</span>
       </p>
-      <p className="text-gray-600">
+      <p className="text-gray-600 dark:text-gray-300">
         Väder: <span className="font-medium">{weatherText}</span>
       </p>
-      <p className="text-gray-600">
+      <p className="text-gray-600 dark:text-gray-300">
         Nederbörd: <span className="font-medium">{precipitation} mm</span>
       </p>
-      <p className="text-gray-500 text-sm mt-4">
+      <p className="text-gray-500 text-sm mt-4 dark:text-gray-300">
         Latitud: {lat}, Longitud: {lon}, Örebro
       </p>
-      <p className="text-gray-500 text-xs mt-4 flex justify-end">
+      <p className="text-gray-500 dark:text-gray-300 text-xs mt-4 flex justify-end">
         Väder från yr.no
       </p>
     </div>

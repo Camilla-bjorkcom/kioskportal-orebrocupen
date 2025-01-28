@@ -5,6 +5,7 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import WeatherComponent from "@/components/WeatherComponent";
 import Countdown from "@/components/Countdown";
 import { InventoryGraph } from "@/components/InventoryGraph";
+import ThemeToggle from "@/components/ThemeToggle";
 
 function Dashboard() {
   const { id } = useParams<{ id: string }>();
@@ -71,7 +72,7 @@ function Dashboard() {
 
             <div className="flex flex-col gap-4 w-full lg:w-1/3">
               <Countdown startDate={tournament.startDate} />
-              <div className="bg-white p-5 rounded shadow-md">
+              <div className="bg-white dark:bg-slate-900  p-5 rounded shadow-md">
                 <p>
                   <strong>Startdatum:</strong>{" "}
                   {new Date(tournament.startDate).toLocaleDateString("sv-SE")}

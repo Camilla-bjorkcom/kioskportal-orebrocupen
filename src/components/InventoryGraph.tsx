@@ -104,9 +104,11 @@ export function InventoryGraph({ tournament }: InventoryGraphProps) {
   const chartData = getInventoryGraphData();
 
   return (
-    <Card>
+    <Card className="dark:bg-slate-900">
       <CardHeader>
-        <CardTitle>Inventeringar per dag</CardTitle>
+        <CardTitle className="dark:text-gray-200">
+          Inventeringar per dag
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className=" rounded-lg shadow-lg">

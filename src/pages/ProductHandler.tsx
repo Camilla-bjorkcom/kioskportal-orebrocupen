@@ -34,6 +34,7 @@ import CreateProductListButton from "@/components/CreateProductListButton";
 import UpdateProductListButton from "@/components/UpdateProductListButton";
 import HandleProductListButton from "@/components/HandleProductListButton";
 import DeleteButton from "@/components/DeleteButton";
+import ThemeToggle from "@/components/ThemeToggle";
 
 function ProductHandler() {
   const { id } = useParams<{ id: string }>();
@@ -269,74 +270,71 @@ function ProductHandler() {
           tournamentId={tournamentId || ""}
         />
         <div className="mt-8">
-        <Accordion type="multiple"  className=" w-full 2xl:w-3/4">
-          {productListsByTournament.map((productList) => (
-            <AccordionItem
-              key={productList.id}
-              value={productList.id}
-              className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
-            >
-              <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
-                <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                  <label className="basis-1/4 font-medium hover:text-slate-800">
-                    {productList.productlistname}
-                  </label>
-                  {/* <HandleProductListButton
+          <Accordion type="multiple" className=" w-full 2xl:w-3/4">
+            {productListsByTournament.map((productList) => (
+              <AccordionItem
+                key={productList.id}
+                value={productList.id}
+                className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+              >
+                <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
+                  <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
+                    <label className="basis-1/4 font-medium hover:text-slate-800">
+                      {productList.productlistname}
+                    </label>
+                    {/* <HandleProductListButton
                     key={productList.id}
                     productlist={productList}
                     onUpdate={updateProductList}
                   ></HandleProductListButton> */}
 
-                  <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
-                   
-                          <UpdateProductListButton
-                            onUpdate={(updatedProductList) => updateProductList(updatedProductList)}
-                            tournamentProducts={productsByTournament}
-                            
-                            
-                             
+                    <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
+                      <UpdateProductListButton
+                        onUpdate={(updatedProductList) =>
+                          updateProductList(updatedProductList)
+                        }
+                        tournamentProducts={productsByTournament}
+                        productlist={productList}
+                      />
 
-                            productlist={productList}
-                          />
-                        
-                    
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <DeleteButton
-                            id={productList.id}
-                            type="ProductList"
-                            onDelete={() => DeleteProductsList(productList.id)}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Radera produktlista</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <DeleteButton
+                              id={productList.id}
+                              type="ProductList"
+                              onDelete={() =>
+                                DeleteProductsList(productList.id)
+                              }
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Radera produktlista</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
                   </div>
-                </div>
-                
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="flex mt-5 font-semibold">Produkter</div>
-                        {productList.products && productList.products.length > 0 ? (
-                          <ul className="grid grid-cols-3 gap-4 mt-2">
-                            {productList.products.map(
-                              (product: Product, index: number) => (
-                                <li key={index}>{product.productname}</li>
-                              )
-                            )}
-                          </ul>
-                        ) : (
-                          <p className="text-gray-500">
-                            Inga produkter tillagda för denna kiosk.
-                          </p>
-                        )}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex mt-5 font-semibold">Produkter</div>
+                  {productList.products && productList.products.length > 0 ? (
+                    <ul className="grid grid-cols-3 gap-4 mt-2">
+                      {productList.products.map(
+                        (product: Product, index: number) => (
+                          <li key={index}>{product.productname}</li>
+                        )
+                      )}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-500">
+                      Inga produkter tillagda för denna kiosk.
+                    </p>
+                  )}
                 </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </div>
     </section>

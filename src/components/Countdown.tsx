@@ -30,9 +30,9 @@ function Countdown({ startDate }: { startDate: string }) {
   }, [startDate]);
 
   return (
-    <div className="p-5 rounded shadow-md">
-      <h3 className="text-xl font-semibold text-gray-800">
-        Turneringsstart ⏳
+    <div className="p-5 rounded shadow-md dark:bg-slate-900">
+      <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+        Turneringsstart
       </h3>
       <p
         className="text-orange-600 text-lg"

@@ -3,9 +3,7 @@ import Header from "@/components/header";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import {Tournament} from "@/interfaces/tournament"
-
-
+import { Tournament } from "@/interfaces/tournament";
 
 function CreateTournament() {
   const navigate = useNavigate();
@@ -36,12 +34,15 @@ function CreateTournament() {
     endDate: Date;
   }) => {
     try {
-      const response = await fetch("https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tournamentName, startDate, endDate }),
-      });
-      console.log(response)
+      const response = await fetch(
+        "https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tournamentName, startDate, endDate }),
+        }
+      );
+      console.log(response);
       if (!response.ok) {
         throw new Error("Failed to save tournament");
       }
@@ -88,30 +89,27 @@ function CreateTournament() {
             {tournaments.length > 0 ? (
               tournaments.map((tournament, index) => (
                 <button
-                onClick={() =>
-                  navigate(`/dashboard/${tournament.id}`, {
-                    state: { tournament }, // Skicka turneringsinformationen här
-                  })
-                }
-                key={index}
-                className="flex flex-col p-2 justify-between rounded-xl border bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 relative"
-              >
-                <div className="flex justify-between w-full">
-                  <p className="">{tournament.tournamentName}</p>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Förhindra navigering vid radering
-                      DeleteTournament(tournament.id);
-                    }}
-                  >
-                    
-                  </button>
-                  <p className="text-xs absolute bottom-2 right-2">
-                    Skapad: {datetime}
-                  </p>
-                </div>
-              </button>
-              
+                  onClick={() =>
+                    navigate(`/dashboard/${tournament.id}`, {
+                      state: { tournament }, // Skicka turneringsinformationen här
+                    })
+                  }
+                  key={index}
+                  className="flex flex-col p-2 justify-between rounded-xl border bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 relative"
+                >
+                  <div className="flex justify-between w-full">
+                    <p className="">{tournament.tournamentName}</p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Förhindra navigering vid radering
+                        DeleteTournament(tournament.id);
+                      }}
+                    ></button>
+                    <p className="text-xs absolute bottom-2 right-2">
+                      Skapad: {datetime}
+                    </p>
+                  </div>
+                </button>
               ))
             ) : (
               <p className="text-gray-500">
