@@ -22,7 +22,7 @@ import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
 
 const formSchema = z.object({
-    productname: z.string().min(2, {
+    productName: z.string().min(2, {
       message: "Produktnamn måste ha minst 2 bokstäver",
     }),
     
@@ -32,43 +32,38 @@ const formSchema = z.object({
     z.number({ message: "Antal per paket måste anges med siffror" })
     .refine(val => val >= 0, { message: "Antal per paket måste vara 0 eller större" })
       .optional() // Gör det till ett valfritt fält
-  ),
-
-    tournamentId: z.string().min(2, {
-      message: "TurneringsId måste finnas",
-    }),
-     
+  ),     
 });
   
 
   
 interface CreateProductButtonProps {
-  tournamentId: string; // Lägg till id här
-  onSave: (productName: string, amountPerPackage: number, tournamentId: string) => void;
+ 
+  onSave: (productName: string, amountPerPackage: number) => void;
 }
 
 
   
-  function CreateProductButton({onSave, tournamentId }: CreateProductButtonProps) {
+  function CreateProductButton({onSave}: CreateProductButtonProps) {
 
     const [savedMessage, setSavedMessage] = useState<string | null>(null);
 
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {
-        productname: "",
+        productName: "",
         amountPerPackage: 0,
-        tournamentId, // Använd id från props
+       
       },
     });
     
       function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Form values:", values);
-        if (!values.tournamentId) {
-          console.error("Tournament ID saknas!");
+        if (!values.productName ) {
+          console.error("Produktnamn saknas!");
           return;
         }
-        onSave(values.productname, values.amountPerPackage ?? 0, values.tournamentId); // Skicka vidare `id`
+        onSave(values.productName, values.amountPerPackage ?? 0); // Skicka vidare `id`
         console.log(values);
         form.reset();
         setSavedMessage("Produkten har sparats");
@@ -94,7 +89,7 @@ interface CreateProductButtonProps {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="productname"
+              name="productName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Produktnamn</FormLabel>

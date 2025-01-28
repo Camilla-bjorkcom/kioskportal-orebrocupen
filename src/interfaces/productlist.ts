@@ -1,8 +1,7 @@
 import { Product } from './product';
 
-export interface ProductList {
+export interface Productlist {
   id: string;
-  productlistname: string;
-  tournamentId:string;
+  productlistName: string;
   products: Product[];
 }

@@ -70,9 +70,7 @@ export function AppSidebar({ id }: { id?: string }) {
           title: "Skapa anläggningar och kiosker",
           url: `/facilitiesandkiosks/${id}`,
         },
-        { title: "Kontaktpersoner", url: `/contactperson/${id}` },
         { title: "QR koder till kiosker", url: "#" },
-        { title: "Skapa kiosker", url: `/kioskmanager/${id}` },
       ],
     },
 
@@ -87,7 +85,7 @@ export function AppSidebar({ id }: { id?: string }) {
           url: `/inventorystatus/${id}`,
         },
         {
-          title: "Visa lagrets inventering",
+          title: "Visa lagrets inventeringar",
           url: `/inventorystatusstorage/${id}`,
         },
       ],

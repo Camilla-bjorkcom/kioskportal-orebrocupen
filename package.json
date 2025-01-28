@@ -33,6 +33,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "lodash-es": "^4.17.21",
     "lucide-react": "^0.460.0",
     "npm": "^10.9.1",
     "oidc-client-ts": "^3.1.0",
@@ -47,11 +48,13 @@
     "recharts": "^2.15.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
+    "usehooks-ts": "^3.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@jridgewell/gen-mapping": "^0.3.7",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.10.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
