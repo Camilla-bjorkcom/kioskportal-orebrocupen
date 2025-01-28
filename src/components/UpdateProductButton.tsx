@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
+
 import {
   Form,
   FormControl,
@@ -25,12 +25,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 
 import { Product } from "@/interfaces";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
+
 import {
   AlertDialog,
   AlertDialogAction,

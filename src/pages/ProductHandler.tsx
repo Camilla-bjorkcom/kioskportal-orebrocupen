@@ -1,15 +1,5 @@
 import CreateProductButton from "@/components/CreateProductButton";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+
 import {
   Tooltip,
   TooltipContent,
@@ -17,10 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import UpdateProductButton from "@/components/UpdateProductButton";
-
-import { TrashIcon } from "@radix-ui/react-icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { Product, Productlist } from "@/interfaces";
 import { useParams } from "react-router-dom";
 import {
@@ -29,10 +16,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import AddProductListButton from "@/components/AddProductListButton";
+
 import CreateProductListButton from "@/components/CreateProductListButton";
 import UpdateProductListButton from "@/components/UpdateProductListButton";
-import HandleProductListButton from "@/components/HandleProductListButton";
 import DeleteButton from "@/components/DeleteButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { toast } from "@/hooks/use-toast";
@@ -40,10 +26,14 @@ import { toast } from "@/hooks/use-toast";
 function ProductHandler() {
   const queryClient = useQueryClient();
   const { id } = useParams<{ id: string }>();
-  
+
   const tournamentId = id;
 
-  const {data:products, isLoading, error } = useQuery<Product[]>({
+  const {
+    data: products,
+    isLoading,
+    error,
+  } = useQuery<Product[]>({
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetchWithAuth(`products/${tournamentId}`);
@@ -51,32 +41,35 @@ function ProductHandler() {
         throw new Error("Failed to fetch products");
       }
       const data = await response.json();
-   
+
       return data;
     },
   });
 
-  const {data:productlists, isLoading: isLoadingProductLists, error: errorProductList } =
-    useQuery<Productlist[]>({
-      queryKey: ["productlists"],
-      queryFn: async () => {
-        const response = await fetchWithAuth(`productlists/${tournamentId}`);
-        if (!response) {
-          throw new Error("Failed to fetch product lists");
-        }
-        const data = await response.json();
-        console.log(data);
-        
+  const {
+    data: productlists,
+    isLoading: isLoadingProductLists,
+    error: errorProductList,
+  } = useQuery<Productlist[]>({
+    queryKey: ["productlists"],
+    queryFn: async () => {
+      const response = await fetchWithAuth(`productlists/${tournamentId}`);
+      if (!response) {
+        throw new Error("Failed to fetch product lists");
+      }
+      const data = await response.json();
+      console.log(data);
 
-        return data || [];
-      },
-    });
+      return data || [];
+    },
+  });
 
- 
-
-  const CreateProduct = async (productName: string, amountPerPackage: number) => {
+  const CreateProduct = async (
+    productName: string,
+    amountPerPackage: number
+  ) => {
     try {
-      const response = await fetchWithAuth(`products/${tournamentId}}`, {
+      const response = await fetchWithAuth(`products/${tournamentId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productName, amountPerPackage }),
@@ -105,7 +98,6 @@ function ProductHandler() {
   };
 
   const DeleteProduct = async (id: string) => {
-
     try {
       const response = await fetchWithAuth(`products/${tournamentId}/${id}`, {
         method: "DELETE",
@@ -131,7 +123,7 @@ function ProductHandler() {
         className: "bg-red-200",
       });
     }
-  }
+  };
 
   const UpdateProduct = async (updatedProduct: Product) => {
     try {
@@ -151,7 +143,7 @@ function ProductHandler() {
       const updatedProductFromApi = await response.json();
 
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      
+
       console.log("Uppdaterad produkt:", updatedProductFromApi);
     } catch (error) {
       console.error("Failed to update product:", error);
@@ -160,12 +152,6 @@ function ProductHandler() {
   };
 
   
-  function displayAmount(amount?: number | null) {
-    if (amount === null || amount === undefined) {
-      return "N/A";
-    }
-    return amount === 0 ? "N/A" : amount;
-  }
 
   if (isLoading) {
     return <div>Loading products...</div>;
@@ -174,17 +160,17 @@ function ProductHandler() {
   if (error) {
     return <div>Error: {String(error)}</div>;
   }
-  const updateProductList = (updatedList: Productlist) => {
-   
-  };
+ 
 
   // Spara ny produktlista (PUT)
-  const SaveProductList = async (
-    productlistName: string,
-    
-  ) => {
+  const SaveProductList = async (productlistName: string) => {
     try {
-      console.log("Saving product list:", productlistName, "Tournament ID:", tournamentId);
+      console.log(
+        "Saving product list:",
+        productlistName,
+        "Tournament ID:",
+        tournamentId
+      );
       const response = await fetchWithAuth(`productlists/${tournamentId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -196,18 +182,43 @@ function ProductHandler() {
       if (!response) {
         throw new Error("Failed to save product list");
       }
-      const newProductList = await response.json();
-      queryClient.invalidateQueries({ queryKey: ["productslists"] });
-      console.log(newProductList);
+      queryClient.invalidateQueries({ queryKey: ["productlists"] });
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const UpdateProductlist = async (updatedProductList: Productlist) => {
+    try {
+      const response = await fetchWithAuth(
+        `productlists/${tournamentId}/${updatedProductList.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedProductList),
+        }
+      );
+
+      if (!response) {
+        throw new Error("Failed to update product list");
+      }
+
+      const updatedProductListFromApi = await response.json();
+
+      queryClient.invalidateQueries({ queryKey: ["productlists"] });
+
+      console.log("Uppdaterad produktlista:", updatedProductListFromApi);
+    } catch (error) {
+      console.error("Failed to update product list:", error);
+      alert("Kunde inte uppdatera produktlistan. Försök igen.");
     }
   };
 
   // Ta bort produktlista (DELETE)
   const DeleteProductsList = async (id: string) => {
     try {
-      const response = await fetchWithAuth(`productlists/${tournamentId}/${id}`,
+      const response = await fetchWithAuth(
+        `productlists/${tournamentId}/${id}`,
         {
           method: "DELETE",
         }
@@ -215,7 +226,7 @@ function ProductHandler() {
       if (!response) {
         throw new Error("Failed to delete product list");
       }
-      queryClient.invalidateQueries({ queryKey: ["productslists"] });
+      queryClient.invalidateQueries({ queryKey: ["productlists"] });
     } catch (error) {
       console.error(error);
     }
@@ -237,8 +248,6 @@ function ProductHandler() {
     );
   }
 
- 
-
   return (
     <section>
       <div className="container mx-auto px-4 flex-row items-center">
@@ -247,7 +256,6 @@ function ProductHandler() {
           onSave={(productName, amountPerPackage) =>
             CreateProduct(productName, amountPerPackage)
           }
-          
         />
 
         <div className="mt-8">
@@ -260,7 +268,7 @@ function ProductHandler() {
                   <TooltipTrigger>
                     <UpdateProductButton
                       product={product}
-                      onUpdate={UpdateProduct}  
+                      onUpdate={UpdateProduct}
                       onDelete={() => product.id && DeleteProduct(product.id)}
                     />
                   </TooltipTrigger>
@@ -278,73 +286,76 @@ function ProductHandler() {
           onSave={(productListName) => {
             SaveProductList(productListName);
           }}
-         
         />
         <div className="mt-8">
-        <Accordion type="multiple"  className=" w-full 2xl:w-3/4">
-          {productlists?.map((productlist) => (
-            <AccordionItem
-              key={productlist.id}
-              value={productlist.id}
-              className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
-            >
-              <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
-                <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                  <label className="basis-1/4 font-medium hover:text-slate-800">
-                    {productlist.productlistName}
-                  </label>
-                  {/* <HandleProductListButton
+          <Accordion type="multiple" className=" w-full 2xl:w-3/4">
+            {productlists?.map((productlist) => (
+              <AccordionItem
+                key={productlist.id}
+                value={productlist.id}
+                className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+              >
+                <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
+                  <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
+                    <label className="basis-1/4 font-medium hover:text-slate-800">
+                      {productlist.productlistName}
+                    </label>
+                    {/* <HandleProductListButton
                     key={productList.id}
                     productlist={productList}
                     onUpdate={updateProductList}
                   ></HandleProductListButton> */}
 
-                  <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
-                   
-                          <UpdateProductListButton
-                            onUpdate={(updatedProductList) => updateProductList(updatedProductList)}
-                            tournamentProducts={products!}
-                            productlist={productlist}
-                          />
-                        
-                    
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <DeleteButton
-                            id={productlist.id}
-                            type="Productlist"
-                            onDelete={() => DeleteProductsList(productlist.id)}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Radera produktlista</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
+                      <UpdateProductListButton
+                        productlist={productlist}
+                        tournamentProducts={products!}
+                        onUpdate={(updatedList) =>
+                          UpdateProductlist(updatedList)
+                        } // Använder funktionen från ProductHandler
+                      />
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <DeleteButton
+                              id={productlist.id}
+                              type="Productlist"
+                              onDelete={() =>
+                                DeleteProductsList(productlist.id)
+                              }
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Radera produktlista</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
                   </div>
-                </div>
-                
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="flex mt-5 font-semibold">Produkter</div>
-                        {productlist.products && productlist.products.length > 0 ? (
-                          <ul className="grid grid-cols-3 gap-4 mt-2">
-                            {productlist.products.map(
-                              (product: Product, index: number) => (
-                                <li key={index}>{product.productName}</li>
-                              )
-                            )}
-                          </ul>
-                        ) : (
-                          <p className="text-gray-500">
-                            Inga produkter tillagda för denna kiosk.
-                          </p>
-                        )}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex mt-5 font-semibold">Produkter</div>
+                  {productlist.products && productlist.products.length > 0 ? (
+                    <ul
+                      className="grid grid-cols-3 gap-4 mt-2"
+                      key={productlist.id}
+                    >
+                      {productlist.products.map(
+                        (product: Product, index: number) => (
+                          <li key={index}>{product.productName}</li>
+                        )
+                      )}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-500">
+                      Inga produkter tillagda i denna produktlista.
+                    </p>
+                  )}
                 </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </div>
     </section>
