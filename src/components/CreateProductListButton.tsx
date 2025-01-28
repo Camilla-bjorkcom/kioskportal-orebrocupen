@@ -9,7 +9,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "./ui/input";
-import { PlusIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -29,27 +28,25 @@ const formSchema = z.object({
   productlistname: z.string().min(2, {
     message: "Produktlistnamnet måste ha minst 2 bokstäver",
   }),
-  tournamentId: z.string().min(2, {
-    message: "TurneringsId måste finnas",
-  }),
+ 
 });
 
 interface CreateProductListButtonProps {
-  onSave: (productListName: string ,tournamentId:string) => void; // Callback för att spara produktnamn
-  tournamentId:string;
+  onSave: (productListName: string) => void; // Callback för att spara produktnamn
+ 
 }
 
-function CreateProductListButton({ onSave,tournamentId }: CreateProductListButtonProps) {
+function CreateProductListButton({ onSave }: CreateProductListButtonProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       productlistname: "",
-      tournamentId
+     
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave(values.productlistname, values.tournamentId);
+    onSave(values.productlistname);
     setOpen(false);
     console.log(values);
     form.reset();

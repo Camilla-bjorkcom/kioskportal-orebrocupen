@@ -100,7 +100,7 @@ function ProductHandler() {
 
   const CreateProduct = async (productName: string, amountPerPackage: number) => {
     try {
-      const response = await fetchWithAuth(`products/${id}`, {
+      const response = await fetchWithAuth(`products/${tournamentId}}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productName, amountPerPackage }),
@@ -183,19 +183,7 @@ function ProductHandler() {
     }
   };
 
-  // const DeleteProduct = async (id: string) => {
-  //   try {
-  //     const response = await fetch(`http://localhost:3000/products/${id}`, {
-  //       method: "DELETE",
-  //     });
-  //     if (!response.ok) {
-  //       throw new Error("failed to delete product");
-  //     }
-  //     setProducts((prev) => prev.filter((list) => list.id !== id));
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  
   function displayAmount(amount?: number | null) {
     if (amount === null || amount === undefined) {
       return "N/A";
@@ -217,23 +205,24 @@ function ProductHandler() {
   // Spara ny produktlista (POST)
   const SaveProductList = async (
     productlistName: string,
-    tournamentId: string
+    
   ) => {
     try {
-      const response = await fetch("http://localhost:3000/productslists", {
-        method: "POST",
+      console.log("Saving product list:", productlistName, "Tournament ID:", tournamentId);
+      const response = await fetchWithAuth(`productlists/${tournamentId}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          productlistname: productlistName,
-          tournamentId: tournamentId,
+          productlistName: productlistName,
           products: [],
         }),
       });
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Failed to save product list");
       }
       const newProductList = await response.json();
       queryClient.invalidateQueries({ queryKey: ["productslists"] });
+      console.log(newProductList);
     } catch (error) {
       console.error(error);
     }
@@ -311,10 +300,10 @@ function ProductHandler() {
       </div>
       <div className="container mx-auto px-4 flex-row items-center">
         <CreateProductListButton
-          onSave={(productListName, tournamentId) => {
-            SaveProductList(productListName, tournamentId);
+          onSave={(productListName) => {
+            SaveProductList(productListName);
           }}
-          tournamentId={tournamentId || ""}
+         
         />
         <div className="mt-8">
         <Accordion type="multiple"  className=" w-full 2xl:w-3/4">
