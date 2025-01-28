@@ -30,11 +30,11 @@ type InventoryGraphProps = {
 const inventories = [
   { id: 1, date: "2025-07-10" },
   { id: 2, date: "2025-07-10" },
-  { id: 3, date: "2025-07-11" },
-  { id: 4, date: "2025-07-12" },
-  { id: 5, date: "2025-07-12" },
-  { id: 6, date: "2025-07-12" },
-  { id: 7, date: "2025-07-12" },
+  { id: 3, date: "2025-07-10" },
+  { id: 4, date: "2025-07-10" },
+  { id: 5, date: "2025-07-10" },
+  { id: 6, date: "2025-07-10" },
+  { id: 7, date: "2025-07-10" },
   { id: 8, date: "2025-07-12" },
   { id: 9, date: "2025-07-12" },
   { id: 10, date: "2025-07-12" },
@@ -43,11 +43,31 @@ const inventories = [
   { id: 12, date: "2025-07-12" },
   { id: 14, date: "2025-07-12" },
   { id: 15, date: "2025-07-12" },
-  { id: 6, date: "2025-07-12" },
-  { id: 6, date: "2025-03-05" },
-  { id: 6, date: "2025-03-05" },
-  { id: 6, date: "2025-03-05" },
-  { id: 6, date: "2025-03-07" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
+  { id: 6, date: "2025-07-13" },
 ];
 
 export function InventoryGraph({ tournament }: InventoryGraphProps) {
@@ -60,12 +80,18 @@ export function InventoryGraph({ tournament }: InventoryGraphProps) {
     const end = new Date(tournament.endDate);
     const days = [];
 
-    while (start <= end) {
-      days.push(new Date(start).toISOString().split("T")[0]); // Format YYYY-MM-DD
-      start.setDate(start.getDate() + 1);
+    let currentDate = new Date(
+      Date.UTC(start.getFullYear(), start.getMonth(), start.getDate())
+    );
+    const endDate = new Date(
+      Date.UTC(end.getFullYear(), end.getMonth(), end.getDate())
+    );
+
+    while (currentDate <= endDate) {
+      days.push(currentDate.toISOString().split("T")[0]);
+      currentDate.setUTCDate(currentDate.getUTCDate() + 1);
     }
 
-    // Räkna inventeringar per dag
     return days.map((day) => ({
       date: new Date(day).toLocaleDateString("sv-SE", {
         month: "short",
