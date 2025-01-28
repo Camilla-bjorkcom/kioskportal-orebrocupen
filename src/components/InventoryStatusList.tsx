@@ -140,8 +140,8 @@ const InventoryStatusList = () => {
 
   const getFacilityClasses = (id: string) => {
     return facilityStatus[id]?.some((x) => x.hasNewData)
-      ? "ml-auto mr-5 bg-orange-400 w-4 h-4 rounded-full opacity-100 transition-opacity delay-150 duration-500 ease-in-out"
-      : "ml-auto mr-5 bg-orange-400 w-4 h-4 rounded-full opacity-0 transition-opacity delay-150 duration-500 ease-in-out";
+      ? "bg-orange-400 w-2 h-2 rounded-full opacity-100 transition-all delay-150 duration-500 ease-in-out absolute -right-3 top-3"
+      : "bg-orange-400  w-2 h-2 opacity-0 rounded-full transition-all delay-150 duration-500 ease-in-out absolute -right-3 top-[10px]";
   };
   
 
@@ -174,14 +174,16 @@ const InventoryStatusList = () => {
                 }, 2000)
               }
             >
+              <div className="flex relative">
               <p>{facilityName}</p>
               <div className={`${getFacilityClasses(id)}`}></div>
+              </div>
             </AccordionTrigger>
             <AccordionContent>
               {sortKiosksByInventoryDate(kiosks).map((kiosk) => (
                 <div key={kiosk.id} className="mb-7">
                   <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2">
-                    <h3 className={`${getKioskClasses(kiosk.id)}`}>
+                    <h3 className={`${getKioskClasses(kiosk.id)} `}>
                       {kiosk.kioskName}
                     </h3>
 
