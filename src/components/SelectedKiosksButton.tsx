@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Kiosk, Product, Productlist } from '@/interfaces';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Checkbox } from './ui/checkbox';
+import fetchWithAuth from '@/api/functions/fetchWithAuth';
+import { useParams } from 'react-router-dom';
 
 interface SelectedKiosksButtonProps {
   selectedKiosks: Kiosk[]; // Lista över valda kiosker
@@ -13,6 +15,7 @@ interface SelectedKiosksButtonProps {
   onClick: (open :boolean) => void; 
   onKiosksUpdated: (updatedKiosks: Kiosk[]) => void;
   onClearSelected: ()=> void;
+
 }
 
 function SelectedKiosksButton({ selectedKiosks,
@@ -22,7 +25,10 @@ function SelectedKiosksButton({ selectedKiosks,
   const [open, setOpen] = useState(false);
   const [selectedProductListId, setSelectedProductListId] = useState<string>('');
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const queryClient = useQueryClient();
 
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
   
 
   const handleDialogOpenChange = async (isOpen: boolean) => {
@@ -71,18 +77,18 @@ function SelectedKiosksButton({ selectedKiosks,
       const updatedKioskList = [];
 
     for (const kiosk of selectedKiosks) {
-        const response = await fetch(`http://localhost:3000/kiosks/${kiosk.id}`, 
+        const response = await fetchWithAuth(`facilities/${tournamentId}/${kiosk.facilityId}/kiosks/${kiosk.id}`, 
             {
                method: "PUT",
                headers: {'Content-Type': 'application.json'},
                body: JSON.stringify({
                 kioskName: kiosk.kioskName,
                 products: selectedProducts,
-                facilityId: kiosk.facilityId
+                
               }),
             })
-            if(!response.ok) {
-                const errorText = await response.text();
+            if(!response) {
+                const errorText = await response!.text();
                 console.error("Server response error:", errorText);
                 throw new Error("Failed to update list");
             }
