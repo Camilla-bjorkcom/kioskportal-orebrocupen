@@ -10,23 +10,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { Pencil, Plus } from "lucide-react";
-import { ProductList, Product } from "@/interfaces";
-import { useParams } from "react-router-dom";
-
-
+import { Productlist, Product } from "@/interfaces";
 
 const formSchema = z.object({
   productlistname: z.string().min(2, {
@@ -35,8 +24,8 @@ const formSchema = z.object({
 });
 
 interface UpdateProductListButtonProps {
-  productlist: ProductList;
-  onUpdate: (updatedList: ProductList) => void;
+  productlist: Productlist;
+  onUpdate: (updatedList: Productlist) => void;
   tournamentProducts: Product[];
 }
 
@@ -44,30 +33,31 @@ function UpdateProductListButton({
   productlist,
   onUpdate,
   tournamentProducts,
-}:  UpdateProductListButtonProps) {
+}: UpdateProductListButtonProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      productlistname: productlist.productlistname,
+      productlistname: productlist.productlistName,
     },
   });
 
- 
   const [productlistForUpdate, setProductlistforUpdate] =
-    useState<ProductList>(productlist);
+    useState<Productlist>(productlist);
   const [open, setOpen] = useState(false);
-  const { id } = useParams<{ id: string }>();
-  const tournamentId = id;
- 
-  const allSelected:boolean = tournamentProducts.length > 0 && tournamentProducts.every((product) =>
-    productlistForUpdate?.products.some((p) => p.id === product.id)
-  );
 
-  const toggleSelectAll = () => {
-    const allSelected = tournamentProducts.length > 0 && tournamentProducts.every((product) =>
+  const allSelected: boolean =
+    tournamentProducts.length > 0 &&
+    tournamentProducts.every((product) =>
       productlistForUpdate?.products.some((p) => p.id === product.id)
     );
-  
+
+  const toggleSelectAll = () => {
+    const allSelected =
+      tournamentProducts.length > 0 &&
+      tournamentProducts.every((product) =>
+        productlistForUpdate?.products.some((p) => p.id === product.id)
+      );
+
     setProductlistforUpdate((prev) =>
       prev
         ? {
@@ -78,74 +68,29 @@ function UpdateProductListButton({
     );
   };
 
- 
-
-  const saveChangesToProductList = async (productlist: ProductList) => {
-    const url = `http://localhost:3000/productslists/${productlist.id}`;
-
-    // Skapa en sanerad version av produktlistan
-    const sanitizedProductList = {
-      id: productlist.id,
-      productlistname: productlist.productlistname,
-      tournamentId: productlist.tournamentId ,
-      products: productlist.products.map((product) => ({
-        id: product.id,
-        productname: product.productname,
-      })),
-    };
-
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(sanitizedProductList),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Server response error:", errorText);
-        throw new Error("Failed to update list");
-      }
-      
-      const data = await response.json();
-      onUpdate(data);
-    } catch (error) {
-      console.error("Update failed:", error);
-      throw error;
-    }
-  };
-
-  const handleSubmit = form.handleSubmit(async (values) => {
+  const handleSubmit = form.handleSubmit((values) => {
     if (productlistForUpdate) {
-      try {
-        // Sätt produktlistan med de nya värdena
-        const updatedList = await saveChangesToProductList({
-          ...productlistForUpdate,
-          productlistname: values.productlistname,
-        });
-
-        console.log("Updated list:", updatedList);
-        setOpen(false);
-      } catch (error) {
-        console.error("Failed to save changes", error);
-      }
+      const updatedList = {
+        ...productlistForUpdate,
+        productlistName: values.productlistname,
+      };
+      onUpdate(updatedList); // Skickar tillbaka den uppdaterade listan
+      setOpen(false);
     }
   });
 
- 
-  
   return (
     <Dialog open={open} onOpenChange={(isOpen) => setOpen(isOpen)}>
       {productlist.products.length === 0 && (
         <DialogTrigger asChild>
-          <Button>
+          <Button className="dark:bg-black">
             Lägg till produkter <Plus />
           </Button>
         </DialogTrigger>
       )}
       {productlist.products.length >= 1 && (
         <DialogTrigger asChild>
-          <Button>
+          <Button className="dark:bg-black">
             Redigera produktlista <Pencil />
           </Button>
         </DialogTrigger>
@@ -154,7 +99,7 @@ function UpdateProductListButton({
         <DialogHeader>
           <DialogTitle>Uppdatera produktlista</DialogTitle>
           <DialogDescription className="sr-only">
-            Fyll i informationen för att skapa en ny Produkt
+            Fyll i informationen för att skapa en ny produktlista.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -167,13 +112,12 @@ function UpdateProductListButton({
                   <FormLabel>Produktlistnamn</FormLabel>
                   <FormControl>
                     <Input
-                      defaultValue={productlistForUpdate?.productlistname}
                       {...field}
                       onChange={(e) => {
                         field.onChange(e);
                         setProductlistforUpdate((prev) =>
                           prev
-                            ? { ...prev, productlistname: e.target.value }
+                            ? { ...prev, productlistName: e.target.value }
                             : prev
                         );
                       }}
@@ -183,55 +127,49 @@ function UpdateProductListButton({
               )}
             />
             <div>
-              <div className="flex justify-between items-center mb-4 text-right">
-                <p className="font-semibold">Välj produkter att lägga till :</p>
+              <div className="flex justify-between items-center mb-4">
+                <p className="font-semibold">Välj produkter att lägga till:</p>
                 <Button type="button" onClick={toggleSelectAll}>
-               {allSelected ? "Avmarkera alla" : "Markera alla"}
+                  {allSelected ? "Avmarkera alla" : "Markera alla"}
                 </Button>
               </div>
               <div className="grid grid-cols-3 gap-4">
-              {tournamentProducts.map((product) => (
-                <div key={product.id} className="flex items-center gap-2">
-                  <Checkbox
-                    id={`product-${product.id}`}
-                    checked={
-                      productlistForUpdate?.products.some(
-                        (p) => p.id === product.id
-                      ) || false
-                    }
-                    onCheckedChange={(checked) => {
-                      if (productlistForUpdate) {
-                        const updatedProducts = checked
-                          ? [...productlistForUpdate.products, product]
-                          : productlistForUpdate.products.filter(
-                              (p) => p.id !== product.id
-                            );
-                        setProductlistforUpdate(
-                          (prev) =>
-                            prev && { ...prev, products: updatedProducts }
-                        );
+                {tournamentProducts.map((product) => (
+                  <div key={product.id} className="flex items-center gap-2">
+                    <Checkbox
+                      id={`product-${product.id}`}
+                      checked={
+                        productlistForUpdate?.products.some(
+                          (p) => p.id === product.id
+                        ) || false
                       }
-                    }}
-                  />
-                  <label
-                    htmlFor={`product-${product.id}`}
-                    className="font-medium hover:text-slate-800 cursor-pointer"
-                  >
-                    {product.productname}
-                  </label>
-                </div>
-                
-              ))}
+                      onCheckedChange={(checked) => {
+                        if (productlistForUpdate) {
+                          const updatedProducts = checked
+                            ? [...productlistForUpdate.products, product]
+                            : productlistForUpdate.products.filter(
+                                (p) => p.id !== product.id
+                              );
+                          setProductlistforUpdate(
+                            (prev) =>
+                              prev && { ...prev, products: updatedProducts }
+                          );
+                        }
+                      }}
+                    />
+                    <label
+                      htmlFor={`product-${product.id}`}
+                      className="font-medium hover:text-slate-800 cursor-pointer"
+                    >
+                      {product.productName}
+                    </label>
+                  </div>
+                ))}
               </div>
             </div>
-            <Button
-              className="mx-auto w-full"
-              onClick={() => saveChangesToProductList(productlistForUpdate)}
-            >
+            <Button className="mx-auto w-full" type="submit">
               Spara
             </Button>
-
-            <FormMessage />
           </form>
         </Form>
       </DialogContent>

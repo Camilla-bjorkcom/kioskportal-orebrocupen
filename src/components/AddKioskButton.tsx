@@ -58,7 +58,7 @@ function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto"
+          className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto dark:hover:bg-slate-600 dark:hover:text-gray-200"
           onClick={(e) => e.stopPropagation()} // Stoppa eventbubbling
         >
           Lägg till kiosk <PlusIcon className="w-4 h-4 place-self-center" />
@@ -94,7 +94,7 @@ function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
             <div className="flex justify-end">
               <Button
                 type="submit"
-                className="border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
+                className="border border-solid hover:bg-slate-800  hover:text-white rounded-xl p-2 mt-8 shadow"
               >
                 Spara kiosk
               </Button>
