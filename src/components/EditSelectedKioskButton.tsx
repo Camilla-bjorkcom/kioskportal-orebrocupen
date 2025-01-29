@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Kiosk, Product, ProductList } from "@/interfaces";
+import { Kiosk, Product, Productlist } from "@/interfaces";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import {
@@ -32,6 +32,9 @@ import {
 import { Input } from "./ui/input";
 import { Toaster } from "./ui/toaster";
 import { toast } from "@/hooks/use-toast";
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
+import { useParams } from "react-router-dom";
+
 
 const formSchema = z.object({
   kioskName: z.string().min(2, {
@@ -41,7 +44,7 @@ const formSchema = z.object({
 
 interface EditSelectedKioskButtonProps {
   kioskForEdit: Kiosk;
-  productLists: ProductList[];
+  productLists: Productlist[];
   products: Product[];
   onKioskUpdated: (updatedkiosk: Kiosk) => void;
 
@@ -62,11 +65,29 @@ function EditSelectedKioskButton({
   const [selectedProductListId, setSelectedProductListId] =
     useState<string>("");
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
+
+  
+
+  // Synkronisera selectedProducts med kioskForEdit.products
+  useEffect(() => {
+    if (kioskForEdit && kioskForEdit.products) {
+      setSelectedProducts(kioskForEdit.products);
+    }
+  }, [kioskForEdit]);
+  
+
 
   const handleDialogOpen = async (isOpen: boolean) => {
     if (isOpen) {
+      // Sätt initiala produkter
       await onEditClick(kioskForEdit); // Ladda kiosken
-      setSelectedProducts(kioskForEdit.products || []); // Sätt initiala produkter
+      console.log("HELA",kioskForEdit);
+      console.log(kioskForEdit.products);
+     
+      setSelectedProducts(kioskForEdit.products);
+      console.log(selectedProducts);
       setOpen(true);
     } else {
       setOpen(false);
@@ -106,21 +127,21 @@ function EditSelectedKioskButton({
 
   const editKiosk = async (kioskForEdit: Kiosk) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/kiosks/${kioskForEdit.id}`,
+      const response = await 
+        fetchWithAuth(`facilities/${tournamentId}/${kioskForEdit.facilityId}/kiosks/${kioskForEdit.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            id: kioskForEdit.id,
+           
             products: selectedProducts,
-            kioskName: kioskForEdit.kioskName,
-            facilityId: kioskForEdit.facilityId,
+           
+            
           }),
         }
       );
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Failed to update kiosk");
       }
 

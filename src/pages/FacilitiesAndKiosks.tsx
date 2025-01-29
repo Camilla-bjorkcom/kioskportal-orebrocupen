@@ -370,6 +370,7 @@ function FacilitiesAndKiosks() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             kioskName: kioskName,
+           
           }),
         }
       );
@@ -415,7 +416,6 @@ function FacilitiesAndKiosks() {
           body: JSON.stringify({
             id: kiosk.id,
             kioskName: kiosk.kioskName,
-            facilityId: kiosk.facilityId,
             products: kiosk.products,
           }),
         }
@@ -488,13 +488,18 @@ function FacilitiesAndKiosks() {
 
     try {
       setKioskForEdit(kiosk);
-      const response = await fetch(`http://localhost:3000/kiosks/${kiosk.id}`);
-      if (!response.ok) {
+      const response = await fetchWithAuth(
+        `facilities/${tournamentId}/${kiosk.facilityId}/kiosks/${kiosk.id}`,{
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+      if (!response) {
         console.error("Failed to fetch kiosk products");
       } else {
         const data = await response.json();
         console.log(data);
-        // setSelectedProducts(kiosk.products);
+        setSelectedProducts(data.products);
+        console.log("selectedProducts", selectedProducts);
 
         setOpen(true);
       }
@@ -550,6 +555,8 @@ function FacilitiesAndKiosks() {
           onClick={handleSubmit}
           onKiosksUpdated={handleKiosksUpdated}
           onClearSelected={clearSelectedKiosks}
+         
+          
         />
       </div>
       <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
