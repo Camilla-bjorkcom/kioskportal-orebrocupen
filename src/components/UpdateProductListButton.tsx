@@ -10,13 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
@@ -89,14 +83,14 @@ function UpdateProductListButton({
     <Dialog open={open} onOpenChange={(isOpen) => setOpen(isOpen)}>
       {productlist.products.length === 0 && (
         <DialogTrigger asChild>
-          <Button>
+          <Button className="dark:bg-black">
             Lägg till produkter <Plus />
           </Button>
         </DialogTrigger>
       )}
       {productlist.products.length >= 1 && (
         <DialogTrigger asChild>
-          <Button>
+          <Button className="dark:bg-black">
             Redigera produktlista <Pencil />
           </Button>
         </DialogTrigger>
