@@ -43,7 +43,8 @@ function FacilitiesAndKiosks() {
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const [productLists, setProductLists] = useState<Productlist[]>([]);
+  const [kiosks, setKiosks] = useState<Kiosk[]>([]);
+  const [kioskProducts, setKioskProducts] = useState<Product[]>([]);
  
   const [open, setOpen] = useState(false);
 
@@ -492,7 +493,7 @@ function FacilitiesAndKiosks() {
   const handleEditClick = async (kiosk: Kiosk) => {
     console.log("handleEditClick körs för kiosk:", kiosk);
     console.log("produkter", products);
-    console.log("produktlistor", productLists);
+    console.log("produktlistor", productlists);
 
     try {
       setKioskForEdit(kiosk);
