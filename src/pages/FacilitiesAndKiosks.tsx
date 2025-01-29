@@ -484,7 +484,6 @@ function FacilitiesAndKiosks() {
   const handleEditClick = async (kiosk: Kiosk) => {
     console.log("handleEditClick körs för kiosk:", kiosk);
     console.log("produkter", products);
-    console.log("produktlistor", productLists);
 
     try {
       setKioskForEdit(kiosk);
