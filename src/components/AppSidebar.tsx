@@ -109,9 +109,9 @@ export function AppSidebar({ id }: { id?: string }) {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                  <SidebarMenuItem className="font-bold">
+                  <SidebarMenuItem className="font-bold hover:bg-none">
                       <SidebarMenuButton asChild>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 ">
                             <item.icon className="w-5 h-5" />
                             <span>{item.title}</span> 
                           </div> 
