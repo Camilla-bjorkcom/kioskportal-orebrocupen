@@ -429,6 +429,7 @@ function FacilitiesAndKiosks() {
         throw new Error("Failed to update kiosk");
       }
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
       toast({
         className: "bg-green-200",
         title: "Lyckat",

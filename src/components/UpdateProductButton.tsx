@@ -78,9 +78,9 @@ function UpdateProductButton({
       amountPerPackage: product.amountPerPackage ?? 0,
     },
   });
-  console.log("Formulärvärden (innan konvertering):", product);
+ 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Formulärvärden (innan konvertering):", values);
+   
     const updatedProduct: Product = {
       id: values.id,
       productName: values.productName,

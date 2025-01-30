@@ -10,7 +10,6 @@ import {
   } from "@/components/ui/dialog"
   
   import { Input } from "./ui/input";
-  import { PlusIcon } from "@radix-ui/react-icons";
   import { zodResolver } from "@hookform/resolvers/zod"
   import { useForm } from "react-hook-form"
   import { useState } from "react";
@@ -20,6 +19,7 @@ import {  z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
+import { Product } from "@/interfaces";
 
 const formSchema = z.object({
     productName: z.string().min(2, {
@@ -39,7 +39,8 @@ const formSchema = z.object({
   
 interface CreateProductButtonProps {
  
-  onSave: (productName: string, amountPerPackage: number) => void;
+  onSave: (productName: string, amountPerPackage: number ) => void;
+  
 }
 
 
