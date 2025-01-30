@@ -88,10 +88,10 @@ const InventoryStatusList = () => {
     data.forEach((item) => {
       item.kiosks.forEach((kiosk) => {
         kiosk.products.forEach((product) => {
-          if (product.amountPerPackage != undefined || null || 0) {
+          if (product.amountPerPackage) {
             const result = calculateTotal(product);
             product.total = result;
-          }
+          }          
         });
       });
     });
@@ -220,7 +220,6 @@ const InventoryStatusList = () => {
                       : "bg-white dark:bg-slate-800"
                   }`}
                 >
-                  {product.id}
                   <p
                     className={
                       isOutOfStock ? "text-red-500 font-semibold" : ""
