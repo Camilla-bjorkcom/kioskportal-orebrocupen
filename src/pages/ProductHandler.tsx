@@ -41,7 +41,7 @@ function ProductHandler() {
         throw new Error("Failed to fetch products");
       }
       const data = await response.json();
-
+      console.log(data); 
       return data;
     },
   });
@@ -58,7 +58,6 @@ function ProductHandler() {
         throw new Error("Failed to fetch product lists");
       }
       const data = await response.json();
-      console.log(data);
 
       return data || [];
     },
@@ -110,6 +109,7 @@ function ProductHandler() {
       }
       //uppdaterar data
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
         className: "bg-green-200",
         title: "Lyckat",
@@ -143,7 +143,8 @@ function ProductHandler() {
       const updatedProductFromApi = await response.json();
 
       queryClient.invalidateQueries({ queryKey: ["products"] });
-
+      queryClient.invalidateQueries({ queryKey: ["productlists"] });
+     
       console.log("Uppdaterad produkt:", updatedProductFromApi);
     } catch (error) {
       console.error("Failed to update product:", error);
@@ -259,14 +260,18 @@ function ProductHandler() {
           <h3 className="text-lg mb-7">Sparade produkter:</h3>
 
           <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
+
             {products?.map((product) => (
+              <>
+             
               <TooltipProvider key={product.id}>
                 <Tooltip>
-                  <TooltipTrigger>
+                                    <TooltipTrigger>
                     <UpdateProductButton
                       product={product}
                       onUpdate={UpdateProduct}
                       onDelete={() => product.id && DeleteProduct(product.id)}
+                      key={product.id}
                     />
                   </TooltipTrigger>
                   <TooltipContent>
@@ -274,6 +279,7 @@ function ProductHandler() {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
+              </>
             ))}
           </div>
         </div>
@@ -297,6 +303,7 @@ function ProductHandler() {
               >
                 <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
                   <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
+                    
                     <label className="basis-1/4 font-medium  ">
                       {productlist.productlistName}
                     </label>
