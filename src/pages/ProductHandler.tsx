@@ -144,11 +144,20 @@ function ProductHandler() {
 
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Produkt med id ${id} uppdaterades`,
+      });
      
       console.log("Uppdaterad produkt:", updatedProductFromApi);
     } catch (error) {
       console.error("Failed to update product:", error);
-      alert("Kunde inte uppdatera produkten. Försök igen.");
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att uppdatera produkt.",
+        className: "bg-red-200",
+      });
     }
   };
 
@@ -163,12 +172,7 @@ function ProductHandler() {
   // Spara ny produktlista (PUT)
   const SaveProductList = async (productlistName: string) => {
     try {
-      console.log(
-        "Saving product list:",
-        productlistName,
-        "Tournament ID:",
-        tournamentId
-      );
+      
       const response = await fetchWithAuth(`productlists/${tournamentId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -181,8 +185,18 @@ function ProductHandler() {
         throw new Error("Failed to save product list");
       }
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Produktlista  ${productlistName} skapades`,
+      });
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att skapa produktlista.",
+        className: "bg-red-200",
+      });
     }
   };
 
@@ -204,11 +218,20 @@ function ProductHandler() {
       const updatedProductListFromApi = await response.json();
 
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Produktlista  ${updatedProductList.productlistName} uppdaterades`,
+      });
 
       console.log("Uppdaterad produktlista:", updatedProductListFromApi);
     } catch (error) {
       console.error("Failed to update product list:", error);
-      alert("Kunde inte uppdatera produktlistan. Försök igen.");
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att uppdatera produktlista.",
+        className: "bg-red-200",
+      });
     }
   };
 
@@ -225,8 +248,18 @@ function ProductHandler() {
         throw new Error("Failed to delete product list");
       }
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Produktlista med id ${id} raderades`,
+      });
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att radera produktlista.",
+        className: "bg-red-200",
+      });
     }
   };
 
@@ -253,8 +286,9 @@ function ProductHandler() {
         <CreateProductButton
           onSave={(productName, amountPerPackage) =>
             CreateProduct(productName, amountPerPackage)
+            
           }
-        />
+        />  
 
         <div className="mt-8">
           <h3 className="text-lg mb-7">Sparade produkter:</h3>
