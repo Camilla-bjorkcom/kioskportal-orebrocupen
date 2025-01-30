@@ -33,7 +33,8 @@ import { Input } from "./ui/input";
 import { Toaster } from "./ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 
 const formSchema = z.object({
@@ -47,7 +48,6 @@ interface EditSelectedKioskButtonProps {
   productLists: Productlist[];
   products: Product[];
   onKioskUpdated: (updatedkiosk: Kiosk) => void;
-
   onEditClick: (kiosk: Kiosk) => void;
   onSave: (kiosk: Kiosk) => void;
   onUpdateKioskClick: () => void;
@@ -147,12 +147,21 @@ function EditSelectedKioskButton({
       }
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
       const updatedKiosk = await response.json();
-      alert("Produkter har sparats!");
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Produkterna har sparats i kiosken!`,
+      });
+    
       onKioskUpdated(updatedKiosk); // Skicka tillbaka uppdaterad kiosk
       setOpen(false); // Stäng dialogen
     } catch (error) {
       console.error("Failed to update kiosk:", error);
-      alert("Kunde inte uppdatera produkterna. Försök igen.");
+      toast({
+        className: "bg-red-200",
+        title: "Misslyckat",
+        description: `Kunde inte spara produkterna till kiosken`,
+      });
     }
   };
 
@@ -232,15 +241,26 @@ function EditSelectedKioskButton({
           <SelectTrigger className="w-auto">
             <SelectValue placeholder="Lägg till produkter från produktlista" />
           </SelectTrigger>
-          <SelectContent>
+          {
+            productLists.length > 0 ? (
+            <SelectContent>
             {productLists.map((productList) => (
               <SelectItem key={productList.id} value={productList.id}>
                 {productList.productlistName}
               </SelectItem>
             ))}
           </SelectContent>
+            ) : (
+              <SelectContent>
+              <SelectItem value="empty">Inga produktlistor är skapade i turneringen</SelectItem>
+            </SelectContent>
+            )
+          }
+          
         </Select>
-
+        {
+          products.length > 0 ? (
+            <>
         <div className="mb-4 text-right">
           <Button type="button" onClick={toggleSelectAll}>
             {allSelected ? "Avmarkera alla" : "Markera alla"}
@@ -248,7 +268,9 @@ function EditSelectedKioskButton({
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {products.map((product) => (
+    
+          
+           {products.map((product) => (
             <div key={product.id} className="flex items-center gap-2">
               <Checkbox
                 id={`product-${product.id}`}
@@ -269,11 +291,33 @@ function EditSelectedKioskButton({
               </label>
             </div>
           ))}
-        </div>
-
-        <Button type="submit" onClick={() => editKiosk(kioskForEdit)}>
+         
+          </div>
+          {
+            selectedProducts.length > 0 ? (
+              
+          <Button type="submit" onClick={() => editKiosk(kioskForEdit)}>
           Spara valda produkter till valda kiosker
         </Button>
+            ) : (
+              <Button type="submit" onClick={() => editKiosk(kioskForEdit)} disabled>
+          Spara valda produkter till valda kiosker
+        </Button>
+            )
+          }
+        </>
+        ) : (
+          <div className="flex flex-col gap-5">
+            <p>Inga produkter är skapade i turneringen</p>
+            <Button type="button">
+            <Link to={`/producthandler/${tournamentId}`} className="flex items-center gap-4">Produkthanterare</Link>
+            </Button>
+          </div>
+        )
+     }
+        
+
+       
       </DialogContent>
     </Dialog>
   );
