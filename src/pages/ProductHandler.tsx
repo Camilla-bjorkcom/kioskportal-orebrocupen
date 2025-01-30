@@ -248,7 +248,7 @@ function ProductHandler() {
   return (
     <section>
       <div className="container mx-auto px-4 flex-row items-center">
-        <h2 className="mt-8 text-2xl pb-2 mb-4">Produktutbud</h2>
+        <h2 className="mt-8 text-2xl pb-2 mb-4">Skapa produkter och produktlistor</h2>
         <CreateProductButton
           onSave={(productName, amountPerPackage) =>
             CreateProduct(productName, amountPerPackage)

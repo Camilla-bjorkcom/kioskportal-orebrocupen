@@ -9,6 +9,7 @@ import {
   BookHeart,
   House,
   ShoppingBasket,
+  ChevronUp,
 } from "lucide-react";
 
 import {
@@ -52,22 +53,17 @@ export function AppSidebar({ id }: { id?: string }) {
       url: "#",
       icon: ShoppingBasket,
       subitems: [
-        { title: "Skapa produktutbud", url: `/producthandler/${id}` },
-        { title: "Skapa produktlista", url: `/productlisthandler/${id}` },
-        {
-          title: "Lägg till produkter i kiosker",
-          url: `/populatekiosks/${id}`,
-        },
+        { title: "Skapa produkter & produktlistor", url: `/producthandler/${id}` },
       ],
     },
 
     {
-      title: "Anläggningar",
+      title: "Anläggningar & Kiosker",
       url: "#",
       icon: House,
       subitems: [
         {
-          title: "Skapa anläggningar och kiosker",
+          title: "Hantera kiosker & produktutbud",
           url: `/facilitiesandkiosks/${id}`,
         },
         { title: "QR koder till kiosker", url: "#" },
@@ -78,14 +74,14 @@ export function AppSidebar({ id }: { id?: string }) {
       title: "Inventering",
       url: "#",
       icon: SquareChartGantt,
-      subitems: [
-        { title: "Inventera lager", url: `/inventorystorage/${id}` },
+      subitems: [   
         {
           title: "Visa kioskernas inventeringar",
           url: `/inventorystatus/${id}`,
         },
+        { title: "Inventera huvudlager", url: `/inventorystorage/${id}` },
         {
-          title: "Visa lagrets inventeringar",
+          title: "Visa huvudlagrets inventeringar",
           url: `/inventorystatusstorage/${id}`,
         },
       ],
@@ -113,29 +109,16 @@ export function AppSidebar({ id }: { id?: string }) {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <Collapsible
-                  key={item.title}
-                  defaultOpen
-                  className="group/collapsible"
-                >
                   <SidebarMenuItem className="font-bold">
-                    <CollapsibleTrigger asChild>
                       <SidebarMenuButton asChild>
-                        <a
-                          href={item.url}
-                          className="flex items-center justify-between"
-                        >
                           <div className="flex items-center gap-2">
                             <item.icon className="w-5 h-5" />
-                            <span>{item.title}</span>
-                          </div>
-                          <ChevronDown className="h-4 w-4" />
-                        </a>
+                            <span>{item.title}</span> 
+                          </div> 
                       </SidebarMenuButton>
-                    </CollapsibleTrigger>
+                 
                     {/* Subitems */}
-                    {item.subitems && (
-                      <CollapsibleContent>
+                    {item.subitems && (                    
                         <SidebarMenuSub>
                           {item.subitems.map((subitem) => (
                             <SidebarMenuSubItem
@@ -148,10 +131,8 @@ export function AppSidebar({ id }: { id?: string }) {
                             </SidebarMenuSubItem>
                           ))}
                         </SidebarMenuSub>
-                      </CollapsibleContent>
                     )}
                   </SidebarMenuItem>
-                </Collapsible>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>

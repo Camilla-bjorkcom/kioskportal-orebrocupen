@@ -646,6 +646,7 @@ function FacilitiesAndKiosks() {
                                     onKioskUpdated={handleKioskUpdated}
                                     onSave={UpdateKiosk}
                                     onUpdateKioskClick={() => {}}
+                                   
                                   />
                                 </TooltipTrigger>
                                 <TooltipContent>
