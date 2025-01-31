@@ -21,7 +21,10 @@ import CreateProductListButton from "@/components/CreateProductListButton";
 import UpdateProductListButton from "@/components/UpdateProductListButton";
 import DeleteButton from "@/components/DeleteButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
+import { useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+
 
 function ProductHandler() {
   const queryClient = useQueryClient();
@@ -29,6 +32,7 @@ function ProductHandler() {
 
   const tournamentId = id;
 
+ 
   const {
     data: products,
     isLoading,
@@ -41,7 +45,8 @@ function ProductHandler() {
         throw new Error("Failed to fetch products");
       }
       const data = await response.json();
-      console.log(data);
+      console.log(data); 
+     
       return data;
     },
   });
@@ -63,29 +68,49 @@ function ProductHandler() {
     },
   });
 
+ 
+
   const CreateProduct = async (
     productName: string,
     amountPerPackage: number
-  ) => {
+  ): Promise<boolean> => { // 🔥 Gör att vi kan returnera true/false
     try {
       const response = await fetchWithAuth(`products/${tournamentId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productName, amountPerPackage }),
       });
+  
       if (!response) {
         throw new Error("Failed to fetch");
       }
+  
+      if (response.status === 409) {
+        const errorData = await response.json();
+        console.log("409 Conflict Error:", errorData);
+        
+        toast({
+          title: "Fel",
+          description: errorData.message || "Produkten finns redan.",
+          className: "bg-red-200",
+        });
+  
+        return false; // 🔥 Returnerar false om produkten redan finns
+      }
+  
       if (!response.ok) {
         throw new Error("Failed to save product");
       }
-      //uppdaterar data
+  
       queryClient.invalidateQueries({ queryKey: ["products"] });
+  
       toast({
         className: "bg-green-200",
         title: "Lyckat",
         description: `Produkt ${productName} skapades`,
       });
+  
+      return true; // 🔥 Returnerar true om allt gick bra
     } catch (error) {
       console.error(error);
       toast({
@@ -93,8 +118,10 @@ function ProductHandler() {
         description: "Misslyckades med att skapa produkt.",
         className: "bg-red-200",
       });
+      return false; // 🔥 Returnerar false vid fel
     }
   };
+  
 
   const DeleteProduct = async (id: string) => {
     try {
@@ -279,6 +306,8 @@ function ProductHandler() {
   }
 
   return (
+    <>
+    <Toaster/>
     <section>
       <div className="container mx-auto px-4 flex-row items-center">
         <h2 className="mt-8 text-2xl pb-2 mb-4">
@@ -397,6 +426,7 @@ function ProductHandler() {
         </div>
       </div>
     </section>
+    </>
   );
 }
 
