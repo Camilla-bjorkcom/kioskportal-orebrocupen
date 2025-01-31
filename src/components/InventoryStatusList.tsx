@@ -88,7 +88,7 @@ const InventoryStatusList = () => {
     data.forEach((item) => {
       item.kiosks.forEach((kiosk) => {
         kiosk.products.forEach((product) => {
-          if (product.amountPerPackage != undefined || null || 0) {
+          if (product.amountPerPackage) {
             const result = calculateTotal(product);
             product.total = result;
           }
