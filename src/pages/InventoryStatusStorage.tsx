@@ -1,5 +1,10 @@
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -16,7 +21,6 @@ interface Products {
   amountPackages: number;
   total: number;
 }
-
 
 const mockStorageInventory: StorageInventory[] = [
   {
@@ -88,13 +92,13 @@ const InventoryStatusStorage = () => {
   const { data, isLoading, error, isSuccess } = useQuery<StorageInventory[]>({
     queryKey: ["inventoryList"],
     queryFn: async () => {
-      if(mockdata){
-        const mockData = mockStorageInventory
+      if (mockdata) {
+        const mockData = mockStorageInventory;
         return mockData;
       }
 
       const response = await fetchWithAuth(`tournaments/{tid}/storage`);
-      if(!response){
+      if (!response) {
         throw new Error("Failed to fetch products");
       }
       if (!response.ok) {
@@ -114,8 +118,7 @@ const InventoryStatusStorage = () => {
   if (error) {
     return <div>Error: {String(error)}</div>;
   }
- 
- 
+
   const toggleExpandAll = () => {
     if (!isSuccess || !data) {
       return; // Gör inget om isSuccess är false eller data saknas
@@ -127,7 +130,7 @@ const InventoryStatusStorage = () => {
       setExpandedItems([]);
     }
   };
-const sortByInventoryDate = (storage: StorageInventory[]) => {
+  const sortByInventoryDate = (storage: StorageInventory[]) => {
     return storage.sort((a, b) => {
       const dateA = new Date(a.inventoryDate!);
       const dateB = new Date(b.inventoryDate!);
@@ -139,33 +142,29 @@ const sortByInventoryDate = (storage: StorageInventory[]) => {
     <div className="container mx-auto ">
       <h2 className="mt-8 text-2xl pb-2 ml-2">Huvudlagrets inventeringar</h2>
       <div className=" 2xl:w-3/4 w-full ml-2">
-      <div className="ml-auto w-fit flex">
-        <Button onClick={toggleExpandAll} className="mb-4">
-          {expandedItems.length === 0 ? "Expandera alla" : "Minimera alla"}
-        </Button>
-      </div>
-      <Accordion
-        type="multiple"
-        value={expandedItems}
-        onValueChange={(newValue) => setExpandedItems(newValue)}
-        className="flex flex-col gap-3 mb-7"
-      >
-  {
-  sortByInventoryDate(data).map((inventory) => (
+        <div className="ml-auto w-fit flex">
+          <Button onClick={toggleExpandAll} className="mb-4">
+            {expandedItems.length === 0 ? "Expandera alla" : "Minimera alla"}
+          </Button>
+        </div>
+        <Accordion
+          type="multiple"
+          value={expandedItems}
+          onValueChange={(newValue) => setExpandedItems(newValue)}
+          className="flex flex-col gap-3 mb-7 dark:bg-slate-900"
+        >
+          {sortByInventoryDate(data).map((inventory) => (
             <AccordionItem
-            key={inventory.id}
-            value={inventory.id}
-            className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50"
-          >
-            <AccordionTrigger
-              className="text-lg font-medium hover:text-slate-800"
+              key={inventory.id}
+              value={inventory.id}
+              className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-900 dark:border-slate-500"
             >
-              <p>{inventory.inventoryDate}</p>
-            </AccordionTrigger>
-            <AccordionContent>
+              <AccordionTrigger className="text-lg font-medium hover:text-slate-800 dark:hover:text-gray-200">
+                <p>{inventory.inventoryDate}</p>
+              </AccordionTrigger>
+              <AccordionContent>
                 <div key={inventory.id} className="mb-7">
-                  <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2">
-
+                  <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2 dark:bg-slate-800 dark:border-slate-500">
                     <h2 className="">
                       Senast inventering:{" "}
                       {new Intl.DateTimeFormat("sv-SE", {
@@ -179,7 +178,7 @@ const sortByInventoryDate = (storage: StorageInventory[]) => {
                   </div>
                   <div className="w-full mt-2">
                     {/* Rubriker för kolumner */}
-                    <div className="grid grid-cols-4 gap-4 font-bold text-gray-600 py-2 px-4">
+                    <div className="grid grid-cols-4 gap-4 font-bold text-gray-600 py-2 px-4 dark:text-gray-200">
                       <p>Namn</p>
                       <p>Obrutna förpackningar</p>
                       <p className="text-center">Totalt</p>
@@ -188,13 +187,14 @@ const sortByInventoryDate = (storage: StorageInventory[]) => {
                     {/* Lista över produkter */}
 
                     {inventory.products.map((product, productIndex) => {
-                      const isOutOfStock =
-                        product.amountPackages === 0;
+                      const isOutOfStock = product.amountPackages === 0;
                       return (
                         <div
                           key={product.id}
-                          className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 ${
-                            productIndex % 2 === 0 ? "bg-gray-100" : "bg-white"
+                          className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 dark:bg-slate-800 dark:border-slate-500 dark:text-gray-200 dark:hover:bg-slate-600 ${
+                            productIndex % 2 === 0
+                              ? "bg-gray-100"
+                              : "bg-white dark:bg-slate-900"
                           }`}
                         >
                           <p
@@ -204,7 +204,7 @@ const sortByInventoryDate = (storage: StorageInventory[]) => {
                           >
                             {product.productName}
                           </p>
-                         
+
                           <p
                             className={
                               isOutOfStock ? "text-red-500 font-semibold" : ""
@@ -230,11 +230,10 @@ const sortByInventoryDate = (storage: StorageInventory[]) => {
                     })}
                   </div>
                 </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))
-      }
-      </Accordion>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </div>
   );
