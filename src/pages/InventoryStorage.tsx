@@ -12,7 +12,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "../components/ui/toaster";
 
 type KioskInventory = {
@@ -109,7 +109,6 @@ function InventoryStorage() {
       }
 
       form.reset();
-
     } catch (error) {
       console.error("Update failed:", error);
       throw error;
@@ -124,18 +123,21 @@ function InventoryStorage() {
     return <div>Error: {String(error)}</div>;
   }
 
-
   return (
     <>
       <Toaster />
       <div className="container mx-auto p-3">
-        <div className="rounded-xl border border-black border-solid text-black aspect-video">
-          <h2 className="text-lg lg:text-2xl text-center w-full mt-10 font-semibold">
-            Inventera lagret
+        <div className="rounded-xl border border-black border-solid text-black aspect-video dark:border-slate-500">
+          <h2 className="text-lg lg:text-2xl text-center w-full mt-10 font-semibold dark:text-gray-200">
+            Inventera huvudlager
           </h2>
           <div className="w-full place-items-center mt-5 gap-3 mb-16">
-            <p className="text-sm lg:text-lg">Senast inventering gjord:</p>
-            <h3 className="lg:text-lg font-semibold">{inventoryDate}</h3>
+            <p className="text-sm lg:text-lg dark:text-gray-200">
+              Senast inventering gjord:
+            </p>
+            <h3 className="lg:text-lg font-semibold dark:text-gray-200">
+              {inventoryDate}
+            </h3>
           </div>
 
           <Form {...form}>
@@ -145,8 +147,8 @@ function InventoryStorage() {
                   key={product.id}
                   className={`space-y-4 lg:flex ${
                     index % 2 === 0
-                      ? "bg-gray-100 rounded-lg p-5"
-                      : "bg-white rounded-lg p-5"
+                      ? "bg-gray-100 dark:bg-slate-900 rounded-lg p-5"
+                      : "bg-white dark:bg-slate-800 rounded-lg p-5"
                   }`}
                 >
                   <FormField
@@ -156,22 +158,24 @@ function InventoryStorage() {
                     render={() => (
                       <FormItem className="place-content-center">
                         <FormLabel>
-                          <p className="w-[280px] lg:w-[300px] text-lg">
+                          <p className="w-[280px] lg:w-[300px] text-lg dark:text-gray-200">
                             {product.productName}
                           </p>
                         </FormLabel>
                       </FormItem>
                     )}
                   />
-                  <div className="flex gap-5">
+                  <div className="flex gap-5 dark:border:solid dark:border-gray-500">
                     <FormField
                       key={index}
                       control={form.control}
                       name={`products.${index}.amountPackages`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Antal i förpackningar</FormLabel>
-                          <FormControl>
+                          <FormLabel className="dark:text-gray-200">
+                            Antal i förpackningar
+                          </FormLabel>
+                          <FormControl className="dark:text-gray-200 dark:border-gray-500">
                             <Input {...field} />
                           </FormControl>
                         </FormItem>
