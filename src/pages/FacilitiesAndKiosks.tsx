@@ -43,7 +43,7 @@ function FacilitiesAndKiosks() {
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [kioskProducts, setKioskProducts] = useState<Product[]>([]);
- 
+
   const [open, setOpen] = useState(false);
 
   const { isLoading, error, data, isSuccess } = useQuery<Facility[]>({
@@ -370,7 +370,6 @@ function FacilitiesAndKiosks() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             kioskName: kioskName,
-           
           }),
         }
       );
@@ -490,10 +489,12 @@ function FacilitiesAndKiosks() {
     try {
       setKioskForEdit(kiosk);
       const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${kiosk.facilityId}/kiosks/${kiosk.id}`,{
+        `facilities/${tournamentId}/${kiosk.facilityId}/kiosks/${kiosk.id}`,
+        {
           method: "GET",
           headers: { "Content-Type": "application/json" },
-        });
+        }
+      );
       if (!response) {
         console.error("Failed to fetch kiosk products");
       } else {
@@ -556,8 +557,6 @@ function FacilitiesAndKiosks() {
           onClick={handleSubmit}
           onKiosksUpdated={handleKiosksUpdated}
           onClearSelected={clearSelectedKiosks}
-         
-          
         />
       </div>
       <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
@@ -565,11 +564,11 @@ function FacilitiesAndKiosks() {
           <AccordionItem
             key={facility.id}
             value={facility.id}
-            className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:bg-slate-900 dark:hover:bg-slate-800 dark:text-gray-200 dark:hover:text-gray-200 dark:border-slate-500"
+            className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:bg-slate-900 dark:hover:bg-slate-900 dark:text-gray-200 dark:hover:text-gray-200 dark:border-slate-500"
           >
             <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
               <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                <label className="basis-1/4 font-medium ">
+                <label className="basis-1/4 hover:underline font-medium ">
                   {facility.facilityName}
                 </label>
                 <AddKioskButton
@@ -647,7 +646,6 @@ function FacilitiesAndKiosks() {
                                     onKioskUpdated={handleKioskUpdated}
                                     onSave={UpdateKiosk}
                                     onUpdateKioskClick={() => {}}
-                                   
                                   />
                                 </TooltipTrigger>
                                 <TooltipContent>

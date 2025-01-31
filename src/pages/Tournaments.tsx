@@ -1,5 +1,4 @@
 import CreateTournamentBtn from "@/components/CreateTournamentBtn";
-import Header from "@/components/header";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Tournament } from "@/interfaces/tournament";
@@ -64,8 +63,6 @@ function Tournaments() {
 
   return (
     <>
-      <Header />
-
       <div className="container mx-auto ">
         <h2 className="mt-8 text-2xl pb-2">Dina turneringar</h2>
         <CreateTournamentBtn onSave={CreateTournament} />

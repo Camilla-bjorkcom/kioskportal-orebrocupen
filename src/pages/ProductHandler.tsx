@@ -183,7 +183,7 @@ function ProductHandler() {
         title: "Lyckat",
         description: `Produkt med id ${id} uppdaterades`,
       });
-     
+
       console.log("Uppdaterad produkt:", updatedProductFromApi);
     } catch (error) {
       console.error("Failed to update product:", error);
@@ -206,7 +206,6 @@ function ProductHandler() {
   // Spara ny produktlista (PUT)
   const SaveProductList = async (productlistName: string) => {
     try {
-      
       const response = await fetchWithAuth(`productlists/${tournamentId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -318,37 +317,36 @@ function ProductHandler() {
     <Toaster/>
     <section>
       <div className="container mx-auto px-4 flex-row items-center">
-        <h2 className="mt-8 text-2xl pb-2 mb-4">Skapa produkter och produktlistor</h2>
+        <h2 className="mt-8 text-2xl pb-2 mb-4">
+          Skapa produkter och produktlistor
+        </h2>
         <CreateProductButton
           onSave={(productName, amountPerPackage) =>
             CreateProduct(productName, amountPerPackage)
-            
           }
-        />  
+        />
 
         <div className="mt-8">
           <h3 className="text-lg mb-7">Sparade produkter:</h3>
 
           <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
-
             {products?.map((product) => (
               <>
-             
-              <TooltipProvider key={product.id}>
-                <Tooltip>
-                                    <TooltipTrigger>
-                    <UpdateProductButton
-                      product={product}
-                      onUpdate={UpdateProduct}
-                      onDelete={() => product.id && DeleteProduct(product.id)}
-                      key={product.id}
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Redigera produkt</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+                <TooltipProvider key={product.id}>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <UpdateProductButton
+                        product={product}
+                        onUpdate={UpdateProduct}
+                        onDelete={() => product.id && DeleteProduct(product.id)}
+                        key={product.id}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Redigera produkt</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </>
             ))}
           </div>
@@ -373,7 +371,6 @@ function ProductHandler() {
               >
                 <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
                   <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                    
                     <label className="basis-1/4 font-medium  ">
                       {productlist.productlistName}
                     </label>
