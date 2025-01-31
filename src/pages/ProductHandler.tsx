@@ -68,14 +68,7 @@ function ProductHandler() {
     },
   });
 
-  useEffect(() => {
-    toast({
-      title: "Test-toast",
-      description: "Denna toast borde synas i UI:t",
-      className: "bg-green-200",
-    });
-  }, []);
-
+ 
 
   const CreateProduct = async (
     productName: string,
