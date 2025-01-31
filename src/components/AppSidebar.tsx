@@ -53,7 +53,10 @@ export function AppSidebar({ id }: { id?: string }) {
       url: "#",
       icon: ShoppingBasket,
       subitems: [
-        { title: "Skapa produkter & produktlistor", url: `/producthandler/${id}` },
+        {
+          title: "Skapa produkter & produktlistor",
+          url: `/producthandler/${id}`,
+        },
       ],
     },
 
@@ -74,7 +77,7 @@ export function AppSidebar({ id }: { id?: string }) {
       title: "Inventering",
       url: "#",
       icon: SquareChartGantt,
-      subitems: [   
+      subitems: [
         {
           title: "Visa kioskernas inventeringar",
           url: `/inventorystatus/${id}`,
@@ -109,30 +112,30 @@ export function AppSidebar({ id }: { id?: string }) {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                  <SidebarMenuItem className="font-bold hover:bg-none">
-                      <SidebarMenuButton asChild>
-                          <div className="flex items-center gap-2 ">
-                            <item.icon className="w-5 h-5" />
-                            <span>{item.title}</span> 
-                          </div> 
-                      </SidebarMenuButton>
-                 
-                    {/* Subitems */}
-                    {item.subitems && (                    
-                        <SidebarMenuSub>
-                          {item.subitems.map((subitem) => (
-                            <SidebarMenuSubItem
-                              className="font-medium hover:bg-gray-100 dark:hover:bg-zinc-800 w-full"
-                              key={subitem.title}
-                            >
-                              <a href={subitem.url} className="w-full flex">
-                                {subitem.title}
-                              </a>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                    )}
-                  </SidebarMenuItem>
+                <SidebarMenuItem className="font-bold hover:bg-none">
+                  <SidebarMenuButton asChild>
+                    <div className="flex items-center gap-2 ">
+                      <item.icon className="w-5 h-5" />
+                      <span>{item.title}</span>
+                    </div>
+                  </SidebarMenuButton>
+
+                  {/* Subitems */}
+                  {item.subitems && (
+                    <SidebarMenuSub>
+                      {item.subitems.map((subitem) => (
+                        <SidebarMenuSubItem
+                          className="font-medium hover:bg-gray-100 dark:hover:bg-slate-600 w-full"
+                          key={subitem.title}
+                        >
+                          <a href={subitem.url} className="w-full flex">
+                            {subitem.title}
+                          </a>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  )}
+                </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -145,7 +148,7 @@ export function AppSidebar({ id }: { id?: string }) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground dark:hover:bg-slate-600 dark:data-[state=open]:bg-slate-600"
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage src={"user.avatar"} alt={"username"} />
@@ -163,7 +166,7 @@ export function AppSidebar({ id }: { id?: string }) {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg dark:bg-slate-900 "
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg dark:bg-slate-900  "
                 align="end"
                 sideOffset={4}
                 side={useIsMobile() ? "top" : "right"}
@@ -187,13 +190,13 @@ export function AppSidebar({ id }: { id?: string }) {
                 <DropdownMenuGroup></DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="dark:hover:bg-slate-600">
                     <BookHeart />
-                    <a href="/tournaments" className="w-full flex">
+                    <a href="/tournaments" className="w-full flex ">
                       Mina turneringar
                     </a>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="dark:hover:bg-slate-600">
                     <BadgeCheck />
                     <a href={`/settings/${id}`} className="w-full flex">
                       Inställningar
@@ -202,7 +205,10 @@ export function AppSidebar({ id }: { id?: string }) {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <button onClick={() => auth.removeUser()} className="w-full">
+                  <button
+                    onClick={() => auth.removeUser()}
+                    className="w-full dark:hover:bg-slate-600"
+                  >
                     <LogOut />
                     <a href="/">Logga ut</a>
                   </button>
