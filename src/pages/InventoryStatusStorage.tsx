@@ -33,7 +33,7 @@ const InventoryStatusStorage = () => {
     queryKey: ["inventoryList"],
     queryFn: async () => {
       const response = await fetchWithAuth(`
-https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments/${tournamentId}/inventories/`);
+tournaments/${tournamentId}/inventories/`);
       if (!response) {
         throw new Error("Failed to fetch products");
       }

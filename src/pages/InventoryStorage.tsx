@@ -53,7 +53,7 @@ function InventoryStorage() {
     queryKey: ["inventoryList"],
     queryFn: async () => {
       const response = await fetchWithAuth(
-        `https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/products/${tournamentId}`
+        `products/${tournamentId}`
       );
       if (!response) {
         throw new Error("Failed to fetch products");
@@ -84,7 +84,7 @@ function InventoryStorage() {
   }, console.error);
 
   const saveChangesToInventoryList = async (data: FormData) => {
-    const url = `https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments/${tournamentId}/inventories`;
+    const url = `tournaments/${tournamentId}/inventories`;
     try {
       const response = await fetchWithAuth(url, {
         method: "PUT",
@@ -134,8 +134,13 @@ function InventoryStorage() {
             Inventera lagret
           </h2>
           <div className="w-full place-items-center mt-5 gap-3 mb-16">
-            <p className="text-sm lg:text-lg">Senast inventering gjord:</p>
-            <h3 className="lg:text-lg font-semibold">{data?.inventoryDate}</h3>
+            {
+              data?.inventoryDate
+                ? <><p className="text-sm lg:text-lg">Senast inventering gjord:</p><h3 className="lg:text-lg font-semibold">{data?.inventoryDate}</h3></>   
+                : <p className="text-sm lg:text-lg">Ingen inventering har gjorts än</p>
+            }
+          
+            
           </div>
 
           <Form {...form}>
