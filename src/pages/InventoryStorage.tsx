@@ -10,27 +10,30 @@ import {
 } from "@/components/ui/form";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "../components/ui/toaster";
+import { useParams } from "react-router-dom";
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
 
-type KioskInventory = {
-  id: number;
+type MainInventory = {
+  id: string;
+  inventoryDate: string;
   products: Products[];
 };
 
 interface Products {
-  id: number;
+  id: string;
   productName: string;
   amountPackages: number;
 }
 
 function InventoryStorage() {
-  const inventoryDate = "2025-06-13 14:25";
-
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
   const { toast } = useToast();
-  const [inventoryList, setInventoryList] = useState<Products[]>([]);
+
+  // const [inventoryList, setInventoryList] = useState<Products[]>([]);
 
   const formSchema = z.object({
     products: z.array(
@@ -43,20 +46,22 @@ function InventoryStorage() {
     ),
   });
 
-  const id = "3395";
+ 
 
   type FormData = z.infer<typeof formSchema>;
 
-  const { isLoading, error } = useQuery<KioskInventory>({
+  const { isLoading, error, data } = useQuery<MainInventory>({
     queryKey: ["inventoryList"],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/inventoryList/${id}`);
+      const response = await fetchWithAuth(`https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/products/${tournamentId}`);
+      if (!response) {
+        throw new Error("Failed to fetch products");
+      }
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
       const data = await response.json();
-      setInventoryList(data.products);
-      return data.products;
+      return data;
     },
   });
 
@@ -67,21 +72,18 @@ function InventoryStorage() {
     },
   });
 
-  useEffect(() => {
-    if (inventoryList.length > 0) {
-      form.reset({
-        products: inventoryList.map((product) => ({
-          productId: product.id,
-          productName: product.productName,
-        })),
-      });
-    }
-  }, [inventoryList, form]);
+  // useEffect(() => {
+  //   if (inventoryList.length > 0) {
+  //     form.reset({
+  //       products: inventoryList.map((product) => ({
+  //         productId: product.id,
+  //         productName: product.productName,
+  //       })),
+  //     });
+  //   }
+  // }, [inventoryList, form]);
 
-  const { fields } = useFieldArray({
-    control: form.control,
-    name: "products",
-  });
+ 
 
   const handleSubmit = form.handleSubmit(async (data: FormData) => {
     console.log("I handlesubmit");
@@ -94,13 +96,16 @@ function InventoryStorage() {
   }, console.error);
 
   const saveChangesToInventoryList = async (data: FormData) => {
-    const url = `http://localhost:3000/inventoryList/${id}`;
+    const url = `https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments/${tournamentId}/inventories`;
     try {
-      const response = await fetch(url, {
+      const response = await fetchWithAuth(url, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      if (!response) {
+        throw new Error("Failed to update list");
+      }
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -135,12 +140,12 @@ function InventoryStorage() {
           </h2>
           <div className="w-full place-items-center mt-5 gap-3 mb-16">
             <p className="text-sm lg:text-lg">Senast inventering gjord:</p>
-            <h3 className="lg:text-lg font-semibold">{inventoryDate}</h3>
+            <h3 className="lg:text-lg font-semibold">{}</h3>
           </div>
 
           <Form {...form}>
             <form onSubmit={handleSubmit} className="w-fit mx-auto mb-20">
-              {fields.map((product, index) => (
+              {data.map((product, index) => (
                 <div
                   key={product.id}
                   className={`space-y-4 lg:flex ${

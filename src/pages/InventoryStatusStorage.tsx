@@ -3,6 +3,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 type StorageInventory = {
   id: string;
@@ -18,82 +19,18 @@ interface Products {
 }
 
 
-const mockStorageInventory: StorageInventory[] = [
-  {
-    id: "1",
-    inventoryDate: "2025-01-01",
-    products: [
-      {
-        id: 101,
-        productName: "Chips",
-        amountPackages: 20,
-        total: 200,
-      },
-      {
-        id: 102,
-        productName: "Soda",
-        amountPackages: 50,
-        total: 500,
-      },
-    ],
-  },
-  {
-    id: "2",
-    inventoryDate: "2025-01-15",
-    products: [
-      {
-        id: 103,
-        productName: "Candy",
-        amountPackages: 30,
-        total: 300,
-      },
-      {
-        id: 104,
-        productName: "Juice",
-        amountPackages: 25,
-        total: 250,
-      },
-      {
-        id: 105,
-        productName: "Water",
-        amountPackages: 40,
-        total: 400,
-      },
-    ],
-  },
-  {
-    id: "3",
-    inventoryDate: "2025-01-22",
-    products: [
-      {
-        id: 106,
-        productName: "Hotdogs",
-        amountPackages: 15,
-        total: 150,
-      },
-      {
-        id: 107,
-        productName: "Bread",
-        amountPackages: 35,
-        total: 350,
-      },
-    ],
-  },
-];
-
 const InventoryStatusStorage = () => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  const mockdata = true;
+
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
 
   const { data, isLoading, error, isSuccess } = useQuery<StorageInventory[]>({
     queryKey: ["inventoryList"],
     queryFn: async () => {
-      if(mockdata){
-        const mockData = mockStorageInventory
-        return mockData;
-      }
 
-      const response = await fetchWithAuth(`tournaments/{tid}/storage`);
+      const response = await fetchWithAuth(`
+https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/tournaments/${tournamentId}/inventories/`);
       if(!response){
         throw new Error("Failed to fetch products");
       }
