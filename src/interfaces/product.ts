@@ -6,3 +6,6 @@ export interface Product {
     amountPackages?: number;
     total?: number;
   }
+
+
+ export type InventoryProducts = Omit<Product, "amountPieces" | "total">;

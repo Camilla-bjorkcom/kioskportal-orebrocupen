@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   FormField,
@@ -11,13 +11,12 @@ import {
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { useQuery } from "@tanstack/react-query";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "../components/ui/toaster";
 import { useParams } from "react-router-dom";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 
-type MainInventory = {
-  id: string;
+type StorageInventory = {
   inventoryDate: string;
   products: Products[];
 };
@@ -33,8 +32,6 @@ function InventoryStorage() {
   const tournamentId = id;
   const { toast } = useToast();
 
-  // const [inventoryList, setInventoryList] = useState<Products[]>([]);
-
   const formSchema = z.object({
     products: z.array(
       z.object({
@@ -46,14 +43,18 @@ function InventoryStorage() {
     ),
   });
 
- 
-
   type FormData = z.infer<typeof formSchema>;
 
-  const { isLoading, error, data } = useQuery<MainInventory>({
+  const {
+    isLoading,
+    error,
+    data,
+  } = useQuery<StorageInventory>({
     queryKey: ["inventoryList"],
     queryFn: async () => {
-      const response = await fetchWithAuth(`https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/products/${tournamentId}`);
+      const response = await fetchWithAuth(
+        `https://zxilxqtzdb.execute-api.eu-north-1.amazonaws.com/prod/products/${tournamentId}`
+      );
       if (!response) {
         throw new Error("Failed to fetch products");
       }
@@ -71,19 +72,6 @@ function InventoryStorage() {
       products: [],
     },
   });
-
-  // useEffect(() => {
-  //   if (inventoryList.length > 0) {
-  //     form.reset({
-  //       products: inventoryList.map((product) => ({
-  //         productId: product.id,
-  //         productName: product.productName,
-  //       })),
-  //     });
-  //   }
-  // }, [inventoryList, form]);
-
- 
 
   const handleSubmit = form.handleSubmit(async (data: FormData) => {
     console.log("I handlesubmit");
@@ -106,17 +94,25 @@ function InventoryStorage() {
       if (!response) {
         throw new Error("Failed to update list");
       }
-
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Server response error:", errorText);
         throw new Error("Failed to update list");
       }
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat!",
+        description: "Inventering skickades iväg",
+      });
 
       form.reset();
-
     } catch (error) {
       console.error("Update failed:", error);
+      toast({
+        className: "bg-red-200",
+        title: "Misslyckat!",
+        description: "Inventering misslyckades",
+      });
       throw error;
     }
   };
@@ -129,7 +125,6 @@ function InventoryStorage() {
     return <div>Error: {String(error)}</div>;
   }
 
-
   return (
     <>
       <Toaster />
@@ -140,12 +135,12 @@ function InventoryStorage() {
           </h2>
           <div className="w-full place-items-center mt-5 gap-3 mb-16">
             <p className="text-sm lg:text-lg">Senast inventering gjord:</p>
-            <h3 className="lg:text-lg font-semibold">{}</h3>
+            <h3 className="lg:text-lg font-semibold">{data?.inventoryDate}</h3>
           </div>
 
           <Form {...form}>
             <form onSubmit={handleSubmit} className="w-fit mx-auto mb-20">
-              {data.map((product, index) => (
+              {data?.products.map((product, index) => (
                 <div
                   key={product.id}
                   className={`space-y-4 lg:flex ${
@@ -187,17 +182,7 @@ function InventoryStorage() {
               ))}
 
               <div className="w-1/2 place-self-center">
-                <Button
-                  type="submit"
-                  className="w-full mt-10"
-                  onClick={() => {
-                    toast({
-                      className: "bg-green-200",
-                      title: "Lyckat!",
-                      description: "Inventering skickades iväg",
-                    });
-                  }}
-                >
+                <Button type="submit" className="w-full mt-10">
                   Skicka in inventering
                 </Button>
               </div>
