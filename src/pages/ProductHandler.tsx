@@ -220,6 +220,19 @@ function ProductHandler() {
       if (!response) {
         throw new Error("Failed to save product list");
       }
+      if (response.status === 409) {
+        const errorData = await response.json();
+        console.log("409 Conflict Error:", errorData);
+
+        toast({
+          title: "Fel",
+          description: `Produktlista med namnet ${productlistName}  finns redan.`,
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
+        });
+        queryClient.invalidateQueries({ queryKey: ["productslists"] });
+        return 409; // returnerar 409 om det är en konflikt för att sätta meddelandet till användare
+      }
+
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
         className: "bg-green-200 dark:text-black dark:bg-green-400",
