@@ -1,7 +1,7 @@
 import { useAuth } from "react-oidc-context";
 import {
   SquareChartGantt,
-  ChevronDown,
+  
   ChartSpline,
   LogOut,
   ChevronsUpDown,
@@ -9,7 +9,7 @@ import {
   BookHeart,
   House,
   ShoppingBasket,
-  ChevronUp,
+
 } from "lucide-react";
 
 import {
