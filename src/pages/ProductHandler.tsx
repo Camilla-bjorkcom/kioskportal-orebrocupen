@@ -21,9 +21,10 @@ import CreateProductListButton from "@/components/CreateProductListButton";
 import UpdateProductListButton from "@/components/UpdateProductListButton";
 import DeleteButton from "@/components/DeleteButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { useEffect } from "react";
+
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
 
 
 function ProductHandler() {
@@ -37,7 +38,7 @@ function ProductHandler() {
     data: products,
     isLoading,
     error,
-  } = useQuery<Product[]>({
+  } = useQuery<GetAllProductsResponse>({
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetchWithAuth(`products/${tournamentId}`);
@@ -73,7 +74,7 @@ function ProductHandler() {
   const CreateProduct = async (
     productName: string,
     amountPerPackage: number
-  ): Promise<boolean> => { // 🔥 Gör att vi kan returnera true/false
+  ): Promise<number> => { // 🔥 Gör att vi kan returnera true/false
     try {
       const response = await fetchWithAuth(`products/${tournamentId}`, {
         method: "PUT",
@@ -95,7 +96,7 @@ function ProductHandler() {
           className: "bg-red-200",
         });
   
-        return false; // 🔥 Returnerar false om produkten redan finns
+        return 409; // returnerar 409 om det är en konflikt för att sätta meddelandet till användare
       }
   
       if (!response.ok) {
@@ -110,7 +111,7 @@ function ProductHandler() {
         description: `Produkt ${productName} skapades`,
       });
   
-      return true; // 🔥 Returnerar true om allt gick bra
+      return 201; // 🔥 Returnerar 500 om något går fel för att sätta meddelandet till användare 
     } catch (error) {
       console.error(error);
       toast({
@@ -118,7 +119,7 @@ function ProductHandler() {
         description: "Misslyckades med att skapa produkt.",
         className: "bg-red-200",
       });
-      return false; // 🔥 Returnerar false vid fel
+      return 500; // 🔥 Returnerar false vid fel
     }
   };
   
@@ -152,7 +153,7 @@ function ProductHandler() {
     }
   };
 
-  const UpdateProduct = async (updatedProduct: Product) => {
+  const UpdateProduct = async (updatedProduct: Product) :Promise<number> => {
     try {
       const response = await fetchWithAuth(
         `/products/${tournamentId}/${updatedProduct.id}`,
@@ -166,6 +167,18 @@ function ProductHandler() {
       if (!response) {
         throw new Error("Failed to update product");
       }
+      if (response.status === 409) {
+        const errorData = await response.json();
+        console.log("409 Conflict Error:", errorData);
+        
+        toast({
+          title: "Fel",
+          description: errorData.message || "Produkten finns redan.",
+          className: "bg-red-200",
+        });
+  
+        return 409; // returnerar 409 om det är en konflikt för att sätta meddelandet till användare
+      }
 
       const updatedProductFromApi = await response.json();
 
@@ -176,8 +189,10 @@ function ProductHandler() {
         title: "Lyckat",
         description: `Produkt med id ${id} uppdaterades`,
       });
-
       console.log("Uppdaterad produkt:", updatedProductFromApi);
+      return 200; // returnerar 200 om det lyckas för att sätta meddelandet till användare  
+
+      
     } catch (error) {
       console.error("Failed to update product:", error);
       toast({
@@ -185,6 +200,7 @@ function ProductHandler() {
         description: "Misslyckades med att uppdatera produkt.",
         className: "bg-red-200",
       });
+      return 500; // returnerar 500 om det misslyckas för att sätta meddelandet till användare
     }
   };
 
@@ -323,7 +339,7 @@ function ProductHandler() {
           <h3 className="text-lg mb-7">Sparade produkter:</h3>
 
           <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
-            {products?.map((product) => (
+            {products?.products.map((product) => (
               <>
                 <TooltipProvider key={product.id}>
                   <Tooltip>
@@ -376,7 +392,7 @@ function ProductHandler() {
                     <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
                       <UpdateProductListButton
                         productlist={productlist}
-                        tournamentProducts={products!}
+                        tournamentProducts={products?.products || []}
                         onUpdate={(updatedList) =>
                           UpdateProductlist(updatedList)
                         } // Använder funktionen från ProductHandler

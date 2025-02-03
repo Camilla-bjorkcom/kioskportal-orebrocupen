@@ -38,7 +38,7 @@ const formSchema = z.object({
 
   
 interface CreateProductButtonProps {
-  onSave: (productName: string, amountPerPackage: number) => Promise<boolean>;
+  onSave: (productName: string, amountPerPackage: number) => Promise<number>;
 }
 
 
@@ -64,12 +64,15 @@ interface CreateProductButtonProps {
         return;
       }
     
-      const success = await onSave(values.productName, values.amountPerPackage ?? 0);
+      const result = await onSave(values.productName, values.amountPerPackage ?? 0);
     
-      if (success) {
+      if (result === 201) {
         setSavedMessage("Produkten har sparats ✅"); // ✅ Om det gick bra
-      } else {
+      } else if (result === 409) {
         setSavedMessage("❌ Produkten finns redan!"); // ❌ Om det var en konflikt
+      }
+      else{
+        setSavedMessage("❌ Något gick fel!"); // ❌ Om det något gick fel
       }
     
       setTimeout(() => {
