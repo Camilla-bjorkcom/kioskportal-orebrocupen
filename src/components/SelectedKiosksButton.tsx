@@ -1,47 +1,58 @@
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import {  useQueryClient } from '@tanstack/react-query';
-import { Kiosk, Product, Productlist } from '@/interfaces';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Checkbox } from './ui/checkbox';
-import fetchWithAuth from '@/api/functions/fetchWithAuth';
-import { useParams } from 'react-router-dom';
+import { useState } from "react";
+import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { useQueryClient } from "@tanstack/react-query";
+import { Kiosk, Product, Productlist } from "@/interfaces";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Checkbox } from "./ui/checkbox";
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
+import { useParams } from "react-router-dom";
 
 interface SelectedKiosksButtonProps {
   selectedKiosks: Kiosk[]; // Lista över valda kiosker
   productlists: Productlist[]; // Produktlistor skickas från PopulateKiosks
   products: Product[]; // Produkter skickas från PopulateKiosks
-  onClick: (open :boolean) => void; 
+  onClick: (open: boolean) => void;
   onKiosksUpdated: (updatedKiosks: Kiosk[]) => void;
-  onClearSelected: ()=> void;
-
+  onClearSelected: () => void;
 }
 
-function SelectedKiosksButton({ selectedKiosks,
+function SelectedKiosksButton({
+  selectedKiosks,
   productlists,
-  products , onKiosksUpdated, onClearSelected}: SelectedKiosksButtonProps) {
-  
+  products,
+  onKiosksUpdated,
+  onClearSelected,
+}: SelectedKiosksButtonProps) {
   const [open, setOpen] = useState(false);
-  const [selectedProductListId, setSelectedProductListId] = useState<string>('');
+  const [selectedProductListId, setSelectedProductListId] =
+    useState<string>("");
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const queryClient = useQueryClient();
 
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
-  
 
   const handleDialogOpenChange = async (isOpen: boolean) => {
-
     if (isOpen && selectedKiosks.length === 0) {
-        alert('Du måste välja minst en kiosk!');
-        return; 
-      }
+      alert("Du måste välja minst en kiosk!");
+      return;
+    }
     setOpen(isOpen);
     setSelectedProducts([]); // Återställ om dialogen stängs eller inga kiosker finns
-    
   };
-
 
   const handleProductListChange = (value: string) => {
     setSelectedProductListId(value);
@@ -50,66 +61,63 @@ function SelectedKiosksButton({ selectedKiosks,
     if (selectedList) {
       setSelectedProducts(selectedList.products);
     } else {
-      setSelectedProducts([]); 
+      setSelectedProducts([]);
     }
   };
 
-  
-  const allSelected = products.length > 0 && products.every((product) =>
-    selectedProducts.some((p) => p.id === product.id)
-  );
+  const allSelected =
+    products.length > 0 &&
+    products.every((product) =>
+      selectedProducts.some((p) => p.id === product.id)
+    );
 
   const toggleSelectAll = () => {
     if (allSelected) {
-      setSelectedProducts([]); 
+      setSelectedProducts([]);
     } else {
-      setSelectedProducts(products); 
+      setSelectedProducts(products);
     }
   };
 
   const saveProductsToKiosks = async () => {
-   
     if (selectedProducts.length === 0) {
-        alert("Du måste välja minst en produkt!");
-        return;
-        
-      }
-      const updatedKioskList = [];
+      alert("Du måste välja minst en produkt!");
+      return;
+    }
+    const updatedKioskList = [];
 
     for (const kiosk of selectedKiosks) {
-        const response = await fetchWithAuth(`facilities/${tournamentId}/${kiosk.facilityId}/kiosks/${kiosk.id}`, 
-            {
-               method: "PUT",
-               headers: {'Content-Type': 'application.json'},
-               body: JSON.stringify({
-                kioskName: kiosk.kioskName,
-                products: selectedProducts,
-                
-              }),
-            })
-            if(!response) {
-                const errorText = await response!.text();
-                console.error("Server response error:", errorText);
-                throw new Error("Failed to update list");
-            }
-            const updatedKiosk = await response.json();
-            console.log(updatedKiosk);
-            
-            updatedKioskList.push(updatedKiosk);
-            onKiosksUpdated(updatedKioskList);
-            onClearSelected();
-            setOpen(false);
-           ;
-
+      const response = await fetchWithAuth(
+        `facilities/${tournamentId}/${kiosk.facilityId}/kiosks/${kiosk.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application.json" },
+          body: JSON.stringify({
+            kioskName: kiosk.kioskName,
+            products: selectedProducts,
+          }),
+        }
+      );
+      if (!response) {
+        const errorText = await response!.text();
+        console.error("Server response error:", errorText);
+        throw new Error("Failed to update list");
       }
-      alert("kioskerna har nu produkter tillagda");
-    };
-    
+      const updatedKiosk = await response.json();
+      console.log(updatedKiosk);
+
+      updatedKioskList.push(updatedKiosk);
+      onKiosksUpdated(updatedKioskList);
+      onClearSelected();
+      setOpen(false);
+    }
+    alert("kioskerna har nu produkter tillagda");
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
-        <Button className=''>
+        <Button className="">
           Valda kiosker att lägga till produkter i ({selectedKiosks.length})
         </Button>
       </DialogTrigger>
@@ -124,7 +132,10 @@ function SelectedKiosksButton({ selectedKiosks,
         </DialogHeader>
 
         {/* Select för produktlista */}
-        <Select value={selectedProductListId} onValueChange={handleProductListChange}>
+        <Select
+          value={selectedProductListId}
+          onValueChange={handleProductListChange}
+        >
           <SelectTrigger className="w-auto">
             <SelectValue placeholder="Lägg till produkter från produktlista" />
           </SelectTrigger>
@@ -137,10 +148,9 @@ function SelectedKiosksButton({ selectedKiosks,
           </SelectContent>
         </Select>
 
-       
         <div className="mb-4 text-right">
           <Button type="button" onClick={toggleSelectAll}>
-            {allSelected ? 'Avmarkera alla' : 'Markera alla'}
+            {allSelected ? "Avmarkera alla" : "Markera alla"}
           </Button>
         </div>
 
@@ -154,18 +164,23 @@ function SelectedKiosksButton({ selectedKiosks,
                 onCheckedChange={(checked) => {
                   setSelectedProducts((prev) =>
                     checked
-                      ? [...prev, product] 
-                      : prev.filter((p) => p.id !== product.id) 
+                      ? [...prev, product]
+                      : prev.filter((p) => p.id !== product.id)
                   );
                 }}
               />
-              <label htmlFor={`product-${product.id}`} className="font-medium cursor-pointer">
+              <label
+                htmlFor={`product-${product.id}`}
+                className="font-medium cursor-pointer"
+              >
                 {product.productName}
               </label>
             </div>
           ))}
         </div>
-        <Button type="submit" onClick={saveProductsToKiosks}>Spara valda produkter till valda kiosker</Button>
+        <Button type="submit" onClick={saveProductsToKiosks}>
+          Spara valda produkter till valda kiosker
+        </Button>
       </DialogContent>
     </Dialog>
   );

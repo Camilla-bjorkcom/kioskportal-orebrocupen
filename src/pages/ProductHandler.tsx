@@ -89,7 +89,7 @@ function ProductHandler() {
         toast({
           title: "Fel",
           description: errorData.message || "Produkten finns redan.",
-          className: "bg-red-200 dark:text-black",
+          className: "bg-red-200  dark:bg-red-400 dark:text-black",
         });
 
         return false; // 🔥 Returnerar false om produkten redan finns
@@ -102,7 +102,7 @@ function ProductHandler() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
 
       toast({
-        className: "bg-green-200 dark:text-black",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produkt ${productName} skapades`,
       });
@@ -113,7 +113,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att skapa produkt.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
       return false; // 🔥 Returnerar false vid fel
     }
@@ -134,7 +134,7 @@ function ProductHandler() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200 dark:text-black",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produkt med id ${id} raderades`,
       });
@@ -143,7 +143,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att radera produkt.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
     }
   };
@@ -168,7 +168,7 @@ function ProductHandler() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produkt med id ${id} uppdaterades`,
       });
@@ -179,7 +179,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att uppdatera produkt.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
     }
   };
@@ -208,7 +208,7 @@ function ProductHandler() {
       }
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200 dark:text-black",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produktlista  ${productlistName} skapades`,
       });
@@ -217,7 +217,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att skapa produktlista.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
     }
   };
@@ -241,7 +241,7 @@ function ProductHandler() {
 
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200 dark:text-black",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produktlista  ${updatedProductList.productlistName} uppdaterades`,
       });
@@ -252,7 +252,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att uppdatera produktlista.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
     }
   };
@@ -271,7 +271,7 @@ function ProductHandler() {
       }
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200 dark:text-black",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produktlista med id ${id} raderades`,
       });
@@ -280,7 +280,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att radera produktlista.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
     }
   };
