@@ -31,6 +31,8 @@ import EditSelectedKioskButton from "@/components/EditSelectedKioskButton";
 import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { toast } from "@/hooks/use-toast";
+import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
+
 
 function FacilitiesAndKiosks() {
   const queryClient = useQueryClient();
@@ -62,7 +64,7 @@ function FacilitiesAndKiosks() {
     },
   });
 
-  const { data: products } = useQuery<Product[]>({
+  const { data: products } = useQuery<GetAllProductsResponse>({
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetchWithAuth(`products/${tournamentId}`);
@@ -553,7 +555,7 @@ function FacilitiesAndKiosks() {
         <SelectedKiosksButton
           selectedKiosks={kiosksForUpdate}
           productlists={productlists || []}
-          products={products || []}
+          products={products?.products || []}
           onClick={handleSubmit}
           onKiosksUpdated={handleKiosksUpdated}
           onClearSelected={clearSelectedKiosks}
@@ -641,7 +643,7 @@ function FacilitiesAndKiosks() {
                                     key={kiosk.id}
                                     kioskForEdit={kiosk}
                                     productLists={productlists || []}
-                                    products={products || []}
+                                    products={products?.products || []}
                                     onEditClick={handleEditClick}
                                     onKioskUpdated={handleKioskUpdated}
                                     onSave={UpdateKiosk}
