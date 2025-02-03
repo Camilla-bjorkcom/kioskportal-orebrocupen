@@ -26,7 +26,6 @@ import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
 
-
 function ProductHandler() {
   const queryClient = useQueryClient();
   const { id } = useParams<{ id: string }>();
@@ -71,7 +70,8 @@ function ProductHandler() {
   const CreateProduct = async (
     productName: string,
     amountPerPackage: number
-  ): Promise<number> => { // 🔥 Gör att vi kan returnera true/false
+  ): Promise<number> => {
+    // 🔥 Gör att vi kan returnera true/false
     try {
       const response = await fetchWithAuth(`products/${tournamentId}`, {
         method: "PUT",
@@ -90,9 +90,9 @@ function ProductHandler() {
         toast({
           title: "Fel",
           description: errorData.message || "Produkten finns redan.",
-          className: "bg-red-200 dark:text-black",
+          className: "bg-red-200  dark:bg-red-400 dark:text-black",
         });
-  
+
         return 409; // returnerar 409 om det är en konflikt för att sätta meddelandet till användare
       }
 
@@ -103,18 +103,18 @@ function ProductHandler() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
 
       toast({
-        className: "bg-green-200 dark:text-black",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produkt ${productName} skapades`,
       });
-  
-      return 201; // 🔥 Returnerar 500 om något går fel för att sätta meddelandet till användare 
+
+      return 201; // 🔥 Returnerar 500 om något går fel för att sätta meddelandet till användare
     } catch (error) {
       console.error(error);
       toast({
         title: "Fel",
         description: "Misslyckades med att skapa produkt.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
       return 500; // 🔥 Returnerar false vid fel
     }
@@ -135,7 +135,7 @@ function ProductHandler() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200 dark:text-black",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produkt med id ${id} raderades`,
       });
@@ -144,12 +144,12 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att radera produkt.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
     }
   };
 
-  const UpdateProduct = async (updatedProduct: Product) :Promise<number> => {
+  const UpdateProduct = async (updatedProduct: Product): Promise<number> => {
     try {
       const response = await fetchWithAuth(
         `/products/${tournamentId}/${updatedProduct.id}`,
@@ -166,11 +166,11 @@ function ProductHandler() {
       if (response.status === 409) {
         const errorData = await response.json();
         console.log("409 Conflict Error:", errorData);
-        
+
         toast({
           title: "Fel",
           description: errorData.message || "Produkten finns redan.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         queryClient.invalidateQueries({ queryKey: ["products"] });
         return 409; // returnerar 409 om det är en konflikt för att sätta meddelandet till användare
@@ -181,20 +181,18 @@ function ProductHandler() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produkt med id ${id} uppdaterades`,
       });
       console.log("Uppdaterad produkt:", updatedProductFromApi);
-      return 200; // returnerar 200 om det lyckas för att sätta meddelandet till användare  
-
-      
+      return 200; // returnerar 200 om det lyckas för att sätta meddelandet till användare
     } catch (error) {
       console.error("Failed to update product:", error);
       toast({
         title: "Fel",
         description: "Misslyckades med att uppdatera produkt.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
       return 500; // returnerar 500 om det misslyckas för att sätta meddelandet till användare
     }
@@ -224,7 +222,7 @@ function ProductHandler() {
       }
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200 dark:text-black",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produktlista  ${productlistName} skapades`,
       });
@@ -233,7 +231,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att skapa produktlista.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
     }
   };
@@ -257,7 +255,7 @@ function ProductHandler() {
 
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200 dark:text-black",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produktlista  ${updatedProductList.productlistName} uppdaterades`,
       });
@@ -268,7 +266,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att uppdatera produktlista.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
     }
   };
@@ -287,7 +285,7 @@ function ProductHandler() {
       }
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200 dark:text-black",
+        className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
         description: `Produktlista med id ${id} raderades`,
       });
@@ -296,7 +294,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att radera produktlista.",
-        className: "bg-red-200 dark:text-black",
+        className: "bg-red-200 dark:text-black dark:bg-red-400",
       });
     }
   };
@@ -387,14 +385,14 @@ function ProductHandler() {
                     onUpdate={updateProductList}
                   ></HandleProductListButton> */}
 
-                    <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
-                      <UpdateProductListButton
-                        productlist={productlist}
-                        tournamentProducts={products?.products || []}
-                        onUpdate={(updatedList) =>
-                          UpdateProductlist(updatedList)
-                        } // Använder funktionen från ProductHandler
-                      />
+                      <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
+                        <UpdateProductListButton
+                          productlist={productlist}
+                          tournamentProducts={products?.products || []}
+                          onUpdate={(updatedList) =>
+                            UpdateProductlist(updatedList)
+                          } // Använder funktionen från ProductHandler
+                        />
 
                         <TooltipProvider>
                           <Tooltip>
