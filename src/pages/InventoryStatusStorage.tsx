@@ -151,7 +151,7 @@ const InventoryStatusStorage = () => {
           type="multiple"
           value={expandedItems}
           onValueChange={(newValue) => setExpandedItems(newValue)}
-          className="flex flex-col gap-3 mb-7 dark:bg-slate-900"
+          className="flex flex-col mb-7 dark:bg-slate-900"
         >
           {sortByInventoryDate(data).map((inventory) => (
             <AccordionItem

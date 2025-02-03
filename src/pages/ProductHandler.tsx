@@ -33,7 +33,6 @@ function ProductHandler() {
 
   const tournamentId = id;
 
- 
   const {
     data: products,
     isLoading,
@@ -46,8 +45,8 @@ function ProductHandler() {
         throw new Error("Failed to fetch products");
       }
       const data = await response.json();
-      console.log(data); 
-     
+      console.log(data);
+
       return data;
     },
   });
@@ -69,8 +68,6 @@ function ProductHandler() {
     },
   });
 
- 
-
   const CreateProduct = async (
     productName: string,
     amountPerPackage: number
@@ -81,32 +78,32 @@ function ProductHandler() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productName, amountPerPackage }),
       });
-  
+
       if (!response) {
         throw new Error("Failed to fetch");
       }
-  
+
       if (response.status === 409) {
         const errorData = await response.json();
         console.log("409 Conflict Error:", errorData);
-        
+
         toast({
           title: "Fel",
           description: errorData.message || "Produkten finns redan.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:text-black",
         });
   
         return 409; // returnerar 409 om det är en konflikt för att sätta meddelandet till användare
       }
-  
+
       if (!response.ok) {
         throw new Error("Failed to save product");
       }
-  
+
       queryClient.invalidateQueries({ queryKey: ["products"] });
-  
+
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:text-black",
         title: "Lyckat",
         description: `Produkt ${productName} skapades`,
       });
@@ -117,12 +114,11 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att skapa produkt.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:text-black",
       });
       return 500; // 🔥 Returnerar false vid fel
     }
   };
-  
 
   const DeleteProduct = async (id: string) => {
     try {
@@ -139,7 +135,7 @@ function ProductHandler() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:text-black",
         title: "Lyckat",
         description: `Produkt med id ${id} raderades`,
       });
@@ -148,7 +144,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att radera produkt.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:text-black",
       });
     }
   };
@@ -198,7 +194,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att uppdatera produkt.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:text-black",
       });
       return 500; // returnerar 500 om det misslyckas för att sätta meddelandet till användare
     }
@@ -228,7 +224,7 @@ function ProductHandler() {
       }
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:text-black",
         title: "Lyckat",
         description: `Produktlista  ${productlistName} skapades`,
       });
@@ -237,7 +233,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att skapa produktlista.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:text-black",
       });
     }
   };
@@ -261,7 +257,7 @@ function ProductHandler() {
 
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:text-black",
         title: "Lyckat",
         description: `Produktlista  ${updatedProductList.productlistName} uppdaterades`,
       });
@@ -272,7 +268,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att uppdatera produktlista.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:text-black",
       });
     }
   };
@@ -291,7 +287,7 @@ function ProductHandler() {
       }
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:text-black",
         title: "Lyckat",
         description: `Produktlista med id ${id} raderades`,
       });
@@ -300,7 +296,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att radera produktlista.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:text-black",
       });
     }
   };
@@ -323,20 +319,20 @@ function ProductHandler() {
 
   return (
     <>
-    <Toaster/>
-    <section>
-      <div className="container mx-auto px-4 flex-row items-center">
-        <h2 className="mt-8 text-2xl pb-2 mb-4">
-          Skapa produkter och produktlistor
-        </h2>
-        <CreateProductButton
-          onSave={(productName, amountPerPackage) =>
-            CreateProduct(productName, amountPerPackage)
-          }
-        />
+      <Toaster />
+      <section>
+        <div className="container mx-auto px-4 flex-row items-center">
+          <h2 className="mt-8 text-2xl pb-2 mb-4">
+            Skapa produkter och produktlistor
+          </h2>
+          <CreateProductButton
+            onSave={(productName, amountPerPackage) =>
+              CreateProduct(productName, amountPerPackage)
+            }
+          />
 
-        <div className="mt-8">
-          <h3 className="text-lg mb-7">Sparade produkter:</h3>
+          <div className="mt-8">
+            <h3 className="text-lg mb-7">Sparade produkter:</h3>
 
           <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
             {products?.products.map((product) => (
@@ -398,50 +394,52 @@ function ProductHandler() {
                         } // Använder funktionen från ProductHandler
                       />
 
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <DeleteButton
-                              id={productlist.id}
-                              type="Productlist"
-                              onDelete={() =>
-                                DeleteProductsList(productlist.id)
-                              }
-                            />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Radera produktlista</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <DeleteButton
+                                id={productlist.id}
+                                type="Productlist"
+                                onDelete={() =>
+                                  DeleteProductsList(productlist.id)
+                                }
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Radera produktlista</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
                     </div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex mt-5 font-semibold ml-4">Produkter</div>
-                  {productlist.products && productlist.products.length > 0 ? (
-                    <ul
-                      className="grid grid-cols-3 gap-4 mt-2 p-4"
-                      key={productlist.id}
-                    >
-                      {productlist.products.map(
-                        (product: Product, index: number) => (
-                          <li key={index}>{product.productName}</li>
-                        )
-                      )}
-                    </ul>
-                  ) : (
-                    <p className="text-gray-500 dark:text-gray-300 ml-4">
-                      Inga produkter tillagda i denna produktlista.
-                    </p>
-                  )}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="flex mt-5 font-semibold ml-4">
+                      Produkter
+                    </div>
+                    {productlist.products && productlist.products.length > 0 ? (
+                      <ul
+                        className="grid grid-cols-3 gap-4 mt-2 p-4"
+                        key={productlist.id}
+                      >
+                        {productlist.products.map(
+                          (product: Product, index: number) => (
+                            <li key={index}>{product.productName}</li>
+                          )
+                        )}
+                      </ul>
+                    ) : (
+                      <p className="text-gray-500 dark:text-gray-300 ml-4">
+                        Inga produkter tillagda i denna produktlista.
+                      </p>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     </>
   );
 }
