@@ -172,7 +172,7 @@ function ProductHandler() {
           description: errorData.message || "Produkten finns redan.",
           className: "bg-red-200",
         });
-  
+        queryClient.invalidateQueries({ queryKey: ["products"] });
         return 409; // returnerar 409 om det är en konflikt för att sätta meddelandet till användare
       }
 
@@ -336,7 +336,9 @@ function ProductHandler() {
 
           <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
             {products?.products.map((product) => (
-              <>
+                
+              
+             
                 <TooltipProvider key={product.id}>
                   <Tooltip>
                     <TooltipTrigger>
@@ -352,7 +354,7 @@ function ProductHandler() {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-              </>
+              
             ))}
           </div>
         </div>
