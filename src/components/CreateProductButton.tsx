@@ -10,7 +10,6 @@ import {
   } from "@/components/ui/dialog"
   
   import { Input } from "./ui/input";
-  import { PlusIcon } from "@radix-ui/react-icons";
   import { zodResolver } from "@hookform/resolvers/zod"
   import { useForm } from "react-hook-form"
   import { useState } from "react";
@@ -20,6 +19,7 @@ import {  z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
+
 
 const formSchema = z.object({
     productName: z.string().min(2, {
@@ -38,8 +38,7 @@ const formSchema = z.object({
 
   
 interface CreateProductButtonProps {
- 
-  onSave: (productName: string, amountPerPackage: number) => void;
+  onSave: (productName: string, amountPerPackage: number) => Promise<boolean>;
 }
 
 
@@ -57,21 +56,32 @@ interface CreateProductButtonProps {
       },
     });
     
-      function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log("Form values:", values);
-        if (!values.productName ) {
-          console.error("Produktnamn saknas!");
-          return;
-        }
-        onSave(values.productName, values.amountPerPackage ?? 0); // Skicka vidare `id`
-        console.log(values);
-        form.reset();
-        setSavedMessage("Produkten har sparats");
-        setTimeout(() => {
-          setSavedMessage(null);
-        }, 3000);
-      
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+      console.log("Form values:", values);
+    
+      if (!values.productName) {
+        console.error("Produktnamn saknas!");
+        return;
       }
+    
+      const success = await onSave(values.productName, values.amountPerPackage ?? 0);
+    
+      if (success) {
+        setSavedMessage("Produkten har sparats ✅"); // ✅ Om det gick bra
+      } else {
+        setSavedMessage("❌ Produkten finns redan!"); // ❌ Om det var en konflikt
+      }
+    
+      setTimeout(() => {
+        setSavedMessage(null);
+      }, 3000);
+    
+      form.reset();
+    }
+    
+    
+      
+      
     return (
         <Dialog>
         <DialogTrigger asChild>
@@ -115,9 +125,11 @@ interface CreateProductButtonProps {
               )}
               />
                 
-                  {savedMessage && (
-                  <div className="text-green-600 text-sm mt-4">{savedMessage}</div>
-                   )}  
+                {savedMessage && (
+  <div className={`text-sm mt-4 ${savedMessage.includes("redan") ? "text-red-600" : "text-green-600"}`}>
+    {savedMessage}
+  </div>
+)}
             
             <div className="flex justify-end">
               <button type="submit" className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow">Spara Produkt</button>

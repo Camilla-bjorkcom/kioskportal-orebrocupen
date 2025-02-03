@@ -31,8 +31,6 @@ function Router() {
             <Route path="inventorystatus/:id" element={<InventoryStatus />} />
             <Route path="inventorystorage/:id" element={<InventoryStorage />} />
             <Route path="inventorystatusstorage/:id" element={<InventoryStatusStorage />} />
-            {/* <Route path="contactperson/:id" element={<ContactPerson />} /> */}
-            {/* <Route path="populatekiosks/:id" element={<PopulateKiosks />} /> */}
           </Route>
         </Route>
       </Routes>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Kiosk, Product, Productlist } from "@/interfaces";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -67,7 +67,7 @@ function EditSelectedKioskButton({
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
-
+  const queryClient = useQueryClient();
   
 
   // Synkronisera selectedProducts med kioskForEdit.products
@@ -138,13 +138,14 @@ function EditSelectedKioskButton({
            
             
           }),
-        }
+        },
+      
       );
 
       if (!response) {
         throw new Error("Failed to update kiosk");
       }
-
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
       const updatedKiosk = await response.json();
       toast({
         className: "bg-green-200",

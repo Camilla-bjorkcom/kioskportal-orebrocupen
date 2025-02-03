@@ -21,7 +21,9 @@ import CreateProductListButton from "@/components/CreateProductListButton";
 import UpdateProductListButton from "@/components/UpdateProductListButton";
 import DeleteButton from "@/components/DeleteButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
+import { useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 function ProductHandler() {
   const queryClient = useQueryClient();
@@ -41,6 +43,7 @@ function ProductHandler() {
         throw new Error("Failed to fetch products");
       }
       const data = await response.json();
+      console.log(data);
 
       return data;
     },
@@ -58,7 +61,6 @@ function ProductHandler() {
         throw new Error("Failed to fetch product lists");
       }
       const data = await response.json();
-      console.log(data);
 
       return data || [];
     },
@@ -67,33 +69,53 @@ function ProductHandler() {
   const CreateProduct = async (
     productName: string,
     amountPerPackage: number
-  ) => {
+  ): Promise<boolean> => {
+    // 🔥 Gör att vi kan returnera true/false
     try {
       const response = await fetchWithAuth(`products/${tournamentId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productName, amountPerPackage }),
       });
+
       if (!response) {
         throw new Error("Failed to fetch");
       }
+
+      if (response.status === 409) {
+        const errorData = await response.json();
+        console.log("409 Conflict Error:", errorData);
+
+        toast({
+          title: "Fel",
+          description: errorData.message || "Produkten finns redan.",
+          className: "bg-red-200 dark:text-black",
+        });
+
+        return false; // 🔥 Returnerar false om produkten redan finns
+      }
+
       if (!response.ok) {
         throw new Error("Failed to save product");
       }
-      //uppdaterar data
+
       queryClient.invalidateQueries({ queryKey: ["products"] });
+
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:text-black",
         title: "Lyckat",
         description: `Produkt ${productName} skapades`,
       });
+
+      return true; // 🔥 Returnerar true om allt gick bra
     } catch (error) {
       console.error(error);
       toast({
         title: "Fel",
         description: "Misslyckades med att skapa produkt.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:text-black",
       });
+      return false; // 🔥 Returnerar false vid fel
     }
   };
 
@@ -110,8 +132,9 @@ function ProductHandler() {
       }
       //uppdaterar data
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:text-black",
         title: "Lyckat",
         description: `Produkt med id ${id} raderades`,
       });
@@ -120,7 +143,7 @@ function ProductHandler() {
       toast({
         title: "Fel",
         description: "Misslyckades med att radera produkt.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:text-black",
       });
     }
   };
@@ -143,11 +166,21 @@ function ProductHandler() {
       const updatedProductFromApi = await response.json();
 
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["productlists"] });
+      toast({
+        className: "bg-green-200",
+        title: "Lyckat",
+        description: `Produkt med id ${id} uppdaterades`,
+      });
 
       console.log("Uppdaterad produkt:", updatedProductFromApi);
     } catch (error) {
       console.error("Failed to update product:", error);
-      alert("Kunde inte uppdatera produkten. Försök igen.");
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att uppdatera produkt.",
+        className: "bg-red-200 dark:text-black",
+      });
     }
   };
 
@@ -162,12 +195,6 @@ function ProductHandler() {
   // Spara ny produktlista (PUT)
   const SaveProductList = async (productlistName: string) => {
     try {
-      console.log(
-        "Saving product list:",
-        productlistName,
-        "Tournament ID:",
-        tournamentId
-      );
       const response = await fetchWithAuth(`productlists/${tournamentId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -180,8 +207,18 @@ function ProductHandler() {
         throw new Error("Failed to save product list");
       }
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
+      toast({
+        className: "bg-green-200 dark:text-black",
+        title: "Lyckat",
+        description: `Produktlista  ${productlistName} skapades`,
+      });
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att skapa produktlista.",
+        className: "bg-red-200 dark:text-black",
+      });
     }
   };
 
@@ -203,11 +240,20 @@ function ProductHandler() {
       const updatedProductListFromApi = await response.json();
 
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
+      toast({
+        className: "bg-green-200 dark:text-black",
+        title: "Lyckat",
+        description: `Produktlista  ${updatedProductList.productlistName} uppdaterades`,
+      });
 
       console.log("Uppdaterad produktlista:", updatedProductListFromApi);
     } catch (error) {
       console.error("Failed to update product list:", error);
-      alert("Kunde inte uppdatera produktlistan. Försök igen.");
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att uppdatera produktlista.",
+        className: "bg-red-200 dark:text-black",
+      });
     }
   };
 
@@ -224,8 +270,18 @@ function ProductHandler() {
         throw new Error("Failed to delete product list");
       }
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
+      toast({
+        className: "bg-green-200 dark:text-black",
+        title: "Lyckat",
+        description: `Produktlista med id ${id} raderades`,
+      });
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att radera produktlista.",
+        className: "bg-red-200 dark:text-black",
+      });
     }
   };
 
@@ -246,119 +302,131 @@ function ProductHandler() {
   }
 
   return (
-    <section>
-      <div className="container mx-auto px-4 flex-row items-center">
-        <h2 className="mt-8 text-2xl pb-2 mb-4">Skapa produkter och produktlistor</h2>
-        <CreateProductButton
-          onSave={(productName, amountPerPackage) =>
-            CreateProduct(productName, amountPerPackage)
-          }
-        />
+    <>
+      <Toaster />
+      <section>
+        <div className="container mx-auto px-4 flex-row items-center">
+          <h2 className="mt-8 text-2xl pb-2 mb-4">
+            Skapa produkter och produktlistor
+          </h2>
+          <CreateProductButton
+            onSave={(productName, amountPerPackage) =>
+              CreateProduct(productName, amountPerPackage)
+            }
+          />
 
-        <div className="mt-8">
-          <h3 className="text-lg mb-7">Sparade produkter:</h3>
+          <div className="mt-8">
+            <h3 className="text-lg mb-7">Sparade produkter:</h3>
 
-          <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
-            {products?.map((product) => (
-              <TooltipProvider key={product.id}>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <UpdateProductButton
-                      product={product}
-                      onUpdate={UpdateProduct}
-                      onDelete={() => product.id && DeleteProduct(product.id)}
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Redigera produkt</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ))}
+            <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
+              {products?.map((product) => (
+                <>
+                  <TooltipProvider key={product.id}>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <UpdateProductButton
+                          product={product}
+                          onUpdate={UpdateProduct}
+                          onDelete={() =>
+                            product.id && DeleteProduct(product.id)
+                          }
+                          key={product.id}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Redigera produkt</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="container mx-auto px-4 flex-row items-center">
-        <CreateProductListButton
-          onSave={(productListName) => {
-            SaveProductList(productListName);
-          }}
-        />
-        <div className="mt-8">
-          <Accordion
-            type="multiple"
-            className=" w-full 2xl:w-3/4 dark:bg-slate-900"
-          >
-            {productlists?.map((productlist) => (
-              <AccordionItem
-                key={productlist.id}
-                value={productlist.id}
-                className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
-              >
-                <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
-                  <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                    <label className="basis-1/4 font-medium  ">
-                      {productlist.productlistName}
-                    </label>
-                    {/* <HandleProductListButton
+        <div className="container mx-auto px-4 flex-row items-center">
+          <CreateProductListButton
+            onSave={(productListName) => {
+              SaveProductList(productListName);
+            }}
+          />
+          <div className="mt-8">
+            <Accordion
+              type="multiple"
+              className=" w-full 2xl:w-3/4 dark:bg-slate-900"
+            >
+              {productlists?.map((productlist) => (
+                <AccordionItem
+                  key={productlist.id}
+                  value={productlist.id}
+                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
+                >
+                  <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
+                    <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
+                      <label className="basis-1/4 font-medium  ">
+                        {productlist.productlistName}
+                      </label>
+                      {/* <HandleProductListButton
                     key={productList.id}
                     productlist={productList}
                     onUpdate={updateProductList}
                   ></HandleProductListButton> */}
 
-                    <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
-                      <UpdateProductListButton
-                        productlist={productlist}
-                        tournamentProducts={products!}
-                        onUpdate={(updatedList) =>
-                          UpdateProductlist(updatedList)
-                        } // Använder funktionen från ProductHandler
-                      />
+                      <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
+                        <UpdateProductListButton
+                          productlist={productlist}
+                          tournamentProducts={products!}
+                          onUpdate={(updatedList) =>
+                            UpdateProductlist(updatedList)
+                          } // Använder funktionen från ProductHandler
+                        />
 
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <DeleteButton
-                              id={productlist.id}
-                              type="Productlist"
-                              onDelete={() =>
-                                DeleteProductsList(productlist.id)
-                              }
-                            />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Radera produktlista</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <DeleteButton
+                                id={productlist.id}
+                                type="Productlist"
+                                onDelete={() =>
+                                  DeleteProductsList(productlist.id)
+                                }
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Radera produktlista</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
                     </div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex mt-5 font-semibold ml-4">Produkter</div>
-                  {productlist.products && productlist.products.length > 0 ? (
-                    <ul
-                      className="grid grid-cols-3 gap-4 mt-2 p-4"
-                      key={productlist.id}
-                    >
-                      {productlist.products.map(
-                        (product: Product, index: number) => (
-                          <li key={index}>{product.productName}</li>
-                        )
-                      )}
-                    </ul>
-                  ) : (
-                    <p className="text-gray-500 dark:text-gray-300 ml-4">
-                      Inga produkter tillagda i denna produktlista.
-                    </p>
-                  )}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="flex mt-5 font-semibold ml-4">
+                      Produkter
+                    </div>
+                    {productlist.products && productlist.products.length > 0 ? (
+                      <ul
+                        className="grid grid-cols-3 gap-4 mt-2 p-4"
+                        key={productlist.id}
+                      >
+                        {productlist.products.map(
+                          (product: Product, index: number) => (
+                            <li key={index}>{product.productName}</li>
+                          )
+                        )}
+                      </ul>
+                    ) : (
+                      <p className="text-gray-500 dark:text-gray-300 ml-4">
+                        Inga produkter tillagda i denna produktlista.
+                      </p>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
 

@@ -93,9 +93,9 @@ tournaments/${tournamentId}/inventories/`);
             <AccordionItem
               key={inventory.id}
               value={inventory.id}
-              className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50"
+              className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-900 dark:border-slate-500"
             >
-              <AccordionTrigger className="text-lg font-medium hover:text-slate-800">
+              <AccordionTrigger className="text-lg font-medium hover:text-slate-800 dark:hover:text-gray-200">
                 <p>{inventory.inventoryDate}</p>
               </AccordionTrigger>
               <AccordionContent>
@@ -114,7 +114,7 @@ tournaments/${tournamentId}/inventories/`);
                   </div>
                   <div className="w-full mt-2">
                     {/* Rubriker för kolumner */}
-                    <div className="grid grid-cols-4 gap-4 font-bold text-gray-600 py-2 px-4">
+                    <div className="grid grid-cols-4 gap-4 font-bold text-gray-600 py-2 px-4 dark:text-gray-200">
                       <p>Namn</p>
                       <p>Obrutna förpackningar</p>
                       <p className="text-center">Totalt</p>
@@ -127,8 +127,10 @@ tournaments/${tournamentId}/inventories/`);
                       return (
                         <div
                           key={product.id}
-                          className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 ${
-                            productIndex % 2 === 0 ? "bg-gray-100" : "bg-white"
+                          className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 dark:bg-slate-800 dark:border-slate-500 dark:text-gray-200 dark:hover:bg-slate-600 ${
+                            productIndex % 2 === 0
+                              ? "bg-gray-100"
+                              : "bg-white dark:bg-slate-900"
                           }`}
                         >
                           <p
