@@ -1,7 +1,7 @@
 import { useAuth } from "react-oidc-context";
 import {
   SquareChartGantt,
-  ChevronDown,
+  
   ChartSpline,
   LogOut,
   ChevronsUpDown,
@@ -9,7 +9,7 @@ import {
   BookHeart,
   House,
   ShoppingBasket,
-  ChevronUp,
+
 } from "lucide-react";
 
 import {
@@ -112,7 +112,7 @@ export function AppSidebar({ id }: { id?: string }) {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem className="font-bold hover:bg-none">
+                <SidebarMenuItem key={item.title} className="font-bold hover:bg-none">
                   <SidebarMenuButton asChild>
                     <div className="flex items-center gap-2 ">
                       <item.icon className="w-5 h-5" />
@@ -125,8 +125,9 @@ export function AppSidebar({ id }: { id?: string }) {
                     <SidebarMenuSub>
                       {item.subitems.map((subitem) => (
                         <SidebarMenuSubItem
-                          className="font-medium hover:bg-gray-100 dark:hover:bg-slate-600 w-full"
                           key={subitem.title}
+                          className="font-medium hover:bg-gray-100 dark:hover:bg-slate-600 w-full"
+                         
                         >
                           <a href={subitem.url} className="w-full flex">
                             {subitem.title}

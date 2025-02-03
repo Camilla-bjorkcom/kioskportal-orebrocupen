@@ -172,7 +172,7 @@ function ProductHandler() {
           description: errorData.message || "Produkten finns redan.",
           className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
-
+        queryClient.invalidateQueries({ queryKey: ["products"] });
         return 409; // returnerar 409 om det är en konflikt för att sätta meddelandet till användare
       }
 
@@ -332,54 +332,54 @@ function ProductHandler() {
           <div className="mt-8">
             <h3 className="text-lg mb-7">Sparade produkter:</h3>
 
-            <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
-              {products?.products.map((product) => (
-                <>
-                  <TooltipProvider key={product.id}>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <UpdateProductButton
-                          product={product}
-                          onUpdate={UpdateProduct}
-                          onDelete={() =>
-                            product.id && DeleteProduct(product.id)
-                          }
-                          key={product.id}
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Redigera produkt</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </>
-              ))}
-            </div>
+          <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
+            {products?.products.map((product) => (
+                
+              
+             
+                <TooltipProvider key={product.id}>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <UpdateProductButton
+                        product={product}
+                        onUpdate={UpdateProduct}
+                        onDelete={() => product.id && DeleteProduct(product.id)}
+                        key={product.id}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Redigera produkt</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              
+            ))}
           </div>
         </div>
-        <div className="container mx-auto px-4 flex-row items-center">
-          <CreateProductListButton
-            onSave={(productListName) => {
-              SaveProductList(productListName);
-            }}
-          />
-          <div className="mt-8">
-            <Accordion
-              type="multiple"
-              className=" w-full 2xl:w-3/4 dark:bg-slate-900"
-            >
-              {productlists?.map((productlist) => (
-                <AccordionItem
-                  key={productlist.id}
-                  value={productlist.id}
-                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
-                >
-                  <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
-                    <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                      <label className="basis-1/4 font-medium  ">
-                        {productlist.productlistName}
-                      </label>
-                      {/* <HandleProductListButton
+      </div>
+      <div className="container mx-auto px-4 flex-row items-center">
+        <CreateProductListButton
+          onSave={(productListName) => {
+            SaveProductList(productListName);
+          }}
+        />
+        <div className="mt-8">
+          <Accordion
+            type="multiple"
+            className=" w-full 2xl:w-3/4 dark:bg-slate-900"
+          >
+            {productlists?.map((productlist) => (
+              <AccordionItem
+                key={productlist.id}
+                value={productlist.id}
+                className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
+              >
+                <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
+                  <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
+                    <label className="basis-1/4 font-medium  ">
+                      {productlist.productlistName}
+                    </label>
+                    {/* <HandleProductListButton
                     key={productList.id}
                     productlist={productList}
                     onUpdate={updateProductList}
