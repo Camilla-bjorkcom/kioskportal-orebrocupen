@@ -151,7 +151,7 @@ const InventoryStatusList = () => {
         .filter((item) => item.facilityName === kiosk.facilityName) 
         .map((item) => ({
             facilityName: item.facilityName, 
-            kioskName: kiosk.facilityName,
+            kioskName: kiosk.kioskName,
             contactPersons: item.contactPersons
         }));
 };
