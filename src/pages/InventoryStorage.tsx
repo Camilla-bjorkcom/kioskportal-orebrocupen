@@ -17,7 +17,6 @@ import { useParams } from "react-router-dom";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useEffect, useState } from "react";
 
-
 type StorageInventory = {
   inventoryDate: string;
   products: TournamentProducts[];
@@ -42,9 +41,10 @@ function InventoryStorage() {
         productName: z.string().min(1, "Produktnamn är obligatoriskt"),
         amountPackages: z.coerce
           .number()
-          .min(0, "Antal paket måste vara större än eller lika med 0"),
+          .min(0, "Antal paket måste vara större än eller lika med 0")
+          .default(0), // Standardvärde
         id: z.string(),
-        amountPerPackage: z.number(),
+        amountPerPackage: z.coerce.number().default(0), // Gör det valfritt
       })
     ),
   });
@@ -66,24 +66,26 @@ function InventoryStorage() {
 
   const [formValues, setFormValues] = useState<TournamentProducts[] | null>();
 
-  
-    const form = useForm<z.infer<typeof formSchema>>({
-      resolver: zodResolver(formSchema),
-      defaultValues: {
-        products: formValues || [],
-      },
-    });
-  
-    useEffect(() => {
-      if (isSuccess && data?.products) {  
-        setFormValues(data.products.map((product) => ({
-          id: product.id,
-          productName: product.productName,
-          amountPackages: product.amountPackages,
-          amountPerPackage: product.amountPerPackage,
-        })));
-      }
-    }, [isSuccess, data]); 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      products: formValues || [],
+    },
+  });
+
+  useEffect(() => {
+    if (isSuccess && data?.products) {
+      const updatedProducts = data.products.map((product) => ({
+        id: product.id,
+        productName: product.productName,
+        amountPackages: product.amountPackages, // Standardvärde
+        amountPerPackage: product.amountPerPackage, // Standardvärde
+      }));
+
+      setFormValues(updatedProducts);
+      form.reset({ products: updatedProducts }); // Uppdaterar formuläret korrekt
+    }
+  }, [isSuccess, data]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -106,16 +108,23 @@ function InventoryStorage() {
       }
       queryClient.invalidateQueries({ queryKey: ["inventoryList"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:bg-green-500 dark:text-black",
         title: "Lyckat!",
         description: "Inventering skickades iväg",
       });
-     
-      form.reset();
+
+      form.reset({
+        products: values.products.map((product) => ({
+          id: product.id,
+          productName: product.productName,
+          amountPackages: undefined, // Återställ till 0 istället för tomt
+          amountPerPackage: undefined, // Återställ till 0 istället för tomt
+        })),
+      });
     } catch (error) {
       console.error("Update failed:", error);
       toast({
-        className: "bg-red-200",
+        className: "bg-red-200 dark:bg-red-500 dark:text-black",
         title: "Misslyckat!",
         description: "Inventering misslyckades",
       });
@@ -130,8 +139,6 @@ function InventoryStorage() {
   if (error) {
     return <div>Error: {String(error)}</div>;
   }
-
- 
 
   return (
     <>
@@ -226,6 +233,5 @@ function InventoryStorage() {
     </>
   );
 }
-
 
 export default InventoryStorage;
