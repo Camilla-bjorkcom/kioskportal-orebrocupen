@@ -9,3 +9,5 @@ export interface Product {
 
 
  export type InventoryProducts = Omit<Product, "amountPieces" | "total">;
+
+ export type InventoryStorageProducts = Omit<Product, "amountPieces" | "total">;
