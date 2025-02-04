@@ -137,7 +137,7 @@ function ProductHandler() {
       toast({
         className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
-        description: `Produkt med id ${id} raderades`,
+        description: `Produkt har raderats`,
       });
     } catch (error) {
       console.error(error);
@@ -183,7 +183,7 @@ function ProductHandler() {
       toast({
         className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
-        description: `Produkt med id ${id} uppdaterades`,
+        description: `Produkten uppdaterades`,
       });
       console.log("Uppdaterad produkt:", updatedProductFromApi);
       return 200; // returnerar 200 om det lyckas för att sätta meddelandet till användare
@@ -287,7 +287,7 @@ function ProductHandler() {
       toast({
         className: "bg-green-200 dark:text-black dark:bg-green-400",
         title: "Lyckat",
-        description: `Produktlista med id ${id} raderades`,
+        description: `Produktlistan raderades`,
       });
     } catch (error) {
       console.error(error);
@@ -332,11 +332,8 @@ function ProductHandler() {
           <div className="mt-8">
             <h3 className="text-lg mb-7">Sparade produkter:</h3>
 
-          <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
-            {products?.products.map((product) => (
-                
-              
-             
+            <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
+              {products?.products.map((product) => (
                 <TooltipProvider key={product.id}>
                   <Tooltip>
                     <TooltipTrigger>
@@ -352,34 +349,33 @@ function ProductHandler() {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-              
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="container mx-auto px-4 flex-row items-center">
-        <CreateProductListButton
-          onSave={(productListName) => {
-            SaveProductList(productListName);
-          }}
-        />
-        <div className="mt-8">
-          <Accordion
-            type="multiple"
-            className=" w-full 2xl:w-3/4 dark:bg-slate-900"
-          >
-            {productlists?.map((productlist) => (
-              <AccordionItem
-                key={productlist.id}
-                value={productlist.id}
-                className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
-              >
-                <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
-                  <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                    <label className="basis-1/4 font-medium  ">
-                      {productlist.productlistName}
-                    </label>
-                    {/* <HandleProductListButton
+        <div className="container mx-auto px-4 flex-row items-center">
+          <CreateProductListButton
+            onSave={(productListName) => {
+              SaveProductList(productListName);
+            }}
+          />
+          <div className="mt-8">
+            <Accordion
+              type="multiple"
+              className=" w-full 2xl:w-3/4 dark:bg-slate-900"
+            >
+              {productlists?.map((productlist) => (
+                <AccordionItem
+                  key={productlist.id}
+                  value={productlist.id}
+                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
+                >
+                  <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
+                    <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
+                      <label className="basis-1/4 font-medium  ">
+                        {productlist.productlistName}
+                      </label>
+                      {/* <HandleProductListButton
                     key={productList.id}
                     productlist={productList}
                     onUpdate={updateProductList}
