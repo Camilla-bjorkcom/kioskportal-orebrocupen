@@ -71,6 +71,7 @@ function InventoryStorage() {
     defaultValues: {
       products: formValues || [],
     },
+    mode: "onChange", // Gör att validering sker löpande
   });
 
   useEffect(() => {
@@ -222,7 +223,11 @@ function InventoryStorage() {
               ))}
 
               <div className="w-1/2 place-self-center">
-                <Button type="submit" className="w-full mt-10">
+                <Button
+                  type="submit"
+                  className="w-full mt-10"
+                  disabled={!form.formState.isValid}
+                >
                   Skicka in inventering
                 </Button>
               </div>
