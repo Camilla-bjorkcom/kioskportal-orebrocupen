@@ -264,8 +264,19 @@ function ProductHandler() {
         throw new Error("Failed to update product list");
       }
 
-      const updatedProductListFromApi = await response.json();
+      if (response.status === 409) {
+        const errorData = await response.json();
+        console.log("409 Conflict Error:", errorData);
 
+        toast({
+          title: "Fel",
+          description: `Produktlista med namnet ${updatedProductList.productlistName}  finns redan.`,
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
+        });
+        queryClient.invalidateQueries({ queryKey: ["productslists"] });
+      }
+      // const updatedProductListFromApi = await response.json();
+      if(response.status === 200){
       queryClient.invalidateQueries({ queryKey: ["productlists"] });
       toast({
         className: "bg-green-200 dark:text-black dark:bg-green-400",
@@ -273,7 +284,8 @@ function ProductHandler() {
         description: `Produktlista  ${updatedProductList.productlistName} uppdaterades`,
       });
 
-      console.log("Uppdaterad produktlista:", updatedProductListFromApi);
+      console.log("Uppdaterad produktlista:", updatedProductList.productlistName);
+    }
     } catch (error) {
       console.error("Failed to update product list:", error);
       toast({
@@ -345,7 +357,7 @@ function ProductHandler() {
           <div className="mt-8">
             <h3 className="text-lg mb-7">Sparade produkter:</h3>
 
-          <div className="grid grid-cols-4 mb-10 gap-2  w-full 2xl:w-3/4">
+          <div className="grid grid-cols-6 mb-10 gap-2  w-full 2xl:w-3/4">
             {products?.products.map((product) => (
                 
               
