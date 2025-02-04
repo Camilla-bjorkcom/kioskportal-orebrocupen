@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Facility, Kiosk, Product } from "@/interfaces";
+import { ContactPerson, Facility, Kiosk, Product } from "@/interfaces";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +12,8 @@ import { useLocalStorage } from "usehooks-ts";
 import { groupBy } from "lodash-es";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useParams } from "react-router-dom";
+import { Checkbox } from "./ui/checkbox";
+import { BellIcon } from "lucide-react";
 
 const InventoryStatusList = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,6 +79,9 @@ const InventoryStatusList = () => {
   };
 
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [notifyContactPerson, setNotifyContactPerson] = useState<
+    ContactPerson[]
+  >([]);
 
   function calculateTotal(product: Product) {
     const { amountPieces, amountPackages, amountPerPackage } = product;
@@ -129,6 +134,31 @@ const InventoryStatusList = () => {
   if (!isSuccess) {
     return <div>Error: {String(error)}</div>;
   }
+ 
+  type NotifyInfoItem = {
+    facilityName: string;
+    contactPersons: {
+      name: string;
+      role: string;
+      id: string;
+      phone: string;
+    }
+    kioskName: string;
+  };
+
+  const notifyInfo = (kiosk: Kiosk): NotifyInfoItem => {
+    return data
+        .filter((item) => item.facilityName === kiosk.facilityName) 
+        .map((item) => ({
+            facilityName: item.facilityName, 
+            kioskName: kiosk.facilityName,
+            contactPersons: item.contactPersons
+        }));
+};
+
+
+ 
+  
 
   const getKioskClasses = (id: string) => {
     return kioskStatus[id]?.some((x) => x.hasNewData)
@@ -142,6 +172,7 @@ const InventoryStatusList = () => {
       : "bg-orange-400  w-2 h-2 opacity-0 rounded-full transition-all delay-150 duration-500 ease-in-out absolute -right-3 top-[10px]";
   };
 
+  console.log(notifyContactPerson);
   return (
     <div className=" 2xl:w-3/4 w-full ml-2">
       <div className="ml-auto w-fit flex">
@@ -177,6 +208,41 @@ const InventoryStatusList = () => {
               </div>
             </AccordionTrigger>
             <AccordionContent>
+              <div className="flex place-content-end gap-3">
+              <div className="font-medium">Välj person att notifiera</div>
+            <BellIcon className="w-4 h-4" />
+            </div>
+              {/* {item.contactPersons.map(
+                (contactPerson) =>
+                  contactPerson.role === "Planansvarig" && (
+                    <div className="flex place-content-end gap-3">
+                      
+
+                      
+                      <label
+                        htmlFor={contactPerson.id}
+                        className=" hover:text-slate-800 cursor-pointer"
+                      >
+                        {contactPerson.name} ({contactPerson.role})
+                      </label>
+                      <Checkbox
+                        key={contactPerson.id}
+                        id={contactPerson.id}
+                        checked={notifyContactPerson.some(
+                          (p) => p.id === contactPerson.id
+                        )}
+                        onCheckedChange={(checked) => {
+                          setNotifyContactPerson((prev) =>
+                            checked
+                              ? [...prev, contactPerson]
+                              : prev.filter((p) => p.id !== contactPerson.id)
+                          );
+                        }}
+                      />
+                    </div>
+                    
+                  )
+              )} */}
               {sortKiosksByInventoryDate(item.kiosks).map(
                 (kiosk) =>
                   kiosk.firstInventoryMade && (
