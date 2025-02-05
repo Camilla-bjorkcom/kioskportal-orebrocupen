@@ -75,6 +75,7 @@ function UpdateProductListButton({
         productlistName: values.productlistname,
       };
       onUpdate(updatedList); // Skickar tillbaka den uppdaterade listan
+      form.reset();
       setOpen(false);
     }
   });

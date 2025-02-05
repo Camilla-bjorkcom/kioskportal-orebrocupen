@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 type StorageInventory = {
   id: string;
@@ -22,82 +23,17 @@ interface Products {
   total: number;
 }
 
-const mockStorageInventory: StorageInventory[] = [
-  {
-    id: "1",
-    inventoryDate: "2025-01-01",
-    products: [
-      {
-        id: 101,
-        productName: "Chips",
-        amountPackages: 20,
-        total: 200,
-      },
-      {
-        id: 102,
-        productName: "Soda",
-        amountPackages: 50,
-        total: 500,
-      },
-    ],
-  },
-  {
-    id: "2",
-    inventoryDate: "2025-01-15",
-    products: [
-      {
-        id: 103,
-        productName: "Candy",
-        amountPackages: 30,
-        total: 300,
-      },
-      {
-        id: 104,
-        productName: "Juice",
-        amountPackages: 25,
-        total: 250,
-      },
-      {
-        id: 105,
-        productName: "Water",
-        amountPackages: 40,
-        total: 400,
-      },
-    ],
-  },
-  {
-    id: "3",
-    inventoryDate: "2025-01-22",
-    products: [
-      {
-        id: 106,
-        productName: "Hotdogs",
-        amountPackages: 15,
-        total: 150,
-      },
-      {
-        id: 107,
-        productName: "Bread",
-        amountPackages: 35,
-        total: 350,
-      },
-    ],
-  },
-];
-
 const InventoryStatusStorage = () => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  const mockdata = true;
+
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
 
   const { data, isLoading, error, isSuccess } = useQuery<StorageInventory[]>({
     queryKey: ["inventoryList"],
     queryFn: async () => {
-      if (mockdata) {
-        const mockData = mockStorageInventory;
-        return mockData;
-      }
-
-      const response = await fetchWithAuth(`tournaments/{tid}/storage`);
+      const response = await fetchWithAuth(`
+tournaments/${tournamentId}/inventories/`);
       if (!response) {
         throw new Error("Failed to fetch products");
       }
@@ -151,7 +87,7 @@ const InventoryStatusStorage = () => {
           type="multiple"
           value={expandedItems}
           onValueChange={(newValue) => setExpandedItems(newValue)}
-          className="flex flex-col mb-7 dark:bg-slate-900"
+          className="flex flex-col gap-3 mb-7"
         >
           {sortByInventoryDate(data).map((inventory) => (
             <AccordionItem
@@ -164,7 +100,7 @@ const InventoryStatusStorage = () => {
               </AccordionTrigger>
               <AccordionContent>
                 <div key={inventory.id} className="mb-7">
-                  <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2 dark:bg-slate-800 dark:border-slate-500">
+                  <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2">
                     <h2 className="">
                       Senast inventering:{" "}
                       {new Intl.DateTimeFormat("sv-SE", {

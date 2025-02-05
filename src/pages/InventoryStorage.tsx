@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   FormField,
@@ -10,27 +10,30 @@ import {
 } from "@/components/ui/form";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "../components/ui/toaster";
+import { useParams } from "react-router-dom";
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
+import { useEffect, useState } from "react";
 
-type KioskInventory = {
-  id: number;
-  products: Products[];
+type StorageInventory = {
+  inventoryDate: string;
+  products: TournamentProducts[];
 };
 
-interface Products {
-  id: number;
+interface TournamentProducts {
+  id: string;
   productName: string;
   amountPackages: number;
+  amountPerPackage: number;
 }
 
 function InventoryStorage() {
-  const inventoryDate = "2025-06-13 14:25";
-
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
   const { toast } = useToast();
-  const [inventoryList, setInventoryList] = useState<Products[]>([]);
+  const queryClient = useQueryClient();
 
   const formSchema = z.object({
     products: z.array(
@@ -38,79 +41,94 @@ function InventoryStorage() {
         productName: z.string().min(1, "Produktnamn är obligatoriskt"),
         amountPackages: z.coerce
           .number()
-          .min(0, "Antal paket måste vara större än eller lika med 0"),
+          .min(0, "Antal paket måste vara större än eller lika med 0")
+          .default(0), // Standardvärde
+        id: z.string(),
+        amountPerPackage: z.coerce.number().default(0), // Gör det valfritt
       })
     ),
   });
 
-  const id = "3395";
-
-  type FormData = z.infer<typeof formSchema>;
-
-  const { isLoading, error } = useQuery<KioskInventory>({
+  const { isLoading, error, data, isSuccess } = useQuery<StorageInventory>({
     queryKey: ["inventoryList"],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/inventoryList/${id}`);
+      const response = await fetchWithAuth(`products/${tournamentId}`);
+      if (!response) {
+        throw new Error("Failed to fetch products");
+      }
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
       const data = await response.json();
-      setInventoryList(data.products);
-      return data.products;
+      return data;
     },
   });
+
+  const [formValues, setFormValues] = useState<TournamentProducts[] | null>();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      products: [],
+      products: formValues || [],
     },
+    mode: "onChange", // Gör att validering sker löpande
   });
 
   useEffect(() => {
-    if (inventoryList.length > 0) {
-      form.reset({
-        products: inventoryList.map((product) => ({
-          productId: product.id,
-          productName: product.productName,
-        })),
-      });
+    if (isSuccess && data?.products) {
+      const updatedProducts = data.products.map((product) => ({
+        id: product.id,
+        productName: product.productName,
+        amountPackages: product.amountPackages, // Standardvärde
+        amountPerPackage: product.amountPerPackage, // Standardvärde
+      }));
+
+      setFormValues(updatedProducts);
+      form.reset({ products: updatedProducts }); // Uppdaterar formuläret korrekt
     }
-  }, [inventoryList, form]);
+  }, [isSuccess, data]);
 
-  const { fields } = useFieldArray({
-    control: form.control,
-    name: "products",
-  });
-
-  const handleSubmit = form.handleSubmit(async (data: FormData) => {
-    console.log("I handlesubmit");
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const updatedList = await saveChangesToInventoryList(data);
-      console.log("Updated list:", updatedList);
-    } catch (error) {
-      console.error("Failed to save changes", error);
-    }
-  }, console.error);
-
-  const saveChangesToInventoryList = async (data: FormData) => {
-    const url = `http://localhost:3000/inventoryList/${id}`;
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
+      console.log("I onSubmit" + values);
+      const response = await fetchWithAuth(
+        `tournaments/${tournamentId}/inventories`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values.products),
+        }
+      );
+      if (!response) {
+        throw new Error("Failed to update list");
+      }
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Server response error:", errorText);
         throw new Error("Failed to update list");
       }
+      queryClient.invalidateQueries({ queryKey: ["inventoryList"] });
+      toast({
+        className: "bg-green-200 dark:bg-green-500 dark:text-black",
+        title: "Lyckat!",
+        description: "Inventering skickades iväg",
+      });
 
-      form.reset();
+      form.reset({
+        products: values.products.map((product) => ({
+          id: product.id,
+          productName: product.productName,
+          amountPackages: undefined, // Återställ till 0 istället för tomt
+          amountPerPackage: undefined, // Återställ till 0 istället för tomt
+        })),
+      });
     } catch (error) {
       console.error("Update failed:", error);
+      toast({
+        className: "bg-red-200 dark:bg-red-500 dark:text-black",
+        title: "Misslyckat!",
+        description: "Inventering misslyckades",
+      });
       throw error;
     }
   };
@@ -132,17 +150,35 @@ function InventoryStorage() {
             Inventera huvudlager
           </h2>
           <div className="w-full place-items-center mt-5 gap-3 mb-16">
-            <p className="text-sm lg:text-lg dark:text-gray-200">
+            <p className="text-sm  dark:text-gray-200">
               Senast inventering gjord:
             </p>
-            <h3 className="lg:text-lg font-semibold dark:text-gray-200">
-              {inventoryDate}
+            <h3 className="text-sm font-semibold dark:text-gray-200">
+              {new Date(data?.inventoryDate ?? "").toLocaleString("sv-SE", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              })}
             </h3>
           </div>
 
           <Form {...form}>
-            <form onSubmit={handleSubmit} className="w-fit mx-auto mb-20">
-              {fields.map((product, index) => (
+            <form
+              onSubmit={form.handleSubmit(
+                (values) => {
+                  console.log("Formuläret är giltigt:", values);
+                  onSubmit(values);
+                },
+                (errors) => {
+                  console.error("Valideringsfel:", errors);
+                }
+              )}
+              className="w-fit mx-auto mb-20"
+            >
+              {data?.products.map((product, index) => (
                 <div
                   key={product.id}
                   className={`space-y-4 lg:flex ${
@@ -165,15 +201,16 @@ function InventoryStorage() {
                       </FormItem>
                     )}
                   />
+
                   <div className="flex gap-5 dark:border:solid dark:border-gray-500">
                     <FormField
-                      key={index}
+                      key={product.id}
                       control={form.control}
                       name={`products.${index}.amountPackages`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="dark:text-gray-200">
-                            Antal i förpackningar
+                            Antal förpackningar
                           </FormLabel>
                           <FormControl className="dark:text-gray-200 dark:border-gray-500">
                             <Input {...field} />
@@ -189,13 +226,7 @@ function InventoryStorage() {
                 <Button
                   type="submit"
                   className="w-full mt-10"
-                  onClick={() => {
-                    toast({
-                      className: "bg-green-200",
-                      title: "Lyckat!",
-                      description: "Inventering skickades iväg",
-                    });
-                  }}
+                  disabled={!form.formState.isValid}
                 >
                   Skicka in inventering
                 </Button>

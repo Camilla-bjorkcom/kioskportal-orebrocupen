@@ -98,19 +98,32 @@ function FacilitiesAndKiosks() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ facilityName }),
       });
+      
       if (!response) {
         throw new Error("Failed to fetch");
       }
-      if (!response.ok) {
-        throw new Error("Failed to save facility");
+      if (response.status === 409) {
+        const errorData = await response.json();
+        console.log("409 Conflict Error:", errorData);
+
+        toast({
+          title: "Fel",
+          description: `Anläggning med namnet ${facilityName}  finns redan.`,
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
+        });
+        queryClient.invalidateQueries({ queryKey: ["facilities"] });
       }
-      //uppdaterar data
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+
+      if (response.status === 200){
+        queryClient.invalidateQueries({ queryKey: ["facilities"] });
       toast({
         className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
         description: `Anläggning ${facilityName} skapades`,
       });
+
+      }
+      
     } catch (error) {
       console.error(error);
       toast({
