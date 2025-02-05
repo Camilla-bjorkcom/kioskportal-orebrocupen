@@ -197,7 +197,7 @@ const InventoryStatusList = () => {
           <AccordionItem
             key={item.id}
             value={item.id}
-            className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:border-slate-500 dark:hover:bg-slate-900"
+            className="p-3 border border-gray-200 rounded-md shadow 0 dark:border-slate-500 "
           >
             <AccordionTrigger
               className="text-lg font-medium"
