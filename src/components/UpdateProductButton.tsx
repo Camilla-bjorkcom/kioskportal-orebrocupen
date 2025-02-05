@@ -56,7 +56,7 @@ const formSchema = z.object({
 });
 
 interface UpdateProductButtonProps {
-  onUpdate: (updatedProduct: Product) => void;
+  onUpdate: (updatedProduct: Product) => Promise<number>;
   product: Product; // Callback för att spara produktnamn
   onDelete: (id: string) => void;
 }
@@ -78,8 +78,9 @@ function UpdateProductButton({
       amountPerPackage: product.amountPerPackage ?? 0,
     },
   });
+  const { reset } = form;
  
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
    
     const updatedProduct: Product = {
       id: values.id,
@@ -87,10 +88,21 @@ function UpdateProductButton({
       amountPerPackage: values.amountPerPackage ?? 0,
     };
 
-    onUpdate(updatedProduct);
+    const result= await onUpdate(updatedProduct);
 
-    console.log("Uppdaterade värden:", values);
-    setUpdateMessage("Produkten har uppdaterats!");
+    if (result === 200) {
+      setUpdateMessage("Produkten har uppdaterats!");
+      
+    }
+    else if(result === 409){
+      setUpdateMessage(`Produkten "${values.productName}" finns redan!`);
+      reset(product);
+      
+    }
+    else{
+      setUpdateMessage("Något gick fel!");
+    }
+    
   }
   const handleDelete = () => {
     console.log("Raderar produkt:", product.id);
@@ -152,7 +164,9 @@ function UpdateProductButton({
               )}
             />
             {updateMessage && (
-              <div className="text-green-600 text-sm mt-4">{updateMessage}</div>
+  <div className={`text-sm mt-4 ${updateMessage.includes("har") ? "text-green-600" : "text-red-600"}`}>
+    {updateMessage}
+  </div>
             )}
             <div className="flex justify-between">
               <AlertDialog>

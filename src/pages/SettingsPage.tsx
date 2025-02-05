@@ -21,9 +21,7 @@ const SettingsPage = () => {
       if (!id) {
         throw new Error("No tournament ID provided");
       }
-      const response = await fetchWithAuth(
-        `tournaments/${id}`
-      );
+      const response = await fetchWithAuth(`tournaments/${id}`);
       if (!response) {
         throw new Error("Failed to fetch");
       }
@@ -53,14 +51,11 @@ const SettingsPage = () => {
 
   const UpdateTournament = async (updatedTournament: UpdateTournament) => {
     try {
-      const response = await fetchWithAuth(
-        `tournaments/${id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedTournament),
-        }
-      );
+      const response = await fetchWithAuth(`tournaments/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedTournament),
+      });
       if (!response) {
         throw new Error("Failed to fetch");
       }
@@ -72,7 +67,7 @@ const SettingsPage = () => {
 
       const updatedTournamentFromApi = await response.json();
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Ändringen sparades",
         description: "Turneringen har uppdaterats",
       });
@@ -83,7 +78,7 @@ const SettingsPage = () => {
       toast({
         title: "Fel",
         description: "Misslyckades med att spara ändringar.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:bg-red-400 dark:text-black",
       });
     }
   };
@@ -92,7 +87,7 @@ const SettingsPage = () => {
     <div className="container mx-auto ml-5">
       <h2 className="text-2xl pb-5">Inställningar</h2>
       <div className="grid grid-cols-2 gap-2">
-        <div>         
+        <div>
           <h3 className="text-lg pb-2 border-b border-b-slate-300 w-3/4">
             Din profil
           </h3>

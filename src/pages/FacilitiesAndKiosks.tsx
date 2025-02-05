@@ -31,6 +31,8 @@ import EditSelectedKioskButton from "@/components/EditSelectedKioskButton";
 import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { toast } from "@/hooks/use-toast";
+import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
+
 
 function FacilitiesAndKiosks() {
   const queryClient = useQueryClient();
@@ -62,7 +64,7 @@ function FacilitiesAndKiosks() {
     },
   });
 
-  const { data: products } = useQuery<Product[]>({
+  const { data: products } = useQuery<GetAllProductsResponse>({
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetchWithAuth(`products/${tournamentId}`);
@@ -96,25 +98,38 @@ function FacilitiesAndKiosks() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ facilityName }),
       });
+      
       if (!response) {
         throw new Error("Failed to fetch");
       }
-      if (!response.ok) {
-        throw new Error("Failed to save facility");
+      if (response.status === 409) {
+        const errorData = await response.json();
+        console.log("409 Conflict Error:", errorData);
+
+        toast({
+          title: "Fel",
+          description: `Anläggning med namnet ${facilityName}  finns redan.`,
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
+        });
+        queryClient.invalidateQueries({ queryKey: ["facilities"] });
       }
-      //uppdaterar data
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+
+      if (response.status === 200){
+        queryClient.invalidateQueries({ queryKey: ["facilities"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
         description: `Anläggning ${facilityName} skapades`,
       });
+
+      }
+      
     } catch (error) {
       console.error(error);
       toast({
         title: "Fel",
         description: "Misslyckades med att skapa anläggning.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:bg-red-400 dark:text-black",
       });
     }
   };
@@ -136,7 +151,7 @@ function FacilitiesAndKiosks() {
         toast({
           title: "Fel",
           description: "Misslyckades med att uppdatera anläggningen.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Failed to fetch");
       }
@@ -144,13 +159,13 @@ function FacilitiesAndKiosks() {
         toast({
           title: "Fel",
           description: "Misslyckades med att uppdatera anläggningen.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Failed to update facility");
       }
 
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
         description: `Anläggningen uppdaterades`,
       });
@@ -163,7 +178,7 @@ function FacilitiesAndKiosks() {
       toast({
         title: "Fel",
         description: "Misslyckades med att uppdatera anläggningen.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:bg-red-400 dark:text-black",
       });
     }
   };
@@ -183,7 +198,7 @@ function FacilitiesAndKiosks() {
         throw new Error("Failed to delete facility");
       }
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
         description: `Anläggningen och dess kiosker raderades`,
       });
@@ -197,7 +212,7 @@ function FacilitiesAndKiosks() {
         title: "Fel",
         description:
           "Misslyckades med att radera anläggningen och dess kiosker.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:bg-red-400 dark:text-black",
       });
     }
   };
@@ -229,7 +244,7 @@ function FacilitiesAndKiosks() {
           title: "Fel",
           description:
             "Misslyckades med att lägga till kontaktperson till anläggningen.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Failed to fetch");
       }
@@ -238,12 +253,12 @@ function FacilitiesAndKiosks() {
           title: "Fel",
           description:
             "Misslyckades med att lägga till kontaktperson till anläggningen.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Failed to update facility");
       }
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
         description: `Kontaktperson lades till`,
       });
@@ -255,7 +270,7 @@ function FacilitiesAndKiosks() {
       toast({
         title: "Fel",
         description: "Misslyckades med att uppdatera anläggningen.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:bg-red-400 dark:text-black",
       });
     }
   };
@@ -281,7 +296,7 @@ function FacilitiesAndKiosks() {
         toast({
           title: "Fel",
           description: "Misslyckades med att uppdatera kontaktperson.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Failed to update contact person");
       }
@@ -289,12 +304,12 @@ function FacilitiesAndKiosks() {
         toast({
           title: "Fel",
           description: "Misslyckades med att uppdatera kontaktperson.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Failed to update contact person");
       }
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
         description: `Kontaktperson uppdaterades`,
       });
@@ -306,7 +321,7 @@ function FacilitiesAndKiosks() {
       toast({
         title: "Fel",
         description: "Misslyckades med att uppdatera kontaktperson.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:bg-red-400 dark:text-black",
       });
     }
   };
@@ -331,7 +346,7 @@ function FacilitiesAndKiosks() {
         toast({
           title: "Fel",
           description: "Misslyckades med att radera kontaktperson.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Failed to fetch");
       }
@@ -339,12 +354,12 @@ function FacilitiesAndKiosks() {
         toast({
           title: "Fel",
           description: "Misslyckades med att radera kontaktperson.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Failed to update facility");
       }
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
         description: `Kontaktperson raderades`,
       });
@@ -356,7 +371,7 @@ function FacilitiesAndKiosks() {
       toast({
         title: "Fel",
         description: "Misslyckades med att radera kontaktperson.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:bg-red-400 dark:text-black",
       });
     }
   };
@@ -377,7 +392,7 @@ function FacilitiesAndKiosks() {
         toast({
           title: "Fel",
           description: "Misslyckades med att radera kontaktperson.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Failed to save kiosk");
       }
@@ -385,13 +400,13 @@ function FacilitiesAndKiosks() {
         toast({
           title: "Fel",
           description: "Misslyckades med att radera kontaktperson.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Failed to save kiosk");
       }
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
         description: ` ${kioskName} skapades`,
       });
@@ -399,7 +414,7 @@ function FacilitiesAndKiosks() {
       toast({
         title: "Fel",
         description: "Misslyckades med att radera kontaktperson.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:bg-red-400 dark:text-black",
       });
       console.error(error);
     }
@@ -423,14 +438,14 @@ function FacilitiesAndKiosks() {
         toast({
           title: "Fel",
           description: "Misslyckades med att uppdatera kiosk.",
-          className: "bg-red-200",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Failed to update kiosk");
       }
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
         description: ` Kiosk uppdaterades`,
       });
@@ -438,7 +453,7 @@ function FacilitiesAndKiosks() {
       toast({
         title: "Fel",
         description: "Misslyckades med att uppdatera kiosk.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:bg-red-400 dark:text-black",
       });
       console.error(error);
     }
@@ -457,7 +472,7 @@ function FacilitiesAndKiosks() {
       }
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
       toast({
-        className: "bg-green-200",
+        className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
         description: `Kiosk raderades`,
       });
@@ -465,7 +480,7 @@ function FacilitiesAndKiosks() {
       toast({
         title: "Fel",
         description: "Misslyckades med att radera kiosk.",
-        className: "bg-red-200",
+        className: "bg-red-200 dark:bg-red-400 dark:text-black",
       });
       console.error(error);
     }
@@ -553,7 +568,7 @@ function FacilitiesAndKiosks() {
         <SelectedKiosksButton
           selectedKiosks={kiosksForUpdate}
           productlists={productlists || []}
-          products={products || []}
+          products={products?.products || []}
           onClick={handleSubmit}
           onKiosksUpdated={handleKiosksUpdated}
           onClearSelected={clearSelectedKiosks}
@@ -641,7 +656,7 @@ function FacilitiesAndKiosks() {
                                     key={kiosk.id}
                                     kioskForEdit={kiosk}
                                     productLists={productlists || []}
-                                    products={products || []}
+                                    products={products?.products || []}
                                     onEditClick={handleEditClick}
                                     onKioskUpdated={handleKioskUpdated}
                                     onSave={UpdateKiosk}
