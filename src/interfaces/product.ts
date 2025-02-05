@@ -8,6 +8,6 @@ export interface Product {
   }
 
 
- export type InventoryProducts = Omit<Product, "amountPieces" | "total">;
+ export type InventoryProducts = Omit<Product, "amountPieces" | "total">; //anpassat interface för inventering av huvudlager
 
  export type InventoryStorageProducts = Omit<Product, "amountPieces" | "total">;
