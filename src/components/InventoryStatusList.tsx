@@ -164,9 +164,9 @@ const InventoryStatusList = () => {
     };
   };
 
-  console.log(notifyInfo);
-
   console.log(notifyContactPerson);
+
+  console.log(inventoryStatus);
 
   const getKioskClasses = (id: string) => {
     return kioskStatus[id]?.some((x) => x.hasNewData)
@@ -215,104 +215,137 @@ const InventoryStatusList = () => {
               </div>
             </AccordionTrigger>
             <AccordionContent>
-            {sortKiosksByInventoryDate(item.kiosks).map((kiosk) => {
-  const info = notifyInfo(kiosk);
+              {sortKiosksByInventoryDate(item.kiosks).map((kiosk) => {
+                const info = notifyInfo(kiosk);
 
-  return (
-    <div key={kiosk.id}>
-      
-        <div className="mb-3 mt-10">
-          <div className="flex flex-col p-3 border-b-4 rounded-xl w-full -mb-2 dark:bg-slate-800 dark:border-slate-500">
-            <div className="flex justify-between">
-              <h3 className={getKioskClasses(kiosk.id)}>
-                {kiosk.kioskName}
-              </h3>
-              {info.contactPersons.length > 0 ? (
-              <div className="flex place-content-end gap-3">
-                <div className="font-medium">
-                  Välj kiosk att notifiera
-                </div>
-                <BellIcon className="w-4 h-4" />
-                <Checkbox
-                  id={info.facilityName}
-                  checked={notifyContactPerson.some(
-                    (i) => i.kioskId === kiosk.id
-                  )}
-                  onCheckedChange={(checked) => {
-                    setNotifyContactPerson((prev) =>
-                      checked
-                        ? [...prev, info]
-                        : prev.filter(
-                            (i) => i.kioskId !== kiosk.id
-                          )
-                    );
-                  }}
-                />
-              </div>
-              ) : (<p>Planansvarig kontaktperson saknas</p>)}
-            </div>
-           
-            {kiosk.firstInventoryMade ? (
-               <h2>Senast inventering:{" "}
-              {new Intl.DateTimeFormat("sv-SE", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              }).format(new Date(kiosk.inventoryDate))}
-             </h2>) : (
-              <h2>Ingen inventering har gjorts ännu hos {kiosk.kioskName} på {kiosk.facility}.</h2>
-            )}
-           
-          </div>
-        </div>
-    
-      {kiosk.firstInventoryMade && (
-        <div className="w-full mt-2">
-          <div className="grid grid-cols-4 gap-4 font-bold text-gray-600 py-2 px-4 dark:text-gray-300">
-            <p>Namn</p>
-            <p>Styckvaror</p>
-            <p>Obrutna förpackningar</p>
-            <p className="text-center">Totalt</p>
-          </div>
+                return (
+                  <div key={kiosk.id}>
+                    <div className="mb-3 mt-10">
+                      <div className="flex flex-col p-3 border-b-4 rounded-xl w-full -mb-2 dark:bg-slate-800 dark:border-slate-500">
+                        <div className="flex justify-between">
+                          <h3 className={getKioskClasses(kiosk.id)}>
+                            {kiosk.kioskName}
+                          </h3>
+                          {info.contactPersons.length > 0 ? (
+                            <div className="flex place-content-end gap-3">
+                              <div className="font-medium">
+                                Välj kiosk att notifiera
+                              </div>
+                              <BellIcon className="w-4 h-4" />
+                              <Checkbox
+                                id={info.facilityName}
+                                checked={notifyContactPerson.some(
+                                  (i) => i.kioskId === kiosk.id
+                                )}
+                                onCheckedChange={(checked) => {
+                                  setNotifyContactPerson((prev) =>
+                                    checked
+                                      ? [...prev, info]
+                                      : prev.filter(
+                                          (i) => i.kioskId !== kiosk.id
+                                        )
+                                  );
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <p>Planansvarig kontaktperson saknas</p>
+                          )}
+                        </div>
 
-          {kiosk.products.map((product, productIndex) => {
-            const isOutOfStock =
-              product.amountPieces === 0 ||
-              product.amountPackages === 0;
+                        {kiosk.firstInventoryMade ? (
+                          <h2>
+                            Senast inventering:{" "}
+                            {new Intl.DateTimeFormat("sv-SE", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }).format(new Date(kiosk.inventoryDate))}
+                          </h2>
+                        ) : (
+                          <h2>
+                            Ingen inventering har gjorts ännu hos{" "}
+                            {kiosk.kioskName} på {kiosk.facility}.
+                          </h2>
+                        )}
+                      </div>
+                    </div>
 
-            return (
-              <div
-                key={product.id}
-                className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 
+                    {kiosk.firstInventoryMade && (
+                      <div className="w-full mt-2">
+                        <div className="grid grid-cols-4 gap-4 font-bold text-gray-600 py-2 px-4 dark:text-gray-300">
+                          <p>Namn</p>
+                          <p>Styckvaror</p>
+                          <p>Obrutna förpackningar</p>
+                          <p className="text-center">Totalt</p>
+                        </div>
+
+                        {kiosk.products.map((product, productIndex) => {
+                          const isOutOfStock =
+                            product.amountPieces === 0 ||
+                            product.amountPackages === 0;
+
+                          return (
+                            <div
+                              key={product.id}
+                              className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 
                   dark:bg-slate-800 dark:text-gray-300 dark:border-slate-500 dark:hover:bg-slate-700 
-                  ${productIndex % 2 === 0 ? "bg-gray-100" : "bg-white dark:bg-slate-900"}`}
-              >
-                <p className={isOutOfStock ? "text-red-500 font-semibold" : ""}>
-                  {product.productName}
-                </p>
-                <p className={isOutOfStock ? "text-red-500 font-semibold" : ""}>
-                  {product.amountPieces} st
-                </p>
-                <p className={isOutOfStock ? "text-red-500 font-semibold" : ""}>
-                  {product.amountPackages} st
-                </p>
-                {product.total ? (
-                  <p className={isOutOfStock ? "text-red-500 text-center font-semibold" : "text-center"}>
-                    {product.total} st
-                  </p>
-                ) : (
-                  <p className="text-center">N/A</p>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      ) }
-    </div>
-  );
-})}
+                  ${
+                    productIndex % 2 === 0
+                      ? "bg-gray-100"
+                      : "bg-white dark:bg-slate-900"
+                  }`}
+                            >
+                              <p
+                                className={
+                                  isOutOfStock
+                                    ? "text-red-500 font-semibold"
+                                    : ""
+                                }
+                              >
+                                {product.productName}
+                              </p>
+                              <p
+                                className={
+                                  isOutOfStock
+                                    ? "text-red-500 font-semibold"
+                                    : ""
+                                }
+                              >
+                                {product.amountPieces} st
+                              </p>
+                              <p
+                                className={
+                                  isOutOfStock
+                                    ? "text-red-500 font-semibold"
+                                    : ""
+                                }
+                              >
+                                {product.amountPackages} st
+                              </p>
+                              {product.total ? (
+                                <p
+                                  className={
+                                    isOutOfStock
+                                      ? "text-red-500 text-center font-semibold"
+                                      : "text-center"
+                                  }
+                                >
+                                  {product.total} st
+                                </p>
+                              ) : (
+                                <p className="text-center">N/A</p>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </AccordionContent>
           </AccordionItem>
         ))}
