@@ -1,7 +1,6 @@
 import { useAuth } from "react-oidc-context";
 import {
   SquareChartGantt,
-  
   ChartSpline,
   LogOut,
   ChevronsUpDown,
@@ -9,7 +8,6 @@ import {
   BookHeart,
   House,
   ShoppingBasket,
-
 } from "lucide-react";
 
 import {
@@ -54,7 +52,7 @@ export function AppSidebar({ id }: { id?: string }) {
       icon: ShoppingBasket,
       subitems: [
         {
-          title: "Skapa produkter & produktlistor",
+          title: "Hantera produkter & produktlistor",
           url: `/producthandler/${id}`,
         },
       ],
@@ -112,7 +110,10 @@ export function AppSidebar({ id }: { id?: string }) {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title} className="font-bold hover:bg-none">
+                <SidebarMenuItem
+                  key={item.title}
+                  className="font-bold hover:bg-none"
+                >
                   <SidebarMenuButton asChild>
                     <div className="flex items-center gap-2 ">
                       <item.icon className="w-5 h-5" />
@@ -127,7 +128,6 @@ export function AppSidebar({ id }: { id?: string }) {
                         <SidebarMenuSubItem
                           key={subitem.title}
                           className="font-medium hover:bg-gray-100 dark:hover:bg-slate-600 w-full"
-                         
                         >
                           <a href={subitem.url} className="w-full flex">
                             {subitem.title}
