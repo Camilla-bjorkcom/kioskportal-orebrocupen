@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Facility, Kiosk, Product } from "@/interfaces";
+import { ContactPerson, Facility, Kiosk, Product } from "@/interfaces";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +12,8 @@ import { useLocalStorage } from "usehooks-ts";
 import { groupBy } from "lodash-es";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useParams } from "react-router-dom";
+import { Checkbox } from "./ui/checkbox";
+import { BellIcon } from "lucide-react";
 
 const InventoryStatusList = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,6 +79,9 @@ const InventoryStatusList = () => {
   };
 
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [notifyContactPerson, setNotifyContactPerson] = useState<NotifyItem[]>(
+    []
+  );
 
   function calculateTotal(product: Product) {
     const { amountPieces, amountPackages, amountPerPackage } = product;
@@ -130,6 +135,39 @@ const InventoryStatusList = () => {
     return <div>Error: {String(error)}</div>;
   }
 
+  type NotifyItem = {
+    kioskId: string;
+    facilityName: string;
+    kioskName: string;
+    contactPersons: ContactPerson[];
+  };
+
+  const notifyInfo = (kiosk: Kiosk): NotifyItem => {
+    const facility = data.find((item) => item.facilityName === kiosk.facility); // Hitta rätt facility
+
+    if (!facility) {
+      return {
+        kioskId: kiosk.id,
+        facilityName: "",
+        kioskName: "",
+        contactPersons: [],
+      };
+    }
+
+    return {
+      kioskId: kiosk.id,
+      facilityName: facility.facilityName,
+      kioskName: kiosk.kioskName,
+      contactPersons: facility.contactPersons.filter(
+        (contactPerson) => contactPerson.role === "Planansvarig"
+      ),
+    };
+  };
+
+  console.log(notifyContactPerson);
+
+  console.log(inventoryStatus);
+
   const getKioskClasses = (id: string) => {
     return kioskStatus[id]?.some((x) => x.hasNewData)
       ? "text-orange-400 font-bold transition-all delay-150 duration-300 ease-in-out"
@@ -143,7 +181,7 @@ const InventoryStatusList = () => {
   };
 
   return (
-    <div className=" 2xl:w-3/4 w-full ml-2">
+    <div className="2xl:w-3/4 w-full ml-2">
       <div className="ml-auto w-fit flex">
         <Button onClick={toggleExpandAll} className="mb-4">
           {expandedItems.length === 0 ? "Expandera alla" : "Minimera alla"}
@@ -153,52 +191,90 @@ const InventoryStatusList = () => {
         type="multiple"
         value={expandedItems}
         onValueChange={(newValue) => setExpandedItems(newValue)}
-        className="flex flex-col  mb-7 dark:bg-slate-900  "
+        className="flex flex-col mb-7 dark:bg-slate-900"
       >
         {data.map((item) => (
           <AccordionItem
             key={item.id}
             value={item.id}
-            className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:border-slate-500 dark:hover:bg-slate-900 "
+            className="p-3 border border-gray-200 rounded-md shadow 0 dark:border-slate-500 "
           >
             <AccordionTrigger
               className="text-lg font-medium"
               onClick={() =>
                 setTimeout(() => {
                   setInventoryStatus((prev) =>
-                    prev.filter((item) => id !== item.id)
+                    prev.filter((inventoryItem) => inventoryItem.id !== item.id)
                   );
                 }, 2000)
               }
             >
               <div className="flex relative">
                 <p>{item.facilityName}</p>
-                <div className={`${getFacilityClasses(item.id)}`}></div>
+                <div className={getFacilityClasses(item.id)}></div>
               </div>
             </AccordionTrigger>
             <AccordionContent>
-              {sortKiosksByInventoryDate(item.kiosks).map(
-                (kiosk) =>
-                  kiosk.firstInventoryMade && (
-                    <div key={kiosk.id} className="mb-7">
-                      <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2 dark:bg-slate-800 dark:border-slate-500">
-                        <h3 className={`${getKioskClasses(kiosk.id)} `}>
-                          {kiosk.kioskName}
-                        </h3>
+              {sortKiosksByInventoryDate(item.kiosks).map((kiosk) => {
+                const info = notifyInfo(kiosk);
 
-                        <h2 className="">
-                          Senast inventering:{" "}
-                          {new Intl.DateTimeFormat("sv-SE", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }).format(new Date(kiosk.inventoryDate))}
-                        </h2>
+                return (
+                  <div key={kiosk.id}>
+                    <div className="mb-3 mt-10">
+                      <div className="flex flex-col p-3 border-b-4 rounded-xl w-full -mb-2 dark:bg-slate-800 dark:border-slate-500">
+                        <div className="flex justify-between">
+                          <h3 className={getKioskClasses(kiosk.id)}>
+                            {kiosk.kioskName}
+                          </h3>
+                          {info.contactPersons.length > 0 ? (
+                            <div className="flex place-content-end gap-3">
+                              <div className="font-medium">
+                                Välj kiosk att notifiera
+                              </div>
+                              <BellIcon className="w-4 h-4" />
+                              <Checkbox
+                                id={info.facilityName}
+                                checked={notifyContactPerson.some(
+                                  (i) => i.kioskId === kiosk.id
+                                )}
+                                onCheckedChange={(checked) => {
+                                  setNotifyContactPerson((prev) =>
+                                    checked
+                                      ? [...prev, info]
+                                      : prev.filter(
+                                          (i) => i.kioskId !== kiosk.id
+                                        )
+                                  );
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <p>Planansvarig kontaktperson saknas</p>
+                          )}
+                        </div>
+
+                        {kiosk.firstInventoryMade ? (
+                          <h2>
+                            Senast inventering:{" "}
+                            {new Intl.DateTimeFormat("sv-SE", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }).format(new Date(kiosk.inventoryDate))}
+                          </h2>
+                        ) : (
+                          <h2>
+                            Ingen inventering har gjorts ännu hos{" "}
+                            {kiosk.kioskName} på {kiosk.facility}.
+                          </h2>
+                        )}
                       </div>
+                    </div>
+
+                    {kiosk.firstInventoryMade && (
                       <div className="w-full mt-2">
-                        {/* Rubriker för kolumner */}
                         <div className="grid grid-cols-4 gap-4 font-bold text-gray-600 py-2 px-4 dark:text-gray-300">
                           <p>Namn</p>
                           <p>Styckvaror</p>
@@ -206,20 +282,21 @@ const InventoryStatusList = () => {
                           <p className="text-center">Totalt</p>
                         </div>
 
-                        {/* Lista över produkter */}
-
                         {kiosk.products.map((product, productIndex) => {
                           const isOutOfStock =
                             product.amountPieces === 0 ||
                             product.amountPackages === 0;
+
                           return (
                             <div
                               key={product.id}
-                              className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 dark:bg-slate-800 dark:text-gray-300 dark:border-slate-500 dark:hover:bg-slate-700 ${
-                                productIndex % 2 === 0
-                                  ? "bg-gray-100"
-                                  : "bg-white dark:bg-slate-900"
-                              }`}
+                              className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 
+                  dark:bg-slate-800 dark:text-gray-300 dark:border-slate-500 dark:hover:bg-slate-700 
+                  ${
+                    productIndex % 2 === 0
+                      ? "bg-gray-100"
+                      : "bg-white dark:bg-slate-900"
+                  }`}
                             >
                               <p
                                 className={
@@ -265,9 +342,10 @@ const InventoryStatusList = () => {
                           );
                         })}
                       </div>
-                    </div>
-                  )
-              )}
+                    )}
+                  </div>
+                );
+              })}
             </AccordionContent>
           </AccordionItem>
         ))}
