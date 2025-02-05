@@ -80,7 +80,7 @@ const InventoryStatusList = () => {
 
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [notifyContactPerson, setNotifyContactPerson] = useState<
-    ContactPerson[]
+    NotifyItem[]
   >([]);
 
   function calculateTotal(product: Product) {
@@ -135,28 +135,38 @@ const InventoryStatusList = () => {
     return <div>Error: {String(error)}</div>;
   }
  
-  type NotifyInfoItem = {
+type NotifyItem = {
+  kioskId: string;
     facilityName: string;
-    contactPersons: {
-      name: string;
-      role: string;
-      id: string;
-      phone: string;
-    }
     kioskName: string;
+    contactPersons: ContactPerson[];
+}
+
+
+  const notifyInfo = (kiosk: Kiosk) :NotifyItem=> {
+    const facility = data.find((item) => item.facilityName === kiosk.facility); // Hitta rätt facility
+    
+    if (!facility) {
+      return {
+        kioskId: kiosk.id,
+        facilityName: "",
+        kioskName: "",
+        contactPersons: [],
+      };
+    }
+  
+    return {
+      kioskId: kiosk.id,
+      facilityName: facility.facilityName,
+      kioskName: kiosk.kioskName,
+      contactPersons: facility.contactPersons.filter((contactPerson) => contactPerson.role === "Planansvarig"),
+    };
   };
+  
 
-  const notifyInfo = (kiosk: Kiosk): NotifyInfoItem => {
-    return data
-        .filter((item) => item.facilityName === kiosk.facilityName) 
-        .map((item) => ({
-            facilityName: item.facilityName, 
-            kioskName: kiosk.kioskName,
-            contactPersons: item.contactPersons
-        }));
-};
+console.log(notifyInfo);
 
-
+console.log(notifyContactPerson);
  
   
 
@@ -172,9 +182,10 @@ const InventoryStatusList = () => {
       : "bg-orange-400  w-2 h-2 opacity-0 rounded-full transition-all delay-150 duration-500 ease-in-out absolute -right-3 top-[10px]";
   };
 
-  console.log(notifyContactPerson);
+  
+
   return (
-    <div className=" 2xl:w-3/4 w-full ml-2">
+    <div className="2xl:w-3/4 w-full ml-2">
       <div className="ml-auto w-fit flex">
         <Button onClick={toggleExpandAll} className="mb-4">
           {expandedItems.length === 0 ? "Expandera alla" : "Minimera alla"}
@@ -184,100 +195,81 @@ const InventoryStatusList = () => {
         type="multiple"
         value={expandedItems}
         onValueChange={(newValue) => setExpandedItems(newValue)}
-        className="flex flex-col  mb-7 dark:bg-slate-900  "
+        className="flex flex-col mb-7 dark:bg-slate-900"
       >
         {data.map((item) => (
           <AccordionItem
             key={item.id}
             value={item.id}
-            className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:border-slate-500 dark:hover:bg-slate-900 "
+            className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:border-slate-500 dark:hover:bg-slate-900"
           >
             <AccordionTrigger
               className="text-lg font-medium"
               onClick={() =>
                 setTimeout(() => {
                   setInventoryStatus((prev) =>
-                    prev.filter((item) => id !== item.id)
+                    prev.filter((inventoryItem) => inventoryItem.id !== item.id)
                   );
                 }, 2000)
               }
             >
               <div className="flex relative">
                 <p>{item.facilityName}</p>
-                <div className={`${getFacilityClasses(item.id)}`}></div>
+                <div className={getFacilityClasses(item.id)}></div>
               </div>
             </AccordionTrigger>
             <AccordionContent>
               <div className="flex place-content-end gap-3">
-              <div className="font-medium">Välj person att notifiera</div>
-            <BellIcon className="w-4 h-4" />
-            </div>
-              {/* {item.contactPersons.map(
-                (contactPerson) =>
-                  contactPerson.role === "Planansvarig" && (
-                    <div className="flex place-content-end gap-3">
-                      
-
-                      
-                      <label
-                        htmlFor={contactPerson.id}
-                        className=" hover:text-slate-800 cursor-pointer"
-                      >
-                        {contactPerson.name} ({contactPerson.role})
-                      </label>
+                <div className="font-medium">Välj person att notifiera</div>
+                <BellIcon className="w-4 h-4" />
+              </div>
+              {sortKiosksByInventoryDate(item.kiosks).map((kiosk) => {
+                const info = notifyInfo(kiosk);
+  
+                return (
+                  info && (
+                    <div key={kiosk.id}>
                       <Checkbox
-                        key={contactPerson.id}
-                        id={contactPerson.id}
+                        id={info.facilityName}
                         checked={notifyContactPerson.some(
-                          (p) => p.id === contactPerson.id
+                          (i) => i.kioskId === kiosk.id
                         )}
                         onCheckedChange={(checked) => {
                           setNotifyContactPerson((prev) =>
                             checked
-                              ? [...prev, contactPerson]
-                              : prev.filter((p) => p.id !== contactPerson.id)
+                              ? [...prev, info]
+                              : prev.filter((i) => i.kioskId !== kiosk.id)
                           );
                         }}
                       />
-                    </div>
-                    
-                  )
-              )} */}
-              {sortKiosksByInventoryDate(item.kiosks).map(
-                (kiosk) =>
-                  kiosk.firstInventoryMade && (
-                    <div key={kiosk.id} className="mb-7">
-                      <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2 dark:bg-slate-800 dark:border-slate-500">
-                        <h3 className={`${getKioskClasses(kiosk.id)} `}>
-                          {kiosk.kioskName}
-                        </h3>
-
-                        <h2 className="">
-                          Senast inventering:{" "}
-                          {new Intl.DateTimeFormat("sv-SE", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }).format(new Date(kiosk.inventoryDate))}
-                        </h2>
-                      </div>
+                      {kiosk.firstInventoryMade && (
+                        <div className="mb-7">
+                          <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2 dark:bg-slate-800 dark:border-slate-500">
+                            <h3 className={getKioskClasses(kiosk.id)}>
+                              {kiosk.kioskName}
+                            </h3>
+                            <h2>
+                              Senast inventering:{" "}
+                              {new Intl.DateTimeFormat("sv-SE", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                                hour: "2-digit",
+                              }).format(new Date(kiosk.inventoryDate))}
+                            </h2>
+                          </div>
+                        </div>
+                      )}
                       <div className="w-full mt-2">
-                        {/* Rubriker för kolumner */}
                         <div className="grid grid-cols-4 gap-4 font-bold text-gray-600 py-2 px-4 dark:text-gray-300">
                           <p>Namn</p>
                           <p>Styckvaror</p>
                           <p>Obrutna förpackningar</p>
                           <p className="text-center">Totalt</p>
                         </div>
-
-                        {/* Lista över produkter */}
-
                         {kiosk.products.map((product, productIndex) => {
                           const isOutOfStock =
-                            product.amountPieces === 0 ||
-                            product.amountPackages === 0;
+                            product.amountPieces === 0 || product.amountPackages === 0;
                           return (
                             <div
                               key={product.id}
@@ -287,41 +279,17 @@ const InventoryStatusList = () => {
                                   : "bg-white dark:bg-slate-900"
                               }`}
                             >
-                              <p
-                                className={
-                                  isOutOfStock
-                                    ? "text-red-500 font-semibold"
-                                    : ""
-                                }
-                              >
+                              <p className={isOutOfStock ? "text-red-500 font-semibold" : ""}>
                                 {product.productName}
                               </p>
-                              <p
-                                className={
-                                  isOutOfStock
-                                    ? "text-red-500 font-semibold"
-                                    : ""
-                                }
-                              >
+                              <p className={isOutOfStock ? "text-red-500 font-semibold" : ""}>
                                 {product.amountPieces} st
                               </p>
-                              <p
-                                className={
-                                  isOutOfStock
-                                    ? "text-red-500 font-semibold"
-                                    : ""
-                                }
-                              >
+                              <p className={isOutOfStock ? "text-red-500 font-semibold" : ""}>
                                 {product.amountPackages} st
                               </p>
                               {product.total ? (
-                                <p
-                                  className={
-                                    isOutOfStock
-                                      ? "text-red-500 text-center font-semibold"
-                                      : "text-center"
-                                  }
-                                >
+                                <p className={isOutOfStock ? "text-red-500 text-center font-semibold" : "text-center"}>
                                   {product.total} st
                                 </p>
                               ) : (
@@ -333,7 +301,8 @@ const InventoryStatusList = () => {
                       </div>
                     </div>
                   )
-              )}
+                );
+              })}
             </AccordionContent>
           </AccordionItem>
         ))}
@@ -341,5 +310,6 @@ const InventoryStatusList = () => {
     </div>
   );
 };
+  
 
 export default InventoryStatusList;

@@ -6,7 +6,7 @@ export interface Kiosk {
   kioskName: string;
   products: Product[] | []; 
   facilityId: string;
-  facilityName: string;
+  facility: string;
   inventoryDate: string;
   firstInventoryMade: boolean;
 }
