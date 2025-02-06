@@ -168,6 +168,41 @@ const InventoryStatusList = () => {
 
   console.log(inventoryStatus);
 
+  const sendNotifications = async () => {
+    if (notifyContactPerson.length === 0) {
+      alert("Ingen kiosk vald för notifikation.");
+      return;
+    }
+
+    try {
+      const response = await fetchWithAuth(`send-sns-notification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          notifications: notifyContactPerson.map((item) => ({
+            kioskName: item.kioskName,
+            facilityName: item.facilityName,
+            contactPersons: item.contactPersons.map((contact) => ({
+              name: contact.name,
+              phone: contact.phone,
+            })),
+          })),
+        }),
+      });
+
+      if (!response) {
+        throw new Error("Kunde inte skicka notifiering");
+      }
+
+      alert("Notifieringar skickade!");
+    } catch (error) {
+      console.error("Fel vid notifiering:", error);
+      alert("Fel vid notifiering, försök igen.");
+    }
+  };
+
   const getKioskClasses = (id: string) => {
     return kioskStatus[id]?.some((x) => x.hasNewData)
       ? "text-orange-400 font-bold transition-all delay-150 duration-300 ease-in-out"
@@ -183,6 +218,9 @@ const InventoryStatusList = () => {
   return (
     <div className="2xl:w-3/4 w-full ml-2">
       <div className="ml-auto w-fit flex">
+        <Button onClick={sendNotifications} className="mb-4 mr-2">
+          Skicka notifieringar
+        </Button>
         <Button onClick={toggleExpandAll} className="mb-4">
           {expandedItems.length === 0 ? "Expandera alla" : "Minimera alla"}
         </Button>
