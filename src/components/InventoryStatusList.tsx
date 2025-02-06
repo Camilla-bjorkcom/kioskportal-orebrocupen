@@ -214,7 +214,7 @@ const InventoryStatusList = () => {
   return (
     <div className="2xl:w-3/4 w-full ml-2">
       <div className="ml-auto w-fit flex">
-        <Button onClick={sendNotifications} className="mb-4 mr-2">
+        <Button onClick={sendNotifications} className="mb-4 mr-2" disabled={notifyContactPerson.length === 0}>
           Skicka notifieringar
         </Button>
         <Button onClick={toggleExpandAll} className="mb-4">
@@ -238,7 +238,7 @@ const InventoryStatusList = () => {
               onClick={() =>
                 setTimeout(() => {
                   setInventoryStatus((prev) =>
-                    prev.filter((inventoryItem) => inventoryItem.id !== item.id)
+                    prev.filter((inventoryItem) => inventoryItem.facilityId !== item.id)
                   );
                 }, 2000)
               }
