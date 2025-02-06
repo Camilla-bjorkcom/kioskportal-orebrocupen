@@ -40,7 +40,6 @@ function SelectedKiosksButton({
   const [selectedProductListId, setSelectedProductListId] =
     useState<string>("");
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const queryClient = useQueryClient();
 
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;

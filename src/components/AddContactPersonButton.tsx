@@ -153,10 +153,7 @@ function AddContactPersonButton({
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel>Roller</SelectLabel>
-                          <SelectItem value="Huvudansvarig">
-                            Huvudansvarig
-                          </SelectItem>
+                          <SelectLabel>Roller</SelectLabel>                          
                           <SelectItem value="Planansvarig">
                             Planansvarig
                           </SelectItem>
