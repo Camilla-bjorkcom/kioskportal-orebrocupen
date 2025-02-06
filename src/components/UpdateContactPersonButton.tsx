@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "./ui/input";
 import {
   Dialog,
@@ -154,10 +152,7 @@ const UpdadeContactPersonButton = ({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>Roller</SelectLabel>
-                            <SelectItem value="Huvudansvarig">
-                              Huvudansvarig
-                            </SelectItem>
+                            <SelectLabel>Roller</SelectLabel>                         
                             <SelectItem value="Planansvarig">
                               Planansvarig
                             </SelectItem>

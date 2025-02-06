@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ContactPerson, Facility, Kiosk, Product } from "@/interfaces";
+import { Facility, Kiosk, Product } from "@/interfaces";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
@@ -14,6 +14,7 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useParams } from "react-router-dom";
 import { Checkbox } from "./ui/checkbox";
 import { BellIcon } from "lucide-react";
+import { NotifyItem } from "@/interfaces/notifyInfoItem";
 
 const InventoryStatusList = () => {
   const { id } = useParams<{ id: string }>();
@@ -135,12 +136,7 @@ const InventoryStatusList = () => {
     return <div>Error: {String(error)}</div>;
   }
 
-  type NotifyItem = {
-    kioskId: string;
-    facilityName: string;
-    kioskName: string;
-    contactPersons: ContactPerson[];
-  };
+
 
   const notifyInfo = (kiosk: Kiosk): NotifyItem => {
     const facility = data.find((item) => item.facilityName === kiosk.facility); // Hitta rätt facility
