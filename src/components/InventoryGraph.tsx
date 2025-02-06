@@ -17,59 +17,61 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { OverviewRecord } from "@/interfaces/overview";
 
 type InventoryGraphProps = {
   tournament: {
     startDate: string;
     endDate: string;
   };
+  overviewRecord: OverviewRecord;
 };
 
 // Simulerade inventeringar
-const inventories = [
-  { id: 1, date: "2025-07-10" },
-  { id: 2, date: "2025-07-10" },
-  { id: 3, date: "2025-07-10" },
-  { id: 4, date: "2025-07-10" },
-  { id: 5, date: "2025-07-10" },
-  { id: 6, date: "2025-07-10" },
-  { id: 7, date: "2025-07-10" },
-  { id: 8, date: "2025-07-12" },
-  { id: 9, date: "2025-07-12" },
-  { id: 10, date: "2025-07-12" },
-  { id: 11, date: "2025-07-12" },
-  { id: 12, date: "2025-07-12" },
-  { id: 12, date: "2025-07-12" },
-  { id: 14, date: "2025-07-12" },
-  { id: 15, date: "2025-07-12" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-  { id: 6, date: "2025-07-13" },
-];
+// const inventories = [
+//   { id: 1, date: "2025-07-10" },
+//   { id: 2, date: "2025-07-10" },
+//   { id: 3, date: "2025-07-10" },
+//   { id: 4, date: "2025-07-10" },
+//   { id: 5, date: "2025-07-10" },
+//   { id: 6, date: "2025-07-10" },
+//   { id: 7, date: "2025-07-10" },
+//   { id: 8, date: "2025-07-12" },
+//   { id: 9, date: "2025-07-12" },
+//   { id: 10, date: "2025-07-12" },
+//   { id: 11, date: "2025-07-12" },
+//   { id: 12, date: "2025-07-12" },
+//   { id: 12, date: "2025-07-12" },
+//   { id: 14, date: "2025-07-12" },
+//   { id: 15, date: "2025-07-12" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+//   { id: 6, date: "2025-07-13" },
+// ];
 
-export function InventoryGraph({ tournament }: InventoryGraphProps) {
+export function InventoryGraph({ tournament, overviewRecord }: InventoryGraphProps) {
   if (!tournament) {
     return <div>Laddar turneringsdata...</div>;
   }
@@ -96,9 +98,12 @@ export function InventoryGraph({ tournament }: InventoryGraphProps) {
         month: "short",
         day: "numeric",
       }),
-      count: inventories.filter((inventory) => inventory.date === day).length,
+      count: overviewRecord[day]?.length ?? 0,
     }));
   };
+
+  console.log(overviewRecord);
+  console.log(overviewRecord["2025-02-06"] ?? 0);
 
   const chartData = getInventoryGraphData();
 
@@ -172,7 +177,7 @@ export function InventoryGraph({ tournament }: InventoryGraphProps) {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Totalt {inventories.length} inventeringar{" "}
+          Totalt {overviewRecord.OverviewItem?.length} inventeringar{" "}
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">

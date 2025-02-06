@@ -5,6 +5,7 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import WeatherComponent from "@/components/WeatherComponent";
 import Countdown from "@/components/Countdown";
 import { InventoryGraph } from "@/components/InventoryGraph";
+import { OverviewRecord } from "@/interfaces/overview";
 
 function Dashboard() {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +24,22 @@ function Dashboard() {
     enabled: !!id,
   });
 
+  const {
+    isLoading: isLoadingOverview,
+    data: overview,
+    error: errorOverview,
+  } = useQuery<OverviewRecord>({
+    queryKey: ["overview"],
+    queryFn: async () => {
+      const response = await fetchWithAuth(`tournaments/${id}/overview`);
+      if (!response) throw new Error("Failed to fetch overview stats");
+      return response.json();
+    },
+
+  });
+
+
+
   if (!id) {
     return (
       <div className="container mx-auto px-5 py-10">
@@ -32,7 +49,7 @@ function Dashboard() {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || isLoadingOverview) {
     return (
       <div className="container mx-auto px-5 py-10 flex justify-center items-center">
         <div className="text-center">
@@ -45,8 +62,9 @@ function Dashboard() {
       </div>
     );
   }
+  
 
-  if (error) {
+  if (error || errorOverview) {
     return (
       <div className="container mx-auto px-5 py-10">
         <h2 className="text-2xl font-bold">Ett fel inträffade</h2>
@@ -67,7 +85,7 @@ function Dashboard() {
 
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="w-full lg:w-2/3">
-              <InventoryGraph tournament={tournament} />
+              <InventoryGraph tournament={tournament} overviewRecord={overview!} />
             </div>
 
             <div className="flex flex-col gap-4 w-full lg:w-1/3">
