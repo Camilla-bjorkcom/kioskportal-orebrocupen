@@ -116,8 +116,8 @@ function SelectedKiosksButton({
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
-        <Button className="">
-          Valda kiosker att lägga till produkter i ({selectedKiosks.length})
+        <Button className="" disabled={selectedKiosks.length === 0}>
+          Valda kiosker att lägga till produkter i ({selectedKiosks.length > 0 ? selectedKiosks.length : ""})
         </Button>
       </DialogTrigger>
       <DialogContent className="w-full max-w-4xl">

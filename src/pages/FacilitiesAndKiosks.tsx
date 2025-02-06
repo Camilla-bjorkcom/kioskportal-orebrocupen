@@ -572,6 +572,7 @@ function FacilitiesAndKiosks() {
           onClick={handleSubmit}
           onKiosksUpdated={handleKiosksUpdated}
           onClearSelected={clearSelectedKiosks}
+          
         />
       </div>
       <Accordion type="single" collapsible className=" w-full 2xl:w-3/4">
