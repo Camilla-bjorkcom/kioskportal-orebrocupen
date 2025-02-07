@@ -515,8 +515,7 @@ const sidebarMenuButtonVariants = cva(
     variants: {
       variant: {
         default: "",
-        outline:
-          "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] ",
+        outline: "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] ",
       },
       size: {
         default: "h-8 text-sm",
