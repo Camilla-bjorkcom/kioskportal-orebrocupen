@@ -44,7 +44,6 @@ function FacilitiesAndKiosks() {
   const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
-  const [kioskProducts, setKioskProducts] = useState<Product[]>([]);
 
   const [open, setOpen] = useState(false);
 
