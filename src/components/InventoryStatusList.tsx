@@ -15,6 +15,14 @@ import { useParams } from "react-router-dom";
 import { Checkbox } from "./ui/checkbox";
 import { BellIcon } from "lucide-react";
 import { NotifyItem } from "@/interfaces/notifyInfoItem";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { toast } from "@/hooks/use-toast";
+import { Toaster } from "./ui/toaster";
 
 const InventoryStatusList = () => {
   const { id } = useParams<{ id: string }>();
@@ -136,8 +144,6 @@ const InventoryStatusList = () => {
     return <div>Error: {String(error)}</div>;
   }
 
-
-
   const notifyInfo = (kiosk: Kiosk): NotifyItem => {
     const facility = data.find((item) => item.facilityName === kiosk.facility); // Hitta rätt facility
 
@@ -165,11 +171,6 @@ const InventoryStatusList = () => {
   console.log(inventoryStatus);
 
   const sendNotifications = async () => {
-    if (notifyContactPerson.length === 0) {
-      alert("Ingen kiosk vald för notifikation.");
-      return;
-    }
-
     try {
       const response = await fetchWithAuth(`send-sns-notification`, {
         method: "POST",
@@ -180,22 +181,44 @@ const InventoryStatusList = () => {
           notifications: notifyContactPerson.map((item) => ({
             kioskName: item.kioskName,
             facilityName: item.facilityName,
-            contactPersons: item.contactPersons.map((contact) => ({
-              name: contact.name,
-              phone: contact.phone,
-            })),
+            contactPersons: item.contactPersons.map((contact) => {
+              let phone = contact.phone;
+
+              if (phone.startsWith("00")) {
+                phone = phone.replace(/^00/, "+46");
+              }
+
+              if (phone.startsWith("+46")) {
+                return { name: contact.name, phone };
+              }
+
+              return { name: contact.name, phone: `+46${phone}` };
+            }),
           })),
         }),
       });
 
       if (!response) {
+        toast({
+          title: "Fel",
+          description: "Misslyckades med att skicka notifiering.",
+          className: "bg-red-200 dark:bg-red-400 dark:text-black",
+        });
         throw new Error("Kunde inte skicka notifiering");
       }
 
-      alert("Notifieringar skickade!");
+      toast({
+        title: "Lyckat",
+        description: "Notifieringar skickades iväg till planansvariga.",
+        className: "bg-green-200 dark:bg-green-400 dark:text-black",
+      });
     } catch (error) {
       console.error("Fel vid notifiering:", error);
-      alert("Fel vid notifiering, försök igen.");
+      toast({
+        title: "Fel",
+        description: "Misslyckades med att skicka notifiering, försök igen.",
+        className: "bg-red-200 dark:bg-red-400 dark:text-black",
+      });
     }
   };
 
@@ -214,9 +237,28 @@ const InventoryStatusList = () => {
   return (
     <div className="2xl:w-3/4 w-full ml-2">
       <div className="ml-auto w-fit flex">
-        <Button onClick={sendNotifications} className="mb-4 mr-2">
-          Skicka notifieringar
-        </Button>
+        <Toaster />
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                onClick={sendNotifications}
+                className="mb-4 mr-2"
+                disabled={notifyContactPerson.length === 0}
+              >
+                Skicka notifieringar
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              {notifyContactPerson.length === 0 ? (
+                <p>Välj en kiosk att notifiera</p>
+              ) : (
+                <p>Skicka en påminnelse om inventering till planansvariga</p>
+              )}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         <Button onClick={toggleExpandAll} className="mb-4">
           {expandedItems.length === 0 ? "Expandera alla" : "Minimera alla"}
         </Button>
@@ -238,7 +280,9 @@ const InventoryStatusList = () => {
               onClick={() =>
                 setTimeout(() => {
                   setInventoryStatus((prev) =>
-                    prev.filter((inventoryItem) => inventoryItem.id !== item.id)
+                    prev.filter(
+                      (inventoryItem) => inventoryItem.facilityId !== item.id
+                    )
                   );
                 }, 2000)
               }
