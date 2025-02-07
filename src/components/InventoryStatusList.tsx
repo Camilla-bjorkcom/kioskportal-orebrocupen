@@ -183,7 +183,7 @@ const InventoryStatusList = () => {
             facilityName: item.facilityName,
             contactPersons: item.contactPersons.map((contact) => ({
               name: contact.name,
-              phone: contact.phone,
+              phone: contact.phone.startsWith("+46") ? contact.phone : `+46${contact.phone}`,
             })),
           })),
         }),
