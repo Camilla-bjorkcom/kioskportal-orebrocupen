@@ -181,10 +181,19 @@ const InventoryStatusList = () => {
           notifications: notifyContactPerson.map((item) => ({
             kioskName: item.kioskName,
             facilityName: item.facilityName,
-            contactPersons: item.contactPersons.map((contact) => ({
-              name: contact.name,
-              phone: contact.phone.startsWith("+46") ? contact.phone : `+46${contact.phone}`,
-            })),
+            contactPersons: item.contactPersons.map((contact) => {
+              let phone = contact.phone;
+
+              if (phone.startsWith("00")) {
+                phone = phone.replace(/^00/, "+46");
+              }
+
+              if (phone.startsWith("+46")) {
+                return { name: contact.name, phone };
+              }
+
+              return { name: contact.name, phone: `+46${phone}` };
+            }),
           })),
         }),
       });
@@ -196,7 +205,6 @@ const InventoryStatusList = () => {
           className: "bg-red-200 dark:bg-red-400 dark:text-black",
         });
         throw new Error("Kunde inte skicka notifiering");
-
       }
 
       toast({
@@ -242,15 +250,11 @@ const InventoryStatusList = () => {
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              {
-                notifyContactPerson.length === 0 ? (
-                  <p>Välj en kiosk att notifiera</p>
-                ) : (
-                  <p>Skicka en påminnelse om inventering till planansvariga</p>
-                )
-
-              }
-           
+              {notifyContactPerson.length === 0 ? (
+                <p>Välj en kiosk att notifiera</p>
+              ) : (
+                <p>Skicka en påminnelse om inventering till planansvariga</p>
+              )}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
