@@ -33,7 +33,6 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { toast } from "@/hooks/use-toast";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
 
-
 function FacilitiesAndKiosks() {
   const queryClient = useQueryClient();
 
@@ -98,7 +97,7 @@ function FacilitiesAndKiosks() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ facilityName }),
       });
-      
+
       if (!response) {
         throw new Error("Failed to fetch");
       }
@@ -114,16 +113,14 @@ function FacilitiesAndKiosks() {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
       }
 
-      if (response.status === 200){
+      if (response.status === 200) {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      toast({
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        title: "Lyckat",
-        description: `Anläggning ${facilityName} skapades`,
-      });
-
+        toast({
+          className: "bg-green-200 dark:bg-green-400 dark:text-black",
+          title: "Lyckat",
+          description: `Anläggning ${facilityName} skapades`,
+        });
       }
-      
     } catch (error) {
       console.error(error);
       toast({
@@ -408,7 +405,7 @@ function FacilitiesAndKiosks() {
       toast({
         className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
-        description: ` ${kioskName} skapades`,
+        description: `${kioskName} skapades`,
       });
     } catch (error) {
       toast({
