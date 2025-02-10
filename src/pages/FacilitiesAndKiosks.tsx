@@ -114,14 +114,9 @@ function FacilitiesAndKiosks() {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
       }
 
-      if (response.status === 200) {
+      
       if (response.status === 200) {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
-        toast({
-          className: "bg-green-200 dark:bg-green-400 dark:text-black",
-          title: "Lyckat",
-          description: `Anläggning ${facilityName} skapades`,
-        });
         toast({
           className: "bg-green-200 dark:bg-green-400 dark:text-black",
           title: "Lyckat",
