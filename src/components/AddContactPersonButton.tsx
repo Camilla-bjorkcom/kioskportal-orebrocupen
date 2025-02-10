@@ -129,7 +129,7 @@ function AddContactPersonButton({
                 <FormItem>
                   <FormLabel>Telefonnummer</FormLabel>
                   <FormControl>
-                    <Input placeholder="Skriv in telefonnummer" {...field} />
+                   <Input placeholder="Skriv in telefonnummer" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -32,6 +32,7 @@ import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { toast } from "@/hooks/use-toast";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
+import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 
 
 function FacilitiesAndKiosks() {
@@ -579,11 +580,11 @@ function FacilitiesAndKiosks() {
           <AccordionItem
             key={facility.id}
             value={facility.id}
-            className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:bg-slate-900 dark:hover:bg-slate-900 dark:text-gray-200 dark:hover:text-gray-200 dark:border-slate-500"
+            className="p-4 border border-gray-200 rounded-md shadow dark:bg-slate-900  dark:text-gray-200  dark:border-slate-500"
           >
             <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
               <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                <label className="basis-1/4 hover:underline font-medium ">
+                <label className="basis-1/4 font-medium cursor-pointer">
                   {facility.facilityName}
                 </label>
                 <AddKioskButton
@@ -633,7 +634,7 @@ function FacilitiesAndKiosks() {
               <Accordion type="single" collapsible>
                 <AccordionItem
                   value={"kiosks" + facility.id}
-                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
+                  className="p-4 border border-gray-200 rounded-md shadow dark:border-slate-500"
                 >
                   <AccordionTrigger className="text-lg font-medium hover:no-underline">
                     Kiosker ({facility.kiosks?.length})
@@ -642,22 +643,25 @@ function FacilitiesAndKiosks() {
                     {facility.kiosks?.map((kiosk) => (
                       <div
                         key={kiosk.id}
-                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-600 dark:border-slate-500"
+                        className="p-4 border border-gray-200 rounded-md shadow dark:border-slate-500"
                       >
                         <div className="flex justify-between items-center">
                           <p className="font-semibold text-lg">
                             {kiosk.kioskName}
                           </p>
                           <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit items-center">
+                            <AddProductsToKioskButton  
+                             kioskForEdit={kiosk}
+                             productLists={productlists || []}
+                             products={products?.products || []}
+                             onEditClick={handleEditClick}
+                             onKioskUpdated={handleKioskUpdated} />
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger>
                                   <EditSelectedKioskButton
                                     key={kiosk.id}
                                     kioskForEdit={kiosk}
-                                    productLists={productlists || []}
-                                    products={products?.products || []}
-                                    onEditClick={handleEditClick}
                                     onKioskUpdated={handleKioskUpdated}
                                     onSave={UpdateKiosk}
                                     onUpdateKioskClick={() => {}}
