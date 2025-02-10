@@ -46,6 +46,7 @@ function FacilitiesAndKiosks() {
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
 
   const [open, setOpen] = useState(false);
+  const [openFacilityId, setOpenFacilityId] = useState<string | null>(null);
 
   const { isLoading, error, data, isSuccess } = useQuery<Facility[]>({
     queryKey: ["facilities"],
@@ -114,7 +115,13 @@ function FacilitiesAndKiosks() {
       }
 
       if (response.status === 200) {
+      if (response.status === 200) {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
+        toast({
+          className: "bg-green-200 dark:bg-green-400 dark:text-black",
+          title: "Lyckat",
+          description: `Anläggning ${facilityName} skapades`,
+        });
         toast({
           className: "bg-green-200 dark:bg-green-400 dark:text-black",
           title: "Lyckat",
@@ -262,6 +269,8 @@ function FacilitiesAndKiosks() {
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
       }, 1500);
+
+      setOpenFacilityId(facilityId);
     } catch (error) {
       console.error(error);
       toast({
@@ -402,10 +411,13 @@ function FacilitiesAndKiosks() {
         throw new Error("Failed to save kiosk");
       }
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
+
+      setOpenFacilityId(facilityId);
+
       toast({
         className: "bg-green-200 dark:bg-green-400 dark:text-black",
         title: "Lyckat",
-        description: ` ${kioskName} skapades`,
+        description: `${kioskName} skapades`,
       });
     } catch (error) {
       toast({
@@ -589,7 +601,14 @@ function FacilitiesAndKiosks() {
             value={facility.id}
             className="p-4 border border-gray-200 rounded-md shadow dark:bg-slate-900  dark:text-gray-200  dark:border-slate-500"
           >
-            <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
+            <AccordionTrigger
+              onClick={() =>
+                setOpenFacilityId(
+                  openFacilityId === facility.id ? null : facility.id
+                )
+              }
+              className="text-lg font-medium hover:no-underline mr-2"
+            >
               <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
                 <label className="basis-1/4 font-medium cursor-pointer">
                   {facility.facilityName}

@@ -32,9 +32,12 @@ const formSchema = z.object({
   }),
 
   amountPerPackage: z.preprocess(
-    (val) => (val === "" ? undefined : Number(val)),
+    (val) => (val === "" ? undefined : Number(val)), // Omvandlar tom sträng till undefined och annars till Number
     z
       .number({ message: "Antal per paket måste anges med siffror" })
+      .refine((val) => Number.isInteger(val), {
+        message: "Antal per paket måste vara ett heltal", // ✅ Säkerställer att värdet är ett heltal
+      })
       .refine((val) => val >= 0, {
         message: "Antal per paket måste vara 0 eller större",
       })

@@ -8,6 +8,7 @@ import {
   BookHeart,
   House,
   ShoppingBasket,
+  Bell,
 } from "lucide-react";
 
 import {
@@ -86,6 +87,12 @@ export function AppSidebar({ id }: { id?: string }) {
           url: `/inventorystatusstorage/${id}`,
         },
       ],
+    },
+    {
+      title: "Notiser",
+      url: "#",
+      icon: Bell,
+      subitems: [{ title: "Skicka notiser", url: `/inventorystatus/${id}` }],
     },
     {
       title: "Statistik",

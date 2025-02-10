@@ -276,16 +276,19 @@ function ProductHandler() {
         queryClient.invalidateQueries({ queryKey: ["productslists"] });
       }
       // const updatedProductListFromApi = await response.json();
-      if(response.status === 200){
-      queryClient.invalidateQueries({ queryKey: ["productlists"] });
-      toast({
-        className: "bg-green-200 dark:text-black dark:bg-green-400",
-        title: "Lyckat",
-        description: `Produktlista  ${updatedProductList.productlistName} uppdaterades`,
-      });
+      if (response.status === 200) {
+        queryClient.invalidateQueries({ queryKey: ["productlists"] });
+        toast({
+          className: "bg-green-200 dark:text-black dark:bg-green-400",
+          title: "Lyckat",
+          description: `Produktlista  ${updatedProductList.productlistName} uppdaterades`,
+        });
 
-      console.log("Uppdaterad produktlista:", updatedProductList.productlistName);
-    }
+        console.log(
+          "Uppdaterad produktlista:",
+          updatedProductList.productlistName
+        );
+      }
     } catch (error) {
       console.error("Failed to update product list:", error);
       toast({

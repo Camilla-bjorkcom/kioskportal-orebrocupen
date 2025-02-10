@@ -43,15 +43,18 @@ const formSchema = z.object({
     message: "Produktnamn måste ha minst 2 bokstäver",
   }),
 
-  amountPerPackage: z.preprocess(
-    (val) => (val === "" ? undefined : Number(val)),
-    z
-      .number({ message: "Antal per paket måste anges med siffror" })
-      .refine((val) => val >= 0, {
-        message: "Antal per paket måste vara 0 eller större",
-      })
-      .optional() // Gör det till ett valfritt fält
-  ),
+   amountPerPackage: z.preprocess(
+      (val) => (val === "" ? undefined : Number(val)), // Omvandlar tom sträng till undefined och annars till Number
+      z
+        .number({ message: "Antal per paket måste anges med siffror" })
+        .refine((val) => Number.isInteger(val), {
+          message: "Antal per paket måste vara ett heltal", // ✅ Säkerställer att värdet är ett heltal
+        })
+        .refine((val) => val >= 0, {
+          message: "Antal per paket måste vara 0 eller större",
+        })
+        .optional() // Gör det till ett valfritt fält
+    ),
   id: z.string().min(1, { message: "Id måste vara en giltig sträng" }),
 });
 
