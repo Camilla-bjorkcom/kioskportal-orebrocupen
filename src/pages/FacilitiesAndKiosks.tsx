@@ -32,6 +32,7 @@ import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { toast } from "@/hooks/use-toast";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
+import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
 
 function FacilitiesAndKiosks() {
   const queryClient = useQueryClient();
@@ -662,7 +663,22 @@ function FacilitiesAndKiosks() {
                           <p className="font-semibold text-lg">
                             {kiosk.kioskName}
                           </p>
+
                           <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit items-center">
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <QrCodeSingleBtn
+                                    kioskName={kiosk.kioskName}
+                                    facility={facility.facilityName}
+                                    inventoryKey={kiosk.inventoryKey}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Visa kioskens QR kod</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger>
