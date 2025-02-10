@@ -55,8 +55,8 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
   const dialogContent = getDialogContent();
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="flex">
-        <TrashIcon className=" mr-0.5 2xl:mr-5 w-5 h-5  hover:text-red-500" />
+      <AlertDialogTrigger className="flex w-fit">
+        <TrashIcon className=" mr-0.5 w-5 h-5  hover:text-red-500" />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

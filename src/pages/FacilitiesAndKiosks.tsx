@@ -32,6 +32,7 @@ import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { toast } from "@/hooks/use-toast";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
+import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 
 function FacilitiesAndKiosks() {
   const queryClient = useQueryClient();
@@ -113,6 +114,7 @@ function FacilitiesAndKiosks() {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
       }
 
+      
       if (response.status === 200) {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
         toast({
@@ -567,26 +569,32 @@ function FacilitiesAndKiosks() {
             CreateFacility(facilityname);
           }}
         />
-        <SelectedKiosksButton
-          selectedKiosks={kiosksForUpdate}
-          productlists={productlists || []}
-          products={products?.products || []}
-          onClick={handleSubmit}
-          onKiosksUpdated={handleKiosksUpdated}
-          onClearSelected={clearSelectedKiosks}
-        />
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <SelectedKiosksButton
+                selectedKiosks={kiosksForUpdate}
+                productlists={productlists || []}
+                products={products?.products || []}
+                onClick={handleSubmit}
+                onKiosksUpdated={handleKiosksUpdated}
+                onClearSelected={clearSelectedKiosks}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              {kiosksForUpdate.length > 0
+                ? "Klicka på knappen för att lägga till produkter i valda kiosker"
+                : "Välj minst en kiosk för att lägga till produkter"}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
-      <Accordion
-        type="single"
-        collapsible
-        value={openFacilityId || undefined}
-        className=" w-full 2xl:w-3/4"
-      >
+      <Accordion type="multiple" className=" w-full 2xl:w-3/4">
         {data.map((facility) => (
           <AccordionItem
             key={facility.id}
             value={facility.id}
-            className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:bg-slate-900 dark:hover:bg-slate-900 dark:text-gray-200 dark:hover:text-gray-200 dark:border-slate-500"
+            className="p-4 border border-gray-200 rounded-md shadow dark:bg-slate-900  dark:text-gray-200  dark:border-slate-500"
           >
             <AccordionTrigger
               onClick={() =>
@@ -597,7 +605,7 @@ function FacilitiesAndKiosks() {
               className="text-lg font-medium hover:no-underline mr-2"
             >
               <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                <label className="basis-1/4 hover:underline font-medium ">
+                <label className="basis-1/4 font-medium cursor-pointer">
                   {facility.facilityName}
                 </label>
                 <AddKioskButton
@@ -610,7 +618,7 @@ function FacilitiesAndKiosks() {
                   }
                   facilityId={facility.id}
                 />
-                <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12 ">
+                <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto mr-5 w-fit basis-1/12 ">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
@@ -644,132 +652,38 @@ function FacilitiesAndKiosks() {
               </div>
             </AccordionTrigger>
             <AccordionContent>
-              <Accordion type="single" collapsible>
-                <AccordionItem
-                  value={"kiosks" + facility.id}
-                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
-                >
-                  <AccordionTrigger className="text-lg font-medium hover:no-underline">
-                    Kiosker ({facility.kiosks?.length})
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    {facility.kiosks?.map((kiosk) => (
-                      <div
-                        key={kiosk.id}
-                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-600 dark:border-slate-500"
-                      >
-                        <div className="flex justify-between items-center">
-                          <p className="font-semibold text-lg">
-                            {kiosk.kioskName}
-                          </p>
-                          <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit items-center">
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <EditSelectedKioskButton
-                                    key={kiosk.id}
-                                    kioskForEdit={kiosk}
-                                    productLists={productlists || []}
-                                    products={products?.products || []}
-                                    onEditClick={handleEditClick}
-                                    onKioskUpdated={handleKioskUpdated}
-                                    onSave={UpdateKiosk}
-                                    onUpdateKioskClick={() => {}}
-                                  />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Redigera kioskutbud</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <DeleteButton
-                                    id={kiosk.id}
-                                    type="Kiosk"
-                                    onDelete={() =>
-                                      DeleteKiosk(kiosk.id, facility.id)
-                                    }
-                                  />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Radera kiosk</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            <Checkbox
-                              className="mr-0.5 2xl:mr-5 w-5 h-5"
-                              id={`kiosk-${kiosk.id}`}
-                              checked={kiosksForUpdate.some(
-                                (k) => k.id === kiosk.id
-                              )}
-                              onClick={(e) => e.stopPropagation()}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  setKiosksforUpdate((prev) => [
-                                    ...prev,
-                                    kiosk,
-                                  ]);
-                                } else {
-                                  setKiosksforUpdate((prev) =>
-                                    prev.filter((k) => k.id !== kiosk.id)
-                                  );
-                                }
-                              }}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex mt-5 font-semibold">Produkter</div>
-                        {kiosk.products && kiosk.products.length > 0 ? (
-                          <ul className="grid grid-cols-3 gap-4 mt-2">
-                            {kiosk.products.map(
-                              (product: Product, index: number) => (
-                                <li key={index}>{product.productName}</li>
-                              )
-                            )}
-                          </ul>
-                        ) : (
-                          <p className="text-gray-500 dark:text-gray-200">
-                            Inga produkter tillagda för denna kiosk.
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem
-                  value={"contactPersons" + facility.id}
-                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
-                >
-                  <AccordionTrigger className="text-lg font-medium hover:no-underline">
-                    Kontaktpersoner ({facility.contactPersons?.length})
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    {facility.contactPersons?.map((contactPerson) => (
-                      <div
-                        key={contactPerson.id}
-                        className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-600 flex justify-between dark:border-slate-500"
-                      >
-                        <p>
-                          {contactPerson.name} - {contactPerson.role} -{" "}
-                          {contactPerson.phone}
+              <div className="p-4 ">
+                <div>
+                  {facility.kiosks?.map((kiosk) => (
+                    <div
+                      key={kiosk.id}
+                      className="p-4 border border-gray-200 rounded-md shadow dark:border-slate-500"
+                    >
+                      <div className="flex justify-between items-center">
+                        <p className="font-semibold text-lg">
+                          {kiosk.kioskName}
                         </p>
                         <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit items-center">
+                          <AddProductsToKioskButton
+                            kioskForEdit={kiosk}
+                            productLists={productlists || []}
+                            products={products?.products || []}
+                            onEditClick={handleEditClick}
+                            onKioskUpdated={handleKioskUpdated}
+                          />
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger>
-                                <UpdateContactPersonButton
-                                  onSave={(updatedContactPerson) =>
-                                    UpdateContactPerson(updatedContactPerson)
-                                  }
-                                  contactPerson={contactPerson}
-                                  onUpdateContactPersonClick={() => {}}
+                                <EditSelectedKioskButton
+                                  key={kiosk.id}
+                                  kioskForEdit={kiosk}
+                                  onKioskUpdated={handleKioskUpdated}
+                                  onSave={UpdateKiosk}
+                                  onUpdateKioskClick={() => {}}
                                 />
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>Redigera kontaktperson</p>
+                                <p>Redigera kioskutbud</p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -777,27 +691,115 @@ function FacilitiesAndKiosks() {
                             <Tooltip>
                               <TooltipTrigger>
                                 <DeleteButton
-                                  id={contactPerson.id}
-                                  type="ContactPerson"
+                                  id={kiosk.id}
+                                  type="Kiosk"
                                   onDelete={() =>
-                                    DeleteContactPerson(
-                                      contactPerson.id,
-                                      facility.id
-                                    )
+                                    DeleteKiosk(kiosk.id, facility.id)
                                   }
                                 />
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>Radera kontaktperson</p>
+                                <p>Radera kiosk</p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
+                          <Checkbox
+                            className="mr-0.5 2xl:mr-5 w-5 h-5"
+                            id={`kiosk-${kiosk.id}`}
+                            checked={kiosksForUpdate.some(
+                              (k) => k.id === kiosk.id
+                            )}
+                            onClick={(e) => e.stopPropagation()}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setKiosksforUpdate((prev) => [...prev, kiosk]);
+                              } else {
+                                setKiosksforUpdate((prev) =>
+                                  prev.filter((k) => k.id !== kiosk.id)
+                                );
+                              }
+                            }}
+                          />
                         </div>
                       </div>
-                    ))}
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+                      <div className="flex mt-5 font-semibold">Produkter ({kiosk.products.length})</div>
+                      {kiosk.products && kiosk.products.length > 0 ? (
+                        <ul className="grid grid-cols-3 gap-3 mt-2">
+                          {kiosk.products.map(
+                            (product: Product, index: number) => (
+                              <li key={index}>{product.productName}</li>
+                            )
+                          )}
+                        </ul>
+                      ) : (
+                        <p className="text-gray-500 dark:text-gray-200 mt-2">
+                          Inga produkter tillagda för denna kiosk.
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-4 ">
+                {facility.contactPersons?.length > 0 && (
+                  <>
+                    <div className="font-semibold text-lg ml-2 mb-2">
+                      Kontaktpersoner
+                    </div>
+                    <div>
+                      {facility.contactPersons?.map((contactPerson) => (
+                        <div
+                          key={contactPerson.id}
+                          className="p-4 border border-gray-200 rounded-md shadow flex justify-between dark:border-slate-500"
+                        >
+                          <p>
+                            {contactPerson.name} - {contactPerson.role} -{" "}
+                            {contactPerson.phone}
+                          </p>
+                          <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit items-center">
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <UpdateContactPersonButton
+                                    onSave={(updatedContactPerson) =>
+                                      UpdateContactPerson(updatedContactPerson)
+                                    }
+                                    contactPerson={contactPerson}
+                                    onUpdateContactPersonClick={() => {}}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Redigera kontaktperson</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <DeleteButton
+                                    id={contactPerson.id}
+                                    type="ContactPerson"
+                                    onDelete={() =>
+                                      DeleteContactPerson(
+                                        contactPerson.id,
+                                        facility.id
+                                      )
+                                    }
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Radera kontaktperson</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
             </AccordionContent>
           </AccordionItem>
         ))}
