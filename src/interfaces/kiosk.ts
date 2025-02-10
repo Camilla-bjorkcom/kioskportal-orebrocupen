@@ -9,5 +9,6 @@ export interface Kiosk {
   facility: string;
   inventoryDate: string;
   firstInventoryMade: boolean;
+  inventoryKey: string;
 }
 

@@ -33,6 +33,7 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { toast } from "@/hooks/use-toast";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
 import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
+import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
 
 function FacilitiesAndKiosks() {
   const queryClient = useQueryClient();
@@ -663,6 +664,7 @@ function FacilitiesAndKiosks() {
                         <p className="font-semibold text-lg">
                           {kiosk.kioskName}
                         </p>
+
                         <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit items-center">
                           <AddProductsToKioskButton
                             kioskForEdit={kiosk}
@@ -671,6 +673,20 @@ function FacilitiesAndKiosks() {
                             onEditClick={handleEditClick}
                             onKioskUpdated={handleKioskUpdated}
                           />
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <QrCodeSingleBtn
+                                    kioskName={kiosk.kioskName}
+                                    facility={kiosk.facility}
+                                    inventoryKey={kiosk.inventoryKey}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Visa kioskens QR kod</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger>
