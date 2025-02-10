@@ -394,26 +394,20 @@ function ProductHandler() {
                 <AccordionItem
                   key={productlist.id}
                   value={productlist.id}
-                  className="p-4 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:hover:bg-slate-800 dark:border-slate-500"
+                  className="p-4 border border-gray-200 rounded-md shadow dark:border-slate-500"
                 >
                   <AccordionTrigger className="text-lg font-medium hover:no-underline mr-2">
                     <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
-                      <label className="basis-1/4 font-medium  ">
+                      <label className="basis-1/4 font-medium cursor-pointer">
                         {productlist.productlistName}
                       </label>
-                      {/* <HandleProductListButton
-                    key={productList.id}
-                    productlist={productList}
-                    onUpdate={updateProductList}
-                  ></HandleProductListButton> */}
-
-                      <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12">
+                      <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12 mr-5">
                         <UpdateProductListButton
                           productlist={productlist}
                           tournamentProducts={products?.products || []}
                           onUpdate={(updatedList) =>
                             UpdateProductlist(updatedList)
-                          } // Använder funktionen från ProductHandler
+                          } 
                         />
 
                         <TooltipProvider>

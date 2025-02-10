@@ -79,30 +79,24 @@ function UpdateProductButton({
     },
   });
   const { reset } = form;
- 
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-   
     const updatedProduct: Product = {
       id: values.id,
       productName: values.productName,
       amountPerPackage: values.amountPerPackage ?? 0,
     };
 
-    const result= await onUpdate(updatedProduct);
+    const result = await onUpdate(updatedProduct);
 
     if (result === 200) {
       setUpdateMessage("Produkten har uppdaterats!");
-      
-    }
-    else if(result === 409){
+    } else if (result === 409) {
       setUpdateMessage(`Produkten "${values.productName}" finns redan!`);
       reset(product);
-      
-    }
-    else{
+    } else {
       setUpdateMessage("Något gick fel!");
     }
-    
   }
   const handleDelete = () => {
     console.log("Raderar produkt:", product.id);
@@ -164,14 +158,21 @@ function UpdateProductButton({
               )}
             />
             {updateMessage && (
-  <div className={`text-sm mt-4 ${updateMessage.includes("har") ? "text-green-600" : "text-red-600"}`}>
-    {updateMessage}
-  </div>
+              <div
+                className={`text-sm mt-4 ${
+                  updateMessage.includes("har")
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
+                {updateMessage}
+              </div>
             )}
             <div className="flex justify-between">
               <AlertDialog>
                 <AlertDialogTrigger>
-                  <Button className="border border-solid rounded-xl p-2 shadow hover:bg-red-600 hover:text-white">
+                  <Button className="border border-solid rounded-xl p-2 shadow hover:bg-red-600 hover:text-white"
+                  variant="destructive">
                     <p>Radera produkt</p>
                   </Button>
                 </AlertDialogTrigger>
@@ -199,7 +200,8 @@ function UpdateProductButton({
                   e.stopPropagation();
                 }}
                 type="submit"
-                className=" border border-solid hover:bg-secondary hover:text-black rounded-xl p-2 shadow"
+                className=" border border-solid  rounded-xl p-2 shadow"
+                variant="default"
               >
                 Spara ändringar
               </Button>

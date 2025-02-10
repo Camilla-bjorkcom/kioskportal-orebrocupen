@@ -152,8 +152,8 @@ function AddProductsToKioskButton({
             e.stopPropagation(); // Stoppa eventbubbling
             setOpen(true);
           }}
-        >
-          Lägg till produkter <PlusIcon className="w-4 h-4 place-self-center" />
+        >{ kioskForEdit.products.length > 0 ? "Redigera produkter" : "Lägg till produkter" }
+          <PlusIcon className="w-4 h-4 place-self-center" />
         </Button>
       </DialogTrigger>
       <DialogContent className="w-full max-w-4xl">

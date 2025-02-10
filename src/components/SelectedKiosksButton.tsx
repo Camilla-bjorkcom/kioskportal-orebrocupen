@@ -19,6 +19,13 @@ import {
 import { Checkbox } from "./ui/checkbox";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useParams } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 interface SelectedKiosksButtonProps {
   selectedKiosks: Kiosk[]; // Lista över valda kiosker
@@ -40,9 +47,9 @@ function SelectedKiosksButton({
   const [selectedProductListId, setSelectedProductListId] =
     useState<string>("");
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
+  const queryClient = useQueryClient();
 
   const handleDialogOpenChange = async (isOpen: boolean) => {
     if (isOpen && selectedKiosks.length === 0) {
@@ -110,17 +117,23 @@ function SelectedKiosksButton({
       onClearSelected();
       setOpen(false);
     }
-    alert("kioskerna har nu produkter tillagda");
+    queryClient.invalidateQueries({ queryKey: ["facilities"] });
+    toast({
+      className: "bg-green-200 dark:bg-green-400 dark:text-black",
+      title: "Lyckat",
+      description: `Valda kiosker populerades med ${selectedProducts.length} produkter`,
+    });
   };
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
         <Button className="" disabled={selectedKiosks.length === 0}>
-          Valda kiosker att lägga till produkter i ({selectedKiosks.length > 0 ? selectedKiosks.length : ""})
+          Valda kiosker att lägga till produkter i (
+          {selectedKiosks.length > 0 ? selectedKiosks.length : ""})
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-4xl">
+      <DialogContent className="w-full">
         <DialogHeader>
           <DialogTitle className="text-lg">Valda kiosker:</DialogTitle>
           <ul className="mt-4 list-disc list-inside">
