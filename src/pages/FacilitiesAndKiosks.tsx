@@ -670,7 +670,7 @@ function FacilitiesAndKiosks() {
                                 <TooltipTrigger>
                                   <QrCodeSingleBtn
                                     kioskName={kiosk.kioskName}
-                                    facility={facility.facilityName}
+                                    facility={kiosk.facility}
                                     inventoryKey={kiosk.inventoryKey}
                                   />
                                 </TooltipTrigger>
