@@ -35,7 +35,6 @@ import { toast } from "@/hooks/use-toast";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
 import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
-import { forEach } from "lodash-es";
 import QrCodeAllBtn from "@/components/QrCodeAllBtn";
 
 function FacilitiesAndKiosks() {
@@ -94,6 +93,11 @@ function FacilitiesAndKiosks() {
       return data || [];
     },
   });
+
+
+const toggleFacility = (facilityId: string) => {
+  setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
+};
 
   const CreateFacility = async (facilityName: string) => {
     try {
@@ -269,7 +273,7 @@ function FacilitiesAndKiosks() {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
       }, 1500);
 
-      setOpenFacilityId(facilityId);
+      setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
     } catch (error) {
       console.error(error);
       toast({
@@ -411,7 +415,7 @@ function FacilitiesAndKiosks() {
       }
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
 
-      setOpenFacilityId(facilityId);
+      setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
 
       toast({
         className: "bg-green-200 dark:bg-green-400 dark:text-black",
@@ -617,21 +621,19 @@ function FacilitiesAndKiosks() {
         </TooltipProvider>
         </div>
       </div>
-      <Accordion type="multiple" className=" w-full 2xl:w-3/4">
+      <Accordion type="multiple" value={openFacilityId ? [openFacilityId] : []} className="w-full 2xl:w-3/4">
+
         {data.map((facility) => (
-          <AccordionItem
-            key={facility.id}
-            value={facility.id}
-            className="p-4 border border-gray-200 rounded-md shadow dark:bg-slate-900  dark:text-gray-200  dark:border-slate-500"
-          >
-            <AccordionTrigger
-              onClick={() =>
-                setOpenFacilityId(
-                  openFacilityId === facility.id ? null : facility.id
-                )
-              }
-              className="text-lg font-medium hover:no-underline mr-2"
-            >
+        <AccordionItem
+        key={facility.id}
+        value={openFacilityId === facility.id ? facility.id : ""}
+        className="p-4 border border-gray-200 rounded-md shadow dark:bg-slate-900 dark:text-gray-200 dark:border-slate-500"
+      >
+      
+      <AccordionTrigger
+  className="text-lg font-medium hover:no-underline mr-2"
+  onClick={() => toggleFacility(facility.id)}
+>
               <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
                 <label className="basis-1/4 font-medium cursor-pointer">
                   {facility.facilityName}
