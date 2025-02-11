@@ -14,6 +14,7 @@ import {
   ContactPerson,
   Facility,
   Kiosk,
+  KioskForQr,
   Product,
   Productlist,
 } from "@/interfaces";
@@ -34,6 +35,8 @@ import { toast } from "@/hooks/use-toast";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
 import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
+import { forEach } from "lodash-es";
+import QrCodeAllBtn from "@/components/QrCodeAllBtn";
 
 function FacilitiesAndKiosks() {
   const queryClient = useQueryClient();
@@ -552,6 +555,16 @@ function FacilitiesAndKiosks() {
     setKiosksforUpdate([]);
   };
 
+ 
+
+  const kiosksForQrCode: KioskForQr[] = data?.flatMap((facility: Facility) =>
+    facility.kiosks.map((kiosk) => ({
+      kioskName: kiosk.kioskName,
+      facility: kiosk.facility,
+      inventoryKey: kiosk.inventoryKey,
+    }))
+  ) || [];
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -570,6 +583,19 @@ function FacilitiesAndKiosks() {
             CreateFacility(facilityname);
           }}
         />
+        <div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <QrCodeAllBtn
+                kiosksForQr={kiosksForQrCode}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+             Klicka för att öppna utskriftsvänlig vy
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
@@ -589,6 +615,7 @@ function FacilitiesAndKiosks() {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+        </div>
       </div>
       <Accordion type="multiple" className=" w-full 2xl:w-3/4">
         {data.map((facility) => (
