@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "../components/ui/toaster";
 import { useParams } from "react-router-dom";
@@ -34,8 +34,7 @@ function InventoryStorage() {
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
   const { toast } = useToast();
-  const queryClient = useQueryClient();
-
+  
   const formSchema = z.object({
     amountPackages: z.array(
       z.coerce
@@ -72,7 +71,7 @@ function InventoryStorage() {
 
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
-      reset();
+      form.reset({amountPackages: []});
     }
   }, [formState, reset])
 
@@ -108,13 +107,13 @@ function InventoryStorage() {
         console.error("Server response error:", errorText);
         throw new Error("Failed to update list");
       }
-      queryClient.invalidateQueries({ queryKey: ["inventoryList"] });
+      
       toast({
         className: "bg-green-200 dark:bg-green-500 dark:text-black",
         title: "Lyckat!",
         description: "Inventering skickades iväg",
       });
-
+      form.reset();
     } catch (error) {
       console.error("Update failed:", error);
       toast({

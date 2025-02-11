@@ -112,7 +112,7 @@ tournaments/${tournamentId}/inventories`);
                 </div>
               </AccordionTrigger>
   
-              {inventories.map((inventory) => (
+              {sortByInventoryDate(inventories).map((inventory) => (
                 <AccordionContent key={inventory.id}>
                   <div className="mb-7">
                     <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2 dark:bg-slate-800 dark:border-slate-400">
