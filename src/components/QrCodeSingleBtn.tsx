@@ -24,8 +24,17 @@ const QrCodeSingleBtn: React.FC<QrCodeSingleBtnProps> = ({
                 <html>
                     <head>
                         <title>QR Code - ${kioskName}</title>
+                        <style>
+                         @media print {
+                            .noprint {
+                        visibility: hidden;
+                            }
+                        </style>
                     </head>
                     <body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 90vh; font-family: Arial, sans-serif;">
+                     <button class="noprint" style="position: fixed; top: 10px; right: 10px; padding: 10px; background-color: #333; color: white; border: none;
+                      border-radius: 5px; cursor: pointer;" onclick="window.print()">Skriv ut</button>
+
                         <h2 style="text-align: center; margin-bottom: 3rem;">${kioskName} (${facility})</h2>
                         <div style="display: flex; justify-content: center; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
                             <svg viewBox="0 0 100 100" width="300" height="300">
@@ -43,7 +52,7 @@ const QrCodeSingleBtn: React.FC<QrCodeSingleBtnProps> = ({
 
   return (
     <button
-      className="flex  dark:hover:bg-slate-900 hover:bg-slate-200"
+      className="flex  dark:hover:bg-slate-600 p-1 rounded-md hover:bg-slate-200"
       onClick={handleOpenQRCode}
     >
       QR kod <QrCodeIcon className="h-5 w-5 ml-2" />
