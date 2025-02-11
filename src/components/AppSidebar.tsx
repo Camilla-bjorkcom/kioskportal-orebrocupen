@@ -86,6 +86,11 @@ export function AppSidebar({ id }: { id?: string }) {
           title: "Visa huvudlagrets inventeringar",
           url: `/inventorystatusstorage/${id}`,
         },
+        {
+          title: "Översikt av turneringens lager",
+          url: `/overViewinventories/${id}`,
+
+        }
       ],
     },
     {
