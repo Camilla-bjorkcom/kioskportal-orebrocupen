@@ -15,7 +15,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "../components/ui/toaster";
 import { useParams } from "react-router-dom";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { InventoryStorageProducts } from "@/interfaces";
 
 type StorageInventory = {
   inventoryDate: string;
@@ -36,16 +37,13 @@ function InventoryStorage() {
   const queryClient = useQueryClient();
 
   const formSchema = z.object({
-    products: z.array(
-      z.object({
-        productName: z.string().min(1, "Produktnamn är obligatoriskt"),
-        amountPackages: z.coerce
-          .number()
-          .min(0, "Antal paket måste vara större än eller lika med 0")
-          .default(0), // Standardvärde
-        id: z.string(),
-        amountPerPackage: z.coerce.number().default(0), // Gör det valfritt
-      })
+    amountPackages: z.array(
+      z.coerce
+        .number({
+          required_error: "Du måste ange ett antal förpackningar",
+          invalid_type_error: "Du måste ange ett värde",
+        })
+        .min(0, "Antal paket måste vara minst 0")
     ),
   });
 
@@ -64,31 +62,34 @@ function InventoryStorage() {
     },
   });
 
-  const [formValues, setFormValues] = useState<TournamentProducts[] | null>();
-
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      products: formValues || [],
-    },
-    mode: "onChange", // Gör att validering sker löpande
+    defaultValues: { amountPackages: [] }
   });
+  
+  const { reset, formState } = form;
 
   useEffect(() => {
-    if (isSuccess && data?.products) {
-      const updatedProducts = data.products.map((product) => ({
-        id: product.id,
-        productName: product.productName,
-        amountPackages: product.amountPackages, // Standardvärde
-        amountPerPackage: product.amountPerPackage, // Standardvärde
-      }));
-
-      setFormValues(updatedProducts);
-      form.reset({ products: updatedProducts }); // Uppdaterar formuläret korrekt
+    if (formState.isSubmitSuccessful) {
+      reset();
     }
-  }, [isSuccess, data]);
+  }, [formState, reset])
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+
+  const onSubmit = async (values: { amountPackages: number[] }) => {
+    
+    const inventoryData = data?.products.map(
+      (product, index) =>
+        ({
+          id: product.id,
+          productName: product.productName,
+          amountPerPackage: product.amountPerPackage,
+          amountPackages: values.amountPackages[index], 
+        } satisfies InventoryStorageProducts)
+    );
+
+    console.log("Inventering skickas:", inventoryData);
     try {
       console.log("I onSubmit" + values);
       const response = await fetchWithAuth(
@@ -96,7 +97,7 @@ function InventoryStorage() {
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values.products),
+          body: JSON.stringify(inventoryData),
         }
       );
       if (!response) {
@@ -114,14 +115,6 @@ function InventoryStorage() {
         description: "Inventering skickades iväg",
       });
 
-      form.reset({
-        products: values.products.map((product) => ({
-          id: product.id,
-          productName: product.productName,
-          amountPackages: undefined, // Återställ till 0 istället för tomt
-          amountPerPackage: undefined, // Återställ till 0 istället för tomt
-        })),
-      });
     } catch (error) {
       console.error("Update failed:", error);
       toast({
@@ -167,67 +160,59 @@ function InventoryStorage() {
 
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(
-                (values) => {
-                  console.log("Formuläret är giltigt:", values);
-                  onSubmit(values);
-                },
-                (errors) => {
-                  console.error("Valideringsfel:", errors);
-                }
-              )}
+              onSubmit={form.handleSubmit(onSubmit)}
               className="w-fit mx-auto mb-20"
             >
-              {data?.products.map((product, index) => (
-                <div
-                  key={product.id}
-                  className={`space-y-4 lg:flex ${
-                    index % 2 === 0
-                      ? "bg-gray-100 dark:bg-slate-900 rounded-lg p-5"
-                      : "bg-white dark:bg-slate-800 rounded-lg p-5"
-                  }`}
-                >
-                  <FormField
+              {isSuccess &&
+                data.products.map((product, index) => (
+                  <div
                     key={product.id}
-                    control={form.control}
-                    name={`products.${index}.productName`}
-                    render={() => (
-                      <FormItem className="place-content-center">
-                        <FormLabel>
-                          <p className="w-[280px] lg:w-[300px] text-lg dark:text-gray-200">
-                            {product.productName}
-                          </p>
-                        </FormLabel>
-                      </FormItem>
-                    )}
-                  />
+                    className={`space-y-4 lg:flex ${
+                      index % 2 === 0
+                        ? "bg-gray-100 dark:bg-slate-900 rounded-lg p-5"
+                        : "bg-white dark:bg-slate-800 rounded-lg p-5"
+                    }`}
+                  >
+                    <FormItem className="place-content-center">
+                      <FormLabel>
+                        <p className="w-[280px] lg:w-[300px] text-lg dark:text-gray-200">
+                          {product.productName}
+                        </p>
+                      </FormLabel>
+                    </FormItem>
 
-                  <div className="flex gap-5 dark:border:solid dark:border-gray-500">
-                    <FormField
-                      key={product.id}
-                      control={form.control}
-                      name={`products.${index}.amountPackages`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="dark:text-gray-200">
-                            Antal förpackningar
-                          </FormLabel>
-                          <FormControl className="dark:text-gray-200 dark:border-gray-500">
-                            <Input {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+                    <div className="flex gap-5 dark:border:solid dark:border-gray-500">
+                      <FormField
+                        key={product.id}
+                        control={form.control}
+                        name={`amountPackages.${index}`}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel className="dark:text-gray-200">
+                              Antal förpackningar
+                            </FormLabel>
+                            <FormControl className="dark:text-gray-200 dark:border-gray-500">
+                              <Input
+                                {...field}
+                                onChange={(e) =>
+                                  field.onChange(Number(e.target.value))
+                                }
+                              />
+                            </FormControl>
+                            {fieldState.error && (
+                              <p className="text-red-500 text-sm">
+                                {fieldState.error.message}
+                              </p>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
               <div className="w-1/2 place-self-center">
-                <Button
-                  type="submit"
-                  className="w-full mt-10"
-                  disabled={!form.formState.isValid}
-                >
+                <Button type="submit" className="w-full mt-10">
                   Skicka in inventering
                 </Button>
               </div>
