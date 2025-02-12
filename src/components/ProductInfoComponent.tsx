@@ -27,9 +27,9 @@ const ProductInfoComponent = () => {
               Skapa upp produkter som ska användas i turneringen.
             </p>
             <p className="text-sm mt-1">
-              Fältet "Ange antal per förpackning (Valfritt)" hjälper dig att
-              hålla koll på uträkningar för hur många produkter det finns totalt
-              i inventeringsvyn.
+              Fältet "Ange antal per förpackning" hjälper dig att hålla koll på
+              uträkningar för hur många produkter det finns totalt i
+              inventeringsvyn. Se till att fylla i detta fält korrekt.
             </p>
           </div>
           <div>

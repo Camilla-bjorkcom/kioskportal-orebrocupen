@@ -377,23 +377,28 @@ function ProductHandler() {
             <h3 className="text-lg mb-7">Sparade produkter:</h3>
 
             <div className="grid grid-cols-4 mb-10 gap-2 w-full 2xl:w-3/4">
-              {products?.products.map((product) => (
-                <TooltipProvider key={product.id}>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <UpdateProductButton
-                        product={product}
-                        onUpdate={UpdateProduct}
-                        onDelete={() => product.id && DeleteProduct(product.id)}
-                        key={product.id}
-                      />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Redigera produkt</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ))}
+              {products?.products
+                .slice()
+                .sort((a, b) => a.productName.localeCompare(b.productName))
+                .map((product) => (
+                  <TooltipProvider key={product.id}>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <UpdateProductButton
+                          product={product}
+                          onUpdate={UpdateProduct}
+                          onDelete={() =>
+                            product.id && DeleteProduct(product.id)
+                          }
+                          key={product.id}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Redigera produkt</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ))}
             </div>
           </div>
         </div>
@@ -457,11 +462,14 @@ function ProductHandler() {
                         className="grid grid-cols-3 gap-4 mt-2 p-4"
                         key={productlist.id}
                       >
-                        {productlist.products.map(
-                          (product: Product, index: number) => (
-                            <li key={index}>{product.productName}</li>
+                        {productlist.products
+                          .slice()
+                          .sort((a, b) =>
+                            a.productName.localeCompare(b.productName)
                           )
-                        )}
+                          .map((product: Product, index: number) => (
+                            <li key={index}>{product.productName}</li>
+                          ))}
                       </ul>
                     ) : (
                       <p className="text-gray-500 dark:text-gray-300 ml-4">
