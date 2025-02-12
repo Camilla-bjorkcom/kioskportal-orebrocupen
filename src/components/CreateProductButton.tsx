@@ -125,9 +125,9 @@ function CreateProductButton({ onSave }: CreateProductButtonProps) {
               name="amountPerPackage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ange antal per förpackning (Valfritt)</FormLabel>
+                  <FormLabel>Ange antal per förpackning (Minsta värde 1)</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} value={field.value ?? 0} />
+                    <Input type="number" {...field} value={field.value ?? 1} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
