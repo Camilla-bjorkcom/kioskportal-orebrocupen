@@ -36,7 +36,6 @@ import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
 import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
 import QrCodeAllBtn from "@/components/QrCodeAllBtn";
-import { Info } from "lucide-react";
 import FacilityProductInfoComponent from "@/components/FacilityProductInfoComponent";
 
 function FacilitiesAndKiosks() {
@@ -96,10 +95,9 @@ function FacilitiesAndKiosks() {
     },
   });
 
-
-const toggleFacility = (facilityId: string) => {
-  setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
-};
+  const toggleFacility = (facilityId: string) => {
+    setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
+  };
 
   const CreateFacility = async (facilityName: string) => {
     try {
@@ -274,7 +272,9 @@ const toggleFacility = (facilityId: string) => {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
       }, 1500);
 
-      setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
+      setOpenFacilityId((prevId) =>
+        prevId === facilityId ? null : facilityId
+      );
     } catch (error) {
       console.error(error);
       toast({
@@ -416,7 +416,9 @@ const toggleFacility = (facilityId: string) => {
       }
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
 
-      setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
+      setOpenFacilityId((prevId) =>
+        prevId === facilityId ? null : facilityId
+      );
 
       toast({
         className: "bg-green-200 dark:bg-green-400 dark:text-black",
@@ -629,19 +631,21 @@ const toggleFacility = (facilityId: string) => {
           </TooltipProvider>
         </div>
       </div>
-      <Accordion type="multiple" value={openFacilityId ? [openFacilityId] : []} className="w-full 2xl:w-3/4">
-
-        {data.map((facility) => (
-        <AccordionItem
-        key={facility.id}
-        value={openFacilityId === facility.id ? facility.id : ""}
-        className="p-4 border border-gray-200 rounded-md shadow dark:bg-slate-900 dark:text-gray-200 dark:border-slate-500"
+      <Accordion
+        type="multiple"
+        value={openFacilityId ? [openFacilityId] : []}
+        className="w-full 2xl:w-3/4"
       >
-      
-      <AccordionTrigger
-  className="text-lg font-medium hover:no-underline mr-2"
-  onClick={() => toggleFacility(facility.id)}
->
+        {data.map((facility) => (
+          <AccordionItem
+            key={facility.id}
+            value={openFacilityId === facility.id ? facility.id : ""}
+            className="p-4 border border-gray-200 rounded-md shadow dark:bg-slate-900 dark:text-gray-200 dark:border-slate-500"
+          >
+            <AccordionTrigger
+              className="text-lg font-medium hover:no-underline mr-2"
+              onClick={() => toggleFacility(facility.id)}
+            >
               <div className="grid w-full grid-cols-1 xl:flex gap-4 justify-between items-center">
                 <label className="basis-1/4 font-medium cursor-pointer">
                   {facility.facilityName}
@@ -780,11 +784,14 @@ const toggleFacility = (facilityId: string) => {
                       </div>
                       {kiosk.products && kiosk.products.length > 0 ? (
                         <ul className="grid grid-cols-3 gap-3 mt-2">
-                          {kiosk.products.map(
-                            (product: Product, index: number) => (
-                              <li key={index}>{product.productName}</li>
+                          {kiosk.products
+                            .slice()
+                            .sort((a, b) =>
+                              a.productName.localeCompare(b.productName)
                             )
-                          )}
+                            .map((product: Product, index: number) => (
+                              <li key={index}>{product.productName}</li>
+                            ))}
                         </ul>
                       ) : (
                         <p className="text-gray-500 dark:text-gray-200 mt-2">
