@@ -78,16 +78,20 @@ function UpdateProductButton({
     defaultValues: {
       id: product.id,
       productName: product.productName,
-      amountPerPackage: product.amountPerPackage ?? 0,
+      amountPerPackage: product.amountPerPackage ?? 1,
     },
   });
   const { reset } = form;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+
+    const correctedAmount = values.amountPerPackage && values.amountPerPackage > 0
+    ? values.amountPerPackage
+    : 1;
     const updatedProduct: Product = {
       id: values.id,
       productName: values.productName,
-      amountPerPackage: values.amountPerPackage ?? 0,
+      amountPerPackage: correctedAmount,
     };
 
     const result = await onUpdate(updatedProduct);
