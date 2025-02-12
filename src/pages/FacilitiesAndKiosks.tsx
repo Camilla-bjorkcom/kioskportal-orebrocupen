@@ -36,6 +36,8 @@ import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
 import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
 import QrCodeAllBtn from "@/components/QrCodeAllBtn";
+import { Info } from "lucide-react";
+import FacilityProductInfoComponent from "@/components/FacilityProductInfoComponent";
 
 function FacilitiesAndKiosks() {
   const queryClient = useQueryClient();
@@ -122,7 +124,6 @@ const toggleFacility = (facilityId: string) => {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
       }
 
-      
       if (response.status === 200) {
         queryClient.invalidateQueries({ queryKey: ["facilities"] });
         toast({
@@ -559,15 +560,14 @@ const toggleFacility = (facilityId: string) => {
     setKiosksforUpdate([]);
   };
 
- 
-
-  const kiosksForQrCode: KioskForQr[] = data?.flatMap((facility: Facility) =>
-    facility.kiosks.map((kiosk) => ({
-      kioskName: kiosk.kioskName,
-      facility: kiosk.facility,
-      inventoryKey: kiosk.inventoryKey,
-    }))
-  ) || [];
+  const kiosksForQrCode: KioskForQr[] =
+    data?.flatMap((facility: Facility) =>
+      facility.kiosks.map((kiosk) => ({
+        kioskName: kiosk.kioskName,
+        facility: kiosk.facility,
+        inventoryKey: kiosk.inventoryKey,
+      }))
+    ) || [];
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -578,9 +578,19 @@ const toggleFacility = (facilityId: string) => {
 
   return (
     <section className="container mx-auto px-5">
-      <h1 className="mt-8 text-2xl pb-2 mb-4 ">
-        Hantera kiosker och produktutbud
-      </h1>
+      <div className="flex justify-between items-center w-3/4">
+        <h1 className="mt-8 text-2xl pb-2 mb-4 ">Anläggningshantering</h1>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <FacilityProductInfoComponent />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Information om anläggningshantering</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
       <div className="flex justify-between w-full 2xl:w-3/4 items-center mb-3">
         <AddFacilityButton
           onSave={(facilityname) => {
@@ -588,37 +598,35 @@ const toggleFacility = (facilityId: string) => {
           }}
         />
         <div>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <QrCodeAllBtn
-                kiosksForQr={kiosksForQrCode}
-              />
-            </TooltipTrigger>
-            <TooltipContent>
-             Klicka för att öppna utskriftsvänlig vy
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <SelectedKiosksButton
-                selectedKiosks={kiosksForUpdate}
-                productlists={productlists || []}
-                products={products?.products || []}
-                onClick={handleSubmit}
-                onKiosksUpdated={handleKiosksUpdated}
-                onClearSelected={clearSelectedKiosks}
-              />
-            </TooltipTrigger>
-            <TooltipContent>
-              {kiosksForUpdate.length > 0
-                ? "Klicka på knappen för att lägga till produkter i valda kiosker"
-                : "Välj minst en kiosk för att lägga till produkter"}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <QrCodeAllBtn kiosksForQr={kiosksForQrCode} />
+              </TooltipTrigger>
+              <TooltipContent>
+                Klicka för att öppna utskriftsvänlig vy
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <SelectedKiosksButton
+                  selectedKiosks={kiosksForUpdate}
+                  productlists={productlists || []}
+                  products={products?.products || []}
+                  onClick={handleSubmit}
+                  onKiosksUpdated={handleKiosksUpdated}
+                  onClearSelected={clearSelectedKiosks}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                {kiosksForUpdate.length > 0
+                  ? "Klicka på knappen för att lägga till produkter i valda kiosker"
+                  : "Välj minst en kiosk för att lägga till produkter"}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
       <Accordion type="multiple" value={openFacilityId ? [openFacilityId] : []} className="w-full 2xl:w-3/4">
@@ -702,20 +710,20 @@ const toggleFacility = (facilityId: string) => {
                             onEditClick={handleEditClick}
                             onKioskUpdated={handleKioskUpdated}
                           />
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <QrCodeSingleBtn
-                                    kioskName={kiosk.kioskName}
-                                    facility={kiosk.facility}
-                                    inventoryKey={kiosk.inventoryKey}
-                                  />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Visa kioskens QR kod</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <QrCodeSingleBtn
+                                  kioskName={kiosk.kioskName}
+                                  facility={kiosk.facility}
+                                  inventoryKey={kiosk.inventoryKey}
+                                />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Visa kioskens QR kod</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger>
@@ -728,7 +736,7 @@ const toggleFacility = (facilityId: string) => {
                                 />
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>Redigera kioskutbud</p>
+                                <p>Redigera kiosknamn</p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -767,7 +775,9 @@ const toggleFacility = (facilityId: string) => {
                           />
                         </div>
                       </div>
-                      <div className="flex mt-5 font-semibold">Produkter ({kiosk.products.length})</div>
+                      <div className="flex mt-5 font-semibold">
+                        Produkter ({kiosk.products.length})
+                      </div>
                       {kiosk.products && kiosk.products.length > 0 ? (
                         <ul className="grid grid-cols-3 gap-3 mt-2">
                           {kiosk.products.map(

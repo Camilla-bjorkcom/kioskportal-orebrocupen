@@ -9,6 +9,7 @@ import {
   House,
   ShoppingBasket,
   Bell,
+  Trophy,
 } from "lucide-react";
 
 import {
@@ -48,27 +49,13 @@ import { useIsMobile } from "@/hooks/use-mobile";
 export function AppSidebar({ id }: { id?: string }) {
   const items = [
     {
-      title: "Produkter",
+      title: "Turneringsförberedelser",
       url: "#",
-      icon: ShoppingBasket,
+      icon: Trophy,
       subitems: [
-        {
-          title: "Hantera produkter & produktlistor",
-          url: `/producthandler/${id}`,
-        },
-      ],
-    },
+        { title: "1. Produkthantering", url: `/producthandler/${id}` },
 
-    {
-      title: "Anläggningar & Kiosker",
-      url: "#",
-      icon: House,
-      subitems: [
-        {
-          title: "Hantera kiosker & produktutbud",
-          url: `/facilitiesandkiosks/${id}`,
-        },
-        { title: "QR koder till kiosker", url: "#" },
+        { title: "2. Anläggningshantering", url: `/facilitiesandkiosks/${id}` },
       ],
     },
 
@@ -77,15 +64,16 @@ export function AppSidebar({ id }: { id?: string }) {
       url: "#",
       icon: SquareChartGantt,
       subitems: [
+        { title: "Inventera huvudlager", url: `/inventorystorage/${id}` },
         {
           title: "Visa kioskernas inventeringar",
           url: `/inventorystatus/${id}`,
         },
-        { title: "Inventera huvudlager", url: `/inventorystorage/${id}` },
         {
           title: "Visa huvudlagrets inventeringar",
           url: `/inventorystatusstorage/${id}`,
         },
+        { title: "QR koder till kiosker", url: `/facilitiesandkiosks/${id}` },
       ],
     },
     {
