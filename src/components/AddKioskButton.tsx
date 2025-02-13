@@ -25,6 +25,10 @@ import {
 } from "./ui/form";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import { createKiosk } from "@/api/functions/createKiosk";
+import { badToast, okToast } from "@/utils/toasts";
+import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   kioskName: z.string().min(2, {
@@ -33,12 +37,18 @@ const formSchema = z.object({
 });
 
 interface AddKioskButtonProps {
-  onSave: (kioskName: string, facilityId: string) => void; // Callback för att spara kiosknamn
+  id: string; // Callback för att spara kiosknamn
   facilityId: string;
+  onFacilityAdded?: (facilityId: string) => void;
 }
 
-function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
+function AddKioskButton({
+  id,
+  facilityId,
+  onFacilityAdded,
+}: AddKioskButtonProps) {
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,10 +57,27 @@ function AddKioskButton({ onSave, facilityId }: AddKioskButtonProps) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave(values.kioskName, facilityId); // Sparar kiosken
-    setOpen(false); // Stänger dialogen
-    form.reset(); // Återställer formuläret
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const kioskCreated = await createKiosk(values.kioskName, facilityId, id!);
+      if (!kioskCreated) throw new NoResponseError("No response from server");
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+
+      onFacilityAdded?.(facilityId);
+
+      okToast(`Anläggning ${values.kioskName} skapades`);
+    } catch (error) {
+      if (error instanceof DuplicateError) {
+        badToast(`Kiosk med namnet ${values.kioskName} finns redan.`);
+      } else if (error instanceof NoResponseError) {
+        badToast("Misslyckades med att skapa kiosk.");
+      } else {
+        badToast("Misslyckades med att skapa kiosk.");
+      }
+    }
+
+    setOpen(false);
+    form.reset();
   }
 
   return (
