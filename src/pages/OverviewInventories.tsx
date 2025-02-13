@@ -2,7 +2,7 @@ import { calculateTotalAmountForFacility } from "@/api/functions/calculateTotalA
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { Facility } from "@/interfaces";
 import { StorageInventory } from "@/interfaces/storaginventory";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table";
 
 const OverviewInventories = () => {
-  const queryClient = useQueryClient();
+ 
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
 
@@ -91,70 +91,70 @@ const OverviewInventories = () => {
   const facilitiesWithTotals =
     facilities?.map((facility) => calculateTotalAmountForFacility(facility)) ||
     [];
-  console.log("totals per facilict", facilitiesWithTotals);
+ 
 
   return (
+    <section className="container mx-auto px-5">
     <div>
-      <h3>OverviewInventories</h3>
+    <h1 className="mt-8 text-2xl pb-2 mb-4 ">Inventeringsöversikt</h1>
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableCaption>Produkternas antal enligt senast gjorda inventering</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Produkt</TableHead>
+            <TableHead className="font-bold dark:text-slate-300">Produkt</TableHead>
             {facilitiesWithTotals.map((facility) => (
-              <TableHead className="text-center" key={facility.facilityName}>
-                {facility.facilityName}
+              <TableHead className="text-center font-bold" key={facility.facilityName}>
+                <p className="font-bold  dark:text-slate-300">{facility.facilityName}</p>
               </TableHead>
             ))}
-            <TableHead className="text-center">Huvudlager</TableHead>
-            <TableHead className="text-center">Totalt antal</TableHead>
+            <TableHead className="text-center font-bold dark:text-slate-300">Huvudlager</TableHead>
+            <TableHead className="text-center font-bold dark:text-slate-300">Totalt antal</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {/* Loopa igenom alla produkter och skapa en rad för varje produkt */}
           {allProducts?.map((productName) => {
+            const productsInFacilities = facilitiesWithTotals.map((x) =>
+              x.products.find((p) => p.productName === productName)
+            );
+
+            const productsInStorage = productTotals.find(
+              (x) => x.productName === productName
+            );
+
+            const total = [productsInStorage, ...productsInFacilities]
+              .map((x) => x?.totalAmount ?? 0)
+              .reduce((a, c) => a + c, 0);
+
             return (
               <TableRow key={productName}>
                 {/* Produktnamn */}
-                <TableCell className="font-medium">{productName}</TableCell>
+                <TableCell ><p className="font-bold dark:text-slate-300">{productName}</p></TableCell>
 
                 {/* För varje facility, hämta totalAmount för denna produkt */}
-                {facilitiesWithTotals.map((facility) => {
-                  const foundProduct = facility.products.find(
-                    (p) => p.productName === productName
-                  );
-                  return (
-                    <TableCell
-                      key={facility.facilityName + productName}
-                      className="text-center"
-                    >
-                      {foundProduct ? foundProduct.totalAmount : "-"}
-                    </TableCell>
-                  );
-                })}
+                {facilitiesWithTotals.map((facility, index) => (
+                  <TableCell
+                    key={facility.facilityName + productName}
+                    className="text-center dark:text-slate-300"
+                  >
+                    {productsInFacilities[index]?.totalAmount ?? "-"}
+                  </TableCell>
+                ))}
 
                 {/* Huvudlager-värde */}
-                {/* Huvudlager-värde */}
-                <TableCell className="text-center">
-                  {productTotals.find((p) => p.productName === productName)
-                    ?.totalAmount || "-"}
+                <TableCell className="text-center dark:text-slate-300">
+                  {productsInStorage?.totalAmount || "-"}
                 </TableCell>
 
                 {/* Totalt antal (summa av alla facilities) */}
-                <TableCell className="text-center font-bold">
-                  {facilitiesWithTotals.reduce((sum, facility) => {
-                    const product = facility.products.find(
-                      (p) => p.productName === productName
-                    );
-                    return sum + (product?.totalAmount ?? 0);
-                  }, 0)}
-                </TableCell>
+                <TableCell className="text-center font-bold dark:text-slate-300">{total}</TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
     </div>
+      </section>
   );
 };
 
