@@ -90,9 +90,11 @@ function UpdateProductButton({
     : 1;
     const updatedProduct: Product = {
       id: values.id,
-      productName: values.productName,
+      productName: values.productName.trim(),
       amountPerPackage: correctedAmount,
     };
+    console.log("Uppdaterar produkt med värden:", updatedProduct);
+
 
     const result = await onUpdate(updatedProduct);
 
