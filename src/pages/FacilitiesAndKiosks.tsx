@@ -37,6 +37,10 @@ import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
 import QrCodeAllBtn from "@/components/QrCodeAllBtn";
 import FacilityProductInfoComponent from "@/components/FacilityProductInfoComponent";
+import { createFacility } from "@/api/functions/createFacility";
+import { badToast, okToast } from "@/utils/toasts";
+import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
+import { createKiosk } from "@/api/functions/createKiosk";
 
 function FacilitiesAndKiosks() {
   const queryClient = useQueryClient();
@@ -97,47 +101,6 @@ function FacilitiesAndKiosks() {
 
   const toggleFacility = (facilityId: string) => {
     setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
-  };
-
-  const CreateFacility = async (facilityName: string) => {
-    try {
-      const response = await fetchWithAuth(`facilities/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ facilityName }),
-      });
-
-      if (!response) {
-        throw new Error("Failed to fetch");
-      }
-      if (response.status === 409) {
-        const errorData = await response.json();
-        console.log("409 Conflict Error:", errorData);
-
-        toast({
-          title: "Fel",
-          description: `Anläggning med namnet ${facilityName}  finns redan.`,
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      }
-
-      if (response.status === 200) {
-        queryClient.invalidateQueries({ queryKey: ["facilities"] });
-        toast({
-          className: "bg-green-200 dark:bg-green-400 dark:text-black",
-          title: "Lyckat",
-          description: `Anläggning ${facilityName} skapades`,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att skapa anläggning.",
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-      });
-    }
   };
 
   const UpdateFacility = async (facility: Facility) => {
@@ -386,55 +349,6 @@ function FacilitiesAndKiosks() {
     }
   };
 
-  const CreateKiosk = async (kioskName: string, facilityId: string) => {
-    try {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${facilityId}/kiosks`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            kioskName: kioskName,
-          }),
-        }
-      );
-      if (!response) {
-        toast({
-          title: "Fel",
-          description: "Misslyckades med att radera kontaktperson.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Failed to save kiosk");
-      }
-      if (!response.ok) {
-        toast({
-          title: "Fel",
-          description: "Misslyckades med att radera kontaktperson.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Failed to save kiosk");
-      }
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
-
-      setOpenFacilityId((prevId) =>
-        prevId === facilityId ? null : facilityId
-      );
-
-      toast({
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        title: "Lyckat",
-        description: `${kioskName} skapades`,
-      });
-    } catch (error) {
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att radera kontaktperson.",
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-      });
-      console.error(error);
-    }
-  };
-
   const UpdateKiosk = async (kiosk: Kiosk) => {
     try {
       const response = await fetchWithAuth(
@@ -594,11 +508,7 @@ function FacilitiesAndKiosks() {
         </TooltipProvider>
       </div>
       <div className="flex justify-between w-full 2xl:w-3/4 items-center mb-3">
-        <AddFacilityButton
-          onSave={(facilityname) => {
-            CreateFacility(facilityname);
-          }}
-        />
+        <AddFacilityButton id={id!} />
         <div>
           <TooltipProvider>
             <Tooltip>
@@ -651,7 +561,8 @@ function FacilitiesAndKiosks() {
                   {facility.facilityName}
                 </label>
                 <AddKioskButton
-                  onSave={(kioskName) => CreateKiosk(kioskName, facility.id)}
+                  onFacilityAdded={setOpenFacilityId}
+                  id={id!}
                   facilityId={facility.id}
                 />
                 <AddContactPersonButton
