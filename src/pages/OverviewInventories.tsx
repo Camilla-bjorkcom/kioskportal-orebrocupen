@@ -1,10 +1,10 @@
-import { calculateTotalAmountForFacility } from "@/api/functions/calculateTotalAmountForFacility";
+import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmountForFacility";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { Facility } from "@/interfaces";
 import { StorageInventory } from "@/interfaces/storaginventory";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -83,7 +83,10 @@ const OverviewInventories = () => {
             <TableHead className="font-bold dark:text-slate-300">Produkt</TableHead>
             {facilitiesWithTotals.map((facility) => (
               <TableHead className="text-center font-bold" key={facility.facilityName}>
-                <p className="font-bold  dark:text-slate-300">{facility.facilityName}</p>
+                <Link to={`/facilityinventory/${tournamentId}/${facility.id}`} >
+                <p className="font-bold underline dark:text-slate-300">{facility.facilityName}</p>
+                </Link>
+               
               </TableHead>
             ))}
             <TableHead className="text-center font-bold dark:text-slate-300">Huvudlager</TableHead>
