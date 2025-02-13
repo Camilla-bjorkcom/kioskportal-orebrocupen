@@ -67,27 +67,6 @@ const OverviewInventories = () => {
       };
     }) || [];
 
-  // const totalStorageAmount=
-
-  // const allKiosks: Kiosk[] = facilities?.flatMap((facility: Facility) =>
-  //     facility.kiosks?.map((kiosk) => ({
-  //       id: kiosk.id,
-  //       kioskName: kiosk.kioskName,
-  //       products: kiosk.products,
-  //       facilityId: kiosk.facilityId,
-  //       facility: kiosk.facility,
-  //       inventoryDate: kiosk.inventoryDate,
-  //       firstInventoryMade: kiosk.firstInventoryMade,
-  //       inventoryKey: kiosk.inventoryKey,
-  //     })) || []
-  //   ) || [];
-
-  // console.log(allKiosks)
-
-  // const totalsPerFacility= calculateTotalAmountPerFacility(facilities || [])
-
-  // console.log(totalsPerFacility)
-
   const facilitiesWithTotals =
     facilities?.map((facility) => calculateTotalAmountForFacility(facility)) ||
     [];
