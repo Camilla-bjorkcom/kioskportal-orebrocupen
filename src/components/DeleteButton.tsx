@@ -1,3 +1,4 @@
+import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,15 +10,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { badToast, okToast } from "@/utils/toasts";
+import { useQueryClient } from "@tanstack/react-query";
+import { values } from "lodash-es";
 import { TrashIcon } from "lucide-react";
 
 interface DeleteButtonProps {
   id: string; // ID för objektet som ska raderas
   type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist"; // Typ av objekt
-  onDelete: (id: string, type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist") => void; // Callback för att radera
+  onDelete: (
+    id: string,
+    type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist"
+  ) => Promise<void>; // Callback för att radera
 }
 
 const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
+  const queryClient = useQueryClient();
   const getDialogContent = () => {
     switch (type) {
       case "Facility":
@@ -32,18 +40,18 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
           description:
             "Den här åtgärden kan inte ångras. Kiosken kommer att tas bort permanent.",
         };
-        case "ContactPerson":
+      case "ContactPerson":
         return {
           title: "Vill du radera kontaktpersonen?",
           description:
             "Den här åtgärden kan inte ångras. Kontaktpersonen kommer att tas bort permanent.",
         };
-        case "Productlist":
-          return {
-            title: "Vill du radera produktlistan?",
-            description:
-              "Den här åtgärden kan inte ångras. Produktlistan kommer att tas bort permanent.",
-          };
+      case "Productlist":
+        return {
+          title: "Vill du radera produktlistan?",
+          description:
+            "Den här åtgärden kan inte ångras. Produktlistan kommer att tas bort permanent.",
+        };
       default:
         return {
           title: "Vill du radera objektet?",
@@ -51,6 +59,20 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
         };
     }
   };
+
+  function deleteConfirmed() {
+    try {
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+
+      okToast(`Objektet raderades`);
+    } catch (error) {
+      if (error instanceof NoResponseError) {
+        badToast("Misslyckades med att radera objektet.");
+      } else {
+        badToast("Misslyckades med att radera objektet.");
+      }
+    }
+  }
 
   const dialogContent = getDialogContent();
   return (
@@ -68,7 +90,9 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
         <AlertDialogFooter>
           <AlertDialogCancel>Avbryt</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => onDelete(id, type)} // Skicka id och typ till callback
+            onClick={() => {
+              onDelete(id, type).then(() => deleteConfirmed());
+            }}
           >
             Radera
           </AlertDialogAction>

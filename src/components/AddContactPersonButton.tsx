@@ -34,6 +34,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
+import { createContactPerson } from "@/api/functions/createContactPerson";
+import { useQueryClient } from "@tanstack/react-query";
+import { badToast, okToast } from "@/utils/toasts";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -48,20 +52,18 @@ const formSchema = z.object({
 });
 
 interface AddContactPersonButtonProps {
-  onSave: (
-    name: string,
-    facilityId: string,
-    phone: string,
-    role: string
-  ) => void;
+  id: string;
   facilityId: string;
+  onFacilityAdded?: (facilityId: string) => void;
 }
 
 function AddContactPersonButton({
-  onSave,
+  id,
   facilityId,
+  onFacilityAdded,
 }: AddContactPersonButtonProps) {
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -72,8 +74,33 @@ function AddContactPersonButton({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave(values.name, values.phone, values.role, facilityId);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const contactPersonCreated = await createContactPerson(
+        values.name,
+        values.phone,
+        values.role,
+        facilityId,
+        id!
+      );
+      if (!contactPersonCreated) {
+        throw new NoResponseError("No response from server");
+      }
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+
+      onFacilityAdded?.(facilityId);
+
+      okToast(`Kontaktperson ${values.name} skapades`);
+    } catch (error) {
+      if (error instanceof DuplicateError) {
+        badToast(`Kiosk med namnet ${values.name} finns redan.`);
+      } else if (error instanceof NoResponseError) {
+        badToast("Misslyckades med att skapa kontaktperson.");
+      } else {
+        badToast("Misslyckades med att skapa kontaktperson.");
+      }
+    }
+
     setOpen(false);
     form.reset();
   }
@@ -129,7 +156,7 @@ function AddContactPersonButton({
                 <FormItem>
                   <FormLabel>Telefonnummer</FormLabel>
                   <FormControl>
-                   <Input placeholder="Skriv in telefonnummer" {...field} />
+                    <Input placeholder="Skriv in telefonnummer" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -153,7 +180,7 @@ function AddContactPersonButton({
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel>Roller</SelectLabel>                          
+                          <SelectLabel>Roller</SelectLabel>
                           <SelectItem value="Planansvarig">
                             Planansvarig
                           </SelectItem>

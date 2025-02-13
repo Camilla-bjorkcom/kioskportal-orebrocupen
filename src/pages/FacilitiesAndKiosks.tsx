@@ -41,6 +41,7 @@ import { createFacility } from "@/api/functions/createFacility";
 import { badToast, okToast } from "@/utils/toasts";
 import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
 import { createKiosk } from "@/api/functions/createKiosk";
+import { deleteFacility } from "@/api/functions/deleteFacility";
 
 function FacilitiesAndKiosks() {
   const queryClient = useQueryClient();
@@ -101,151 +102,6 @@ function FacilitiesAndKiosks() {
 
   const toggleFacility = (facilityId: string) => {
     setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
-  };
-
-  const UpdateFacility = async (facility: Facility) => {
-    try {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${facility.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            facilityName: facility.facilityName,
-            operation: "updateFacility",
-          }),
-        }
-      );
-      if (!response) {
-        toast({
-          title: "Fel",
-          description: "Misslyckades med att uppdatera anläggningen.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Failed to fetch");
-      }
-      if (!response.ok) {
-        toast({
-          title: "Fel",
-          description: "Misslyckades med att uppdatera anläggningen.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Failed to update facility");
-      }
-
-      toast({
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        title: "Lyckat",
-        description: `Anläggningen uppdaterades`,
-      });
-      //uppdaterar data
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      }, 1500);
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att uppdatera anläggningen.",
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-      });
-    }
-  };
-
-  const DeleteFacility = async (FId: string) => {
-    try {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${FId}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response) {
-        throw new Error("Failed to fetch");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to delete facility");
-      }
-      toast({
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        title: "Lyckat",
-        description: `Anläggningen och dess kiosker raderades`,
-      });
-      //uppdaterar data
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      }, 1500);
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Fel",
-        description:
-          "Misslyckades med att radera anläggningen och dess kiosker.",
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-      });
-    }
-  };
-
-  const CreateContactPerson = async (
-    name: string,
-    phone: string,
-    role: string,
-    facilityId: string
-  ) => {
-    try {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${facilityId}/contactpersons`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name,
-            phone,
-            role,
-            facilityId,
-            operation: "createContactPerson",
-          }),
-        }
-      );
-
-      if (!response) {
-        toast({
-          title: "Fel",
-          description:
-            "Misslyckades med att lägga till kontaktperson till anläggningen.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Failed to fetch");
-      }
-      if (!response.ok) {
-        toast({
-          title: "Fel",
-          description:
-            "Misslyckades med att lägga till kontaktperson till anläggningen.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Failed to update facility");
-      }
-      toast({
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        title: "Lyckat",
-        description: `Kontaktperson lades till`,
-      });
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      }, 1500);
-
-      setOpenFacilityId((prevId) =>
-        prevId === facilityId ? null : facilityId
-      );
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att uppdatera anläggningen.",
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-      });
-    }
   };
 
   const UpdateContactPerson = async (contactPerson: ContactPerson) => {
@@ -566,21 +422,15 @@ function FacilitiesAndKiosks() {
                   facilityId={facility.id}
                 />
                 <AddContactPersonButton
-                  onSave={(name, phone, role) =>
-                    CreateContactPerson(name, phone, role, facility.id)
-                  }
+                  id={id!}
                   facilityId={facility.id}
+                  onFacilityAdded={setOpenFacilityId}
                 />
                 <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto mr-5 w-fit basis-1/12 ">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
-                        <UpdateFacilityButton
-                          onSave={(updatedFacility) =>
-                            UpdateFacility(updatedFacility)
-                          }
-                          facility={facility}
-                        />
+                        <UpdateFacilityButton id={id!} facility={facility} />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Redigera anläggning</p>
@@ -593,7 +443,7 @@ function FacilitiesAndKiosks() {
                         <DeleteButton
                           id={facility.id}
                           type="Facility"
-                          onDelete={() => DeleteFacility(facility.id)}
+                          onDelete={() => deleteFacility(facility.id, id!)}
                         />
                       </TooltipTrigger>
                       <TooltipContent>
