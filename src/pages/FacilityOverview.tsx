@@ -21,7 +21,7 @@ const FacilityOverview = () => {
     const { id: tournamentId, fid: facilityId } = useParams<{ id: string; fid: string }>();
 
     const { isLoading, error, data: facility, isSuccess } = useQuery<Facility>({
-        queryKey: ["facilities"],
+        queryKey: ["facilities", tournamentId, facilityId],
         queryFn: async () => {
           const response = await fetchWithAuth(`facilities/${tournamentId}/${facilityId}`);
           if (!response) {
@@ -43,12 +43,13 @@ const FacilityOverview = () => {
       }
       if (!isSuccess || !facility) {
         return <div>Error: {String(error) || "Facility not found"}</div>;
-      }
+      }    
       
       const facilityForTable = calculateTotalAmountForFacility(facility) || null;
       console.log(facilityForTable)
       
-      const facilityProducts = facilityForTable.products
+      const facilityProducts = facilityForTable.products  ?? [];
+      console.log(facilityProducts)
 
   return (
     <section className="container mx-auto px-5">
