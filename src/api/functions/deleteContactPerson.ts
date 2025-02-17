@@ -1,24 +1,23 @@
-import { DuplicateError, NoResponseError } from "./apiErrors";
+import { NoResponseError } from "./apiErrors";
 import fetchWithAuth from "./fetchWithAuth";
 
-export const createKiosk = async (
-  kioskName: string,
+export const deleteContactPerson = async (
+  contactPersonId: string,
   facilityId: string,
   tournamentId: string
 ) => {
   const response = await fetchWithAuth(
-    `facilities/${tournamentId}/${facilityId}/kiosks`,
-
+    `facilities/${tournamentId}/${facilityId}/contactpersons`,
     {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ kioskName }),
+      body: JSON.stringify({
+        id: contactPersonId,
+        operation: "deleteContactPerson",
+      }),
     }
   );
-
   if (!response) throw new NoResponseError("No response from server");
-
-  if (response.status === 409) throw new DuplicateError("Kiosk already exists");
 
   return response.json();
 };

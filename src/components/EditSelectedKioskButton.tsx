@@ -22,7 +22,10 @@ import {
 import { Input } from "./ui/input";
 import { Toaster } from "./ui/toaster";
 import { Pencil } from "lucide-react";
-
+import { updateKiosk } from "@/api/functions/updateKiosk";
+import { NoResponseError } from "@/api/functions/apiErrors";
+import { okToast, badToast } from "@/utils/toasts";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   kioskName: z.string().min(2, {
@@ -31,20 +34,15 @@ const formSchema = z.object({
 });
 
 interface EditSelectedKioskButtonProps {
+  id: string;
   kioskForEdit: Kiosk;
-  onKioskUpdated: (updatedkiosk: Kiosk) => void;
-  onSave: (kiosk: Kiosk) => void;
-  onUpdateKioskClick: () => void;
 }
 function EditSelectedKioskButton({
   kioskForEdit,
-  onSave,
-  onUpdateKioskClick,
+  id,
 }: EditSelectedKioskButtonProps) {
-
   const [open, setOpen] = useState(false);
- 
-
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,25 +56,31 @@ function EditSelectedKioskButton({
     }
   }, [kioskForEdit, form]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    onUpdateKioskClick();
-    const updatedKiosk = { ...kioskForEdit, kioskName: values.kioskName };
-    onSave(updatedKiosk);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const updatedKiosk = { ...kioskForEdit, kioskName: values.kioskName };
+      const updatedKioskResult = await updateKiosk(updatedKiosk, id!);
+
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+
+      if (!updatedKioskResult) throw new Error("No contact person found");
+      okToast("Kontaktpersonen har uppdaterats");
+    } catch (error) {
+      if (error instanceof NoResponseError) {
+        badToast("Misslyckades med att uppdatera kontaktperson");
+      } else {
+        badToast("Misslyckades med att uppdatera kontaktperson");
+      }
+    }
+
     setOpen(false);
     form.reset();
   }
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <Toaster />
-      <DialogTrigger>
-        <div
-          className="flex flex-col place-self-center hover:text-orange-n"
-          role="button"
-          tabIndex={0}
-          onClick={() => setOpen(true)}
-        >
-          <Pencil className="mr-0.5 2xl:mr-5 w-[20px] h-[20px] items-center mt-1" />
-        </div>
+      <DialogTrigger asChild>
+        <Pencil className="w-5 h-5 hover:text-orange-n place-self-center" />
       </DialogTrigger>
       <DialogContent className="w-full max-w-4xl">
         <DialogHeader>
@@ -110,7 +114,6 @@ function EditSelectedKioskButton({
             </form>
           </Form>
         </DialogHeader>
-       
       </DialogContent>
     </Dialog>
   );
