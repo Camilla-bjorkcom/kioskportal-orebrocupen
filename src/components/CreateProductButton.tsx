@@ -56,7 +56,7 @@ function CreateProductButton({ onSave }: CreateProductButtonProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       productName: "",
-      amountPerPackage: 0,
+      amountPerPackage: 1,
     },
   });
 
@@ -67,11 +67,14 @@ function CreateProductButton({ onSave }: CreateProductButtonProps) {
       console.error("Produktnamn saknas!");
       return;
     }
+    const correctedAmount = values.amountPerPackage && values.amountPerPackage > 0
+    ? values.amountPerPackage
+    : 1;
 
-    const result = await onSave(
-      values.productName,
-      values.amountPerPackage ?? 0
-    );
+    const result = await onSave(values.productName, correctedAmount);
+  
+
+  
 
     if (result === 201) {
       setSavedMessage("Produkten har sparats ✅"); // ✅ Om det gick bra
@@ -122,9 +125,9 @@ function CreateProductButton({ onSave }: CreateProductButtonProps) {
               name="amountPerPackage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ange antal per förpackning (Valfritt)</FormLabel>
+                  <FormLabel>Ange antal per förpackning (Minsta värde 1)</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} value={field.value ?? 0} />
+                    <Input type="number" {...field} value={field.value ?? 1} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

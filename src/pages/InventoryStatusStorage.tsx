@@ -6,6 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { Product } from "@/interfaces";
 import { useQuery } from "@tanstack/react-query";
 import { Suspense, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -16,7 +17,7 @@ type StorageInventory = {
   id: string;
   inventoryDate: string;
   products: Products[];
-}
+};
 
 interface Products {
   id: number;
@@ -30,21 +31,22 @@ const InventoryStatusStorage = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
 
-  const { data, isLoading, error, isSuccess } = useQuery<GroupedStorageInventories>({
-    queryKey: ["inventoryList"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(`
+  const { data, isLoading, error, isSuccess } =
+    useQuery<GroupedStorageInventories>({
+      queryKey: ["inventoryList"],
+      queryFn: async () => {
+        const response = await fetchWithAuth(`
 tournaments/${tournamentId}/inventories`);
-      if (!response) {
-        throw new Error("Failed to fetch products");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
-      }
-      const data = await response.json();
-      return data;
-    },
-  });
+        if (!response) {
+          throw new Error("Failed to fetch products");
+        }
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data = await response.json();
+        return data;
+      },
+    });
 
   console.log(data);
 
@@ -101,26 +103,27 @@ tournaments/${tournamentId}/inventories`);
             >
               <AccordionTrigger>
                 <div className="flex flex-col gap-2">
-                <h2>
-                  {new Date(date).toLocaleString("sv-SE", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour12: false,
-                  })}
-                </h2>
-                <p className="text-xs font-normal hover:no-underline">({inventories.length} inventeringar)</p>
+                  <h2>
+                    {new Date(date).toLocaleString("sv-SE", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour12: false,
+                    })}
+                  </h2>
+                  <p className="text-xs font-normal hover:no-underline">
+                    ({inventories.length} inventeringar)
+                  </p>
                 </div>
               </AccordionTrigger>
-  
+
               {sortByInventoryDate(inventories).map((inventory) => (
                 <AccordionContent key={inventory.id}>
                   <div className="mb-7">
                     <div className="flex flex-col bg-gray-50 p-3 border-b-2 rounded-xl w-full -mb-2 dark:bg-slate-800 dark:border-slate-400">
                       <h2 className="">
-                        Inventering gjord kl: { '' }
+                        Inventering gjord kl: {""}
                         {new Intl.DateTimeFormat("sv-SE", {
-                         
                           hour: "2-digit",
                           minute: "2-digit",
                         }).format(new Date(inventory.inventoryDate))}
@@ -133,49 +136,58 @@ tournaments/${tournamentId}/inventories`);
                         <p>Obrutna förpackningar</p>
                         <p className="text-center">Totalt</p>
                       </div>
-  
+
                       {/* Rendera varje produkt */}
-                      {inventory.products.map((product, productIndex) => {
-                        const isOutOfStock = product.amountPackages === 0;
-                        return (
-                          <div
-                            key={product.id}
-                            className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 dark:bg-slate-800 dark:border-slate-500 dark:text-gray-200 dark:hover:bg-slate-600 ${
-                              productIndex % 2 === 0
-                                ? "bg-gray-100"
-                                : "bg-white dark:bg-slate-900"
-                            }`}
-                          >
-                            <p
-                              className={
-                                isOutOfStock ? "text-red-500 font-semibold" : ""
-                              }
+                      {inventory.products
+                        .slice()
+                        .sort((a, b) =>
+                          a.productName.localeCompare(b.productName)
+                        )
+                        .map((product, productIndex) => {
+                          const isOutOfStock = product.amountPackages === 0;
+                          return (
+                            <div
+                              key={product.id}
+                              className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 dark:bg-slate-800 dark:border-slate-500 dark:text-gray-200 dark:hover:bg-slate-600 ${
+                                productIndex % 2 === 0
+                                  ? "bg-gray-100"
+                                  : "bg-white dark:bg-slate-900"
+                              }`}
                             >
-                              {product.productName}
-                            </p>
-                            <p
-                              className={
-                                isOutOfStock ? "text-red-500 font-semibold" : ""
-                              }
-                            >
-                              {product.amountPackages} st
-                            </p>
-                            {product.total ? (
                               <p
                                 className={
                                   isOutOfStock
-                                    ? "text-red-500 text-center font-semibold"
-                                    : "text-center"
+                                    ? "text-red-500 font-semibold"
+                                    : ""
                                 }
                               >
-                                {product.total} st
+                                {product.productName}
                               </p>
-                            ) : (
-                              <p className="text-center">N/A</p>
-                            )}
-                          </div>
-                        );
-                      })}
+                              <p
+                                className={
+                                  isOutOfStock
+                                    ? "text-red-500 font-semibold"
+                                    : ""
+                                }
+                              >
+                                {product.amountPackages} st
+                              </p>
+                              {product.total ? (
+                                <p
+                                  className={
+                                    isOutOfStock
+                                      ? "text-red-500 text-center font-semibold"
+                                      : "text-center"
+                                  }
+                                >
+                                  {product.total} st
+                                </p>
+                              ) : (
+                                <p className="text-center">N/A</p>
+                              )}
+                            </div>
+                          );
+                        })}
                     </div>
                   </div>
                 </AccordionContent>
@@ -186,6 +198,6 @@ tournaments/${tournamentId}/inventories`);
       </div>
     </div>
   );
-}  
+};
 
 export default InventoryStatusStorage;

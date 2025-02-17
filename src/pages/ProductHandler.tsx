@@ -25,6 +25,8 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
+import { Info } from "lucide-react";
+import ProductInfoComponent from "@/components/ProductInfoComponent";
 
 function ProductHandler() {
   const queryClient = useQueryClient();
@@ -348,9 +350,23 @@ function ProductHandler() {
       <Toaster />
       <section>
         <div className="container mx-auto px-4 flex-row items-center">
-          <h2 className="mt-8 text-2xl pb-2 mb-4">
-            Skapa produkter och produktlistor
-          </h2>
+          <div className="flex justify-between w-3/4 text-start ">
+            <h2 className="mt-8 text-2xl pb-2 mb-4 mr-2">Produkthantering</h2>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  {/* <button className="flex items-center dark:hover:bg-slate-600 p-1 rounded-md hover:bg-gray-100">
+                    <Info className="h-4 w-4 mr-2" />
+                    <span className="text-xs font-semibold ">Info</span>
+                  </button> */}
+                  <ProductInfoComponent />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Information om produkthantering</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
           <CreateProductButton
             onSave={(productName, amountPerPackage) =>
               CreateProduct(productName, amountPerPackage)
@@ -360,29 +376,34 @@ function ProductHandler() {
           <div className="mt-8">
             <h3 className="text-lg mb-7">Sparade produkter:</h3>
 
-          <div className="grid grid-cols-4 mb-10 gap-2 w-full 2xl:w-3/4">
-            {products?.products.map((product) => (
-
-                <TooltipProvider key={product.id}>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <UpdateProductButton
-                        product={product}
-                        onUpdate={UpdateProduct}
-                        onDelete={() => product.id && DeleteProduct(product.id)}
-                        key={product.id}
-                      />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Redigera produkt</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ))}
+            <div className="grid grid-cols-4 mb-10 gap-2 w-full 2xl:w-3/4">
+              {products?.products
+                .slice()
+                .sort((a, b) => a.productName.localeCompare(b.productName))
+                .map((product) => (
+                  <TooltipProvider key={product.id}>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <UpdateProductButton
+                          product={product}
+                          onUpdate={UpdateProduct}
+                          onDelete={() =>
+                            product.id && DeleteProduct(product.id)
+                          }
+                          key={product.id}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Redigera produkt</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ))}
             </div>
           </div>
         </div>
         <div className="container mx-auto px-4 flex-row items-center">
+          <div className="border border-t-2 mb-8 dark:border-slate-600 w-3/4"></div>
           <CreateProductListButton
             onSave={(productListName) => {
               SaveProductList(productListName);
@@ -410,7 +431,7 @@ function ProductHandler() {
                           tournamentProducts={products?.products || []}
                           onUpdate={(updatedList) =>
                             UpdateProductlist(updatedList)
-                          } 
+                          }
                         />
 
                         <TooltipProvider>
@@ -441,11 +462,14 @@ function ProductHandler() {
                         className="grid grid-cols-3 gap-4 mt-2 p-4"
                         key={productlist.id}
                       >
-                        {productlist.products.map(
-                          (product: Product, index: number) => (
-                            <li key={index}>{product.productName}</li>
+                        {productlist.products
+                          .slice()
+                          .sort((a, b) =>
+                            a.productName.localeCompare(b.productName)
                           )
-                        )}
+                          .map((product: Product, index: number) => (
+                            <li key={index}>{product.productName}</li>
+                          ))}
                       </ul>
                     ) : (
                       <p className="text-gray-500 dark:text-gray-300 ml-4">

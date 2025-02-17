@@ -11,6 +11,8 @@ import InventoryStatusStorage from "./pages/InventoryStatusStorage";
 // import PopulateKiosks from "./pages/PopulateKiosks";
 import FacilitiesAndKiosks from "./pages/FacilitiesAndKiosks";
 import Tournaments from "./pages/Tournaments";
+import OverviewInventories from "./pages/OverviewInventories";
+import FacilityOverview from "./pages/FacilityOverview";
 
 
 function Router() {
@@ -31,6 +33,8 @@ function Router() {
             <Route path="inventorystatus/:id" element={<InventoryStatus />} />
             <Route path="inventorystorage/:id" element={<InventoryStorage />} />
             <Route path="inventorystatusstorage/:id" element={<InventoryStatusStorage />} />
+            <Route path="overviewinventories/:id" element={<OverviewInventories />} />
+            <Route path="facilityinventory/:id/:fid" element={<FacilityOverview />} />
           </Route>
         </Route>
       </Routes>

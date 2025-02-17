@@ -25,7 +25,12 @@ import {
 } from "./ui/form";
 import { useState } from "react";
 import { Button } from "./ui/button";
-
+import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
+import { createFacility } from "@/api/functions/createFacility";
+import { toast } from "@/hooks/use-toast";
+import { okToast, badToast } from "@/utils/toasts";
+import { useQueryClient } from "@tanstack/react-query";
+import { Facility } from "@/interfaces";
 
 const formSchema = z.object({
   facilityName: z.string().min(2, {
@@ -33,39 +38,51 @@ const formSchema = z.object({
   }),
 });
 
-
-
-
 interface AddFacilityButtonProps {
-  onSave: (facilityName: string) => void; 
+  id: string;
 }
 
-
-
-function AddFacilityButton({ onSave}: AddFacilityButtonProps) {
-  
+function AddFacilityButton({ id }: AddFacilityButtonProps) {
   const [open, setOpen] = useState(false);
-  
+  const queryClient = useQueryClient();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       facilityName: "",
-      
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave(values.facilityName);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const facilityCreated = await createFacility(id!, values.facilityName);
+      if (!facilityCreated) {
+        throw new NoResponseError("No response from server");
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+
+      okToast(`Anläggning ${values.facilityName} skapades`);
+    } catch (error) {
+      if (error instanceof DuplicateError) {
+        badToast(`Anläggning med namnet ${values.facilityName} finns redan.`);
+      } else if (error instanceof NoResponseError) {
+        badToast("Misslyckades med att skapa anläggning.");
+      } else {
+        badToast("Misslyckades med att skapa anläggning.");
+      }
+    }
+
     setOpen(false);
     form.reset();
   }
 
-
   return (
-    <Dialog open={open} onOpenChange={setOpen} >
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className=" flex w-fit gap-2 cursor-pointer">
-          Lägg till anläggning <PlusIcon className="w-4 h-4 place-self-center" />
+          Lägg till anläggning{" "}
+          <PlusIcon className="w-4 h-4 place-self-center" />
         </Button>
       </DialogTrigger>
       <DialogContent>

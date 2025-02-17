@@ -152,7 +152,10 @@ function AddProductsToKioskButton({
             e.stopPropagation(); // Stoppa eventbubbling
             setOpen(true);
           }}
-        >{ kioskForEdit.products.length > 0 ? "Redigera produkter" : "Lägg till produkter" }
+        >
+          {kioskForEdit.products.length > 0
+            ? "Redigera produkter"
+            : "Lägg till produkter"}
           <PlusIcon className="w-4 h-4 place-self-center" />
         </Button>
       </DialogTrigger>
@@ -193,27 +196,32 @@ function AddProductsToKioskButton({
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              {products.map((product) => (
-                <div key={product.id} className="flex items-center gap-2">
-                  <Checkbox
-                    id={`product-${product.id}`}
-                    checked={selectedProducts.some((p) => p.id === product.id)}
-                    onCheckedChange={(checked) =>
-                      setSelectedProducts((prev) =>
-                        checked
-                          ? [...prev, product]
-                          : prev.filter((p) => p.id !== product.id)
-                      )
-                    }
-                  />
-                  <label
-                    htmlFor={`product-${product.id}`}
-                    className="font-medium cursor-pointer"
-                  >
-                    {product.productName}
-                  </label>
-                </div>
-              ))}
+              {products
+                .slice()
+                .sort((a, b) => a.productName.localeCompare(b.productName))
+                .map((product) => (
+                  <div key={product.id} className="flex items-center gap-2">
+                    <Checkbox
+                      id={`product-${product.id}`}
+                      checked={selectedProducts.some(
+                        (p) => p.id === product.id
+                      )}
+                      onCheckedChange={(checked) =>
+                        setSelectedProducts((prev) =>
+                          checked
+                            ? [...prev, product]
+                            : prev.filter((p) => p.id !== product.id)
+                        )
+                      }
+                    />
+                    <label
+                      htmlFor={`product-${product.id}`}
+                      className="font-medium cursor-pointer"
+                    >
+                      {product.productName}
+                    </label>
+                  </div>
+                ))}
             </div>
             {selectedProducts.length > 0 ? (
               <Button type="submit" onClick={() => editKiosk(kioskForEdit)}>

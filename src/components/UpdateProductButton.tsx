@@ -78,17 +78,23 @@ function UpdateProductButton({
     defaultValues: {
       id: product.id,
       productName: product.productName,
-      amountPerPackage: product.amountPerPackage ?? 0,
+      amountPerPackage: product.amountPerPackage ?? 1,
     },
   });
   const { reset } = form;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+
+    const correctedAmount = values.amountPerPackage && values.amountPerPackage > 0
+    ? values.amountPerPackage
+    : 1;
     const updatedProduct: Product = {
       id: values.id,
-      productName: values.productName,
-      amountPerPackage: values.amountPerPackage ?? 0,
+      productName: values.productName.trim(),
+      amountPerPackage: correctedAmount,
     };
+    console.log("Uppdaterar produkt med värden:", updatedProduct);
+
 
     const result = await onUpdate(updatedProduct);
 
@@ -152,7 +158,7 @@ function UpdateProductButton({
               name="amountPerPackage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ange antal per förpackning (Valfritt)</FormLabel>
+                  <FormLabel>Ange antal per förpackning (Minsta värde 1)</FormLabel>
                   <FormControl>
                     <Input type="number" {...field} value={field.value ?? ""} />
                   </FormControl>

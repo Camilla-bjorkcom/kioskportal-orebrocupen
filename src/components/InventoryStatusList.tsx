@@ -361,65 +361,70 @@ const InventoryStatusList = () => {
                           <p className="text-center">Totalt</p>
                         </div>
 
-                        {kiosk.products.map((product, productIndex) => {
-                          const isOutOfStock =
-                            product.amountPieces === 0 ||
-                            product.amountPackages === 0;
+                        {kiosk.products
+                          .slice()
+                          .sort((a, b) =>
+                            a.productName.localeCompare(b.productName)
+                          )
+                          .map((product, productIndex) => {
+                            const isOutOfStock =
+                              product.amountPieces === 0 ||
+                              product.amountPackages === 0;
 
-                          return (
-                            <div
-                              key={product.id}
-                              className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 
+                            return (
+                              <div
+                                key={product.id}
+                                className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 
                   dark:bg-slate-800 dark:text-gray-300 dark:border-slate-500 dark:hover:bg-slate-700 
                   ${
                     productIndex % 2 === 0
                       ? "bg-gray-100"
                       : "bg-white dark:bg-slate-900"
                   }`}
-                            >
-                              <p
-                                className={
-                                  isOutOfStock
-                                    ? "text-red-500 font-semibold"
-                                    : ""
-                                }
                               >
-                                {product.productName}
-                              </p>
-                              <p
-                                className={
-                                  isOutOfStock
-                                    ? "text-red-500 font-semibold"
-                                    : ""
-                                }
-                              >
-                                {product.amountPieces} st
-                              </p>
-                              <p
-                                className={
-                                  isOutOfStock
-                                    ? "text-red-500 font-semibold"
-                                    : ""
-                                }
-                              >
-                                {product.amountPackages} st
-                              </p>
-                              {product.total ? (
                                 <p
                                   className={
                                     isOutOfStock
-                                      ? "text-red-500 text-center font-semibold"
-                                      : "text-center"
+                                      ? "text-red-500 font-semibold"
+                                      : ""
                                   }
                                 >
-                                  {product.total} st
+                                  {product.productName}
                                 </p>
-                              ) : (
-                                <p className="text-center">N/A</p>
-                              )}
-                            </div>
-                          );
-                        })}
+                                <p
+                                  className={
+                                    isOutOfStock
+                                      ? "text-red-500 font-semibold"
+                                      : ""
+                                  }
+                                >
+                                  {product.amountPieces} st
+                                </p>
+                                <p
+                                  className={
+                                    isOutOfStock
+                                      ? "text-red-500 font-semibold"
+                                      : ""
+                                  }
+                                >
+                                  {product.amountPackages} st
+                                </p>
+                                {product.total ? (
+                                  <p
+                                    className={
+                                      isOutOfStock
+                                        ? "text-red-500 text-center font-semibold"
+                                        : "text-center"
+                                    }
+                                  >
+                                    {product.total} st
+                                  </p>
+                                ) : (
+                                  <p className="text-center">N/A</p>
+                                )}
+                              </div>
+                            );
+                          })}
                       </div>
                     )}
                   </div>

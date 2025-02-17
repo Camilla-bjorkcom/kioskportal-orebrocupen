@@ -135,37 +135,40 @@ function UpdateProductListButton({
                 </Button>
               </div>
               <div className="grid grid-cols-3 gap-4">
-                {tournamentProducts.map((product) => (
-                  <div key={product.id} className="flex items-center gap-2">
-                    <Checkbox
-                      id={`product-${product.id}`}
-                      checked={
-                        productlistForUpdate?.products.some(
-                          (p) => p.id === product.id
-                        ) || false
-                      }
-                      onCheckedChange={(checked) => {
-                        if (productlistForUpdate) {
-                          const updatedProducts = checked
-                            ? [...productlistForUpdate.products, product]
-                            : productlistForUpdate.products.filter(
-                                (p) => p.id !== product.id
-                              );
-                          setProductlistforUpdate(
-                            (prev) =>
-                              prev && { ...prev, products: updatedProducts }
-                          );
+                {tournamentProducts
+                  .slice()
+                  .sort((a, b) => a.productName.localeCompare(b.productName))
+                  .map((product) => (
+                    <div key={product.id} className="flex items-center gap-2">
+                      <Checkbox
+                        id={`product-${product.id}`}
+                        checked={
+                          productlistForUpdate?.products.some(
+                            (p) => p.id === product.id
+                          ) || false
                         }
-                      }}
-                    />
-                    <label
-                      htmlFor={`product-${product.id}`}
-                      className="font-medium hover:text-slate-800 cursor-pointer"
-                    >
-                      {product.productName}
-                    </label>
-                  </div>
-                ))}
+                        onCheckedChange={(checked) => {
+                          if (productlistForUpdate) {
+                            const updatedProducts = checked
+                              ? [...productlistForUpdate.products, product]
+                              : productlistForUpdate.products.filter(
+                                  (p) => p.id !== product.id
+                                );
+                            setProductlistforUpdate(
+                              (prev) =>
+                                prev && { ...prev, products: updatedProducts }
+                            );
+                          }
+                        }}
+                      />
+                      <label
+                        htmlFor={`product-${product.id}`}
+                        className="font-medium hover:text-slate-800 cursor-pointer"
+                      >
+                        {product.productName}
+                      </label>
+                    </div>
+                  ))}
               </div>
             </div>
             <Button className="mx-auto w-full" type="submit">
