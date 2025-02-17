@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { badToast, okToast } from "@/utils/toasts";
 import { useQueryClient } from "@tanstack/react-query";
-import { values } from "lodash-es";
 import { TrashIcon } from "lucide-react";
 
 interface DeleteButtonProps {

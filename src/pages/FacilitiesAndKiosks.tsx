@@ -42,6 +42,7 @@ import { badToast, okToast } from "@/utils/toasts";
 import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
 import { createKiosk } from "@/api/functions/createKiosk";
 import { deleteFacility } from "@/api/functions/deleteFacility";
+import { deleteContactPerson } from "@/api/functions/deleteContactPerson";
 
 function FacilitiesAndKiosks() {
   const queryClient = useQueryClient();
@@ -102,107 +103,6 @@ function FacilitiesAndKiosks() {
 
   const toggleFacility = (facilityId: string) => {
     setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
-  };
-
-  const UpdateContactPerson = async (contactPerson: ContactPerson) => {
-    try {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${contactPerson.facilityId}/contactpersons`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: contactPerson.id,
-            name: contactPerson.name,
-            phone: contactPerson.phone,
-            role: contactPerson.role,
-            facilityId: contactPerson.facilityId,
-            operation: "updateContactPerson",
-          }),
-        }
-      );
-      if (!response) {
-        toast({
-          title: "Fel",
-          description: "Misslyckades med att uppdatera kontaktperson.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Failed to update contact person");
-      }
-      if (!response.ok) {
-        toast({
-          title: "Fel",
-          description: "Misslyckades med att uppdatera kontaktperson.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Failed to update contact person");
-      }
-      toast({
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        title: "Lyckat",
-        description: `Kontaktperson uppdaterades`,
-      });
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      }, 1500);
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att uppdatera kontaktperson.",
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-      });
-    }
-  };
-
-  const DeleteContactPerson = async (
-    contactPersonId: string,
-    facilityId: string
-  ) => {
-    try {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${facilityId}/contactpersons`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: contactPersonId,
-            operation: "deleteContactPerson",
-          }),
-        }
-      );
-      if (!response) {
-        toast({
-          title: "Fel",
-          description: "Misslyckades med att radera kontaktperson.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Failed to fetch");
-      }
-      if (!response.ok) {
-        toast({
-          title: "Fel",
-          description: "Misslyckades med att radera kontaktperson.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Failed to update facility");
-      }
-      toast({
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        title: "Lyckat",
-        description: `Kontaktperson raderades`,
-      });
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      }, 1500);
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att radera kontaktperson.",
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-      });
-    }
   };
 
   const UpdateKiosk = async (kiosk: Kiosk) => {
@@ -495,9 +395,7 @@ function FacilitiesAndKiosks() {
                                 <EditSelectedKioskButton
                                   key={kiosk.id}
                                   kioskForEdit={kiosk}
-                                  onKioskUpdated={handleKioskUpdated}
-                                  onSave={UpdateKiosk}
-                                  onUpdateKioskClick={() => {}}
+                                  id={id!}
                                 />
                               </TooltipTrigger>
                               <TooltipContent>
@@ -585,11 +483,8 @@ function FacilitiesAndKiosks() {
                               <Tooltip>
                                 <TooltipTrigger>
                                   <UpdateContactPersonButton
-                                    onSave={(updatedContactPerson) =>
-                                      UpdateContactPerson(updatedContactPerson)
-                                    }
+                                    id={id!}
                                     contactPerson={contactPerson}
-                                    onUpdateContactPersonClick={() => {}}
                                   />
                                 </TooltipTrigger>
                                 <TooltipContent>
@@ -604,9 +499,10 @@ function FacilitiesAndKiosks() {
                                     id={contactPerson.id}
                                     type="ContactPerson"
                                     onDelete={() =>
-                                      DeleteContactPerson(
+                                      deleteContactPerson(
                                         contactPerson.id,
-                                        facility.id
+                                        facility.id,
+                                        id!
                                       )
                                     }
                                   />
