@@ -8,7 +8,7 @@ export interface Tournament {
 }
 
 export interface UpdateTournament {
-  tournamentName?: string;
-  startDate?: Date;
-  endDate?: Date;
+  tournamentName: string;
+  startDate: Date;
+  endDate: Date;
 }

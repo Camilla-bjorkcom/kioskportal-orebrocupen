@@ -1,9 +1,7 @@
 import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmountForFacility";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { Facility } from "@/interfaces";
-import { StorageInventory } from "@/interfaces/storaginventory";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Table,
@@ -14,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { StorageInventory } from "@/interfaces/storageinventory";
 
 const OverviewInventories = () => {
   const { id } = useParams<{ id: string }>();

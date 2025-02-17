@@ -16,19 +16,9 @@ import { Toaster } from "../components/ui/toaster";
 import { useParams } from "react-router-dom";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useEffect } from "react";
-import { InventoryStorageProducts } from "@/interfaces";
+import { TournamentProducts } from "@/interfaces/product";
+import { StorageInventory } from "@/interfaces/storageinventory";
 
-type StorageInventory = {
-  inventoryDate: string;
-  products: TournamentProducts[];
-};
-
-interface TournamentProducts {
-  id: string;
-  productName: string;
-  amountPackages: number;
-  amountPerPackage: number;
-}
 
 function InventoryStorage() {
   const { id } = useParams<{ id: string }>();
@@ -47,7 +37,7 @@ function InventoryStorage() {
   });
 
   const { isLoading, error, data, isSuccess } = useQuery<StorageInventory>({
-    queryKey: ["inventoryList"],
+    queryKey: ["storageProducts"],
     queryFn: async () => {
       const response = await fetchWithAuth(`products/${tournamentId}`);
       if (!response) {
@@ -85,12 +75,10 @@ function InventoryStorage() {
           productName: product.productName,
           amountPerPackage: product.amountPerPackage,
           amountPackages: values.amountPackages[index], 
-        } satisfies InventoryStorageProducts)
+        } satisfies TournamentProducts)
     );
 
-    console.log("Inventering skickas:", inventoryData);
     try {
-      console.log("I onSubmit" + values);
       const response = await fetchWithAuth(
         `tournaments/${tournamentId}/inventories`,
         {
@@ -132,7 +120,7 @@ function InventoryStorage() {
   if (error) {
     return <div>Error: {String(error)}</div>;
   }
-  console.log(data?.inventoryDate)
+
 
   return (
     <>
