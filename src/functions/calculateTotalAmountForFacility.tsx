@@ -1,4 +1,4 @@
-import { Facility, Product } from "@/interfaces";
+import { Facility } from "@/interfaces";
 
 export const calculateTotalAmountForFacility = (
   facility: Facility
