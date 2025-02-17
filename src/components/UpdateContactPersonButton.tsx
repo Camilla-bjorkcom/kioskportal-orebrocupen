@@ -33,6 +33,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { useQueryClient } from "@tanstack/react-query";
+import { updateContactPerson } from "@/api/functions/updateContactPerson";
+import { badToast, okToast } from "@/utils/toasts";
+import { NoResponseError } from "@/api/functions/apiErrors";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -47,17 +51,16 @@ const formSchema = z.object({
 });
 
 interface UpdateContactPersonButtonProps {
+  id: string;
   contactPerson: ContactPerson;
-  onSave: (contactPerson: ContactPerson) => void;
-  onUpdateContactPersonClick: () => void;
 }
 
 const UpdadeContactPersonButton = ({
+  id,
   contactPerson,
-  onSave,
-  onUpdateContactPersonClick,
 }: UpdateContactPersonButtonProps) => {
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -78,15 +81,30 @@ const UpdadeContactPersonButton = ({
     }
   }, [contactPerson, form]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    onUpdateContactPersonClick();
-    const updatedContactPerson = {
-      ...contactPerson,
-      name: values.name,
-      phone: values.phone,
-      role: values.role,
-    };
-    onSave(updatedContactPerson);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const updatedContactPerson = await updateContactPerson(
+        {
+          id: contactPerson.id,
+          name: values.name,
+          phone: values.phone,
+          role: values.role,
+          facilityId: contactPerson.facilityId,
+        },
+        id!
+      );
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+
+      if (!updatedContactPerson) throw new Error("No contact person found");
+      okToast("Kontaktpersonen har uppdaterats");
+    } catch (error) {
+      if (error instanceof NoResponseError) {
+        badToast("Misslyckades med att uppdatera kontaktperson");
+      } else {
+        badToast("Misslyckades med att uppdatera kontaktperson");
+      }
+    }
+
     setOpen(false);
     form.reset();
   }
@@ -152,7 +170,7 @@ const UpdadeContactPersonButton = ({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>Roller</SelectLabel>                         
+                            <SelectLabel>Roller</SelectLabel>
                             <SelectItem value="Planansvarig">
                               Planansvarig
                             </SelectItem>

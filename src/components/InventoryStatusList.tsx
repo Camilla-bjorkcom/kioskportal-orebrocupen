@@ -27,7 +27,11 @@ import { Toaster } from "./ui/toaster";
 const InventoryStatusList = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
-
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [notifyContactPerson, setNotifyContactPerson] = useState<NotifyItem[]>(
+    []
+  );
+  
   const { isLoading, error, data, isSuccess } = useQuery<Facility[]>({
     queryKey: ["facilities"],
     queryFn: async () => {
@@ -87,10 +91,7 @@ const InventoryStatusList = () => {
     setInventoryStatus(newInventory);
   };
 
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  const [notifyContactPerson, setNotifyContactPerson] = useState<NotifyItem[]>(
-    []
-  );
+  
 
   function calculateTotal(product: Product) {
     const { amountPieces, amountPackages, amountPerPackage } = product;

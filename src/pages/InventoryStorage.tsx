@@ -132,6 +132,7 @@ function InventoryStorage() {
   if (error) {
     return <div>Error: {String(error)}</div>;
   }
+  console.log(data?.inventoryDate)
 
   return (
     <>
@@ -142,18 +143,21 @@ function InventoryStorage() {
             Inventera huvudlager
           </h2>
           <div className="w-full place-items-center mt-5 gap-3 mb-16">
-            <p className="text-sm  dark:text-gray-200">
+         
+            <p className="text-sm dark:text-gray-200">
               Senast inventering gjord:
             </p>
             <h3 className="text-sm font-semibold dark:text-gray-200">
-              {new Date(data?.inventoryDate ?? "").toLocaleString("sv-SE", {
+              {data?.inventoryDate === "ingen inventering gjord"
+              ? data?.inventoryDate
+              : new Date(data!.inventoryDate).toLocaleString("sv-SE", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: false,
-              })}
+                })}
             </h3>
           </div>
 
@@ -162,59 +166,64 @@ function InventoryStorage() {
               onSubmit={form.handleSubmit(onSubmit)}
               className="w-fit mx-auto mb-20"
             >
-              {isSuccess &&
+                {isSuccess && data.products != null && data.products.length > 0 ? (
                 data.products.map((product, index) => (
+                  <>
                   <div
-                    key={product.id}
-                    className={`space-y-4 lg:flex ${
-                      index % 2 === 0
-                        ? "bg-gray-100 dark:bg-slate-900 rounded-lg p-5"
-                        : "bg-white dark:bg-slate-800 rounded-lg p-5"
-                    }`}
+                  key={product.id}
+                  className={`space-y-4 lg:flex ${
+                    index % 2 === 0
+                    ? "bg-gray-100 dark:bg-slate-900 rounded-lg p-5"
+                    : "bg-white dark:bg-slate-800 rounded-lg p-5"
+                  }`}
                   >
-                    <FormItem className="place-content-center">
-                      <FormLabel>
-                        <p className="w-[280px] lg:w-[300px] text-lg dark:text-gray-200">
-                          {product.productName}
-                        </p>
+                  <FormItem className="place-content-center">
+                    <FormLabel>
+                    <p className="w-[280px] lg:w-[300px] text-lg dark:text-gray-200">
+                      {product.productName}
+                    </p>
+                    </FormLabel>
+                  </FormItem>
+
+                  <div className="flex gap-5 dark:border:solid dark:border-gray-500">
+                    <FormField
+                    key={product.id}
+                    control={form.control}
+                    name={`amountPackages.${index}`}
+                    render={({ field, fieldState }) => (
+                      <FormItem>
+                      <FormLabel className="dark:text-gray-200">
+                        Antal förpackningar
                       </FormLabel>
-                    </FormItem>
-
-                    <div className="flex gap-5 dark:border:solid dark:border-gray-500">
-                      <FormField
-                        key={product.id}
-                        control={form.control}
-                        name={`amountPackages.${index}`}
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel className="dark:text-gray-200">
-                              Antal förpackningar
-                            </FormLabel>
-                            <FormControl className="dark:text-gray-200 dark:border-gray-500">
-                              <Input
-                                {...field}
-                                onChange={(e) =>
-                                  field.onChange(Number(e.target.value))
-                                }
-                              />
-                            </FormControl>
-                            {fieldState.error && (
-                              <p className="text-red-500 text-sm">
-                                {fieldState.error.message}
-                              </p>
-                            )}
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                      <FormControl className="dark:text-gray-200 dark:border-gray-500">
+                        <Input
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(Number(e.target.value))
+                        }
+                        />
+                      </FormControl>
+                      {fieldState.error && (
+                        <p className="text-red-500 text-sm">
+                        {fieldState.error.message}
+                        </p>
+                      )}
+                      </FormItem>
+                    )}
+                    />
                   </div>
-                ))}
-
-              <div className="w-1/2 place-self-center">
-                <Button type="submit" className="w-full mt-10">
-                  Skicka in inventering
-                </Button>
-              </div>
+                  </div>
+                  <div className="w-1/2 place-self-center">
+                  <Button type="submit" className="w-full mt-10">
+                    Skicka in inventering
+                  </Button>
+                </div>
+                </>
+                ))
+                ) : (
+                <p className="dark:text-white">Inga produkter tillagda i turneringen</p>
+                )}
+              
             </form>
           </Form>
         </div>

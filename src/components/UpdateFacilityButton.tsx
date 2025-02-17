@@ -23,6 +23,10 @@ import { Pencil } from "lucide-react";
 import { Toaster } from "./ui/toaster";
 import { Button } from "./ui/button";
 import { Facility } from "@/interfaces";
+import { badToast, okToast } from "@/utils/toasts";
+import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
+import { updateFacility } from "@/api/functions/updateFacility";
+import { useQueryClient } from "@tanstack/react-query";
 const formSchema = z.object({
   facilityName: z.string().min(2, {
     message: "Anläggnings namn måste ha minst 2 bokstäver",
@@ -30,15 +34,13 @@ const formSchema = z.object({
 });
 
 interface UpdateFacilityButtonProps {
+  id: string;
   facility: Facility;
-  onSave: (facility: Facility) => void;
 }
 
-const UpdateFacilityButton = ({
-  facility,
-  onSave,
-}: UpdateFacilityButtonProps) => {
+const UpdateFacilityButton = ({ id, facility }: UpdateFacilityButtonProps) => {
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,13 +55,29 @@ const UpdateFacilityButton = ({
     }
   }, [facility, form]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    const updatedFacility = { ...facility, facilityName: values.facilityName };
-    onSave(updatedFacility);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const updatedFacility = await updateFacility(
+        facility,
+        values.facilityName,
+        id!
+      );
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+
+      if (!updatedFacility) throw new Error("No facility found");
+      okToast("Anläggning uppdaterad");
+    } catch (error) {
+      if (error instanceof DuplicateError) {
+        badToast("Anläggning finns redan");
+      } else if (error instanceof NoResponseError) {
+        badToast("Misslyckades med att uppdatera anläggning");
+      } else {
+        badToast("Misslyckades med att uppdatera anläggning");
+      }
+    }
     setOpen(false);
     form.reset();
   }
-
   return (
     <>
       <Toaster />
