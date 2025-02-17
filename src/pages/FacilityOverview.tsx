@@ -25,7 +25,6 @@ const FacilityOverview = () => {
   // 🔹 Hämtar facility-data
   const {
     isLoading,
-    error,
     data: facility,
     isSuccess,
   } = useQuery<Facility>({
@@ -63,7 +62,7 @@ const FacilityOverview = () => {
           throw new Error(`Failed to fetch inventory for kiosk ${kiosk.id}`);
         }
         const firstInventory = await response.json();
-        return firstInventory; //?? { kioskId: kiosk.id, kioskInventoryId: "", inventoryDate: "", products: [] }; //  Om `null`, returnera tom inventering
+        return firstInventory; 
       },
       enabled: !!kiosk.id,
     })),
