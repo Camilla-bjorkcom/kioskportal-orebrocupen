@@ -1,7 +1,7 @@
 import AddFacilityButton from "@/components/AddFacilityButton";
 import AddKioskButton from "@/components/AddKioskButton";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import UpdateFacilityButton from "@/components/UpdateFacilityButton";
 import DeleteButton from "@/components/DeleteButton";
 import {
@@ -11,7 +11,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-  ContactPerson,
   Facility,
   Kiosk,
   KioskForQr,
@@ -31,22 +30,17 @@ import { Checkbox } from "@/components/ui/checkbox";
 import EditSelectedKioskButton from "@/components/EditSelectedKioskButton";
 import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { toast } from "@/hooks/use-toast";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
 import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
 import QrCodeAllBtn from "@/components/QrCodeAllBtn";
 import FacilityProductInfoComponent from "@/components/FacilityProductInfoComponent";
-import { createFacility } from "@/api/functions/createFacility";
-import { badToast, okToast } from "@/utils/toasts";
-import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
-import { createKiosk } from "@/api/functions/createKiosk";
+
 import { deleteFacility } from "@/api/functions/deleteFacility";
 import { deleteContactPerson } from "@/api/functions/deleteContactPerson";
+import { deleteKiosk } from "@/api/functions/deleteKiosk";
 
 function FacilitiesAndKiosks() {
-  const queryClient = useQueryClient();
-
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
 
@@ -103,72 +97,6 @@ function FacilitiesAndKiosks() {
 
   const toggleFacility = (facilityId: string) => {
     setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
-  };
-
-  const UpdateKiosk = async (kiosk: Kiosk) => {
-    try {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${kiosk.facilityId}/kiosks/${kiosk.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: kiosk.id,
-            kioskName: kiosk.kioskName,
-            products: kiosk.products,
-          }),
-        }
-      );
-      if (!response) {
-        toast({
-          title: "Fel",
-          description: "Misslyckades med att uppdatera kiosk.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Failed to update kiosk");
-      }
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-      toast({
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        title: "Lyckat",
-        description: ` Kiosk uppdaterades`,
-      });
-    } catch (error) {
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att uppdatera kiosk.",
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-      });
-      console.error(error);
-    }
-  };
-
-  const DeleteKiosk = async (id: string, facilityId: string) => {
-    try {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${facilityId}/kiosks/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response) {
-        throw new Error("Failed to delete kiosk");
-      }
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      toast({
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        title: "Lyckat",
-        description: `Kiosk raderades`,
-      });
-    } catch (error) {
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att radera kiosk.",
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-      });
-      console.error(error);
-    }
   };
 
   const handleSubmit = (open: boolean) => {
@@ -410,7 +338,7 @@ function FacilitiesAndKiosks() {
                                   id={kiosk.id}
                                   type="Kiosk"
                                   onDelete={() =>
-                                    DeleteKiosk(kiosk.id, facility.id)
+                                    deleteKiosk(kiosk.id, facility.id, id!)
                                   }
                                 />
                               </TooltipTrigger>
