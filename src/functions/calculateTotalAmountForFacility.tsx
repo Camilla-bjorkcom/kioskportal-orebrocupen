@@ -2,7 +2,7 @@ import { Facility, Product } from "@/interfaces";
 
 export const calculateTotalAmountForFacility = (
   facility: Facility
-): { facilityName: string; products: { productName: string; totalAmount: number; id: string }[] } => {
+): { facilityName: string; id:string; products: { productName: string; totalAmount: number; id: string }[] } => {
   
   const totals: Record<string, { productName: string; totalAmount: number; id: string }> = {};
 
@@ -34,6 +34,7 @@ export const calculateTotalAmountForFacility = (
 
   return {
     facilityName: facility.facilityName,
+    id: facility.id,
     products: Object.values(totals), // Konvertera till en array för enklare användning i UI
   };
 };
