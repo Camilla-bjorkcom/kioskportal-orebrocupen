@@ -201,17 +201,17 @@ function InventoryStorage() {
                     />
                   </div>
                   </div>
-                  <div className="w-1/2 place-self-center">
-                  <Button type="submit" className="w-full mt-10">
-                    Skicka in inventering
-                  </Button>
-                </div>
+                  
                 </>
                 ))
                 ) : (
                 <p className="dark:text-white">Inga produkter tillagda i turneringen</p>
                 )}
-              
+              <div className="w-1/2 place-self-center">
+                  <Button type="submit" className="w-full mt-10">
+                    Skicka in inventering
+                  </Button>
+                </div>
             </form>
           </Form>
         </div>
