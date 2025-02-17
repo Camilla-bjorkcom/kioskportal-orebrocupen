@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useParams } from "react-router-dom";
 
 type GroupedStorageInventories = Record<string, StorageInventory[]>;
@@ -93,6 +93,7 @@ tournaments/${tournamentId}/inventories`);
           className="flex flex-col gap-3 mb-7"
         >
           {Object.entries(data).map(([date, inventories]) => (
+           
             <AccordionItem
               key={date}
               value={date}
