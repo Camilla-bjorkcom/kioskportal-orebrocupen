@@ -135,7 +135,7 @@ const OverviewInventories = () => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Button onClick={toggleViewDate}>Visa inventeringsdatum</Button>
+                <Button onClick={toggleViewDate}>{viewDate ? "Dölj inventeringsdatum" : "Visa inventeringsdatum" }</Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Visa kioskernas senaste inventering</p>
