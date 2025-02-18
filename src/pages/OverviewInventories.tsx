@@ -21,6 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { sortByInventoryDate } from "@/utils/sortByDate";
 
 const OverviewInventories = () => {
   const { id } = useParams<{ id: string }>();
@@ -168,7 +169,7 @@ const OverviewInventories = () => {
                       {facility.facilityName}
                     </p>
                   </Link>
-                  {facility.kiosks.map((kiosk) =>
+                  {sortByInventoryDate(facility.kiosks).map((kiosk) => 
                     viewDate ? (
                       <div className="flex gap-1 mx-auto w-fit">
                         <p className="font-bold  text-center" key={kiosk.id}>
