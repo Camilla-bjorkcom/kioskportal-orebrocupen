@@ -6,6 +6,7 @@ import WeatherComponent from "@/components/WeatherComponent";
 import Countdown from "@/components/Countdown";
 import { InventoryGraph } from "@/components/InventoryGraph";
 import { OverviewRecord } from "@/interfaces/overview";
+import ChangePassword from "@/components/ChangePassword";
 
 function Dashboard() {
   const { id } = useParams<{ id: string }>();
@@ -103,6 +104,9 @@ function Dashboard() {
                 <WeatherComponent lat={59.2753} lon={15.2134} />
               </div>
             </div>
+          </div>
+          <div>
+            <ChangePassword />
           </div>
         </>
       )}

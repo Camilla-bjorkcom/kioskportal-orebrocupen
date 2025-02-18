@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -67,14 +68,12 @@ function CreateProductButton({ onSave }: CreateProductButtonProps) {
       console.error("Produktnamn saknas!");
       return;
     }
-    const correctedAmount = values.amountPerPackage && values.amountPerPackage > 0
-    ? values.amountPerPackage
-    : 1;
+    const correctedAmount =
+      values.amountPerPackage && values.amountPerPackage > 0
+        ? values.amountPerPackage
+        : 1;
 
     const result = await onSave(values.productName, correctedAmount);
-  
-
-  
 
     if (result === 201) {
       setSavedMessage("Produkten har sparats ✅"); // ✅ Om det gick bra
@@ -98,7 +97,8 @@ function CreateProductButton({ onSave }: CreateProductButtonProps) {
           Skapa Produkt <Plus />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogOverlay className="backdrop-blur-0" />
+      <DialogContent blur={false}>
         <DialogHeader>
           <DialogTitle>Skapa Produkt</DialogTitle>
           <DialogDescription className="sr-only">
@@ -125,7 +125,9 @@ function CreateProductButton({ onSave }: CreateProductButtonProps) {
               name="amountPerPackage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ange antal per förpackning (Minsta värde 1)</FormLabel>
+                  <FormLabel>
+                    Ange antal per förpackning (Minsta värde 1)
+                  </FormLabel>
                   <FormControl>
                     <Input type="number" {...field} value={field.value ?? 1} />
                   </FormControl>
