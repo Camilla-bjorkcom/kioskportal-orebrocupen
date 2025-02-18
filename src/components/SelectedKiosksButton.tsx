@@ -145,13 +145,21 @@ function SelectedKiosksButton({
           <SelectTrigger className="w-auto">
             <SelectValue placeholder="Lägg till produkter från produktlista" />
           </SelectTrigger>
-          <SelectContent>
-            {productlists.map((productlist) => (
-              <SelectItem key={productlist.id} value={productlist.id}>
-                {productlist.productlistName}
+          {productlists.length > 0 ? (
+            <SelectContent>
+              {productlists.map((productlist) => (
+                <SelectItem key={productlist.id} value={productlist.id}>
+                  {productlist.productlistName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          ) : (
+            <SelectContent>
+              <SelectItem value="empty">
+                Inga produktlistor är skapade i turneringen
               </SelectItem>
-            ))}
-          </SelectContent>
+            </SelectContent>
+          )}
         </Select>
 
         <div className="mb-4 text-right">
