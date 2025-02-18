@@ -14,6 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { KioskInventory } from "@/interfaces/kioskInventory";
+import { calculateProductTotalsFacility } from "@/functions/calculateProductTotalsFacility";
 
 const OverviewInventories = () => {
   const { id } = useParams<{ id: string }>();
@@ -69,32 +71,32 @@ const OverviewInventories = () => {
       return data;
     },
   });
+  const {data: firstKioskInventories} = useQuery<KioskInventory[]>({
+    queryKey:["firstkioskinventories"],
+    queryFn: async () =>{
+      const response = await fetchWithAuth(`firstkioskinventories/${tournamentId}`);
+      if(!response) {
+        throw new Error("Failed to feth first inventories");
+      }
+      if (!response.ok) {
+        throw new Error("Failed to fetch facilities");
+      }
+      const data = await response.json();
+     
+      return data;
+    },
+  });
+  console.log("kiosks", firstKioskInventories)
 
   const allProducts = storageInventory?.products.map((product) => {
     return product.productName;
   });
 
-  const productTotals =
-    storageInventory?.products.map((product) => {
-      const totalAmount =
-        (product.amountPackages ?? 0) * (product.amountPerPackage ?? 1);
-      return {
-        productName: product.productName,
-        totalAmount: totalAmount,
-      };
-    }) || [];
+    const productTotals = calculateProductTotalsFacility(storageInventory!)
   console.log("Current", productTotals);
 
-  const productsFirstTotal =
-    firstStorageInventory?.products.map((product) => {
-      const totalAmount =
-        (product.amountPackages ?? 0) * (product.amountPerPackage ?? 1);
-      return {
-        productName: product.productName,
-        totalAmount: totalAmount,
-      };
-    }) || [];
-  console.log("First", productsFirstTotal);
+   const productsFirstTotals = calculateProductTotalsFacility(firstStorageInventory!)
+  console.log("First", productsFirstTotals);
 
   const facilitiesWithTotals =
     facilities?.map((facility) => calculateTotalAmountForFacility(facility)) ||
@@ -146,7 +148,7 @@ const OverviewInventories = () => {
               const productsInStorage = productTotals.find(
                 (x) => x.productName === productName
               );
-              const productsInStorageFirst = productsFirstTotal.find(
+              const productsInStorageFirst = productsFirstTotals.find(
                 (x) => x.productName === productName
               );
 
