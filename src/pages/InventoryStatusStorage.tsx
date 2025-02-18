@@ -1,4 +1,3 @@
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import {
   Accordion,
   AccordionContent,
@@ -6,53 +5,32 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Product } from "@/interfaces";
-import { useQuery } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
+import { useGetAllStorageInventories } from "@/hooks/use-query";
+import { sortByInventoryDate } from "@/utils/sortByDate";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-
-type GroupedStorageInventories = Record<string, StorageInventory[]>;
-
-type StorageInventory = {
-  id: string;
-  inventoryDate: string;
-  products: Products[];
-};
-
-interface Products {
-  id: number;
-  productName: string;
-  amountPackages: number;
-  total: number;
-}
 
 const InventoryStatusStorage = () => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
 
-  const { data, isLoading, error, isSuccess } =
-    useQuery<GroupedStorageInventories>({
-      queryKey: ["inventoryList"],
-      queryFn: async () => {
-        const response = await fetchWithAuth(`
-tournaments/${tournamentId}/inventories`);
-        if (!response) {
-          throw new Error("Failed to fetch products");
-        }
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await response.json();
-        return data;
-      },
-    });
-
-  console.log(data);
+  const { data, isLoading, error, isSuccess } = useGetAllStorageInventories(tournamentId!);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="container mx-auto px-5 py-10 flex justify-center items-center">
+        <div className="text-center">
+          <div
+            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+            role="status"
+          ></div>
+          <p className="mt-4 text-gray-500">Laddar turneringsdata...</p>
+        </div>
+      </div>
+    );
   }
+
   if (!isSuccess) {
     return <div>Error: {String(error)}</div>;
   }
@@ -62,7 +40,7 @@ tournaments/${tournamentId}/inventories`);
 
   const toggleExpandAll = () => {
     if (!isSuccess || !data) {
-      return; // Gör inget om isSuccess är false eller data saknas
+      return; 
     }
     if (expandedItems.length === 0) {
       const allItems = Object.entries(data).map(([date, value]) => date);
@@ -70,13 +48,6 @@ tournaments/${tournamentId}/inventories`);
     } else {
       setExpandedItems([]);
     }
-  };
-  const sortByInventoryDate = (storage: StorageInventory[]) => {
-    return storage.sort((a, b) => {
-      const dateA = new Date(a.inventoryDate!);
-      const dateB = new Date(b.inventoryDate!);
-      return dateA > dateB ? -1 : 1; // Senast inventering hamnar först
-    });
   };
 
   return (
@@ -95,7 +66,6 @@ tournaments/${tournamentId}/inventories`);
           className="flex flex-col gap-3 mb-7"
         >
           {Object.entries(data).map(([date, inventories]) => (
-           
             <AccordionItem
               key={date}
               value={date}
@@ -130,14 +100,12 @@ tournaments/${tournamentId}/inventories`);
                       </h2>
                     </div>
                     <div className="w-full mt-2">
-                      {/* Rubriker för kolumner */}
                       <div className="grid grid-cols-4 gap-4 font-bold text-gray-600 py-2 px-4 dark:text-gray-200">
                         <p>Namn</p>
                         <p>Obrutna förpackningar</p>
                         <p className="text-center">Totalt</p>
                       </div>
 
-                      {/* Rendera varje produkt */}
                       {inventory.products
                         .slice()
                         .sort((a, b) =>

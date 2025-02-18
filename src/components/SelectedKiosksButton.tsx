@@ -20,12 +20,6 @@ import { Checkbox } from "./ui/checkbox";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useParams } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
 
 interface SelectedKiosksButtonProps {
   selectedKiosks: Kiosk[]; // Lista över valda kiosker
@@ -57,7 +51,7 @@ function SelectedKiosksButton({
       return;
     }
     setOpen(isOpen);
-    setSelectedProducts([]); // Återställ om dialogen stängs eller inga kiosker finns
+    setSelectedProducts([]); 
   };
 
   const handleProductListChange = (value: string) => {

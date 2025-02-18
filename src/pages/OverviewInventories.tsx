@@ -1,9 +1,8 @@
 import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmountForFacility";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { Facility } from "@/interfaces";
-import { StorageInventory } from "@/interfaces/storaginventory";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Table,
@@ -16,6 +15,14 @@ import {
 } from "@/components/ui/table";
 import { KioskInventory } from "@/interfaces/kioskInventory";
 import { calculateProductTotalsFacility } from "@/functions/calculateProductTotalsFacility";
+import { StorageInventory } from "@/interfaces/storageinventory";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const OverviewInventories = () => {
   const { id } = useParams<{ id: string }>();
@@ -39,23 +46,25 @@ const OverviewInventories = () => {
     },
   });
 
-  const { data: firstStorageInventory } = useQuery<StorageInventory>({
-    queryKey: ["firstInventoryList"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(
-        `/tournaments/${tournamentId}/firstinventory`
-      );
-      if (!response) {
-        throw new Error("Failed to fetch products");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
-      }
-      const data = await response.json();
+  const { data: firstStorageInventory, isLoading } = useQuery<StorageInventory>(
+    {
+      queryKey: ["firstInventoryList"],
+      queryFn: async () => {
+        const response = await fetchWithAuth(
+          `/tournaments/${tournamentId}/firstinventory`
+        );
+        if (!response) {
+          throw new Error("Failed to fetch products");
+        }
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data = await response.json();
 
-      return data;
-    },
-  });
+        return data;
+      },
+    }
+  );
 
   const { data: facilities } = useQuery<Facility[]>({
     queryKey: ["facilities"],
@@ -102,21 +111,56 @@ const OverviewInventories = () => {
     facilities?.map((facility) => calculateTotalAmountForFacility(facility)) ||
     [];
 
+  const [viewDate, setViewDate] = useState<boolean>(false);
+
+  const toggleViewDate = () => {
+    setViewDate((prev) => !prev);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-5 py-10 flex justify-center items-center">
+        <div className="text-center">
+          <div
+            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+            role="status"
+          ></div>
+          <p className="mt-4 text-gray-500">Laddar turneringsdata...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <section className="container mx-auto px-5">
       <div>
-        <h1 className="mt-8 text-2xl pb-2 mb-4 ">Inventeringsöversikt</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="mt-8 text-2xl pb-2 mb-4">Inventeringsöversikt</h1>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button onClick={toggleViewDate}>{viewDate ? "Dölj inventeringsdatum" : "Visa inventeringsdatum" }</Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Visa kioskernas senaste inventering</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
         <Table>
           <TableCaption>
             Produkternas antal enligt senast gjorda inventering
-            <p className="text-red-500">Röd text indikerar att antalet produkter är mindre än 20% av det första inventerade värdet</p>
+            <p className="text-red-500">
+              Röd text indikerar att antalet produkter är mindre än 20% av det
+              första inventerade värdet
+            </p>
           </TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="font-bold dark:text-slate-300">
                 Produkt
               </TableHead>
-              {facilitiesWithTotals.map((facility) => (
+              {facilities?.map((facility) => (
                 <TableHead
                   className="text-center font-bold"
                   key={facility.facilityName}
@@ -128,6 +172,29 @@ const OverviewInventories = () => {
                       {facility.facilityName}
                     </p>
                   </Link>
+                  {facility.kiosks.map((kiosk) =>
+                    viewDate ? (
+                      <div className="flex gap-1 mx-auto w-fit">
+                        <p className="font-bold  text-center" key={kiosk.id}>
+                          {kiosk.kioskName}:
+                        </p>
+                        <p className="font-medium text-center">
+                          {new Date(kiosk.inventoryDate).toLocaleString(
+                            "sv-SE",
+                            {
+                              month: "long",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                            }
+                          )}
+                        </p>
+                      </div>
+                    ) : (
+                      <p key={kiosk.id}></p>
+                    )
+                  )}
                 </TableHead>
               ))}
               <TableHead className="text-center font-bold dark:text-slate-300">

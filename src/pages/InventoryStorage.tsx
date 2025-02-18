@@ -16,19 +16,9 @@ import { Toaster } from "../components/ui/toaster";
 import { useParams } from "react-router-dom";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useEffect } from "react";
-import { InventoryStorageProducts } from "@/interfaces";
+import { TournamentProducts } from "@/interfaces/product";
+import { StorageInventory } from "@/interfaces/storageinventory";
 
-type StorageInventory = {
-  inventoryDate: string;
-  products: TournamentProducts[];
-};
-
-interface TournamentProducts {
-  id: string;
-  productName: string;
-  amountPackages: number;
-  amountPerPackage: number;
-}
 
 function InventoryStorage() {
   const { id } = useParams<{ id: string }>();
@@ -47,7 +37,7 @@ function InventoryStorage() {
   });
 
   const { isLoading, error, data, isSuccess } = useQuery<StorageInventory>({
-    queryKey: ["inventoryList"],
+    queryKey: ["storageProducts"],
     queryFn: async () => {
       const response = await fetchWithAuth(`products/${tournamentId}`);
       if (!response) {
@@ -85,12 +75,10 @@ function InventoryStorage() {
           productName: product.productName,
           amountPerPackage: product.amountPerPackage,
           amountPackages: values.amountPackages[index], 
-        } satisfies InventoryStorageProducts)
+        } satisfies TournamentProducts)
     );
 
-    console.log("Inventering skickas:", inventoryData);
     try {
-      console.log("I onSubmit" + values);
       const response = await fetchWithAuth(
         `tournaments/${tournamentId}/inventories`,
         {
@@ -126,13 +114,23 @@ function InventoryStorage() {
   };
 
   if (isLoading) {
-    return <div>Loading products...</div>;
+    return (
+      <div className="container mx-auto px-5 py-10 flex justify-center items-center">
+        <div className="text-center">
+          <div
+            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+            role="status"
+          ></div>
+          <p className="mt-4 text-gray-500">Laddar turneringsdata...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
     return <div>Error: {String(error)}</div>;
   }
-  console.log(data?.inventoryDate)
+
 
   return (
     <>
@@ -213,17 +211,17 @@ function InventoryStorage() {
                     />
                   </div>
                   </div>
-                  <div className="w-1/2 place-self-center">
-                  <Button type="submit" className="w-full mt-10">
-                    Skicka in inventering
-                  </Button>
-                </div>
+                  
                 </>
                 ))
                 ) : (
                 <p className="dark:text-white">Inga produkter tillagda i turneringen</p>
                 )}
-              
+              <div className="w-1/2 place-self-center">
+                  <Button type="submit" className="w-full mt-10">
+                    Skicka in inventering
+                  </Button>
+                </div>
             </form>
           </Form>
         </div>
