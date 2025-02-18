@@ -62,7 +62,7 @@ const FacilityOverview = () => {
           throw new Error(`Failed to fetch inventory for kiosk ${kiosk.id}`);
         }
         const firstInventory = await response.json();
-        return firstInventory; 
+        return firstInventory;
       },
       enabled: !!kiosk.id,
     })),
@@ -76,7 +76,6 @@ const FacilityOverview = () => {
   );
   const isInventoryError = kioskInventoryQueries.some((query) => query.isError);
 
- 
   if (isLoading || isFetchingInventories || isInventoryLoading) {
     return (
       <div className="container mx-auto px-5 py-10 flex justify-center items-center">
@@ -114,12 +113,10 @@ const FacilityOverview = () => {
     validKioskInventories
   );
 
-
   // 🔹 Använd den omvandlade datan i `calculateTotalAmountForFacility`
   const facilityFirstForTable = calculateTotalAmountForFacility(
     mappedFacilityFirstInventory
   );
-
 
   return (
     <section className="container mx-auto px-5">
@@ -128,7 +125,10 @@ const FacilityOverview = () => {
       <Table>
         <TableCaption>
           Produkternas antal enligt senaste inventering{" "}
-          <p className="text-red-500">Röd text indikerar att antalet produkter är mindre än 20% av det första inventerade värdet</p>
+          <p className="text-red-500">
+            Röd text indikerar att antalet produkter är mindre än 20% av det
+            första inventerade värdet
+          </p>
         </TableCaption>
         <TableHeader>
           <TableRow>
@@ -158,17 +158,63 @@ const FacilityOverview = () => {
 
                 {/* 🔹 Loopa igenom kiosker och visa antal produkter i varje */}
                 {facility.kiosks.map((kiosk) => {
-                  const foundProduct = kiosk.products.find(
-                    (p) => p.id === product.id
+                  // 🔹 Hitta den första inventeringen för denna kiosk i `validKioskInventories`
+                  const firstKioskInventory = validKioskInventories.find(
+                    (inventory) => inventory.kioskId === kiosk.id
                   );
-                  const amountPackages = foundProduct?.amountPackages ?? 0;
-                  const amountPerPackage = foundProduct?.amountPerPackage ?? 1;
-                  const amountPieces = foundProduct?.amountPieces ?? 0;
-                  const totalAmount =
-                    amountPackages * amountPerPackage + amountPieces;
+
                   return (
                     <TableCell key={kiosk.id} className="text-center">
-                      {totalAmount}
+
+                      {/* 🔹 Hitta motsvarande produkt i kioskens senaste inventering */}
+                      {(() => {
+                        const latestProduct = kiosk.products.find(
+                          (p) => p.id === product.id
+                        );
+
+                        // 🔹 Hitta motsvarande produkt i den första inventeringen
+                        const firstInventoryProduct =
+                          firstKioskInventory?.products.find(
+                            (p) => p.id === product.id
+                          );
+
+                        // 🔹 Beräkna totalAmount från den senaste inventeringen
+                        const latestAmountPackages =
+                          latestProduct?.amountPackages ?? 0;
+                        const latestAmountPerPackage =
+                          latestProduct?.amountPerPackage ?? 1;
+                        const latestAmountPieces =
+                          latestProduct?.amountPieces ?? 0;
+                        const latestTotalAmount =
+                          latestAmountPackages * latestAmountPerPackage +
+                          latestAmountPieces;
+
+                        // 🔹 Beräkna totalAmount från den första inventeringen
+                        const firstAmountPackages =
+                          firstInventoryProduct?.amountPackages ?? 0;
+                        const firstAmountPerPackage =
+                          firstInventoryProduct?.amountPerPackage ?? 1;
+                        const firstAmountPieces =
+                          firstInventoryProduct?.amountPieces ?? 0;
+                        const firstTotalAmount =
+                          firstAmountPackages * firstAmountPerPackage +
+                          firstAmountPieces;
+
+                        // 🔹 Bestäm om vi ska färga rött (nuvarande mängd < 20% av första mängden)
+                        const isLowStock =
+                          firstTotalAmount > 0 &&
+                          latestTotalAmount < firstTotalAmount * 0.2;
+
+                        return (
+                          <span
+                            className={
+                              isLowStock ? "text-red-500 font-bold" : ""
+                            }
+                          >
+                            {latestTotalAmount}
+                          </span>
+                        );
+                      })()}
                     </TableCell>
                   );
                 })}
