@@ -35,10 +35,7 @@ function Dashboard() {
       if (!response) throw new Error("Failed to fetch overview stats");
       return response.json();
     },
-
   });
-
-
 
   if (!id) {
     return (
@@ -62,7 +59,6 @@ function Dashboard() {
       </div>
     );
   }
-  
 
   if (error || errorOverview) {
     return (
@@ -85,7 +81,10 @@ function Dashboard() {
 
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="w-full lg:w-2/3">
-              <InventoryGraph tournament={tournament} overviewRecord={overview!} />
+              <InventoryGraph
+                tournament={tournament}
+                overviewRecord={overview!}
+              />
             </div>
 
             <div className="flex flex-col gap-4 w-full lg:w-1/3">
