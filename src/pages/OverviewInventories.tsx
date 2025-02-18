@@ -3,7 +3,7 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { Facility } from "@/interfaces";
 import { StorageInventory } from "@/interfaces/storaginventory";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Table,
@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 const OverviewInventories = () => {
   const { id } = useParams<{ id: string }>();
@@ -100,21 +101,33 @@ const OverviewInventories = () => {
     facilities?.map((facility) => calculateTotalAmountForFacility(facility)) ||
     [];
 
+  const [viewDate, setViewDate] = useState<boolean>(false);
+
+  const toggleViewDate = () => {
+    setViewDate((prev) => !prev);
+  };
+
   return (
     <section className="container mx-auto px-5">
       <div>
-        <h1 className="mt-8 text-2xl pb-2 mb-4 ">Inventeringsöversikt</h1>
+        <div className="flex">
+          <h1 className="mt-8 text-2xl pb-2 mb-4">Inventeringsöversikt</h1>
+          <Button onClick={toggleViewDate}>Visa inventeringsdatum</Button>
+</div>
         <Table>
           <TableCaption>
             Produkternas antal enligt senast gjorda inventering
-            <p className="text-red-500">Röd text indikerar att antalet produkter är mindre än 20% av det första inventerade värdet</p>
+            <p className="text-red-500">
+              Röd text indikerar att antalet produkter är mindre än 20% av det
+              första inventerade värdet
+            </p>
           </TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="font-bold dark:text-slate-300">
                 Produkt
               </TableHead>
-              {facilitiesWithTotals.map((facility) => (
+              {facilities!.map((facility) => (
                 <TableHead
                   className="text-center font-bold"
                   key={facility.facilityName}
@@ -126,6 +139,22 @@ const OverviewInventories = () => {
                       {facility.facilityName}
                     </p>
                   </Link>
+                  {facility.kiosks.map((kiosk) =>
+                    viewDate ? (
+                      <p className="text-center font-medium" key={kiosk.id}>
+                        {kiosk.kioskName}{": "}
+                        {new Date(kiosk.inventoryDate).toLocaleString("sv-SE", {
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                        })}
+                      </p>
+                    ) : (
+                      <p key={kiosk.id}></p>
+                    )
+                  )}
                 </TableHead>
               ))}
               <TableHead className="text-center font-bold dark:text-slate-300">
