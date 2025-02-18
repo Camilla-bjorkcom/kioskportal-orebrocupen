@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { StorageInventory } from "@/interfaces/storageinventory";
+import { StorageInventory } from "@/interfaces/storageInventory";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,

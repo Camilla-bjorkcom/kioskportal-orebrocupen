@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Facility } from "@/interfaces/facility";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { GroupedStorageInventories } from "@/interfaces/storageinventory";
+import { GroupedStorageInventories } from "@/interfaces/storageInventory";
 
 export const useGetAllFacilities = (tournamentId: string) => {
   return useQuery<Facility[]>({

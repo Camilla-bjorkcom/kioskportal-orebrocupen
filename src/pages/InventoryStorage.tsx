@@ -17,7 +17,7 @@ import { useParams } from "react-router-dom";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useEffect } from "react";
 import { TournamentProducts } from "@/interfaces/product";
-import { StorageInventory } from "@/interfaces/storageinventory";
+import { StorageInventory } from "@/interfaces/storageInventory";
 
 
 function InventoryStorage() {
