@@ -68,7 +68,6 @@ const FacilityOverview = () => {
     })),
   });
 
-  // 🔹 Hantera laddning och fel
   const isFetchingInventories = kioskInventoryQueries.some(
     (query) => query.isFetching
   );
@@ -77,10 +76,21 @@ const FacilityOverview = () => {
   );
   const isInventoryError = kioskInventoryQueries.some((query) => query.isError);
 
-  // 🔹 Se till att vi väntar på att ALLA queries är färdiga
+ 
   if (isLoading || isFetchingInventories || isInventoryLoading) {
-    return <div>Loading kiosk inventories...</div>;
+    return (
+      <div className="container mx-auto px-5 py-10 flex justify-center items-center">
+        <div className="text-center">
+          <div
+            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+            role="status"
+          ></div>
+          <p className="mt-4 text-gray-500">Laddar turneringsdata...</p>
+        </div>
+      </div>
+    );
   }
+
   if (!isSuccess || !facility || isInventoryError) {
     return <div>Error loading data.</div>;
   }
@@ -104,14 +114,12 @@ const FacilityOverview = () => {
     validKioskInventories
   );
 
-  console.log("Mapped Facility for Calculation:", mappedFacilityFirstInventory);
 
   // 🔹 Använd den omvandlade datan i `calculateTotalAmountForFacility`
   const facilityFirstForTable = calculateTotalAmountForFacility(
     mappedFacilityFirstInventory
   );
 
-  console.log("Facility Table Data after Calculation:", facilityFirstForTable);
 
   return (
     <section className="container mx-auto px-5">

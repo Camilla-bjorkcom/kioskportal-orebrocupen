@@ -38,7 +38,7 @@ const OverviewInventories = () => {
     },
   });
 
-  const { data: firstStorageInventory } = useQuery<StorageInventory>({
+  const { data: firstStorageInventory, isLoading } = useQuery<StorageInventory>({
     queryKey: ["firstInventoryList"],
     queryFn: async () => {
       const response = await fetchWithAuth(
@@ -84,7 +84,7 @@ const OverviewInventories = () => {
         totalAmount: totalAmount,
       };
     }) || [];
-  console.log("Current", productTotals);
+  
 
   const productsFirstTotal =
     firstStorageInventory?.products.map((product) => {
@@ -95,7 +95,7 @@ const OverviewInventories = () => {
         totalAmount: totalAmount,
       };
     }) || [];
-  console.log("First", productsFirstTotal);
+  
 
   const facilitiesWithTotals =
     facilities?.map((facility) => calculateTotalAmountForFacility(facility)) ||
@@ -106,6 +106,20 @@ const OverviewInventories = () => {
   const toggleViewDate = () => {
     setViewDate((prev) => !prev);
   };
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-5 py-10 flex justify-center items-center">
+        <div className="text-center">
+          <div
+            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+            role="status"
+          ></div>
+          <p className="mt-4 text-gray-500">Laddar turneringsdata...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section className="container mx-auto px-5">
