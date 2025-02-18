@@ -27,51 +27,10 @@ type InventoryGraphProps = {
   overviewRecord: OverviewRecord;
 };
 
-// Simulerade inventeringar
-// const inventories = [
-//   { id: 1, date: "2025-07-10" },
-//   { id: 2, date: "2025-07-10" },
-//   { id: 3, date: "2025-07-10" },
-//   { id: 4, date: "2025-07-10" },
-//   { id: 5, date: "2025-07-10" },
-//   { id: 6, date: "2025-07-10" },
-//   { id: 7, date: "2025-07-10" },
-//   { id: 8, date: "2025-07-12" },
-//   { id: 9, date: "2025-07-12" },
-//   { id: 10, date: "2025-07-12" },
-//   { id: 11, date: "2025-07-12" },
-//   { id: 12, date: "2025-07-12" },
-//   { id: 12, date: "2025-07-12" },
-//   { id: 14, date: "2025-07-12" },
-//   { id: 15, date: "2025-07-12" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-// ];
-
-export function InventoryGraph({ tournament, overviewRecord }: InventoryGraphProps) {
+export function InventoryGraph({
+  tournament,
+  overviewRecord,
+}: InventoryGraphProps) {
   if (!tournament) {
     return <div>Laddar turneringsdata...</div>;
   }
