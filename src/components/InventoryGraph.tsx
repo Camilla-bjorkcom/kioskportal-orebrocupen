@@ -67,15 +67,13 @@ export function InventoryGraph({
   const chartData = getInventoryGraphData();
 
   return (
-    <Card className="dark:bg-slate-900">
+    <Card className="dark:bg-slate-900 ">
       <CardHeader>
-        <CardTitle className="dark:text-gray-200">
-          Inventeringar per dag
-        </CardTitle>
+        <CardTitle className="dark:text-gray-200">Inventeringar</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="rounded-lg shadow-lg flex justify-center items-center">
-          <ResponsiveContainer width="80%" height={290}>
+        <div className="rounded-lg  flex justify-center items-center">
+          <ResponsiveContainer width="100%" height={290}>
             <BarChart
               data={chartData}
               margin={{
@@ -111,7 +109,7 @@ export function InventoryGraph({
                 dataKey="count"
                 fill="#f97316"
                 radius={[4, 4, 0, 0]}
-                barSize={50}
+                barSize={100}
                 isAnimationActive={false}
               />
             </BarChart>
