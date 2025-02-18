@@ -4,13 +4,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Facility, Kiosk, Product } from "@/interfaces";
+import { Facility, Kiosk } from "@/interfaces";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "usehooks-ts";
 import { groupBy } from "lodash-es";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useParams } from "react-router-dom";
 import { Checkbox } from "./ui/checkbox";
 import { BellIcon } from "lucide-react";
@@ -21,8 +19,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { toast } from "@/hooks/use-toast";
 import { Toaster } from "./ui/toaster";
+import { useGetAllFacilities } from "@/hooks/use-query";
+import { calculateTotal } from "@/utils/calculateTotalAmountKiosk";
+import { sendNotifications } from "@/api/functions/sendNotifications";
+import { badToast, okToast } from "@/utils/toasts";
+import { NoResponseError } from "@/api/functions/apiErrors";
+import { sortByInventoryDate } from "@/utils/sortByDate";
 
 const InventoryStatusList = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,24 +34,10 @@ const InventoryStatusList = () => {
   const [notifyContactPerson, setNotifyContactPerson] = useState<NotifyItem[]>(
     []
   );
-  
-  const { isLoading, error, data, isSuccess } = useQuery<Facility[]>({
-    queryKey: ["facilities"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(`facilities/${tournamentId}`);
-      if (!response) {
-        throw new Error("Failed to fetch");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch facilities");
-      }
-      const dataResponse = await response.json();
 
-      persistNewInventory(dataResponse);
-
-      return dataResponse;
-    },
-  });
+  const { data, isLoading, error, isSuccess } = useGetAllFacilities(
+    tournamentId!
+  );
 
   const [inventoryStatus, setInventoryStatus] = useLocalStorage(
     "inventoryStatus",
@@ -91,14 +80,6 @@ const InventoryStatusList = () => {
     setInventoryStatus(newInventory);
   };
 
-  
-
-  function calculateTotal(product: Product) {
-    const { amountPieces, amountPackages, amountPerPackage } = product;
-    product.total = amountPieces! + amountPackages! * amountPerPackage!;
-    return product.total;
-  }
-
   if (isSuccess) {
     data.forEach((item) => {
       item.kiosks.forEach((kiosk) => {
@@ -110,22 +91,15 @@ const InventoryStatusList = () => {
         });
       });
     });
+    persistNewInventory(data);
   }
 
   const facilityStatus = groupBy(inventoryStatus, (x) => x.facilityId);
   const kioskStatus = groupBy(inventoryStatus, (x) => x.id);
 
-  const sortKiosksByInventoryDate = (kiosks: Kiosk[]) => {
-    return kiosks.sort((a, b) => {
-      const dateA = new Date(a.inventoryDate!);
-      const dateB = new Date(b.inventoryDate!);
-      return dateA > dateB ? -1 : 1; // Senast inventering hamnar först
-    });
-  };
-
   const toggleExpandAll = () => {
     if (!isSuccess || !data) {
-      return; // Gör inget om isSuccess är false eller data saknas
+      return;
     }
     if (expandedItems.length === 0) {
       const allItems = data.map((facility) => facility.id);
@@ -156,8 +130,8 @@ const InventoryStatusList = () => {
     return <div>Error: {String(error)}</div>;
   }
 
-  const notifyInfo = (kiosk: Kiosk): NotifyItem => {
-    const facility = data.find((item) => item.facilityName === kiosk.facility); // Hitta rätt facility
+  const notifyInfoItem = (kiosk: Kiosk): NotifyItem => {
+    const facility = data.find((item) => item.facilityName === kiosk.facility);
 
     if (!facility) {
       return {
@@ -176,62 +150,6 @@ const InventoryStatusList = () => {
         (contactPerson) => contactPerson.role === "Planansvarig"
       ),
     };
-  };
-
-  console.log(notifyContactPerson);
-
-  console.log(inventoryStatus);
-
-  const sendNotifications = async () => {
-    try {
-      const response = await fetchWithAuth(`send-sns-notification`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          notifications: notifyContactPerson.map((item) => ({
-            kioskName: item.kioskName,
-            facilityName: item.facilityName,
-            contactPersons: item.contactPersons.map((contact) => {
-              let phone = contact.phone;
-
-              if (phone.startsWith("00")) {
-                phone = phone.replace(/^00/, "+46");
-              }
-
-              if (phone.startsWith("+46")) {
-                return { name: contact.name, phone };
-              }
-
-              return { name: contact.name, phone: `+46${phone}` };
-            }),
-          })),
-        }),
-      });
-
-      if (!response) {
-        toast({
-          title: "Fel",
-          description: "Misslyckades med att skicka notifiering.",
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        throw new Error("Kunde inte skicka notifiering");
-      }
-
-      toast({
-        title: "Lyckat",
-        description: "Notifieringar skickades iväg till planansvariga.",
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-      });
-    } catch (error) {
-      console.error("Fel vid notifiering:", error);
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att skicka notifiering, försök igen.",
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-      });
-    }
   };
 
   const getKioskClasses = (id: string) => {
@@ -254,7 +172,23 @@ const InventoryStatusList = () => {
           <Tooltip>
             <TooltipTrigger>
               <Button
-                onClick={sendNotifications}
+                onClick={() =>
+                  sendNotifications(notifyContactPerson)
+                    .then(() =>
+                      okToast(
+                        "Notifieringar skickades iväg till planansvariga."
+                      )
+                    )
+                    .catch((error) => {
+                      if (error instanceof NoResponseError) {
+                        badToast(
+                          "Misslyckades med att skicka notifiering, försök igen."
+                        );
+                      } else {
+                        badToast("Misslyckades med att skicka notifiering.");
+                      }
+                    })
+                }
                 className="mb-4 mr-2"
                 disabled={notifyContactPerson.length === 0}
               >
@@ -305,8 +239,8 @@ const InventoryStatusList = () => {
               </div>
             </AccordionTrigger>
             <AccordionContent>
-              {sortKiosksByInventoryDate(item.kiosks).map((kiosk) => {
-                const info = notifyInfo(kiosk);
+              {sortByInventoryDate(item.kiosks).map((kiosk) => {
+                const info = notifyInfoItem(kiosk);
 
                 return (
                   <div key={kiosk.id}>

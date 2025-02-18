@@ -1,7 +1,6 @@
 import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmountForFacility";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { Facility } from "@/interfaces";
-import { StorageInventory } from "@/interfaces/storaginventory";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -14,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { StorageInventory } from "@/interfaces/storageinventory";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
