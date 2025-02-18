@@ -47,7 +47,7 @@ function AddProductsToKioskButton({
   const tournamentId = id;
   const queryClient = useQueryClient();
 
-  // Synkronisera selectedProducts med kioskForEdit.products
+  
   useEffect(() => {
     if (kioskForEdit && kioskForEdit.products) {
       setSelectedProducts(kioskForEdit.products);
@@ -56,8 +56,8 @@ function AddProductsToKioskButton({
 
   const handleDialogOpen = async (isOpen: boolean) => {
     if (isOpen) {
-      // Sätt initiala produkter
-      await onEditClick(kioskForEdit); // Ladda kiosken
+      
+      await onEditClick(kioskForEdit); 
       console.log("HELA", kioskForEdit);
       console.log(kioskForEdit.products);
 
@@ -124,8 +124,8 @@ function AddProductsToKioskButton({
         description: `Produkterna har sparats i kiosken!`,
       });
 
-      onKioskUpdated(updatedKiosk); // Skicka tillbaka uppdaterad kiosk
-      setOpen(false); // Stäng dialogen
+      onKioskUpdated(updatedKiosk); 
+      setOpen(false); 
     } catch (error) {
       console.error("Failed to update kiosk:", error);
       toast({
@@ -137,7 +137,7 @@ function AddProductsToKioskButton({
   };
 
   if (!kioskForEdit || !productLists || !products) {
-    return null; // Rendera inte om data saknas
+    return null; 
   }
 
   return (

@@ -1,7 +1,6 @@
-import { Product } from './product';
-
+import { Product } from "./product";
 
 export interface GetAllProductsResponse {
-    inventoryDate: string;
+  inventoryDate: string;
   products: Product[];
-}   
+}

@@ -31,7 +31,7 @@ const OverviewInventories = () => {
     queryKey: ["inventoryList"],
     queryFn: async () => {
       const response = await fetchWithAuth(
-        `/tournaments/${tournamentId}/inventoryoverview`
+        `tournaments/${tournamentId}/inventoryoverview`
       );
       if (!response) {
         throw new Error("Failed to fetch products");
@@ -50,7 +50,7 @@ const OverviewInventories = () => {
       queryKey: ["firstInventoryList"],
       queryFn: async () => {
         const response = await fetchWithAuth(
-          `/tournaments/${tournamentId}/firstinventory`
+          `tournaments/${tournamentId}/firstinventory`
         );
         if (!response) {
           throw new Error("Failed to fetch products");

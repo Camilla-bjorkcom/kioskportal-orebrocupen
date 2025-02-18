@@ -8,7 +8,6 @@ export const createKiosk = async (
 ) => {
   const response = await fetchWithAuth(
     `facilities/${tournamentId}/${facilityId}/kiosks`,
-
     {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
