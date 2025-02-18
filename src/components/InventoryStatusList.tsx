@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Facility, Kiosk } from "@/interfaces";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { useLocalStorage } from "usehooks-ts";
 import { groupBy } from "lodash-es";
@@ -80,19 +80,22 @@ const InventoryStatusList = () => {
     setInventoryStatus(newInventory);
   };
 
-  if (isSuccess) {
-    data.forEach((item) => {
-      item.kiosks.forEach((kiosk) => {
-        kiosk.products.forEach((product) => {
-          if (product.amountPerPackage) {
-            const result = calculateTotal(product);
-            product.total = result;
-          }
+  useEffect(() => {
+    if (isSuccess) {
+      data.forEach((item) => {
+        item.kiosks.forEach((kiosk) => {
+          kiosk.products.forEach((product) => {
+            if (product.amountPerPackage) {
+              const result = calculateTotal(product);
+              product.total = result;
+            }
+          });
         });
       });
-    });
-    persistNewInventory(data);
-  }
+
+      persistNewInventory(data);
+    }
+  }, [isSuccess, data]); // Run only when `isSuccess` or `data` changes
 
   const facilityStatus = groupBy(inventoryStatus, (x) => x.facilityId);
   const kioskStatus = groupBy(inventoryStatus, (x) => x.id);
