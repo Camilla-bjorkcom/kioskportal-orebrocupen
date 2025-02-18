@@ -2,9 +2,9 @@
 
 import { TrendingUp } from "lucide-react";
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
-  Line,
-  LineChart,
   XAxis,
   YAxis,
   Tooltip,
@@ -74,9 +74,9 @@ export function InventoryGraph({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className=" rounded-lg shadow-lg">
-          <ResponsiveContainer width="100%" height={290}>
-            <LineChart
+        <div className="rounded-lg shadow-lg flex justify-center items-center">
+          <ResponsiveContainer width="80%" height={290}>
+            <BarChart
               data={chartData}
               margin={{
                 top: 20,
@@ -85,12 +85,6 @@ export function InventoryGraph({
                 bottom: 20,
               }}
             >
-              <defs>
-                <linearGradient id="colorLine" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#4f46e5" stopOpacity={0.8} />
-                  <stop offset="100%" stopColor="#22d3ee" stopOpacity={0.8} />
-                </linearGradient>
-              </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis
                 dataKey="date"
@@ -104,6 +98,7 @@ export function InventoryGraph({
                 tickLine={false}
               />
               <Tooltip
+                cursor={false}
                 contentStyle={{
                   backgroundColor: "#f9fafb",
                   borderRadius: "8px",
@@ -112,31 +107,19 @@ export function InventoryGraph({
                 }}
                 labelStyle={{ color: "#6b7280", fontWeight: "bold" }}
               />
-              <Line
-                type="monotone"
+              <Bar
                 dataKey="count"
-                stroke="#FF8C00"
-                strokeWidth={3}
-                dot={{
-                  r: 4,
-                  fill: "#fffffff",
-                  strokeWidth: 2,
-                  stroke: "#ffffff",
-                }}
-                activeDot={{
-                  r: 6,
-                  fill: "#FF8C00",
-                  strokeWidth: 2,
-                  stroke: "#ffffff",
-                }}
+                fill="#f97316"
+                radius={[4, 4, 0, 0]}
+                barSize={50}
+                isAnimationActive={false}
               />
-            </LineChart>
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Totalt {overviewRecord.OverviewItem?.length} inventeringar{" "}
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
