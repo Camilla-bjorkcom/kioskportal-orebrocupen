@@ -88,9 +88,8 @@ function Tournaments() {
 
   return (
     <>
-      <div className="container mx-auto p-3">
-        <Topbar />
-      </div>
+      <Topbar />
+
       <div className="container mx-auto mt-20 px-5">
         <h2 className="mt-8 text-2xl pb-2">Dina turneringar</h2>
         <CreateTournamentBtn onSave={CreateTournament} />

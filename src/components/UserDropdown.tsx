@@ -23,7 +23,7 @@ export function UserDropdown({ id }: { id?: string }) {
   const isMobile = useIsMobile(); // Kollar om det är mobilvy
 
   return (
-    <div className="absolute top-1 right-1">
+    <div className="">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="flex items-center gap-2 p-2 rounded-lg bg-gray-200 dark:bg-slate-800 hover:bg-gray-300 dark:hover:bg-slate-600">
