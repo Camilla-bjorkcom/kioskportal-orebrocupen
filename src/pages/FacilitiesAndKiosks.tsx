@@ -169,20 +169,20 @@ function FacilitiesAndKiosks() {
       }))
     ) || [];
 
-    if (isLoading) {
-      return (
-        <div className="container mx-auto px-5 py-10 flex justify-center items-center">
-          <div className="text-center">
-            <div
-              className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
-              role="status"
-            ></div>
-            <p className="mt-4 text-gray-500">Laddar turneringsdata...</p>
-          </div>
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-5 py-10 flex justify-center items-center">
+        <div className="text-center">
+          <div
+            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+            role="status"
+          ></div>
+          <p className="mt-4 text-gray-500">Laddar turneringsdata...</p>
         </div>
-      );
-    }
-    
+      </div>
+    );
+  }
+
   if (!isSuccess) {
     return <div>Error: {String(error)}</div>;
   }
@@ -245,7 +245,7 @@ function FacilitiesAndKiosks() {
           <AccordionItem
             key={facility.id}
             value={openFacilityId === facility.id ? facility.id : ""}
-            className="p-4 border border-gray-200 rounded-md shadow dark:bg-slate-900 dark:text-gray-200 dark:border-slate-500"
+            className="p-4 border border-gray-200 rounded-md shadow dark:bg-slate-800 dark:text-gray-200 dark:border-slate-500"
           >
             <AccordionTrigger
               className="text-lg font-medium hover:no-underline mr-2"

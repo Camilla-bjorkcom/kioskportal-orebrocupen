@@ -64,7 +64,7 @@ function CreateTournamentBtn({ onSave }: CreateTournamentButtonProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="flex flex-col p-2 justify-between rounded-xl border-2 border-dashed bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 dark:bg-slate-900 dark:hover:bg-slate-600 dark:text-gray-200 dark:border-slate-500">
+        <button className="flex flex-col p-2 justify-between rounded-xl border-2 border-dashed bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 dark:bg-slate-800 dark:hover:bg-slate-600 dark:text-gray-200 dark:border-slate-500">
           <PlusIcon className=" w-32 h-32 mx-auto" />
           <p className="text-center w-full mb-4 ">Skapa turnering</p>
         </button>

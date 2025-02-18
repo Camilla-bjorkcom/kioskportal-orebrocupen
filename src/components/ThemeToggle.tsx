@@ -33,7 +33,7 @@ export default function ThemeToggle() {
         <TooltipTrigger asChild>
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}
-            className="p-2 rounded dark:bg-slate-900 text-gray-800 dark:text-gray-200"
+            className="p-2 rounded dark:bg-slate-800 text-gray-800 dark:text-gray-200"
           >
             {isDarkMode ? <Moon /> : <Sun />}
           </button>

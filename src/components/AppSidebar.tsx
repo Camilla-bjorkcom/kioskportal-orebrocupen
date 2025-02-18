@@ -3,13 +3,12 @@ import {
   SquareChartGantt,
   ChartSpline,
   LogOut,
-  ChevronsUpDown,
   BadgeCheck,
   BookHeart,
-  House,
-  ShoppingBasket,
   Bell,
   Trophy,
+  ChevronsLeftRight,
+  ChevronsUpDown,
 } from "lucide-react";
 
 import {
@@ -26,11 +25,6 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 
 import {
   DropdownMenu,
@@ -77,8 +71,7 @@ export function AppSidebar({ id }: { id?: string }) {
         {
           title: "Översikt av turneringens lager",
           url: `/overViewinventories/${id}`,
-
-        }
+        },
       ],
     },
     {
@@ -95,15 +88,18 @@ export function AppSidebar({ id }: { id?: string }) {
     },
   ];
   const auth = useAuth();
+  const isMobile = useIsMobile();
 
   return (
-    <Sidebar variant="sidebar" collapsible="icon" className="dark:bg-slate-900">
+    <Sidebar variant="sidebar" collapsible="icon" className="dark:bg-slate-800">
       <SidebarContent>
         <SidebarHeader>
-          <img
-            src="../src/assets/images/sidebarLogo.svg"
-            alt="kiosk portal logo"
-          />
+          <button onClick={() => (window.location.href = `/dashboard/${id}`)}>
+            <img
+              src="../src/assets/images/sidebarLogo.svg"
+              alt="kiosk portal logo"
+            />
+          </button>
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Meny</SidebarGroupLabel>
@@ -163,11 +159,15 @@ export function AppSidebar({ id }: { id?: string }) {
                       {auth.user?.profile["cognito:username"] as string}
                     </span>
                   </div>
-                  <ChevronsUpDown className="ml-auto size-4" />
+                  {isMobile ? (
+                    <ChevronsUpDown className="ml-auto size-4" />
+                  ) : (
+                    <ChevronsLeftRight className="ml-auto size-4" />
+                  )}
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg dark:bg-slate-900  "
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg dark:bg-slate-800  "
                 align="end"
                 sideOffset={4}
                 side={useIsMobile() ? "top" : "right"}

@@ -67,7 +67,7 @@ export function InventoryGraph({
   const chartData = getInventoryGraphData();
 
   return (
-    <Card className="dark:bg-slate-900 ">
+    <Card className="dark:bg-slate-800 ">
       <CardHeader>
         <CardTitle className="dark:text-gray-200">Inventeringar</CardTitle>
       </CardHeader>
@@ -107,7 +107,7 @@ export function InventoryGraph({
               />
               <Bar
                 dataKey="count"
-                fill="#f97316"
+                fill="#fb923c"
                 radius={[4, 4, 0, 0]}
                 barSize={100}
                 isAnimationActive={false}

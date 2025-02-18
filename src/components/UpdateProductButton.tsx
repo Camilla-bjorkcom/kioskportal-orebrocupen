@@ -43,18 +43,18 @@ const formSchema = z.object({
     message: "Produktnamn måste ha minst 2 bokstäver",
   }),
 
-   amountPerPackage: z.preprocess(
-      (val) => (val === "" ? undefined : Number(val)), // Omvandlar tom sträng till undefined och annars till Number
-      z
-        .number({ message: "Antal per paket måste anges med siffror" })
-        .refine((val) => Number.isInteger(val), {
-          message: "Antal per paket måste vara ett heltal", // ✅ Säkerställer att värdet är ett heltal
-        })
-        .refine((val) => val >= 0, {
-          message: "Antal per paket måste vara 0 eller större",
-        })
-        .optional() // Gör det till ett valfritt fält
-    ),
+  amountPerPackage: z.preprocess(
+    (val) => (val === "" ? undefined : Number(val)), // Omvandlar tom sträng till undefined och annars till Number
+    z
+      .number({ message: "Antal per paket måste anges med siffror" })
+      .refine((val) => Number.isInteger(val), {
+        message: "Antal per paket måste vara ett heltal", // ✅ Säkerställer att värdet är ett heltal
+      })
+      .refine((val) => val >= 0, {
+        message: "Antal per paket måste vara 0 eller större",
+      })
+      .optional() // Gör det till ett valfritt fält
+  ),
   id: z.string().min(1, { message: "Id måste vara en giltig sträng" }),
 });
 
@@ -84,17 +84,16 @@ function UpdateProductButton({
   const { reset } = form;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-
-    const correctedAmount = values.amountPerPackage && values.amountPerPackage > 0
-    ? values.amountPerPackage
-    : 1;
+    const correctedAmount =
+      values.amountPerPackage && values.amountPerPackage > 0
+        ? values.amountPerPackage
+        : 1;
     const updatedProduct: Product = {
       id: values.id,
       productName: values.productName.trim(),
       amountPerPackage: correctedAmount,
     };
     console.log("Uppdaterar produkt med värden:", updatedProduct);
-
 
     const result = await onUpdate(updatedProduct);
 
@@ -116,7 +115,7 @@ function UpdateProductButton({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <span className="flex border-2 border-transparent hover:border-solid hover:border-1 rounded-md  hover:text-white hover:bg-black dark:bg-slate-900 dark:hover:bg-slate-600 dark:text-gray-200">
+        <span className="flex border-2 border-transparent hover:border-solid hover:border-1 rounded-md  hover:text-white hover:bg-black dark:bg-slate-800 dark:hover:bg-slate-600 dark:text-gray-200">
           <p className="ml-2">{productName}</p>
         </span>
       </DialogTrigger>
@@ -158,7 +157,9 @@ function UpdateProductButton({
               name="amountPerPackage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ange antal per förpackning (Minsta värde 1)</FormLabel>
+                  <FormLabel>
+                    Ange antal per förpackning (Minsta värde 1)
+                  </FormLabel>
                   <FormControl>
                     <Input type="number" {...field} value={field.value ?? ""} />
                   </FormControl>
@@ -180,8 +181,10 @@ function UpdateProductButton({
             <div className="flex justify-between">
               <AlertDialog>
                 <AlertDialogTrigger>
-                  <Button className="border border-solid rounded-xl p-2 shadow hover:bg-red-600 hover:text-white"
-                  variant="destructive">
+                  <Button
+                    className="border border-solid rounded-xl p-2 shadow hover:bg-red-600 hover:text-white"
+                    variant="destructive"
+                  >
                     <p>Radera produkt</p>
                   </Button>
                 </AlertDialogTrigger>

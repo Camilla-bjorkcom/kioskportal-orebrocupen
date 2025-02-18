@@ -6,7 +6,6 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetDescription,
   SheetFooter,
   SheetClose,
 } from "@/components/ui/sheet";
@@ -65,7 +64,7 @@ const ChangePassword = () => {
       <SheetTrigger asChild>
         <Button
           variant="outline"
-          className="dark:bg-slate-900 dark:hover:bg-slate-800"
+          className="dark:bg-slate-700 dark:hover:bg-slate-600"
         >
           Byt lösenord
         </Button>
@@ -73,14 +72,11 @@ const ChangePassword = () => {
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Byt lösenord</SheetTitle>
-          <SheetDescription>
-            Ange ditt nuvarande och nya lösenord.
-          </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="current-password" className="text-right">
-              Nuvarande lösenord
+          <div className="grid grid-cols-2 items-center gap-4">
+            <Label htmlFor="current-password" className="text-start">
+              Nuvarande lösenord:
             </Label>
             <Input
               id="current-password"
@@ -91,9 +87,9 @@ const ChangePassword = () => {
               className="col-span-3"
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="new-password" className="text-right">
-              Nytt lösenord
+          <div className="grid grid-cols-2 items-center gap-4">
+            <Label htmlFor="new-password" className="text-start">
+              Nytt lösenord:
             </Label>
             <Input
               id="new-password"

@@ -37,7 +37,7 @@ function TournamentDetails() {
     <SidebarProvider>
       <AppSidebar id={data.id} />
       <main className="w-full ">
-        <div className="p-1 shadow w-full flex items-center mb-8 dark:bg-slate-900 ">
+        <div className="p-1 shadow w-full flex items-center mb-8 dark:bg-slate-800 ">
           <SidebarTrigger />
           <p className="mx-auto font-semibold text-4xl dark:text-gray-200">
             {data?.tournamentName}

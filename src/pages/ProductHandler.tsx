@@ -421,7 +421,7 @@ function ProductHandler() {
           <div className="mt-8">
             <Accordion
               type="multiple"
-              className=" w-full 2xl:w-3/4 dark:bg-slate-900"
+              className=" w-full 2xl:w-3/4 dark:bg-slate-800"
             >
               {productlists?.map((productlist) => (
                 <AccordionItem
