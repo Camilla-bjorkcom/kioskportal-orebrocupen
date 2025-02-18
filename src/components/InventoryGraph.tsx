@@ -2,9 +2,9 @@
 
 import { TrendingUp } from "lucide-react";
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
-  Line,
-  LineChart,
   XAxis,
   YAxis,
   Tooltip,
@@ -27,51 +27,10 @@ type InventoryGraphProps = {
   overviewRecord: OverviewRecord;
 };
 
-// Simulerade inventeringar
-// const inventories = [
-//   { id: 1, date: "2025-07-10" },
-//   { id: 2, date: "2025-07-10" },
-//   { id: 3, date: "2025-07-10" },
-//   { id: 4, date: "2025-07-10" },
-//   { id: 5, date: "2025-07-10" },
-//   { id: 6, date: "2025-07-10" },
-//   { id: 7, date: "2025-07-10" },
-//   { id: 8, date: "2025-07-12" },
-//   { id: 9, date: "2025-07-12" },
-//   { id: 10, date: "2025-07-12" },
-//   { id: 11, date: "2025-07-12" },
-//   { id: 12, date: "2025-07-12" },
-//   { id: 12, date: "2025-07-12" },
-//   { id: 14, date: "2025-07-12" },
-//   { id: 15, date: "2025-07-12" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-//   { id: 6, date: "2025-07-13" },
-// ];
-
-export function InventoryGraph({ tournament, overviewRecord }: InventoryGraphProps) {
+export function InventoryGraph({
+  tournament,
+  overviewRecord,
+}: InventoryGraphProps) {
   if (!tournament) {
     return <div>Laddar turneringsdata...</div>;
   }
@@ -108,16 +67,14 @@ export function InventoryGraph({ tournament, overviewRecord }: InventoryGraphPro
   const chartData = getInventoryGraphData();
 
   return (
-    <Card className="dark:bg-slate-900">
+    <Card className="dark:bg-slate-900 ">
       <CardHeader>
-        <CardTitle className="dark:text-gray-200">
-          Inventeringar per dag
-        </CardTitle>
+        <CardTitle className="dark:text-gray-200">Inventeringar</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className=" rounded-lg shadow-lg">
+        <div className="rounded-lg  flex justify-center items-center">
           <ResponsiveContainer width="100%" height={290}>
-            <LineChart
+            <BarChart
               data={chartData}
               margin={{
                 top: 20,
@@ -126,12 +83,6 @@ export function InventoryGraph({ tournament, overviewRecord }: InventoryGraphPro
                 bottom: 20,
               }}
             >
-              <defs>
-                <linearGradient id="colorLine" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#4f46e5" stopOpacity={0.8} />
-                  <stop offset="100%" stopColor="#22d3ee" stopOpacity={0.8} />
-                </linearGradient>
-              </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis
                 dataKey="date"
@@ -145,6 +96,7 @@ export function InventoryGraph({ tournament, overviewRecord }: InventoryGraphPro
                 tickLine={false}
               />
               <Tooltip
+                cursor={false}
                 contentStyle={{
                   backgroundColor: "#f9fafb",
                   borderRadius: "8px",
@@ -153,31 +105,19 @@ export function InventoryGraph({ tournament, overviewRecord }: InventoryGraphPro
                 }}
                 labelStyle={{ color: "#6b7280", fontWeight: "bold" }}
               />
-              <Line
-                type="monotone"
+              <Bar
                 dataKey="count"
-                stroke="#FF8C00"
-                strokeWidth={3}
-                dot={{
-                  r: 4,
-                  fill: "#fffffff",
-                  strokeWidth: 2,
-                  stroke: "#ffffff",
-                }}
-                activeDot={{
-                  r: 6,
-                  fill: "#FF8C00",
-                  strokeWidth: 2,
-                  stroke: "#ffffff",
-                }}
+                fill="#f97316"
+                radius={[4, 4, 0, 0]}
+                barSize={100}
+                isAnimationActive={false}
               />
-            </LineChart>
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Totalt {overviewRecord.OverviewItem?.length} inventeringar{" "}
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">

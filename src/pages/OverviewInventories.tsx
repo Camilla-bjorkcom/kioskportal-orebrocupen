@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import { KioskInventory } from "@/interfaces/kioskInventory";
 import { calculateProductTotalsFacility } from "@/functions/calculateProductTotalsFacility";
-import { StorageInventory } from "@/interfaces/storageinventory";
+import { StorageInventory } from "@/interfaces/storageInventory";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -24,6 +24,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { calculateFirstTotalAmountForFacility } from "@/functions/calculateFirstTotalAmountForFacility";
+import { sortByInventoryDate } from "@/utils/sortByDate";
 
 const OverviewInventories = () => {
   const { id } = useParams<{ id: string }>();
@@ -33,7 +34,7 @@ const OverviewInventories = () => {
     queryKey: ["inventoryList"],
     queryFn: async () => {
       const response = await fetchWithAuth(
-        `/tournaments/${tournamentId}/inventoryoverview`
+        `tournaments/${tournamentId}/inventoryoverview`
       );
       if (!response) {
         throw new Error("Failed to fetch products");
@@ -52,7 +53,7 @@ const OverviewInventories = () => {
       queryKey: ["firstInventoryList"],
       queryFn: async () => {
         const response = await fetchWithAuth(
-          `/tournaments/${tournamentId}/firstinventory`
+          `tournaments/${tournamentId}/firstinventory`
         );
         if (!response) {
           throw new Error("Failed to fetch products");
@@ -185,7 +186,7 @@ const OverviewInventories = () => {
                       {facility.facilityName}
                     </p>
                   </Link>
-                  {facility.kiosks.map((kiosk) =>
+                  {sortByInventoryDate(facility.kiosks).map((kiosk) => 
                     viewDate ? (
                       <div className="flex gap-1 mx-auto w-fit">
                         <p className="font-bold  text-center" key={kiosk.id}>

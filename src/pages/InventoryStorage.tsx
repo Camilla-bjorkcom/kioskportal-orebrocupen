@@ -16,8 +16,8 @@ import { Toaster } from "../components/ui/toaster";
 import { useParams } from "react-router-dom";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useEffect } from "react";
-import { TournamentProducts } from "@/interfaces/product";
-import { StorageInventory } from "@/interfaces/storageinventory";
+import { StorageInventory } from "@/interfaces/storageInventory";
+import { InventoryStorageProducts } from "@/interfaces/product";
 
 
 function InventoryStorage() {
@@ -75,7 +75,7 @@ function InventoryStorage() {
           productName: product.productName,
           amountPerPackage: product.amountPerPackage,
           amountPackages: values.amountPackages[index], 
-        } satisfies TournamentProducts)
+        } satisfies InventoryStorageProducts)
     );
 
     try {

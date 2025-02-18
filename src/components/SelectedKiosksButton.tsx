@@ -20,6 +20,7 @@ import { Checkbox } from "./ui/checkbox";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useParams } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { okToast } from "@/utils/toasts";
 
 interface SelectedKiosksButtonProps {
   selectedKiosks: Kiosk[]; // Lista över valda kiosker
@@ -51,7 +52,7 @@ function SelectedKiosksButton({
       return;
     }
     setOpen(isOpen);
-    setSelectedProducts([]); 
+    setSelectedProducts([]);
   };
 
   const handleProductListChange = (value: string) => {
@@ -112,11 +113,9 @@ function SelectedKiosksButton({
       setOpen(false);
     }
     queryClient.invalidateQueries({ queryKey: ["facilities"] });
-    toast({
-      className: "bg-green-200 dark:bg-green-400 dark:text-black",
-      title: "Lyckat",
-      description: `Valda kiosker populerades med ${selectedProducts.length} produkter`,
-    });
+    okToast(
+      `Valda kiosker populerades med ${selectedProducts.length} produkter`
+    );
   };
 
   return (
@@ -145,13 +144,21 @@ function SelectedKiosksButton({
           <SelectTrigger className="w-auto">
             <SelectValue placeholder="Lägg till produkter från produktlista" />
           </SelectTrigger>
-          <SelectContent>
-            {productlists.map((productlist) => (
-              <SelectItem key={productlist.id} value={productlist.id}>
-                {productlist.productlistName}
+          {productlists.length > 0 ? (
+            <SelectContent>
+              {productlists.map((productlist) => (
+                <SelectItem key={productlist.id} value={productlist.id}>
+                  {productlist.productlistName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          ) : (
+            <SelectContent>
+              <SelectItem value="empty">
+                Inga produktlistor är skapade i turneringen
               </SelectItem>
-            ))}
-          </SelectContent>
+            </SelectContent>
+          )}
         </Select>
 
         <div className="mb-4 text-right">

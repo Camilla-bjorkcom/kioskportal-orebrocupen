@@ -104,16 +104,11 @@ function FacilitiesAndKiosks() {
       alert("Du måste välja minst en kiosk!");
       return;
     }
-    console.log("Valda kiosker:", kiosksForUpdate);
-    // Här kan du öppna en dialog eller skicka datan till en API-endpoint
+    
     alert(`Du har valt ${kiosksForUpdate.length} kiosker.`);
   };
 
   const handleEditClick = async (kiosk: Kiosk) => {
-    console.log("handleEditClick körs för kiosk:", kiosk);
-    console.log("produkter", products);
-    console.log("produktlistor", productlists);
-
     try {
       setKioskForEdit(kiosk);
       const response = await fetchWithAuth(
@@ -127,10 +122,7 @@ function FacilitiesAndKiosks() {
         console.error("Failed to fetch kiosk products");
       } else {
         const data = await response.json();
-        console.log(data);
         setSelectedProducts(data.products);
-        console.log("selectedProducts", selectedProducts);
-
         setOpen(true);
       }
     } catch (error) {
