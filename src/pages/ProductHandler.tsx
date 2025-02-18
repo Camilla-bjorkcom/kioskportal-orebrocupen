@@ -25,7 +25,6 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
-import { Info } from "lucide-react";
 import ProductInfoComponent from "@/components/ProductInfoComponent";
 
 function ProductHandler() {
@@ -201,7 +200,17 @@ function ProductHandler() {
   };
 
   if (isLoading) {
-    return <div>Loading products...</div>;
+    return (
+      <div className="container mx-auto px-5 py-10 flex justify-center items-center">
+        <div className="text-center">
+          <div
+            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+            role="status"
+          ></div>
+          <p className="mt-4 text-gray-500">Laddar turneringsdata...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {

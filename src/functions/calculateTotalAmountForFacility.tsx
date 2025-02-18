@@ -35,6 +35,7 @@ export const calculateTotalAmountForFacility = (
   return {
     facilityName: facility.facilityName,
     id: facility.id,
-    products: Object.values(totals), // Konvertera till en array för enklare användning i UI
+    products: Object.values(totals)
+     // Konvertera till en array för enklare användning i UI
   };
 };
