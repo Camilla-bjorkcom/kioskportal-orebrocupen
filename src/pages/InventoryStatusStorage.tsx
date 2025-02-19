@@ -153,8 +153,8 @@ const InventoryStatusStorage = () => {
                                       : "text-center"
                                   }
                                 >
-                                  {total > 0 ? `${total} st` : "N/A"}
-                                </p>
+                                  {total > 0 ? `${total} st` : "N/A"}  
+                                </p> //fixat totalen
                               ) : (
                                 <p className="text-center">N/A</p>
                               )}
