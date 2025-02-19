@@ -1,7 +1,4 @@
 import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmountForFacility";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { Facility } from "@/interfaces";
-import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import {
   Table,
@@ -12,9 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { KioskInventory } from "@/interfaces/kioskInventory";
 import { calculateProductTotalsFacility } from "@/functions/calculateProductTotalsFacility";
-import { StorageInventory } from "@/interfaces/storageInventory";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -26,80 +21,19 @@ import { calculateFirstTotalAmountForFacility } from "@/functions/calculateFirst
 import { sortByInventoryDate } from "@/utils/sortByDate";
 import { useState } from "react";
 import { cleanDate } from "@/utils/cleanDate";
+import { useGetAllFacilities, useGetAllFirstKioskInventories, useGetFirstStorageInventory, useGetStorageInventory } from "@/hooks/use-query";
 
 const OverviewInventories = () => {
   const { id } = useParams<{ id: string }>();
-  const tournamentId = id;
+  const tournamentId = id ||"";
 
-  const { data: storageInventory } = useQuery<StorageInventory>({
-    queryKey: ["inventoryList"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(
-        `tournaments/${tournamentId}/inventoryoverview`
-      );
-      if (!response) {
-        throw new Error("Failed to fetch products");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
-      }
-      const data = await response.json();
+  const { data: storageInventory } = useGetStorageInventory(tournamentId)
 
-      return data;
-    },
-  });
-
-  const { data: firstStorageInventory, isLoading } = useQuery<StorageInventory>(
-    {
-      queryKey: ["firstInventoryList"],
-      queryFn: async () => {
-        const response = await fetchWithAuth(
-          `tournaments/${tournamentId}/firstinventory`
-        );
-        if (!response) {
-          throw new Error("Failed to fetch products");
-        }
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await response.json();
-
-        return data;
-      },
-    }
-  );
-
-  const { data: facilities } = useQuery<Facility[]>({
-    queryKey: ["facilities"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(`facilities/${tournamentId}`);
-      if (!response) {
-        throw new Error("Failed to fetch");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch facilities");
-      }
-      const data = await response.json();
-      return data;
-    },
-  });
-  const { data: firstKioskInventories } = useQuery<KioskInventory[]>({
-    queryKey: ["firstkioskinventories"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(
-        `firstkioskinventories/${tournamentId}`
-      );
-      if (!response) {
-        throw new Error("Failed to feth first inventories");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch facilities");
-      }
-      const data = await response.json();
-
-      return data;
-    },
-  });
+  const { data: firstStorageInventory, isLoading } = useGetFirstStorageInventory(tournamentId)
+  
+  const { data: facilities } = useGetAllFacilities(tournamentId)
+  
+  const { data: firstKioskInventories } = useGetAllFirstKioskInventories(tournamentId)
 
   const allProducts = storageInventory?.products.map((product) => {
     return product.productName;

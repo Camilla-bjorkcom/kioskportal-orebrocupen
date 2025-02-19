@@ -15,6 +15,7 @@ import {
 import { KioskInventory } from "@/interfaces/kioskInventory";
 import { mapKioskInventoriesToFacility } from "@/functions/mapKioskInventoriesToFacility";
 import { cleanDate } from "@/utils/cleanDate";
+import { useGetOneFacility } from "@/hooks/use-query";
 
 const FacilityOverview = () => {
   const { id: tournamentId, fid: facilityId } = useParams<{
@@ -27,22 +28,7 @@ const FacilityOverview = () => {
     isLoading,
     data: facility,
     isSuccess,
-  } = useQuery<Facility>({
-    queryKey: ["facilities", tournamentId, facilityId],
-    queryFn: async () => {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${facilityId}`
-      );
-      if (!response) {
-        throw new Error("Response is undefined");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch facility");
-      }
-      const data = await response.json();
-      return data.length > 0 ? data[0] : null;
-    },
-  });
+  } = useGetOneFacility(tournamentId ?? "", facilityId ?? "")
 
   // 🔹 Vänta på att `facility` laddas innan vi skapar queries
   const currentKiosks = facility?.kiosks ?? [];
