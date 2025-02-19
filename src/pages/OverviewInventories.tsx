@@ -25,6 +25,7 @@ import {
 import { calculateFirstTotalAmountForFacility } from "@/functions/calculateFirstTotalAmountForFacility";
 import { sortByInventoryDate } from "@/utils/sortByDate";
 import { useState } from "react";
+import { cleanDate } from "@/utils/cleanDate";
 
 const OverviewInventories = () => {
   const { id } = useParams<{ id: string }>();
@@ -99,18 +100,16 @@ const OverviewInventories = () => {
       return data;
     },
   });
- 
 
   const allProducts = storageInventory?.products.map((product) => {
     return product.productName;
   });
-  
+
   const productTotals = calculateProductTotalsFacility(storageInventory!);
 
   const productsFirstTotals = calculateProductTotalsFacility(
     firstStorageInventory!
   );
- 
 
   const facilitiesWithTotals =
     facilities?.map((facility) => calculateTotalAmountForFacility(facility)) ||
@@ -118,7 +117,11 @@ const OverviewInventories = () => {
 
   const facilitiesFirstTotals =
     facilities?.map((facility) =>
-      calculateFirstTotalAmountForFacility(facility.id, facility.facilityName, firstKioskInventories!)
+      calculateFirstTotalAmountForFacility(
+        facility.id,
+        facility.facilityName,
+        firstKioskInventories!
+      )
     ) || [];
 
   const [viewDate, setViewDate] = useState<boolean>(false);
@@ -186,23 +189,14 @@ const OverviewInventories = () => {
                       {facility.facilityName}
                     </p>
                   </Link>
-                  {sortByInventoryDate(facility.kiosks).map((kiosk) => 
+                  {sortByInventoryDate(facility.kiosks).map((kiosk) =>
                     viewDate ? (
                       <div className="flex gap-1 mx-auto w-fit">
-                        <p className="font-bold  text-center" key={kiosk.id}>
+                        <p className="font-medium text-center" key={kiosk.id}>
                           {kiosk.kioskName}:
                         </p>
                         <p className="font-medium text-center">
-                          {new Date(kiosk.inventoryDate).toLocaleString(
-                            "sv-SE",
-                            {
-                              month: "long",
-                              day: "2-digit",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: false,
-                            }
-                          )}
+                          {cleanDate(kiosk.inventoryDate)}
                         </p>
                       </div>
                     ) : (
@@ -212,7 +206,13 @@ const OverviewInventories = () => {
                 </TableHead>
               ))}
               <TableHead className="text-center font-bold dark:text-slate-300">
-                Huvudlager
+              <p>Huvudlager</p>
+                {viewDate && storageInventory?.inventoryDate && (
+                  <p className="font-medium text-center">
+                    {cleanDate(storageInventory.inventoryDate)}
+                  </p>
+                
+                )}
               </TableHead>
               <TableHead className="text-center font-bold dark:text-slate-300">
                 Totalt antal
@@ -233,20 +233,22 @@ const OverviewInventories = () => {
                 (x) => x.productName === productName
               );
               const productsFirstInFacility = facilitiesFirstTotals.map((x) =>
-                
-              x.products.find((p) => p.productName === productName)  
-            )
+                x.products.find((p) => p.productName === productName)
+              );
 
               const total = [productsInStorage, ...productsInFacilities]
                 .map((x) => x?.totalAmount ?? 0)
                 .reduce((a, c) => a + c, 0);
-                console.log(total)
-              
-              const initialTotal = [productsInStorageFirst, ...productsFirstInFacility]
-              .map((x) => x?.totalAmount ?? 0)
-              .reduce((a, c) => a + c, 0) 
-              console.log(initialTotal)
-                
+              console.log(total);
+
+              const initialTotal = [
+                productsInStorageFirst,
+                ...productsFirstInFacility,
+              ]
+                .map((x) => x?.totalAmount ?? 0)
+                .reduce((a, c) => a + c, 0);
+              console.log(initialTotal);
+
               return (
                 <TableRow key={productName}>
                   {/* Produktnamn */}
@@ -294,10 +296,12 @@ const OverviewInventories = () => {
                   </TableCell>
 
                   {/* Totalt antal (summa av alla facilities + huvudlager) */}
-                  <TableCell className={`text-center font-bold dark:text-slate-300 ${
-                      (total ?? 0) < (initialTotal ?? 0) * 0.2 ?  "text-red-500 font-bold dark:text-red-500 dark:font-bold" // 🔴 Röd text om värdet är under 20%
+                  <TableCell
+                    className={`text-center font-bold dark:text-slate-300 ${
+                      (total ?? 0) < (initialTotal ?? 0) * 0.2
+                        ? "text-red-500 font-bold dark:text-red-500 dark:font-bold" // 🔴 Röd text om värdet är under 20%
                         : ""
-                  }`}
+                    }`}
                   >
                     {total}
                   </TableCell>
