@@ -2,7 +2,6 @@ import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmoun
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { Facility } from "@/interfaces";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Table,
@@ -25,6 +24,7 @@ import {
 } from "@/components/ui/tooltip";
 import { calculateFirstTotalAmountForFacility } from "@/functions/calculateFirstTotalAmountForFacility";
 import { sortByInventoryDate } from "@/utils/sortByDate";
+import { useState } from "react";
 
 const OverviewInventories = () => {
   const { id } = useParams<{ id: string }>();
