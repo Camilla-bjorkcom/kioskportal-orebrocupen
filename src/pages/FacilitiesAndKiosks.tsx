@@ -27,7 +27,6 @@ import { useParams } from "react-router-dom";
 import AddContactPersonButton from "@/components/AddContactPersonButton";
 import SelectedKiosksButton from "@/components/SelectedKiosksButton";
 import { Checkbox } from "@/components/ui/checkbox";
-import EditSelectedKioskButton from "@/components/EditSelectedKioskButton";
 import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
@@ -35,10 +34,10 @@ import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
 import QrCodeAllBtn from "@/components/QrCodeAllBtn";
 import FacilityProductInfoComponent from "@/components/FacilityProductInfoComponent";
-
 import { deleteFacility } from "@/api/functions/deleteFacility";
 import { deleteContactPerson } from "@/api/functions/deleteContactPerson";
 import { deleteKiosk } from "@/api/functions/deleteKiosk";
+import UpdateKioskKioskButton from "@/components/UpdateKioskButton";
 
 function FacilitiesAndKiosks() {
   const { id } = useParams<{ id: string }>();
@@ -195,7 +194,7 @@ function FacilitiesAndKiosks() {
         </TooltipProvider>
       </div>
       <div className="flex justify-between w-full 2xl:w-3/4 items-center mb-3">
-        <AddFacilityButton id={id!} />
+        <AddFacilityButton tournamentId={tournamentId!} />
         <div>
           <TooltipProvider>
             <Tooltip>
@@ -249,11 +248,11 @@ function FacilitiesAndKiosks() {
                 </label>
                 <AddKioskButton
                   onFacilityAdded={setOpenFacilityId}
-                  id={id!}
+                  tournamentId={tournamentId!}
                   facilityId={facility.id}
                 />
                 <AddContactPersonButton
-                  id={id!}
+                  tournamentId={tournamentId!}
                   facilityId={facility.id}
                   onFacilityAdded={setOpenFacilityId}
                 />
@@ -261,7 +260,7 @@ function FacilitiesAndKiosks() {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
-                        <UpdateFacilityButton id={id!} facility={facility} />
+                        <UpdateFacilityButton tournamentId={tournamentId!} facility={facility} />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Redigera anläggning</p>
@@ -274,7 +273,7 @@ function FacilitiesAndKiosks() {
                         <DeleteButton
                           id={facility.id}
                           type="Facility"
-                          onDelete={() => deleteFacility(facility.id, id!)}
+                          onDelete={() => deleteFacility(facility.id, tournamentId!)}
                         />
                       </TooltipTrigger>
                       <TooltipContent>
@@ -323,10 +322,10 @@ function FacilitiesAndKiosks() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger>
-                                <EditSelectedKioskButton
+                                <UpdateKioskKioskButton
                                   key={kiosk.id}
                                   kioskForEdit={kiosk}
-                                  id={id!}
+                                  tournamentId={tournamentId!}
                                 />
                               </TooltipTrigger>
                               <TooltipContent>
@@ -341,7 +340,7 @@ function FacilitiesAndKiosks() {
                                   id={kiosk.id}
                                   type="Kiosk"
                                   onDelete={() =>
-                                    deleteKiosk(kiosk.id, facility.id, id!)
+                                    deleteKiosk(kiosk.id, facility.id, tournamentId!)
                                   }
                                 />
                               </TooltipTrigger>
@@ -414,7 +413,7 @@ function FacilitiesAndKiosks() {
                               <Tooltip>
                                 <TooltipTrigger>
                                   <UpdateContactPersonButton
-                                    id={id!}
+                                    tournamentId={tournamentId!}
                                     contactPerson={contactPerson}
                                   />
                                 </TooltipTrigger>
@@ -433,7 +432,7 @@ function FacilitiesAndKiosks() {
                                       deleteContactPerson(
                                         contactPerson.id,
                                         facility.id,
-                                        id!
+                                        tournamentId!
                                       )
                                     }
                                   />

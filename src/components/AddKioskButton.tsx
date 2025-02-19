@@ -37,13 +37,13 @@ const formSchema = z.object({
 });
 
 interface AddKioskButtonProps {
-  id: string; 
+  tournamentId: string; 
   facilityId: string;
   onFacilityAdded?: (facilityId: string) => void;
 }
 
 function AddKioskButton({
-  id,
+  tournamentId,
   facilityId,
   onFacilityAdded,
 }: AddKioskButtonProps) {
@@ -59,7 +59,7 @@ function AddKioskButton({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const kioskCreated = await createKiosk(values.kioskName, facilityId, id!);
+      const kioskCreated = await createKiosk(values.kioskName, facilityId, tournamentId!);
       if (!kioskCreated) throw new NoResponseError("No response from server");
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
 

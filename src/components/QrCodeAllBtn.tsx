@@ -1,4 +1,4 @@
-import { inventoryURL } from "@/api/functions/baseInventoryURL";
+import { inventoryURL } from "@/api/functions/urls";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 import { QrCodeIcon } from "lucide-react";

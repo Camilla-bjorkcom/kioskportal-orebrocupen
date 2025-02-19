@@ -51,12 +51,12 @@ const formSchema = z.object({
 });
 
 interface UpdateContactPersonButtonProps {
-  id: string;
+  tournamentId: string;
   contactPerson: ContactPerson;
 }
 
 const UpdadeContactPersonButton = ({
-  id,
+  tournamentId,
   contactPerson,
 }: UpdateContactPersonButtonProps) => {
   const [open, setOpen] = useState(false);
@@ -91,7 +91,7 @@ const UpdadeContactPersonButton = ({
           role: values.role,
           facilityId: contactPerson.facilityId,
         },
-        id!
+        tournamentId!
       );
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
 

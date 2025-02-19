@@ -1,4 +1,4 @@
-import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
+import {  NoResponseError } from "@/api/functions/apiErrors";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -59,16 +59,24 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
     }
   };
 
-  function deleteConfirmed() {
+  function deleteConfirmed(type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist") {
     try {
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
-
+      switch(type){
+        case "Facility":
+        case "Kiosk":
+        case "ContactPerson":
+          queryClient.invalidateQueries({ queryKey: ["facilities"] });
+          break;
+        case "Productlist":
+          queryClient.invalidateQueries({ queryKey: ["productlists"] });
+          break;
+      }  
       okToast(`Objektet raderades`);
     } catch (error) {
       if (error instanceof NoResponseError) {
-        badToast("Misslyckades med att radera objektet.");
+        badToast(`Misslyckades med att radera objektet.`);
       } else {
-        badToast("Misslyckades med att radera objektet.");
+        badToast(`Misslyckades med att radera objektet.`);
       }
     }
   }
@@ -90,7 +98,7 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
           <AlertDialogCancel>Avbryt</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              onDelete(id, type).then(() => deleteConfirmed());
+              onDelete(id, type).then(() => deleteConfirmed(type));
             }}
           >
             Radera

@@ -6,8 +6,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import UpdateProductButton from "@/components/UpdateProductButton";
-import { useQueryClient } from "@tanstack/react-query";
-import { Product, Productlist } from "@/interfaces";
+import { Product } from "@/interfaces";
 import { useParams } from "react-router-dom";
 import {
   Accordion,
@@ -18,16 +17,13 @@ import {
 import CreateProductListButton from "@/components/CreateProductListButton";
 import UpdateProductListButton from "@/components/UpdateProductListButton";
 import DeleteButton from "@/components/DeleteButton";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import ProductInfoComponent from "@/components/ProductInfoComponent";
 import { useGetAllProductlists, useGetAllProducts } from "@/hooks/use-query";
+import { deleteProductList } from "@/api/functions/deleteProductlist";
 
 function ProductHandler() {
-  const queryClient = useQueryClient();
   const { id } = useParams<{ id: string }>();
-
   const tournamentId = id;
 
   const {
@@ -42,117 +38,6 @@ function ProductHandler() {
     error: errorProductList,
   } = useGetAllProductlists(tournamentId!)
 
-
-  const SaveProductList = async (productlistName: string) => {
-    try {
-      const response = await fetchWithAuth(`productlists/${tournamentId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productlistName: productlistName,
-          products: [],
-        }),
-      });
-      if (!response) {
-        throw new Error("Failed to save product list");
-      }
-      if (response.status === 409) {
-        toast({
-          title: "Fel",
-          description: `Produktlista med namnet ${productlistName}  finns redan.`,
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        queryClient.invalidateQueries({ queryKey: ["productslists"] });
-        return 409; 
-      }
-
-      queryClient.invalidateQueries({ queryKey: ["productlists"] });
-      toast({
-        className: "bg-green-200 dark:text-black dark:bg-green-400",
-        title: "Lyckat",
-        description: `Produktlista  ${productlistName} skapades`,
-      });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att skapa produktlista.",
-        className: "bg-red-200 dark:text-black dark:bg-red-400",
-      });
-    }
-  };
-
-  const UpdateProductlist = async (updatedProductList: Productlist) => {
-    try {
-      const response = await fetchWithAuth(
-        `productlists/${tournamentId}/${updatedProductList.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedProductList),
-        }
-      );
-
-      if (!response) {
-        throw new Error("Failed to update product list");
-      }
-
-      if (response.status === 409) {
-        toast({
-          title: "Fel",
-          description: `Produktlista med namnet ${updatedProductList.productlistName}  finns redan.`,
-          className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        });
-        queryClient.invalidateQueries({ queryKey: ["productslists"] });
-      }
-   
-      if (response.status === 200) {
-        queryClient.invalidateQueries({ queryKey: ["productlists"] });
-        toast({
-          className: "bg-green-200 dark:text-black dark:bg-green-400",
-          title: "Lyckat",
-          description: `Produktlista  ${updatedProductList.productlistName} uppdaterades`,
-        });
-
-        
-      }
-    } catch (error) {
-      console.error("Failed to update product list:", error);
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att uppdatera produktlista.",
-        className: "bg-red-200 dark:text-black dark:bg-red-400",
-      });
-    }
-  };
-
-
-  const DeleteProductsList = async (id: string) => {
-    try {
-      const response = await fetchWithAuth(
-        `productlists/${tournamentId}/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response) {
-        throw new Error("Failed to delete product list");
-      }
-      queryClient.invalidateQueries({ queryKey: ["productlists"] });
-      toast({
-        className: "bg-green-200 dark:text-black dark:bg-green-400",
-        title: "Lyckat",
-        description: `Produktlistan raderades`,
-      });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att radera produktlista.",
-        className: "bg-red-200 dark:text-black dark:bg-red-400",
-      });
-    }
-  };
 
   if (isLoading || isLoadingProductLists) {
     return (
@@ -230,9 +115,7 @@ function ProductHandler() {
         <div className="container mx-auto px-4 flex-row items-center">
           <div className="border border-t-2 mb-8 dark:border-slate-600 w-3/4"></div>
           <CreateProductListButton
-            onSave={(productListName) => {
-              SaveProductList(productListName);
-            }}
+           tournamentId={tournamentId!}
           />
           <div className="mt-8">
             <Accordion
@@ -254,9 +137,7 @@ function ProductHandler() {
                         <UpdateProductListButton
                           productlist={productlist}
                           tournamentProducts={products?.products || []}
-                          onUpdate={(updatedList) =>
-                            UpdateProductlist(updatedList)
-                          }
+                          tournamentId={tournamentId!}  
                         />
 
                         <TooltipProvider>
@@ -265,9 +146,7 @@ function ProductHandler() {
                               <DeleteButton
                                 id={productlist.id}
                                 type="Productlist"
-                                onDelete={() =>
-                                  DeleteProductsList(productlist.id)
-                                }
+                                onDelete={() => deleteProductList(productlist.id, tournamentId!)}
                               />
                             </TooltipTrigger>
                             <TooltipContent>

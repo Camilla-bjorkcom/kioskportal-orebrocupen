@@ -52,13 +52,13 @@ const formSchema = z.object({
 });
 
 interface AddContactPersonButtonProps {
-  id: string;
+  tournamentId: string;
   facilityId: string;
   onFacilityAdded?: (facilityId: string) => void;
 }
 
 function AddContactPersonButton({
-  id,
+  tournamentId,
   facilityId,
   onFacilityAdded,
 }: AddContactPersonButtonProps) {
@@ -81,7 +81,7 @@ function AddContactPersonButton({
         values.phone,
         values.role,
         facilityId,
-        id!
+        tournamentId!
       );
       if (!contactPersonCreated) {
         throw new NoResponseError("No response from server");

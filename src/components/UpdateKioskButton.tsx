@@ -33,14 +33,14 @@ const formSchema = z.object({
   }),
 });
 
-interface EditSelectedKioskButtonProps {
-  id: string;
+interface UpdateKioskKioskButtonProps {
+  tournamentId: string;
   kioskForEdit: Kiosk;
 }
-function EditSelectedKioskButton({
+function UpdateKioskKioskButton({
   kioskForEdit,
-  id,
-}: EditSelectedKioskButtonProps) {
+  tournamentId,
+}: UpdateKioskKioskButtonProps) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -59,7 +59,7 @@ function EditSelectedKioskButton({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const updatedKiosk = { ...kioskForEdit, kioskName: values.kioskName };
-      const updatedKioskResult = await updateKiosk(updatedKiosk, id!);
+      const updatedKioskResult = await updateKiosk(updatedKiosk, tournamentId!);
 
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
 
@@ -119,4 +119,4 @@ function EditSelectedKioskButton({
   );
 }
 
-export default EditSelectedKioskButton;
+export default UpdateKioskKioskButton;

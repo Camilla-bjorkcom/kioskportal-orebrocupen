@@ -8,6 +8,6 @@ export class DuplicateError extends Error {
 export class NoResponseError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "NotResponseError";
+    this.name = "NoResponseError";
   }
 }

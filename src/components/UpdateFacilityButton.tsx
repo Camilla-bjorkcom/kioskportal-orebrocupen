@@ -34,11 +34,11 @@ const formSchema = z.object({
 });
 
 interface UpdateFacilityButtonProps {
-  id: string;
+  tournamentId: string;
   facility: Facility;
 }
 
-const UpdateFacilityButton = ({ id, facility }: UpdateFacilityButtonProps) => {
+const UpdateFacilityButton = ({ tournamentId, facility }: UpdateFacilityButtonProps) => {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -60,7 +60,7 @@ const UpdateFacilityButton = ({ id, facility }: UpdateFacilityButtonProps) => {
       const updatedFacility = await updateFacility(
         facility,
         values.facilityName,
-        id!
+        tournamentId!
       );
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
 
