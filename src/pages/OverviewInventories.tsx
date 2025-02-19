@@ -2,7 +2,6 @@ import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmoun
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { Facility } from "@/interfaces";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Table,
