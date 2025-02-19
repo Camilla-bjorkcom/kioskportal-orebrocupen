@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { Facility } from "@/interfaces/facility";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { GroupedStorageInventories } from "@/interfaces/storageInventory";
+import { GroupedStorageInventories, StorageInventory } from "@/interfaces/storageInventory";
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
 import { Productlist } from "@/interfaces/productlist";
+import { KioskInventory } from "@/interfaces/kioskInventory";
 import { Tournament } from "@/interfaces/tournament";
 import { Kiosk } from "@/interfaces";
 
@@ -127,3 +128,64 @@ export const useGetOneKiosk = (tournamentId: string, facilityId: string, kioskId
       },
     });
   };
+export const useGetStorageInventory = (tournamentId: string) => {
+  return useQuery<StorageInventory>({
+    queryKey: ["inventoryList"],
+    queryFn: async () => {
+      const response = await fetchWithAuth(
+        `tournaments/${tournamentId}/inventoryoverview`
+      );
+      if (!response) {
+        throw new Error("Failed to fetch storage inventory");
+      }
+      if (!response.ok) {
+        throw new Error("Failed to fetch storage inventory");
+      }
+      const dataResponse = await response.json();
+
+      return dataResponse;
+    },
+  });
+}
+
+export const useGetFirstStorageInventory = (tournamentId : string) => {
+ return useQuery<StorageInventory>(
+    {
+      queryKey: ["firstInventoryList"],
+      queryFn: async () => {
+        const response = await fetchWithAuth(
+          `tournaments/${tournamentId}/firstinventory`
+        );
+        if (!response) {
+          throw new Error("Failed to fetch first storage inventory");
+        }
+        if (!response.ok) {
+          throw new Error("Failed to fetch first storage inventory");
+        }
+        const dataResponse = await response.json();
+
+        return dataResponse;
+      },
+    });
+
+}
+
+export const useGetAllFirstKioskInventories = (tournamentId: string) => {
+  return useQuery<KioskInventory[]>({
+    queryKey: ["firstkioskinventories"],
+    queryFn: async () => {
+      const response = await fetchWithAuth(
+        `firstkioskinventories/${tournamentId}`
+      );
+      if (!response) {
+        throw new Error("Failed to feth first inventories");
+      }
+      if (!response.ok) {
+        throw new Error("Failed to fetch facilities");
+      }
+      const data = await response.json();
+
+      return data;
+    },
+  });
+}

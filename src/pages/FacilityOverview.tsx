@@ -15,6 +15,7 @@ import { KioskInventory } from "@/interfaces/kioskInventory";
 import { mapKioskInventoriesToFacility } from "@/functions/mapKioskInventoriesToFacility";
 import { useGetOneFacility } from "@/hooks/use-query";
 import { cleanDate } from "@/utils/cleanDate";
+import { useGetOneFacility } from "@/hooks/use-query";
 
 const FacilityOverview = () => {
   const { id: tournamentId, fid: facilityId } = useParams<{
@@ -26,7 +27,7 @@ const FacilityOverview = () => {
     isLoading,
     data: facility,
     isSuccess,
-  } = useGetOneFacility(tournamentId!, facilityId!)
+  } = useGetOneFacility(tournamentId ?? "", facilityId ?? "")
 
   
   const currentKiosks = facility?.kiosks ?? [];
