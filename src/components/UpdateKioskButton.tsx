@@ -33,14 +33,14 @@ const formSchema = z.object({
   }),
 });
 
-interface EditSelectedKioskButtonProps {
-  id: string;
+interface UpdateKioskKioskButtonProps {
+  tournamentId: string;
   kioskForEdit: Kiosk;
 }
-function EditSelectedKioskButton({
+function UpdateKioskKioskButton({
   kioskForEdit,
-  id,
-}: EditSelectedKioskButtonProps) {
+  tournamentId,
+}: UpdateKioskKioskButtonProps) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -58,18 +58,17 @@ function EditSelectedKioskButton({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const updatedKiosk = { ...kioskForEdit, kioskName: values.kioskName };
-      const updatedKioskResult = await updateKiosk(updatedKiosk, id!);
-
+     
+      const updatedKioskResult = await updateKiosk({tournamentId:tournamentId!, facilityId:kioskForEdit.facilityId, kioskId:kioskForEdit.id, kioskName:values.kioskName});
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
 
-      if (!updatedKioskResult) throw new Error("No contact person found");
-      okToast("Kontaktpersonen har uppdaterats");
+      if (!updatedKioskResult) throw new Error("Misslyckades med att uppdatera kiosknamn");
+      okToast("Kiosknamn har uppdaterats");
     } catch (error) {
       if (error instanceof NoResponseError) {
-        badToast("Misslyckades med att uppdatera kontaktperson");
+        badToast("Misslyckades med att uppdatera kiosknamn");
       } else {
-        badToast("Misslyckades med att uppdatera kontaktperson");
+        badToast("Misslyckades med att uppdatera kiosknamn");
       }
     }
 
@@ -119,4 +118,4 @@ function EditSelectedKioskButton({
   );
 }
 
-export default EditSelectedKioskButton;
+export default UpdateKioskKioskButton;

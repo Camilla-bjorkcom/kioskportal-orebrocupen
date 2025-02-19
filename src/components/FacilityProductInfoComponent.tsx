@@ -32,29 +32,23 @@ const FacilityProductInfoComponent = () => {
             </p>
             <p className="text-sm mt-1">
               Du kan välja fler kiosker med hjälp av checkboxarna till höger för
-              att populera kioskerna snabbare med produkter
+              att populera kioskerna snabbare med produkter.
             </p>
           </div>
           <div>
             <h4 className=" font-semibold">Kontaktpersoner</h4>
             <p className="text-sm mt-1">
-              Du kan skapa kontaktpersoner för att koppla till en anläggning.
-              Kontaktpersoner med rollen "planansvarig kan notifieras i vyn
+              Du kan skapa kontaktpersoner kopplade till en anläggning.
+              Kontaktpersoner med rollen "planansvarig" kan notifieras i vyn
               "Visa kioskernas inventering" om kiosker behöver påminnas om
-              inventering.
+              att göra sin inventering.
             </p>
           </div>
           <div>
             <h4 className=" font-semibold">QR koder</h4>
             <p className="text-sm mt-1">
-              Överst på sidan hittar du en knapp för att skriva ut samtliga
-              QR-koder till dina skapade kiosker. Dessa används i kioskerna för
-              att komma till en inventeringsvy.
-            </p>
-            <p className="text-sm mt-1">
-              Varje kiosk har även möjlighet att skriva ut sin egen QR-kod som
-              går till inventeringsvyn.
-            </p>
+             QR-koder används ute i kioskerna för att komma till inventeringsvyn. Du har möjlighet att skriva ut alla QR-koder på en gång eller var för sig för varje kiosk. Alla QR-koder är unika och ska placeras i rätt kiosk för att inventering av kioskens produkter ska bli så tillförlitlig som möjligt. 
+            </p>       
           </div>
         </DialogContent>
       </Dialog>

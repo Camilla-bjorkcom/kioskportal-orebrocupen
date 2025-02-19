@@ -27,7 +27,6 @@ export const calculateFirstTotalAmountForFacility = (
       { productName: string; totalAmount: number; id: string }
     > = {};
   
-    // Hämta alla firstKioskInventories som matchar facilityId
     const matchingInventories = firstKioskInventories.filter(
       (inventory) => inventory.facilityId === facilityId
     );
@@ -42,7 +41,7 @@ export const calculateFirstTotalAmountForFacility = (
         const productId = product.id;
         const productName = product.productName;
   
-        // Beräkna total mängd per produkt
+       
         const amountPackages = product.amountPackages ?? 0;
         const amountPerPackage = product.amountPerPackage ?? 1;
         const amountPieces = product.amountPieces ?? 0;
@@ -50,7 +49,7 @@ export const calculateFirstTotalAmountForFacility = (
         const totalAmount = amountPackages * amountPerPackage + amountPieces;
   
       
-        // Om produkten inte finns i totals, skapa den
+     
         if (!totals[productId]) {
           totals[productId] = {
             productName,
@@ -59,16 +58,11 @@ export const calculateFirstTotalAmountForFacility = (
           };
         }
   
-        // Summera totalen
+     
         totals[productId].totalAmount += totalAmount;
       });
     });
   
-    console.log(
-      "Final computed first totals for facility:",
-      facilityName,
-      Object.values(totals)
-    );
   
     return {
       facilityName,

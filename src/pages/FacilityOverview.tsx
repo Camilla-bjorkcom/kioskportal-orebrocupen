@@ -1,7 +1,6 @@
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmountForFacility";
-import { Facility } from "@/interfaces/facility";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {
   Table,
@@ -14,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { KioskInventory } from "@/interfaces/kioskInventory";
 import { mapKioskInventoriesToFacility } from "@/functions/mapKioskInventoriesToFacility";
+import { useGetOneFacility } from "@/hooks/use-query";
 import { cleanDate } from "@/utils/cleanDate";
 import { useGetOneFacility } from "@/hooks/use-query";
 
@@ -23,17 +23,15 @@ const FacilityOverview = () => {
     fid: string;
   }>();
 
-  // 🔹 Hämtar facility-data
   const {
     isLoading,
     data: facility,
     isSuccess,
   } = useGetOneFacility(tournamentId ?? "", facilityId ?? "")
 
-  // 🔹 Vänta på att `facility` laddas innan vi skapar queries
+  
   const currentKiosks = facility?.kiosks ?? [];
 
-  // 🔹 Hämta alla kiosk-inventeringar
   const kioskInventoryQueries = useQueries({
     queries: currentKiosks.map((kiosk) => ({
       queryKey: ["kioskInventory", kiosk.id],

@@ -11,23 +11,23 @@ export const calculateTotalAmountForFacility = (
       const productId = product.id;
       const productName = product.productName;
 
-      // Beräkna total mängd per produkt
+     
       const amountPackages = product.amountPackages ?? 0;
-      const amountPerPackage = product.amountPerPackage ?? 1; // Default till 1 om det saknas
+      const amountPerPackage = product.amountPerPackage ?? 1; 
       const amountPieces = product.amountPieces ?? 0;
 
       const totalAmount = amountPackages * amountPerPackage + amountPieces;
 
-      // Om produkten inte finns, skapa den
+     
       if (!totals[productId]) {
         totals[productId] = {
           productName,
           totalAmount: 0,
-          id: productId, // Placeras sist
+          id: productId, 
         };
       }
 
-      // Summera totalen
+    
       totals[productId].totalAmount += totalAmount;
     });
   });
@@ -36,6 +36,5 @@ export const calculateTotalAmountForFacility = (
     facilityName: facility.facilityName,
     id: facility.id,
     products: Object.values(totals)
-     // Konvertera till en array för enklare användning i UI
   };
 };

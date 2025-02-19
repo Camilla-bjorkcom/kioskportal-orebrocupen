@@ -28,15 +28,18 @@ const ProductInfoComponent = () => {
             </p>
             <p className="text-sm mt-1">
               Fältet "Ange antal per förpackning" hjälper dig att hålla koll på
-              uträkningar för hur många produkter det finns totalt i
+              hur många produkter det finns totalt hos anläggningar och kiosker i
               inventeringsvyn. Se till att fylla i detta fält korrekt.
+            </p>
+            <p className="text-sm mt-1">
+             Tryck på en produkt för att redigera den.
             </p>
           </div>
           <div>
             <h4 className=" font-semibold">Produktlista</h4>
             <p className="text-sm mt-1">
               Skapa upp en eller flera produktlistor och lägg till dina skapade
-              produkter för att enklare populera kiosker.
+              produkter i den för att enklare populera kioskerna.
             </p>
           </div>
         </DialogContent>

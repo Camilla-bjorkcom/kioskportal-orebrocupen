@@ -1,34 +1,30 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Outlet } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { Tournament } from "@/interfaces";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
+
 import ThemeToggle from "@/components/ThemeToggle";
+import { useGetTournament } from "@/hooks/use-query";
 
 function TournamentDetails() {
   const { id } = useParams<{ id: string }>();
 
-  const { isLoading, error, data, isSuccess } = useQuery<Tournament>({
-    queryKey: ["tournament", id],
-    queryFn: async () => {
-      if (!id) {
-        throw new Error("No tournament ID provided");
-      }
-      const response = await fetchWithAuth(`tournaments/${id}`);
-      if (!response) {
-        throw new Error("Failed to fetch tournament");
-      }
-      const tournament = await response.json();
-
-      return tournament || [];
-    },
-  });
+  const { isLoading, error, data, isSuccess } = useGetTournament(id!);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="container mx-auto px-5 py-10 flex justify-center items-center">
+        <div className="text-center">
+          <div
+            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+            role="status"
+          ></div>
+          <p className="mt-4 text-gray-500">Laddar turneringsdata...</p>
+        </div>
+      </div>
+    );
   }
+  
   if (!isSuccess) {
     return <div>Error: {String(error)}</div>;
   }

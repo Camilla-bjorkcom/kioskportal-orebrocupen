@@ -5,6 +5,8 @@ import { GroupedStorageInventories, StorageInventory } from "@/interfaces/storag
 import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
 import { Productlist } from "@/interfaces/productlist";
 import { KioskInventory } from "@/interfaces/kioskInventory";
+import { Tournament } from "@/interfaces/tournament";
+import { Kiosk } from "@/interfaces";
 
 export const useGetAllFacilities = (tournamentId: string) => {
   return useQuery<Facility[]>({
@@ -13,7 +15,7 @@ export const useGetAllFacilities = (tournamentId: string) => {
       const response = await fetchWithAuth(`facilities/${tournamentId}`);
 
       if (!response || !response.ok) {
-        throw new Error("Failed to fetch inventories");
+        throw new Error("Failed to fetch facilities");
       }
       const dataResponse: Facility[] = await response.json();
       return dataResponse;
@@ -21,24 +23,21 @@ export const useGetAllFacilities = (tournamentId: string) => {
   });
 };
 
-export const useGetOneFacility = (tournamentId: string, facilityId: string) =>{
+export const useGetOneFacility = (tournamentId: string, facilityId: string) => {
   return useQuery<Facility>({
-    queryKey: ["facilities", tournamentId, facilityId],
+    queryKey: ["facilities", facilityId],
     queryFn: async () => {
       const response = await fetchWithAuth(
         `facilities/${tournamentId}/${facilityId}`
       );
-      if (!response) {
-        throw new Error("Response is undefined");
-      }
-      if (!response.ok) {
+      if (!response || !response.ok) {
         throw new Error("Failed to fetch facility");
       }
-      const data = await response.json();
-      return data.length > 0 ? data[0] : null;
+      const dataResponse = await response.json();
+      return dataResponse.length > 0 ? dataResponse[0] : null;
     },
   });
-}
+};
 
 export const useGetAllStorageInventories = (tournamentId: string) => {
   return useQuery<GroupedStorageInventories>({
@@ -46,11 +45,8 @@ export const useGetAllStorageInventories = (tournamentId: string) => {
     queryFn: async () => {
       const response = await fetchWithAuth(`
 tournaments/${tournamentId}/inventories`);
-      if (!response) {
-        throw new Error("Failed to fetch products");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
+      if (!response || !response.ok) {
+        throw new Error("Failed to fetch inventories");
       }
       const dataResponse = await response.json();
       return dataResponse;
@@ -63,10 +59,7 @@ export const useGetAllProducts = (tournamentId: string) => {
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetchWithAuth(`products/${tournamentId}`);
-      if (!response) {
-        throw new Error("Failed to fetch products");
-      }
-      if (!response.ok) {
+      if (!response || !response.ok) {
         throw new Error("Failed to fetch products");
       }
       const dataResponse = await response.json();
@@ -80,7 +73,7 @@ export const useGetAllProductlists = (tournamentId: string) => {
     queryKey: ["productlists"],
     queryFn: async () => {
       const response = await fetchWithAuth(`productlists/${tournamentId}`);
-      if (!response) {
+      if (!response || !response.ok) {
         throw new Error("Failed to fetch productlists");
       }
       const dataResponse = await response.json();
@@ -88,8 +81,53 @@ export const useGetAllProductlists = (tournamentId: string) => {
       return dataResponse || [];
     },
   });
-}
+};
 
+export const useGetTournament = (tournamentId: string) => {
+  return useQuery<Tournament>({
+    queryKey: ["tournament"],
+    queryFn: async () => {
+      const response = await fetchWithAuth(`tournaments/${tournamentId}`);
+      if (!response || !response.ok) {
+        throw new Error("Failed to fetch tournament");
+      }
+      const dataResponse = await response.json();
+
+      return dataResponse || [];
+    },
+  });
+};
+
+export const useGetAllTournaments = () => {
+  return useQuery<Tournament[]>({
+    queryKey: ["tournaments"],
+    queryFn: async () => {
+      const response = await fetchWithAuth("tournaments");
+      if (!response || !response.ok) {
+        throw new Error("Failed to fetch tournaments");
+      }
+      const dataResponse = await response.json();
+
+      return dataResponse || [];
+    },
+  });
+};
+
+export const useGetOneKiosk = (tournamentId: string, facilityId: string, kioskId: string) => {
+  return useQuery<Kiosk>({
+    queryKey: ["kiosk"],
+    queryFn: async () => {
+      const response = await fetchWithAuth(
+        `facilities/${tournamentId}/${facilityId}/kiosks/${kioskId}`);
+        if (!response || !response.ok) {
+          throw new Error("Failed to fetch kiosk");
+        }
+        const dataResponse = await response.json();
+  
+        return dataResponse || [];
+      },
+    });
+  };
 export const useGetStorageInventory = (tournamentId: string) => {
   return useQuery<StorageInventory>({
     queryKey: ["inventoryList"],

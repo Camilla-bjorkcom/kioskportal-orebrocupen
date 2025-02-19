@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Dialog,
   DialogContent,
@@ -8,12 +6,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Input } from "./ui/input";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
 import { z } from "zod";
 import {
   Form,
@@ -27,10 +23,9 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
 import { createFacility } from "@/api/functions/createFacility";
-import { toast } from "@/hooks/use-toast";
 import { okToast, badToast } from "@/utils/toasts";
 import { useQueryClient } from "@tanstack/react-query";
-import { Facility } from "@/interfaces";
+
 
 const formSchema = z.object({
   facilityName: z.string().min(2, {
@@ -39,10 +34,10 @@ const formSchema = z.object({
 });
 
 interface AddFacilityButtonProps {
-  id: string;
+  tournamentId: string;
 }
 
-function AddFacilityButton({ id }: AddFacilityButtonProps) {
+function AddFacilityButton({ tournamentId }: AddFacilityButtonProps) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -55,7 +50,7 @@ function AddFacilityButton({ id }: AddFacilityButtonProps) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const facilityCreated = await createFacility(id!, values.facilityName);
+      const facilityCreated = await createFacility(tournamentId!, values.facilityName);
       if (!facilityCreated) {
         throw new NoResponseError("No response from server");
       }

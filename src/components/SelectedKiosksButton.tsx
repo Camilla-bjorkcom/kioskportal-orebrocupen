@@ -17,15 +17,14 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useParams } from "react-router-dom";
-import { toast } from "@/hooks/use-toast";
 import { okToast } from "@/utils/toasts";
+import { updateKiosk } from "@/api/functions/updateKiosk";
 
 interface SelectedKiosksButtonProps {
-  selectedKiosks: Kiosk[]; // Lista över valda kiosker
-  productlists: Productlist[]; // Produktlistor skickas från PopulateKiosks
-  products: Product[]; // Produkter skickas från PopulateKiosks
+  selectedKiosks: Kiosk[]; 
+  productlists: Productlist[]; 
+  products: Product[]; 
   onClick: (open: boolean) => void;
   onKiosksUpdated: (updatedKiosks: Kiosk[]) => void;
   onClearSelected: () => void;
@@ -88,23 +87,7 @@ function SelectedKiosksButton({
     const updatedKioskList = [];
 
     for (const kiosk of selectedKiosks) {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${kiosk.facilityId}/kiosks/${kiosk.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application.json" },
-          body: JSON.stringify({
-            kioskName: kiosk.kioskName,
-            products: selectedProducts,
-          }),
-        }
-      );
-      if (!response) {
-        const errorText = await response!.text();
-        console.error("Server response error:", errorText);
-        throw new Error("Failed to update list");
-      }
-      const updatedKiosk = await response.json();
+      const updatedKiosk = await updateKiosk({ tournamentId: tournamentId!, facilityId: kiosk.facilityId, kioskId: kiosk.id, products: selectedProducts });
       console.log(updatedKiosk);
 
       updatedKioskList.push(updatedKiosk);
@@ -136,7 +119,6 @@ function SelectedKiosksButton({
           </ul>
         </DialogHeader>
 
-        {/* Select för produktlista */}
         <Select
           value={selectedProductListId}
           onValueChange={handleProductListChange}
@@ -167,7 +149,7 @@ function SelectedKiosksButton({
           </Button>
         </div>
 
-        {/* Produktlista */}
+      
         <div className="grid grid-cols-2 gap-4">
           {products.map((product) => (
             <div key={product.id} className="flex items-center gap-2">
