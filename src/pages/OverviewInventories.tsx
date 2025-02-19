@@ -2,7 +2,6 @@ import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmoun
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { Facility } from "@/interfaces";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Table,
@@ -13,6 +12,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { KioskInventory } from "@/interfaces/kioskInventory";
+import { calculateProductTotalsFacility } from "@/functions/calculateProductTotalsFacility";
 import { StorageInventory } from "@/interfaces/storageInventory";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +22,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { calculateFirstTotalAmountForFacility } from "@/functions/calculateFirstTotalAmountForFacility";
 import { sortByInventoryDate } from "@/utils/sortByDate";
+import { useState } from "react";
 
 const OverviewInventories = () => {
   const { id } = useParams<{ id: string }>();
@@ -79,34 +82,44 @@ const OverviewInventories = () => {
       return data;
     },
   });
+  const { data: firstKioskInventories } = useQuery<KioskInventory[]>({
+    queryKey: ["firstkioskinventories"],
+    queryFn: async () => {
+      const response = await fetchWithAuth(
+        `firstkioskinventories/${tournamentId}`
+      );
+      if (!response) {
+        throw new Error("Failed to feth first inventories");
+      }
+      if (!response.ok) {
+        throw new Error("Failed to fetch facilities");
+      }
+      const data = await response.json();
+
+      return data;
+    },
+  });
+ 
 
   const allProducts = storageInventory?.products.map((product) => {
     return product.productName;
   });
+  
+  const productTotals = calculateProductTotalsFacility(storageInventory!);
 
-  const productTotals =
-    storageInventory?.products.map((product) => {
-      const totalAmount =
-        (product.amountPackages ?? 0) * (product.amountPerPackage ?? 1);
-      return {
-        productName: product.productName,
-        totalAmount: totalAmount,
-      };
-    }) || [];
-
-  const productsFirstTotal =
-    firstStorageInventory?.products.map((product) => {
-      const totalAmount =
-        (product.amountPackages ?? 0) * (product.amountPerPackage ?? 1);
-      return {
-        productName: product.productName,
-        totalAmount: totalAmount,
-      };
-    }) || [];
+  const productsFirstTotals = calculateProductTotalsFacility(
+    firstStorageInventory!
+  );
+ 
 
   const facilitiesWithTotals =
     facilities?.map((facility) => calculateTotalAmountForFacility(facility)) ||
     [];
+
+  const facilitiesFirstTotals =
+    facilities?.map((facility) =>
+      calculateFirstTotalAmountForFacility(facility.id, facility.facilityName, firstKioskInventories!)
+    ) || [];
 
   const [viewDate, setViewDate] = useState<boolean>(false);
 
@@ -136,7 +149,11 @@ const OverviewInventories = () => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Button onClick={toggleViewDate}>{viewDate ? "Dölj inventeringsdatum" : "Visa inventeringsdatum" }</Button>
+                <Button onClick={toggleViewDate}>
+                  {viewDate
+                    ? "Dölj inventeringsdatum"
+                    : "Visa inventeringsdatum"}
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Visa kioskernas senaste inventering</p>
@@ -212,14 +229,24 @@ const OverviewInventories = () => {
               const productsInStorage = productTotals.find(
                 (x) => x.productName === productName
               );
-              const productsInStorageFirst = productsFirstTotal.find(
+              const productsInStorageFirst = productsFirstTotals.find(
                 (x) => x.productName === productName
               );
+              const productsFirstInFacility = facilitiesFirstTotals.map((x) =>
+                
+              x.products.find((p) => p.productName === productName)  
+            )
 
               const total = [productsInStorage, ...productsInFacilities]
                 .map((x) => x?.totalAmount ?? 0)
                 .reduce((a, c) => a + c, 0);
-
+                console.log(total)
+              
+              const initialTotal = [productsInStorageFirst, ...productsFirstInFacility]
+              .map((x) => x?.totalAmount ?? 0)
+              .reduce((a, c) => a + c, 0) 
+              console.log(initialTotal)
+                
               return (
                 <TableRow key={productName}>
                   {/* Produktnamn */}
@@ -230,14 +257,29 @@ const OverviewInventories = () => {
                   </TableCell>
 
                   {/* För varje facility, hämta totalAmount för denna produkt */}
-                  {facilitiesWithTotals.map((facility, index) => (
-                    <TableCell
-                      key={facility.facilityName + productName}
-                      className="text-center dark:text-slate-300"
-                    >
-                      {productsInFacilities[index]?.totalAmount ?? "-"}
-                    </TableCell>
-                  ))}
+                  {facilitiesWithTotals.map((facility, index) => {
+                    const currentTotal =
+                      productsInFacilities[index]?.totalAmount ?? 0;
+                    const firstTotal =
+                      facilitiesFirstTotals[index]?.products.find(
+                        (p) => p.productName === productName
+                      )?.totalAmount ?? 0;
+
+                    const isLowStock = currentTotal < firstTotal * 0.2; // Kolla om värdet är under 20% av första inventeringen
+
+                    return (
+                      <TableCell
+                        key={facility.facilityName + productName}
+                        className={`text-center dark:text-slate-300 ${
+                          isLowStock
+                            ? "text-red-500 font-bold dark:text-red-500 dark:font-bold"
+                            : ""
+                        }`}
+                      >
+                        {currentTotal ?? "-"}
+                      </TableCell>
+                    );
+                  })}
 
                   {/* Huvudlager-värde */}
                   <TableCell
@@ -252,7 +294,11 @@ const OverviewInventories = () => {
                   </TableCell>
 
                   {/* Totalt antal (summa av alla facilities + huvudlager) */}
-                  <TableCell className="text-center font-bold dark:text-slate-300">
+                  <TableCell className={`text-center font-bold dark:text-slate-300 ${
+                      (total ?? 0) < (initialTotal ?? 0) * 0.2 ?  "text-red-500 font-bold dark:text-red-500 dark:font-bold" // 🔴 Röd text om värdet är under 20%
+                        : ""
+                  }`}
+                  >
                     {total}
                   </TableCell>
                 </TableRow>

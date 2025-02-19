@@ -76,7 +76,7 @@ export function AppSidebar({ id }: { id?: string }) {
         { title: "QR koder till kiosker", url: `/facilitiesandkiosks/${id}` },
         {
           title: "Översikt av turneringens lager",
-          url: `/overViewinventories/${id}`,
+          url: `/overviewinventories/${id}`,
 
         }
       ],
