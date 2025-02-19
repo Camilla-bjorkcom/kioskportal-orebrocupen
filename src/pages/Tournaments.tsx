@@ -44,7 +44,7 @@ function Tournaments() {
       <h2 className="mt-8 text-2xl pb-2">Dina turneringar</h2>
       <CreateTournamentButton />
 
-      {/* Aktiva turneringar */}
+    
       <div className="mt-8">
         <h3 className="text-lg font-semibold dark:text-gray-200">
           Aktiva turneringar
@@ -79,7 +79,7 @@ function Tournaments() {
         </div>
       </div>
 
-      {/* Avslutade turneringar */}
+   
       <div className="mt-12">
         <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-200">
           Avslutade turneringar

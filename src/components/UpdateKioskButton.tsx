@@ -58,18 +58,17 @@ function UpdateKioskKioskButton({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const updatedKiosk = { ...kioskForEdit, kioskName: values.kioskName };
-      const updatedKioskResult = await updateKiosk(updatedKiosk, tournamentId!);
-
+     
+      const updatedKioskResult = await updateKiosk({tournamentId:tournamentId!, facilityId:kioskForEdit.facilityId, kioskId:kioskForEdit.id, kioskName:values.kioskName});
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
 
-      if (!updatedKioskResult) throw new Error("No contact person found");
-      okToast("Kontaktpersonen har uppdaterats");
+      if (!updatedKioskResult) throw new Error("Misslyckades med att uppdatera kiosknamn");
+      okToast("Kiosknamn har uppdaterats");
     } catch (error) {
       if (error instanceof NoResponseError) {
-        badToast("Misslyckades med att uppdatera kontaktperson");
+        badToast("Misslyckades med att uppdatera kiosknamn");
       } else {
-        badToast("Misslyckades med att uppdatera kontaktperson");
+        badToast("Misslyckades med att uppdatera kiosknamn");
       }
     }
 

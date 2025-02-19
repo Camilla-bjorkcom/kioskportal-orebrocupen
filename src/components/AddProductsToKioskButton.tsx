@@ -1,5 +1,3 @@
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { toast } from "@/hooks/use-toast";
 import { Kiosk } from "@/interfaces/kiosk";
 import { Product } from "@/interfaces/product";
 import { useQueryClient } from "@tanstack/react-query";
@@ -23,10 +21,12 @@ import {
 } from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
 import { Productlist } from "@/interfaces/productlist";
+import { badToast, okToast } from "@/utils/toasts";
+import { updateKiosk } from "@/api/functions/updateKiosk";
 
 interface AddProductsToKioskButtonProps {
   kioskForEdit: Kiosk;
-  productLists: Productlist[];
+  productlists: Productlist[];
   products: Product[];
   onKioskUpdated: (updatedkiosk: Kiosk) => void;
   onEditClick: (kiosk: Kiosk) => void;
@@ -34,7 +34,7 @@ interface AddProductsToKioskButtonProps {
 
 function AddProductsToKioskButton({
   kioskForEdit,
-  productLists,
+  productlists,
   products,
   onKioskUpdated,
   onEditClick,
@@ -58,11 +58,7 @@ function AddProductsToKioskButton({
     if (isOpen) {
       
       await onEditClick(kioskForEdit); 
-      console.log("HELA", kioskForEdit);
-      console.log(kioskForEdit.products);
-
       setSelectedProducts(kioskForEdit.products);
-      console.log(selectedProducts);
       setOpen(true);
     } else {
       setOpen(false);
@@ -72,7 +68,7 @@ function AddProductsToKioskButton({
   };
 
   const handleProductListChange = (value: string) => {
-    const selectedList = productLists.find((list) => list.id === value);
+    const selectedList = productlists.find((list) => list.id === value);
     if (selectedList) {
       setSelectedProductListId(value);
       setSelectedProducts(selectedList.products);
@@ -88,9 +84,9 @@ function AddProductsToKioskButton({
         selectedProducts.some((p) => p.id === product.id)
       )
     ) {
-      setSelectedProducts([]); // Avmarkera alla
+      setSelectedProducts([]); 
     } else {
-      setSelectedProducts(products); // Markera alla
+      setSelectedProducts(products); 
     }
   };
 
@@ -100,43 +96,22 @@ function AddProductsToKioskButton({
       selectedProducts.some((p) => p.id === product.id)
     );
 
-  const editKiosk = async (kioskForEdit: Kiosk) => {
+  const addProductsToKiosk = async (kioskForEdit: Kiosk) => {
     try {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${kioskForEdit.facilityId}/kiosks/${kioskForEdit.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            products: selectedProducts,
-          }),
-        }
-      );
-
-      if (!response) {
-        throw new Error("Failed to update kiosk");
-      }
+      const updatedKiosk = await updateKiosk({tournamentId: tournamentId!, facilityId: kioskForEdit.facilityId, kioskId: kioskForEdit.id, products: selectedProducts});
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
-      const updatedKiosk = await response.json();
-      toast({
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        title: "Lyckat",
-        description: `Produkterna har sparats i kiosken!`,
-      });
+     
+      okToast(`Produkterna har sparats i kiosken!`);
 
       onKioskUpdated(updatedKiosk); 
       setOpen(false); 
     } catch (error) {
       console.error("Failed to update kiosk:", error);
-      toast({
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-        title: "Misslyckat",
-        description: `Kunde inte spara produkterna till kiosken`,
-      });
+      badToast(`Kunde inte spara produkterna till kiosken`);
     }
   };
 
-  if (!kioskForEdit || !productLists || !products) {
+  if (!kioskForEdit || !productlists || !products) {
     return null; 
   }
 
@@ -148,7 +123,7 @@ function AddProductsToKioskButton({
           variant="ghost"
           className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto"
           onClick={(e) => {
-            e.stopPropagation(); // Stoppa eventbubbling
+            e.stopPropagation(); 
             setOpen(true);
           }}
         >
@@ -170,11 +145,11 @@ function AddProductsToKioskButton({
           <SelectTrigger className="w-auto">
             <SelectValue placeholder="Lägg till produkter från produktlista" />
           </SelectTrigger>
-          {productLists.length > 0 ? (
+          {productlists.length > 0 ? (
             <SelectContent>
-              {productLists.map((productList) => (
-                <SelectItem key={productList.id} value={productList.id}>
-                  {productList.productlistName}
+              {productlists.map((productlists) => (
+                <SelectItem key={productlists.id} value={productlists.id}>
+                  {productlists.productlistName}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -223,13 +198,13 @@ function AddProductsToKioskButton({
                 ))}
             </div>
             {selectedProducts.length > 0 ? (
-              <Button type="submit" onClick={() => editKiosk(kioskForEdit)}>
+              <Button type="submit" onClick={() => addProductsToKiosk(kioskForEdit)}>
                 Spara valda produkter till valda kiosker
               </Button>
             ) : (
               <Button
                 type="submit"
-                onClick={() => editKiosk(kioskForEdit)}
+                onClick={() => addProductsToKiosk(kioskForEdit)}
                 disabled
               >
                 Spara valda produkter till valda kiosker

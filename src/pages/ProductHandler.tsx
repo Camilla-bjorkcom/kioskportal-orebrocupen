@@ -14,13 +14,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import CreateProductListButton from "@/components/CreateProductListButton";
 import UpdateProductListButton from "@/components/UpdateProductListButton";
 import DeleteButton from "@/components/DeleteButton";
 import { Toaster } from "@/components/ui/toaster";
 import ProductInfoComponent from "@/components/ProductInfoComponent";
 import { useGetAllProductlists, useGetAllProducts } from "@/hooks/use-query";
 import { deleteProductList } from "@/api/functions/deleteProductlist";
+import CreateProductListButton from "@/components/CreateProductlistButton";
+
 
 function ProductHandler() {
   const { id } = useParams<{ id: string }>();
@@ -88,7 +89,7 @@ function ProductHandler() {
           />
 
           <div className="mt-8">
-            <h3 className="text-lg mb-7">Sparade produkter:</h3>
+            <h3 className="text-lg mb-7">Skapade produkter:</h3>
 
             <div className="grid grid-cols-4 mb-10 gap-2 w-full 2xl:w-3/4">
               {products?.products
@@ -118,6 +119,7 @@ function ProductHandler() {
            tournamentId={tournamentId!}
           />
           <div className="mt-8">
+          <h3 className="text-lg mb-7">Skapade produktlistor:</h3>
             <Accordion
               type="multiple"
               className=" w-full 2xl:w-3/4 dark:bg-slate-900"

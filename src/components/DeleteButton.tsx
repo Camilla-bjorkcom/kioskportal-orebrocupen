@@ -15,12 +15,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { TrashIcon } from "lucide-react";
 
 interface DeleteButtonProps {
-  id: string; // ID för objektet som ska raderas
-  type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist"; // Typ av objekt
+  id: string; 
+  type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist"; 
   onDelete: (
     id: string,
     type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist"
-  ) => Promise<void>; // Callback för att radera
+  ) => Promise<void>; 
 }
 
 const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {

@@ -10,6 +10,7 @@ const fetchWithAuth = async (
       `oidc.user:${cognitoUserUrl}`
     );
 
+    console.log(cognitoUserUrl)
     if (!oidcStorage) {
       throw new Error("No auth token found");
     }

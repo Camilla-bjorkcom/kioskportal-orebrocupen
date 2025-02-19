@@ -52,8 +52,8 @@ function CreateProductListButton({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const productlistCreated = await createProductlist(
+        values.productlistName,
         tournamentId!,
-        values.productlistName
       );
       if (!productlistCreated) {
         throw new NoResponseError("No response from server");

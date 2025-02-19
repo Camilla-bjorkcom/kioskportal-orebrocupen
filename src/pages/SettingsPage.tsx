@@ -102,10 +102,6 @@ const SettingsPage = () => {
           <h3 className="text-lg pb-2 border-b border-b-slate-300 w-3/4">
             Din profil
           </h3>
-          {/* <div className="flex mt-4 flex-col">
-            <p className="font-semibold mr-2 mb-2">Email:</p>
-            <span>{auth.user?.}</span>
-          </div> */}
           <div className="mt-3">
             <p className="font-semibold mr-2">Byt lösenord: </p>
             <ChangePassword />

@@ -38,11 +38,6 @@ const formSchema = z.object({
   }),
 });
 
-// interface CreateTournamentButtonProps {
-//   tournamentName: string;
-//   startDate: Date;
-//   endDate: Date;
-// }
 
 function CreateTournamentButton() {
   const [open, setOpen] = useState(false);
@@ -64,7 +59,7 @@ function CreateTournamentButton() {
         throw new NoResponseError("No response from server");
       }
 
-      queryClient.invalidateQueries({ queryKey: ["productslists"] });
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
 
       okToast(`Turnering ${values.tournamentName} skapades`);
     } catch (error) {

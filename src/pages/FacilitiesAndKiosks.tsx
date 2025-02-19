@@ -38,6 +38,8 @@ import { deleteFacility } from "@/api/functions/deleteFacility";
 import { deleteContactPerson } from "@/api/functions/deleteContactPerson";
 import { deleteKiosk } from "@/api/functions/deleteKiosk";
 import UpdateKioskKioskButton from "@/components/UpdateKioskButton";
+import { useGetOneKiosk } from "@/hooks/use-query";
+import { badToast } from "@/utils/toasts";
 
 function FacilitiesAndKiosks() {
   const { id } = useParams<{ id: string }>();
@@ -103,29 +105,22 @@ function FacilitiesAndKiosks() {
       alert("Du måste välja minst en kiosk!");
       return;
     }
-    
     alert(`Du har valt ${kiosksForUpdate.length} kiosker.`);
   };
 
   const handleEditClick = async (kiosk: Kiosk) => {
     try {
       setKioskForEdit(kiosk);
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${kiosk.facilityId}/kiosks/${kiosk.id}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
+     
+        const {data: fetchedKiosk, isSuccess: kioskSuccess} = useGetOneKiosk(tournamentId!, kiosk.facilityId, kiosk.id);
+        if(kioskSuccess){
+          setSelectedProducts(fetchedKiosk.products);
+          setOpen(true);
         }
-      );
-      if (!response) {
-        console.error("Failed to fetch kiosk products");
-      } else {
-        const data = await response.json();
-        setSelectedProducts(data.products);
-        setOpen(true);
-      }
+        
     } catch (error) {
       console.error("Error handling edit click:", error);
+      badToast("Något gick fel.")
     }
   };
 
@@ -300,7 +295,7 @@ function FacilitiesAndKiosks() {
                         <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit items-center">
                           <AddProductsToKioskButton
                             kioskForEdit={kiosk}
-                            productLists={productlists || []}
+                            productlists={productlists || []}
                             products={products?.products || []}
                             onEditClick={handleEditClick}
                             onKioskUpdated={handleKioskUpdated}

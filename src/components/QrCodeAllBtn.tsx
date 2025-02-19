@@ -12,7 +12,7 @@ interface QrCodeAllBtnProps {
 
 const QrCodeAllBtn: React.FC<QrCodeAllBtnProps> = ({ kiosksForQr }) => {
   if (!kiosksForQr || kiosksForQr.length === 0) {
-    return null; // Om listan är tom, visa inget
+    return null; 
   }
 
   const handleOpenQRCode = () => {

@@ -27,6 +27,8 @@ import { badToast, okToast } from "@/utils/toasts";
 import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
 import { updateFacility } from "@/api/functions/updateFacility";
 import { useQueryClient } from "@tanstack/react-query";
+
+
 const formSchema = z.object({
   facilityName: z.string().min(2, {
     message: "Anläggnings namn måste ha minst 2 bokstäver",

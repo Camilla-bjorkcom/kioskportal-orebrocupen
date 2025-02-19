@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Dialog,
   DialogContent,
@@ -8,12 +6,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Input } from "./ui/input";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
 import { z } from "zod";
 import {
   Form,
@@ -111,7 +107,7 @@ function AddContactPersonButton({
         <Button
           variant="outline"
           className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto"
-          onClick={(e) => e.stopPropagation()} // Stoppa eventbubbling
+          onClick={(e) => e.stopPropagation()}
         >
           Lägg till kontaktperson{" "}
           <PlusIcon className="w-4 h-4 place-self-center" />
@@ -119,7 +115,7 @@ function AddContactPersonButton({
       </DialogTrigger>
       <DialogContent
         onClick={(e) => {
-          e.stopPropagation(); // Hindrar event från att bubbla upp till AccordionTrigger
+          e.stopPropagation(); 
         }}
       >
         <DialogHeader>
@@ -130,7 +126,7 @@ function AddContactPersonButton({
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {/* Fält för namn */}
+           
             <FormField
               control={form.control}
               name="name"
@@ -148,7 +144,7 @@ function AddContactPersonButton({
               )}
             />
 
-            {/* Fält för telefonnummer */}
+           
             <FormField
               control={form.control}
               name="phone"
@@ -163,7 +159,7 @@ function AddContactPersonButton({
               )}
             />
 
-            {/* Roll-select */}
+          
             <FormField
               control={form.control}
               name="role"

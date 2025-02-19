@@ -8,9 +8,7 @@ export const createProductlist = async (
   const response = await fetchWithAuth(`productlists/${tournamentId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      productlistName: productlistName
-    }),
+    body: JSON.stringify({productlistName}),
   });
 
   if (!response) throw new NoResponseError("No response from server");
