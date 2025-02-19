@@ -1,4 +1,4 @@
-import { StorageInventory } from "@/interfaces/storageinventory";
+import { StorageInventory } from "@/interfaces/storageInventory";
 
 export const calculateProductTotalsFacility =(storageInventory:StorageInventory) => {
     if (!storageInventory || !Array.isArray(storageInventory.products)) {

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { KioskInventory } from "@/interfaces/kioskInventory";
 import { mapKioskInventoriesToFacility } from "@/functions/mapKioskInventoriesToFacility";
+import { cleanDate } from "@/utils/cleanDate";
 
 const FacilityOverview = () => {
   const { id: tournamentId, fid: facilityId } = useParams<{
@@ -234,6 +235,17 @@ const FacilityOverview = () => {
               </TableRow>
             );
           })}
+           <TableRow>
+            <TableHead className="font-normal dark:text-slate-300">
+              Senaste Inventering
+            </TableHead>
+            {facility.kiosks.map((kiosk) => (
+              <TableHead className="text-center font-bold" key={kiosk.id}>
+                <p>{cleanDate(kiosk.inventoryDate)}</p>
+              </TableHead>
+            ))}
+            
+            </TableRow>
         </TableBody>
       </Table>
     </section>
