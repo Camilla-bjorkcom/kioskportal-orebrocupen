@@ -14,3 +14,5 @@ export function cleanDate(isoDate: string): string {
         hour12: false
     }).replace(", ", " kl. ");
 }
+
+//funkrion för att formatera UTC datum till UI 

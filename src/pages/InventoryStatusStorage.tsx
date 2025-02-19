@@ -113,6 +113,11 @@ const InventoryStatusStorage = () => {
                         )
                         .map((product, productIndex) => {
                           const isOutOfStock = product.amountPackages === 0;
+
+                          const total =
+                          product.amountPackages && product.amountPerPackage
+                            ? product.amountPackages * product.amountPerPackage
+                            : 0;
                           return (
                             <div
                               key={product.id}
@@ -140,7 +145,7 @@ const InventoryStatusStorage = () => {
                               >
                                 {product.amountPackages} st
                               </p>
-                              {product.total ? (
+                              {product.amountPackages ? (
                                 <p
                                   className={
                                     isOutOfStock
@@ -148,8 +153,8 @@ const InventoryStatusStorage = () => {
                                       : "text-center"
                                   }
                                 >
-                                  {product.total} st
-                                </p>
+                                  {total > 0 ? `${total} st` : "N/A"}  
+                                </p> //fixat totalen
                               ) : (
                                 <p className="text-center">N/A</p>
                               )}
