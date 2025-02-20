@@ -10,15 +10,16 @@ import {
 } from "@/components/ui/form";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
+
 import { Toaster } from "../components/ui/toaster";
 import { useParams } from "react-router-dom";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useEffect } from "react";
-import { StorageInventory } from "@/interfaces/storageInventory";
+
 import { InventoryStorageProducts } from "@/interfaces/product";
 import { badToast, okToast } from "@/utils/toasts";
+import { useGetAllStorageProducts } from "@/hooks/use-query";
 
 function InventoryStorage() {
   const { id } = useParams<{ id: string }>();
@@ -29,31 +30,21 @@ function InventoryStorage() {
     amountPackages: z.array(
       z
         .union([z.number(), z.nan()])
-        .transform((val) => (isNaN(val) ? 0 : val)) // Om fältet är NaN (tomt), sätt 0
+        .transform((val) => (isNaN(val) ? 0 : val))
         .refine((val) => val >= 0, {
           message: "Antal paket måste vara minst 0",
-        }) // Säkerställer att värdet inte är negativt
+        })
     ),
   });
 
-  const { isLoading, error, data, isSuccess } = useQuery<StorageInventory>({
-    queryKey: ["storageProducts"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(`products/${tournamentId}`);
-      if (!response) {
-        throw new Error("Failed to fetch products");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
-      }
-      const data = await response.json();
-      return data;
-    },
-  });
+  const { isLoading, error, data, isSuccess } = useGetAllStorageProducts(
+    tournamentId!
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { amountPackages: [] },
+    mode: "onChange",
   });
 
   const { reset, formState } = form;
@@ -155,7 +146,7 @@ function InventoryStorage() {
               {isSuccess && data.products && data.products.length > 0 ? (
                 data.products.map((product, index) => (
                   <div
-                    key={product.id} // ✅ Fixad React-key här!
+                    key={product.id}
                     className={`space-y-4 lg:flex ${
                       index % 2 === 0
                         ? "bg-gray-100 dark:bg-slate-800 rounded-lg p-5"
@@ -182,7 +173,7 @@ function InventoryStorage() {
                             <FormControl className="dark:text-gray-200 dark:border-gray-500">
                               <Input
                                 {...field}
-                                value={field.value ?? ""} // ✅ Hanterar tomt fält korrekt
+                                value={field.value ?? ""}
                                 placeholder="Ange antal"
                                 onChange={(e) => {
                                   const val = e.target.value;
@@ -192,14 +183,14 @@ function InventoryStorage() {
                                 }}
                                 onBlur={(e) => {
                                   if (e.target.value === "") {
-                                    field.onChange(0); // ✅ Om fältet töms, sätt tillbaka 0
+                                    field.onChange(0);
                                   }
                                 }}
                               />
                             </FormControl>
                             {fieldState.error && (
                               <p className="text-red-500 text-sm">
-                                {fieldState.error.message}
+                                Fältet måste fyllas i
                               </p>
                             )}
                           </FormItem>
@@ -214,7 +205,11 @@ function InventoryStorage() {
                 </p>
               )}
               <div className="w-1/2 place-self-center">
-                <Button type="submit" className="w-full mt-10">
+                <Button
+                  type="submit"
+                  className="w-full mt-10"
+                  disabled={!formState.isValid}
+                >
                   Skicka in inventering
                 </Button>
               </div>
