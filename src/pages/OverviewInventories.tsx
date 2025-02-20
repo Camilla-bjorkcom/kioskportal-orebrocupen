@@ -1,8 +1,4 @@
-import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmountForFacility";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { Facility } from "@/interfaces";
-import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { calculateTotalAmountForFacility } from "@/utils/calculateTotalAmountForFacility";
 import { Link, useParams } from "react-router-dom";
 import {
   Table,
@@ -13,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { StorageInventory } from "@/interfaces/storageInventory";
+import { calculateProductTotalsFacility } from "@/utils/calculateProductTotalsFacility";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -21,92 +17,47 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { calculateFirstTotalAmountForFacility } from "@/utils/calculateFirstTotalAmountForFacility";
 import { sortByInventoryDate } from "@/utils/sortByDate";
+import { useState } from "react";
+import { cleanDate } from "@/utils/cleanDate";
+import {
+  useGetAllFacilities,
+  useGetAllFirstKioskInventories,
+  useGetFirstStorageInventory,
+  useGetStorageInventory,
+} from "@/hooks/use-query";
 
 const OverviewInventories = () => {
-  const { id } = useParams<{ id: string }>();
-  const tournamentId = id;
+  const tournamentId = useParams().id as string;
 
-  const { data: storageInventory } = useQuery<StorageInventory>({
-    queryKey: ["inventoryList"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(
-        `/tournaments/${tournamentId}/inventoryoverview`
-      );
-      if (!response) {
-        throw new Error("Failed to fetch products");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
-      }
-      const data = await response.json();
+  const { data: storageInventory } = useGetStorageInventory(tournamentId);
+  const { data: firstStorageInventory, isLoading } =
+    useGetFirstStorageInventory(tournamentId);
+  const { data: facilities } = useGetAllFacilities(tournamentId);
+  const { data: firstKioskInventories } =
+    useGetAllFirstKioskInventories(tournamentId);
 
-      return data;
-    },
-  });
+  const allProducts = storageInventory?.products.map((p) => p.productName);
 
-  const { data: firstStorageInventory, isLoading } = useQuery<StorageInventory>(
-    {
-      queryKey: ["firstInventoryList"],
-      queryFn: async () => {
-        const response = await fetchWithAuth(
-          `/tournaments/${tournamentId}/firstinventory`
-        );
-        if (!response) {
-          throw new Error("Failed to fetch products");
-        }
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await response.json();
+  const productTotals = calculateProductTotalsFacility(storageInventory!);
 
-        return data;
-      },
-    }
+  const productsFirstTotals = calculateProductTotalsFacility(
+    firstStorageInventory!
   );
-
-  const { data: facilities } = useQuery<Facility[]>({
-    queryKey: ["facilities"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(`facilities/${tournamentId}`);
-      if (!response) {
-        throw new Error("Failed to fetch");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch facilities");
-      }
-      const data = await response.json();
-      return data;
-    },
-  });
-
-  const allProducts = storageInventory?.products.map((product) => {
-    return product.productName;
-  });
-
-  const productTotals =
-    storageInventory?.products.map((product) => {
-      const totalAmount =
-        (product.amountPackages ?? 0) * (product.amountPerPackage ?? 1);
-      return {
-        productName: product.productName,
-        totalAmount: totalAmount,
-      };
-    }) || [];
-
-  const productsFirstTotal =
-    firstStorageInventory?.products.map((product) => {
-      const totalAmount =
-        (product.amountPackages ?? 0) * (product.amountPerPackage ?? 1);
-      return {
-        productName: product.productName,
-        totalAmount: totalAmount,
-      };
-    }) || [];
 
   const facilitiesWithTotals =
     facilities?.map((facility) => calculateTotalAmountForFacility(facility)) ||
     [];
+
+  const facilitiesFirstTotals =
+    facilities?.map((facility) =>
+      calculateFirstTotalAmountForFacility(
+        facility.id,
+        facility.facilityName,
+        firstKioskInventories!
+      )
+    ) || [];
 
   const [viewDate, setViewDate] = useState<boolean>(false);
 
@@ -136,7 +87,11 @@ const OverviewInventories = () => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Button onClick={toggleViewDate}>{viewDate ? "Dölj inventeringsdatum" : "Visa inventeringsdatum" }</Button>
+                <Button onClick={toggleViewDate}>
+                  {viewDate
+                    ? "Dölj inventeringsdatum"
+                    : "Visa inventeringsdatum"}
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Visa kioskernas senaste inventering</p>
@@ -169,23 +124,14 @@ const OverviewInventories = () => {
                       {facility.facilityName}
                     </p>
                   </Link>
-                  {sortByInventoryDate(facility.kiosks).map((kiosk) => 
+                  {sortByInventoryDate(facility.kiosks).map((kiosk) =>
                     viewDate ? (
                       <div className="flex gap-1 mx-auto w-fit">
-                        <p className="font-bold  text-center" key={kiosk.id}>
+                        <p className="font-medium text-center" key={kiosk.id}>
                           {kiosk.kioskName}:
                         </p>
                         <p className="font-medium text-center">
-                          {new Date(kiosk.inventoryDate).toLocaleString(
-                            "sv-SE",
-                            {
-                              month: "long",
-                              day: "2-digit",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: false,
-                            }
-                          )}
+                          {cleanDate(kiosk.inventoryDate)}
                         </p>
                       </div>
                     ) : (
@@ -195,7 +141,12 @@ const OverviewInventories = () => {
                 </TableHead>
               ))}
               <TableHead className="text-center font-bold dark:text-slate-300">
-                Huvudlager
+                <p>Huvudlager</p>
+                {viewDate && storageInventory?.inventoryDate && (
+                  <p className="font-medium text-center">
+                    {cleanDate(storageInventory.inventoryDate)}
+                  </p>
+                )}
               </TableHead>
               <TableHead className="text-center font-bold dark:text-slate-300">
                 Totalt antal
@@ -212,13 +163,25 @@ const OverviewInventories = () => {
               const productsInStorage = productTotals.find(
                 (x) => x.productName === productName
               );
-              const productsInStorageFirst = productsFirstTotal.find(
+              const productsInStorageFirst = productsFirstTotals.find(
                 (x) => x.productName === productName
+              );
+              const productsFirstInFacility = facilitiesFirstTotals.map((x) =>
+                x.products.find((p) => p.productName === productName)
               );
 
               const total = [productsInStorage, ...productsInFacilities]
                 .map((x) => x?.totalAmount ?? 0)
                 .reduce((a, c) => a + c, 0);
+            
+
+              const initialTotal = [
+                productsInStorageFirst,
+                ...productsFirstInFacility,
+              ]
+                .map((x) => x?.totalAmount ?? 0)
+                .reduce((a, c) => a + c, 0);
+           
 
               return (
                 <TableRow key={productName}>
@@ -230,14 +193,29 @@ const OverviewInventories = () => {
                   </TableCell>
 
                   {/* För varje facility, hämta totalAmount för denna produkt */}
-                  {facilitiesWithTotals.map((facility, index) => (
-                    <TableCell
-                      key={facility.facilityName + productName}
-                      className="text-center dark:text-slate-300"
-                    >
-                      {productsInFacilities[index]?.totalAmount ?? "-"}
-                    </TableCell>
-                  ))}
+                  {facilitiesWithTotals.map((facility, index) => {
+                    const currentTotal =
+                      productsInFacilities[index]?.totalAmount ?? 0;
+                    const firstTotal =
+                      facilitiesFirstTotals[index]?.products.find(
+                        (p) => p.productName === productName
+                      )?.totalAmount ?? 0;
+
+                    const isLowStock = currentTotal < firstTotal * 0.2; // Kolla om värdet är under 20% av första inventeringen
+
+                    return (
+                      <TableCell
+                        key={facility.facilityName + productName}
+                        className={`text-center dark:text-slate-300 ${
+                          isLowStock
+                            ? "text-red-500 font-bold dark:text-red-500 dark:font-bold"
+                            : ""
+                        }`}
+                      >
+                        {currentTotal ?? "-"}
+                      </TableCell>
+                    );
+                  })}
 
                   {/* Huvudlager-värde */}
                   <TableCell
@@ -252,7 +230,13 @@ const OverviewInventories = () => {
                   </TableCell>
 
                   {/* Totalt antal (summa av alla facilities + huvudlager) */}
-                  <TableCell className="text-center font-bold dark:text-slate-300">
+                  <TableCell
+                    className={`text-center font-bold dark:text-slate-300 ${
+                      (total ?? 0) < (initialTotal ?? 0) * 0.2
+                        ? "text-red-500 font-bold dark:text-red-500 dark:font-bold" // 🔴 Röd text om värdet är under 20%
+                        : ""
+                    }`}
+                  >
                     {total}
                   </TableCell>
                 </TableRow>

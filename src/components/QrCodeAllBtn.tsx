@@ -1,4 +1,4 @@
-import { inventoryURL } from "@/api/functions/baseInventoryURL";
+import { inventoryURL } from "@/api/functions/urls";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 import { QrCodeIcon } from "lucide-react";
@@ -12,7 +12,7 @@ interface QrCodeAllBtnProps {
 
 const QrCodeAllBtn: React.FC<QrCodeAllBtnProps> = ({ kiosksForQr }) => {
   if (!kiosksForQr || kiosksForQr.length === 0) {
-    return null; // Om listan är tom, visa inget
+    return null; 
   }
 
   const handleOpenQRCode = () => {

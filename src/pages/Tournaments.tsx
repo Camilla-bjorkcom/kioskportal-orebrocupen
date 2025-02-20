@@ -1,58 +1,13 @@
-import CreateTournamentBtn from "@/components/CreateTournamentBtn";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { Tournament } from "@/interfaces/tournament";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
+import { useGetAllTournaments } from "@/hooks/use-query";
+import CreateTournamentButton from "@/components/CreateTournamentButton";
 import { UserDropdown } from "@/components/UserDropdown";
 import Topbar from "@/components/Topbar";
 
 function Tournaments() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
-  const { isLoading, error, data, isSuccess } = useQuery<Tournament[]>({
-    queryKey: ["tournaments"],
-    queryFn: async () => {
-      const response = await fetchWithAuth("/tournaments");
-      if (!response) {
-        throw new Error("Failed to fetch");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch tournaments");
-      }
-      const dataloading = await response.json();
-      return dataloading || [];
-    },
-  });
-
-  const CreateTournament = async ({
-    tournamentName,
-    startDate,
-    endDate,
-  }: {
-    tournamentName: string;
-    startDate: Date;
-    endDate: Date;
-  }) => {
-    try {
-      const response = await fetchWithAuth("tournaments", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tournamentName, startDate, endDate }),
-      });
-      if (!response) {
-        throw new Error("Failed to fetch");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to save tournament");
-      }
-
-      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
-    } catch (error) {
-      console.error(error);
-      throw new Error("Failed to save tournament");
-    }
-  };
+  const { isLoading, error, data, isSuccess } = useGetAllTournaments();
 
   if (isLoading) {
     return (
@@ -92,9 +47,8 @@ function Tournaments() {
 
       <div className="container mx-auto mt-20 px-5">
         <h2 className="mt-8 text-2xl pb-2">Dina turneringar</h2>
-        <CreateTournamentBtn onSave={CreateTournament} />
+        <CreateTournamentButton />
 
-        {/* Aktiva turneringar */}
         <div className="mt-8">
           <h3 className="text-lg font-semibold dark:text-gray-200">
             Aktiva turneringar

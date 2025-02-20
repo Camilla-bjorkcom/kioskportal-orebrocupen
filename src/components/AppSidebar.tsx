@@ -128,7 +128,6 @@ export function AppSidebar({ id }: { id?: string }) {
                     </div>
                   </SidebarMenuButton>
 
-                  {/* Subitems */}
                   {item.subitems && (
                     <SidebarMenuSub>
                       {item.subitems.map((subitem) => (

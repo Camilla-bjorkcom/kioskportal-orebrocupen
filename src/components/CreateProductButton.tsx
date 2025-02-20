@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Dialog,
   DialogContent,
@@ -9,12 +7,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Input } from "./ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-
 import { z } from "zod";
 import {
   Form,
@@ -26,6 +22,10 @@ import {
 } from "./ui/form";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
+import { createProduct } from "@/api/functions/createProduct";
+import { badToast, okToast } from "@/utils/toasts";
+import { useQueryClient } from "@tanstack/react-query";
+import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
 
 const formSchema = z.object({
   productName: z.string().min(2, {
@@ -33,25 +33,25 @@ const formSchema = z.object({
   }),
 
   amountPerPackage: z.preprocess(
-    (val) => (val === "" ? undefined : Number(val)), // Omvandlar tom sträng till undefined och annars till Number
+    (val) => (val === "" ? undefined : Number(val)),
     z
       .number({ message: "Antal per paket måste anges med siffror" })
       .refine((val) => Number.isInteger(val), {
-        message: "Antal per paket måste vara ett heltal", // ✅ Säkerställer att värdet är ett heltal
+        message: "Antal per paket måste vara ett heltal",
       })
       .refine((val) => val >= 0, {
         message: "Antal per paket måste vara 0 eller större",
       })
-      .optional() // Gör det till ett valfritt fält
+      .optional()
   ),
 });
-
-interface CreateProductButtonProps {
-  onSave: (productName: string, amountPerPackage: number) => Promise<number>;
+interface CreateProductProps {
+  tournamentId: string;
 }
 
-function CreateProductButton({ onSave }: CreateProductButtonProps) {
+function CreateProductButton({ tournamentId }: CreateProductProps) {
   const [savedMessage, setSavedMessage] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,27 +62,34 @@ function CreateProductButton({ onSave }: CreateProductButtonProps) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Form values:", values);
+    try {
+      const correctedAmount =
+        values.amountPerPackage && values.amountPerPackage > 0
+          ? values.amountPerPackage
+          : 1;
 
-    if (!values.productName) {
-      console.error("Produktnamn saknas!");
-      return;
+      const productCreated = await createProduct(
+        values.productName,
+        correctedAmount,
+        tournamentId!
+      );
+      if (!productCreated) throw new NoResponseError("No response from server");
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+
+      setSavedMessage("Produkten har sparats ✅");
+      okToast(`Produkt ${values.productName} skapades`);
+    } catch (error) {
+      if (error instanceof DuplicateError) {
+        badToast(`Produkt med namnet ${values.productName} finns redan.`);
+        setSavedMessage("❌ Produkten finns redan!");
+      } else if (error instanceof NoResponseError) {
+        badToast("Misslyckades med att skapa produkt.");
+        setSavedMessage("❌ Något gick fel!");
+      } else {
+        badToast("Misslyckades med att skapa produkt.");
+        setSavedMessage("❌ Något gick fel!");
+      }
     }
-    const correctedAmount =
-      values.amountPerPackage && values.amountPerPackage > 0
-        ? values.amountPerPackage
-        : 1;
-
-    const result = await onSave(values.productName, correctedAmount);
-
-    if (result === 201) {
-      setSavedMessage("Produkten har sparats ✅"); // ✅ Om det gick bra
-    } else if (result === 409) {
-      setSavedMessage("❌ Produkten finns redan!"); // ❌ Om det var en konflikt
-    } else {
-      setSavedMessage("❌ Något gick fel!"); // ❌ Om det något gick fel
-    }
-
     setTimeout(() => {
       setSavedMessage(null);
     }, 3000);

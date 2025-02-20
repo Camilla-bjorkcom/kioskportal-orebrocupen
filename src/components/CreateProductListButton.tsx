@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Dialog,
   DialogContent,
@@ -23,42 +21,68 @@ import {
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
+import { createProductlist } from "@/api/functions/createProductlist";
+import { useQueryClient } from "@tanstack/react-query";
+import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
+import { badToast, okToast } from "@/utils/toasts";
 
 const formSchema = z.object({
-  productlistname: z.string().min(2, {
+  productlistName: z.string().min(2, {
     message: "Produktlistnamnet måste ha minst 2 bokstäver",
   }),
- 
 });
 
 interface CreateProductListButtonProps {
-  onSave: (productListName: string) => void; // Callback för att spara produktnamn
- 
+  tournamentId: string;
 }
 
-function CreateProductListButton({ onSave }: CreateProductListButtonProps) {
+function CreateProductListButton({
+  tournamentId,
+}: CreateProductListButtonProps) {
+  const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      productlistname: "",
-     
+      productlistName: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave(values.productlistname);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const productlistCreated = await createProductlist(
+        values.productlistName,
+        tournamentId!,
+      );
+      if (!productlistCreated) {
+        throw new NoResponseError("No response from server");
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["productslists"] });
+
+      okToast(`Produktlista ${values.productlistName} skapades`);
+    } catch (error) {
+      if (error instanceof DuplicateError) {
+        badToast(
+          `Produktlista med namnet ${values.productlistName} finns redan.`
+        );
+      } else if (error instanceof NoResponseError) {
+        badToast("Misslyckades med att skapa produktlista.");
+      } else {
+        badToast("Misslyckades med att skapa produktlista.");
+      }
+    }
     setOpen(false);
-    console.log(values);
     form.reset();
   }
-  const [open, setOpen] = useState(false);
-  
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-      <Button className="text-md">
-           Skapa Produktlista <Plus/>
-          </Button>
+        <Button className="text-md">
+          Skapa Produktlista <Plus />
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -71,7 +95,7 @@ function CreateProductListButton({ onSave }: CreateProductListButtonProps) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="productlistname"
+              name="productlistName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Produktlistnamn</FormLabel>
@@ -84,12 +108,12 @@ function CreateProductListButton({ onSave }: CreateProductListButtonProps) {
             />
 
             <div className="flex justify-end">
-              <button
+              <Button
                 type="submit"
                 className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
               >
                 Spara Produktlista
-              </button>
+              </Button>
             </div>
           </form>
         </Form>

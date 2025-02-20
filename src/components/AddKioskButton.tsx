@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Dialog,
   DialogContent,
@@ -8,12 +6,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Input } from "./ui/input";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
 import { z } from "zod";
 import {
   Form,
@@ -37,13 +33,13 @@ const formSchema = z.object({
 });
 
 interface AddKioskButtonProps {
-  id: string; // Callback för att spara kiosknamn
+  tournamentId: string; 
   facilityId: string;
   onFacilityAdded?: (facilityId: string) => void;
 }
 
 function AddKioskButton({
-  id,
+  tournamentId,
   facilityId,
   onFacilityAdded,
 }: AddKioskButtonProps) {
@@ -59,7 +55,7 @@ function AddKioskButton({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const kioskCreated = await createKiosk(values.kioskName, facilityId, id!);
+      const kioskCreated = await createKiosk(values.kioskName, facilityId, tournamentId!);
       if (!kioskCreated) throw new NoResponseError("No response from server");
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
 
@@ -86,14 +82,14 @@ function AddKioskButton({
         <Button
           variant="outline"
           className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto dark:hover:bg-slate-600 dark:hover:text-gray-200"
-          onClick={(e) => e.stopPropagation()} // Stoppa eventbubbling
+          onClick={(e) => e.stopPropagation()} 
         >
           Lägg till kiosk <PlusIcon className="w-4 h-4 place-self-center" />
         </Button>
       </DialogTrigger>
       <DialogContent
         onClick={(e) => {
-          e.stopPropagation(); // Hindrar event från att bubbla upp till AccordionTrigger
+          e.stopPropagation(); 
         }}
       >
         <DialogHeader>

@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
 import { z } from "zod";
 import {
   Form,
@@ -51,12 +50,12 @@ const formSchema = z.object({
 });
 
 interface UpdateContactPersonButtonProps {
-  id: string;
+  tournamentId: string;
   contactPerson: ContactPerson;
 }
 
 const UpdadeContactPersonButton = ({
-  id,
+  tournamentId,
   contactPerson,
 }: UpdateContactPersonButtonProps) => {
   const [open, setOpen] = useState(false);
@@ -91,7 +90,7 @@ const UpdadeContactPersonButton = ({
           role: values.role,
           facilityId: contactPerson.facilityId,
         },
-        id!
+        tournamentId!
       );
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
 

@@ -1,8 +1,4 @@
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmountForFacility";
-import { Facility } from "@/interfaces/facility";
-import { useQueries, useQuery } from "@tanstack/react-query";
-import React from "react";
+import { calculateTotalAmountForFacility } from "@/utils/calculateTotalAmountForFacility";
 import { useParams } from "react-router-dom";
 import {
   Table,
@@ -14,69 +10,40 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { KioskInventory } from "@/interfaces/kioskInventory";
-import { mapKioskInventoriesToFacility } from "@/functions/mapKioskInventoriesToFacility";
+import { mapKioskInventoriesToFacility } from "@/utils/mapKioskInventoriesToFacility";
+import { cleanDate } from "@/utils/cleanDate";
+import {
+  useGetFirstKioskInventoriesForOneFacility,
+  useGetOneFacility,
+} from "@/hooks/use-query";
 
 const FacilityOverview = () => {
-  const { id: tournamentId, fid: facilityId } = useParams<{
-    id: string;
-    fid: string;
-  }>();
+  const tournamentId = useParams().id as string;
+  const facilityId = useParams().fid as string;
 
-  // 🔹 Hämtar facility-data
   const {
     isLoading,
     data: facility,
     isSuccess,
-  } = useQuery<Facility>({
-    queryKey: ["facilities", tournamentId, facilityId],
-    queryFn: async () => {
-      const response = await fetchWithAuth(
-        `facilities/${tournamentId}/${facilityId}`
-      );
-      if (!response) {
-        throw new Error("Response is undefined");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch facility");
-      }
-      const data = await response.json();
-      return data.length > 0 ? data[0] : null;
-    },
-  });
+  } = useGetOneFacility(tournamentId, facilityId);
 
-  // 🔹 Vänta på att `facility` laddas innan vi skapar queries
   const currentKiosks = facility?.kiosks ?? [];
 
-  // 🔹 Hämta alla kiosk-inventeringar
-  const kioskInventoryQueries = useQueries({
-    queries: currentKiosks.map((kiosk) => ({
-      queryKey: ["kioskInventory", kiosk.id],
-      queryFn: async (): Promise<KioskInventory> => {
-        const response = await fetchWithAuth(
-          `firstkioskinventories/${tournamentId}/${kiosk.id}`
-        );
-        if (!response) {
-          throw new Error("Response is undefined");
-        }
-        if (!response.ok) {
-          throw new Error(`Failed to fetch inventory for kiosk ${kiosk.id}`);
-        }
-        const firstInventory = await response.json();
-        return firstInventory; 
-      },
-      enabled: !!kiosk.id,
-    })),
-  });
+  const kiosksFirstInventories = useGetFirstKioskInventoriesForOneFacility(
+    tournamentId,
+    currentKiosks
+  );
 
-  const isFetchingInventories = kioskInventoryQueries.some(
+  const isFetchingInventories = kiosksFirstInventories.some(
     (query) => query.isFetching
   );
-  const isInventoryLoading = kioskInventoryQueries.some(
+  const isInventoryLoading = kiosksFirstInventories.some(
     (query) => query.isLoading
   );
-  const isInventoryError = kioskInventoryQueries.some((query) => query.isError);
+  const isInventoryError = kiosksFirstInventories.some(
+    (query) => query.isError
+  );
 
- 
   if (isLoading || isFetchingInventories || isInventoryLoading) {
     return (
       <div className="container mx-auto px-5 py-10 flex justify-center items-center">
@@ -95,7 +62,7 @@ const FacilityOverview = () => {
     return <div>Error loading data.</div>;
   }
 
-  const kioskInventories = kioskInventoryQueries
+  const kioskInventories = kiosksFirstInventories
     .map((query) => query.data)
     .filter((data) => data && data.kioskInventoryId !== "");
 
@@ -103,23 +70,19 @@ const FacilityOverview = () => {
     ? calculateTotalAmountForFacility(facility)
     : null;
 
-  // 🔹 Filtrera bort `undefined` från `kioskInventories`
+  
   const validKioskInventories = kioskInventories.filter(
     (inventory): inventory is KioskInventory => !!inventory
   );
 
-  // 🔹 Använd den filtrerade listan
   const mappedFacilityFirstInventory = mapKioskInventoriesToFacility(
     facility,
     validKioskInventories
   );
 
-
-  // 🔹 Använd den omvandlade datan i `calculateTotalAmountForFacility`
   const facilityFirstForTable = calculateTotalAmountForFacility(
     mappedFacilityFirstInventory
   );
-
 
   return (
     <section className="container mx-auto px-5">
@@ -128,7 +91,10 @@ const FacilityOverview = () => {
       <Table>
         <TableCaption>
           Produkternas antal enligt senaste inventering{" "}
-          <p className="text-red-500">Röd text indikerar att antalet produkter är mindre än 20% av det första inventerade värdet</p>
+          <p className="text-red-500">
+            Röd text indikerar att antalet produkter är mindre än 20% av det
+            första inventerade värdet
+          </p>
         </TableCaption>
         <TableHeader>
           <TableRow>
@@ -158,17 +124,54 @@ const FacilityOverview = () => {
 
                 {/* 🔹 Loopa igenom kiosker och visa antal produkter i varje */}
                 {facility.kiosks.map((kiosk) => {
-                  const foundProduct = kiosk.products.find(
+                  // 🔹 Hitta den första inventeringen för denna kiosk i `validKioskInventories`
+                  const firstKioskInventory = validKioskInventories.find(
+                    (inventory) => inventory.kioskId === kiosk.id
+                  );
+                  const latestProduct = kiosk.products.find(
                     (p) => p.id === product.id
                   );
-                  const amountPackages = foundProduct?.amountPackages ?? 0;
-                  const amountPerPackage = foundProduct?.amountPerPackage ?? 1;
-                  const amountPieces = foundProduct?.amountPieces ?? 0;
-                  const totalAmount =
-                    amountPackages * amountPerPackage + amountPieces;
+
+                  // 🔹 Hitta motsvarande produkt i den första inventeringen
+                  const firstInventoryProduct =
+                    firstKioskInventory?.products.find(
+                      (p) => p.id === product.id
+                    );
+
+                  // 🔹 Beräkna totalAmount från den senaste inventeringen
+                  const latestAmountPackages =
+                    latestProduct?.amountPackages ?? 0;
+                  const latestAmountPerPackage =
+                    latestProduct?.amountPerPackage ?? 1;
+                  const latestAmountPieces = latestProduct?.amountPieces ?? 0;
+                  const latestTotalAmount =
+                    latestAmountPackages * latestAmountPerPackage +
+                    latestAmountPieces;
+
+                  // 🔹 Beräkna totalAmount från den första inventeringen
+                  const firstAmountPackages =
+                    firstInventoryProduct?.amountPackages ?? 0;
+                  const firstAmountPerPackage =
+                    firstInventoryProduct?.amountPerPackage ?? 1;
+                  const firstAmountPieces =
+                    firstInventoryProduct?.amountPieces ?? 0;
+                  const firstTotalAmount =
+                    firstAmountPackages * firstAmountPerPackage +
+                    firstAmountPieces;
+
+                  // 🔹 Bestäm om vi ska färga rött (nuvarande mängd < 20% av första mängden)
+                  const isLowStock =
+                    firstTotalAmount > 0 &&
+                    latestTotalAmount < firstTotalAmount * 0.2;
                   return (
                     <TableCell key={kiosk.id} className="text-center">
-                      {totalAmount}
+                      {/* 🔹 Hitta motsvarande produkt i kioskens senaste inventering */}
+
+                      <span
+                        className={isLowStock ? "text-red-500 font-bold" : ""}
+                      >
+                        {latestTotalAmount}
+                      </span>
                     </TableCell>
                   );
                 })}
@@ -188,6 +191,16 @@ const FacilityOverview = () => {
               </TableRow>
             );
           })}
+          <TableRow>
+            <TableHead className="font-normal dark:text-slate-300">
+              Senaste Inventering
+            </TableHead>
+            {facility.kiosks.map((kiosk) => (
+              <TableHead className="text-center font-bold" key={kiosk.id}>
+                <p>{cleanDate(kiosk.inventoryDate)}</p>
+              </TableHead>
+            ))}
+          </TableRow>
         </TableBody>
       </Table>
     </section>
