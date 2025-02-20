@@ -1,4 +1,10 @@
-import { SquareChartGantt, ChartSpline, Bell, Trophy } from "lucide-react";
+import {
+  SquareChartGantt,
+  ChartSpline,
+  Bell,
+  Trophy,
+  House,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -47,12 +53,7 @@ export function AppSidebar({ id }: { id?: string }) {
         { title: "QR koder till kiosker", url: `/facilitiesandkiosks/${id}` },
       ],
     },
-    {
-      title: "Notiser",
-      url: "#",
-      icon: Bell,
-      subitems: [{ title: "Skicka notiser", url: `/inventorystatus/${id}` }],
-    },
+
     {
       title: "Statistik",
       url: "#",
@@ -71,6 +72,18 @@ export function AppSidebar({ id }: { id?: string }) {
           url: `/overviewinventories/${id}`,
         },
       ],
+    },
+    {
+      title: "Notiser",
+      url: "#",
+      icon: Bell,
+      subitems: [{ title: "Skicka notiser", url: `/inventorystatus/${id}` }],
+    },
+    {
+      title: "Turnering",
+      url: "#",
+      icon: House,
+      subitems: [{ title: "Din översikt", url: `/dashboard/${id}` }],
     },
   ];
 
