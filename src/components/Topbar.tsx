@@ -1,5 +1,6 @@
 import { UserDropdown } from "@/components/UserDropdown";
 import ThemeToggle from "@/components/ThemeToggle";
+import logo from "@/assets/images/tempLogo.svg"
 
 const Topbar = ({ tournamentName }: { tournamentName: string }) => {
   return (
@@ -7,7 +8,7 @@ const Topbar = ({ tournamentName }: { tournamentName: string }) => {
       <div className="container mx-auto flex justify-between items-center">
         {tournamentName === "" ? (
           <img
-            src="../src/assets/images/sidebarLogo.svg"
+            src={logo}
             alt="KioskPortal Logo"
             className="h-10 w-auto"
           />

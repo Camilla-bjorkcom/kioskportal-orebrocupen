@@ -1,38 +1,32 @@
-import { useState, useEffect } from "react";
+import { NoResponseError } from "@/api/functions/apiErrors";
+import { updateTournament } from "@/api/functions/updateTournament";
+import DeleteTournamentButton from "@/components/DeleteTournamentButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
+  SheetContent, SheetHeader,
   SheetTitle,
-  SheetTrigger,
+  SheetTrigger
 } from "@/components/ui/sheet";
-import { useQueryClient } from "@tanstack/react-query";
 import { UpdateTournament } from "@/interfaces/tournament";
-import DeleteTournamentButton from "@/components/DeleteTournamentButton";
-import { useNavigate } from "react-router-dom";
-import { updateTournament } from "@/api/functions/updateTournament";
 import { badToast, okToast } from "@/utils/toasts";
-import { NoResponseError } from "@/api/functions/apiErrors";
-import { Toaster } from "./ui/toaster";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 import { DatePicker } from "./DatePicker";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from "./ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { Toaster } from "./ui/toaster";
 
 const UpdateTournamentSheet = ({
   tournament,
@@ -41,13 +35,8 @@ const UpdateTournamentSheet = ({
   tournament: UpdateTournament;
   tournamentId: string;
 }) => {
-  const [formData, setFormData] = useState(tournament);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setFormData(tournament);
-  }, [tournament]);
 
   const handleDelete = () => {
     queryClient.invalidateQueries({ queryKey: ["tournament"] });
@@ -97,7 +86,7 @@ const UpdateTournamentSheet = ({
         <SheetTrigger asChild>
           <Button
             className="dark:bg-slate-700 dark:hover:bg-slate-600"
-            variant="outline"
+            variant="default"
           >
             Redigera turnering
           </Button>

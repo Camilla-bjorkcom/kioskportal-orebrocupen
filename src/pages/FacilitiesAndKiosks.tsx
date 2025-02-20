@@ -43,11 +43,11 @@ function FacilitiesAndKiosks() {
   const tournamentId = useParams().id as string;
 
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
-  const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
-  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const [kiosks, setKiosks] = useState<Kiosk[]>([]);
+  const [, setKioskForEdit] = useState<Kiosk>();
+  const [, setSelectedProducts] = useState<Product[]>([]);
+  const [, setKiosks] = useState<Kiosk[]>([]);
 
-  const [open, setOpen] = useState(false);
+  const [, setOpen] = useState(false);
   const [openFacilityId, setOpenFacilityId] = useState<string | null>(null);
 
   const { isLoading, error, data, isSuccess } =

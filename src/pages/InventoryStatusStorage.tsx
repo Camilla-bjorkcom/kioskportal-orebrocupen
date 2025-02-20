@@ -45,7 +45,7 @@ const InventoryStatusStorage = () => {
       return;
     }
     if (expandedItems.length === 0) {
-      const allItems = Object.entries(data).map(([date, value]) => date);
+      const allItems = Object.entries(data).map(([date]) => date);
       setExpandedItems(allItems);
     } else {
       setExpandedItems([]);
