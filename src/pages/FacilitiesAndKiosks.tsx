@@ -38,12 +38,11 @@ import { deleteFacility } from "@/api/functions/deleteFacility";
 import { deleteContactPerson } from "@/api/functions/deleteContactPerson";
 import { deleteKiosk } from "@/api/functions/deleteKiosk";
 import UpdateKioskKioskButton from "@/components/UpdateKioskButton";
-import { useGetOneKiosk } from "@/hooks/use-query";
+import { useGetAllFacilities, useGetAllProductlists, useGetAllProducts, useGetOneKiosk } from "@/hooks/use-query";
 import { badToast } from "@/utils/toasts";
 
 function FacilitiesAndKiosks() {
-  const { id } = useParams<{ id: string }>();
-  const tournamentId = id;
+  const tournamentId = useParams().id as string;
 
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [kioskForEdit, setKioskForEdit] = useState<Kiosk>();
@@ -53,48 +52,48 @@ function FacilitiesAndKiosks() {
   const [open, setOpen] = useState(false);
   const [openFacilityId, setOpenFacilityId] = useState<string | null>(null);
 
-  const { isLoading, error, data, isSuccess } = useQuery<Facility[]>({
-    queryKey: ["facilities"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(`facilities/${tournamentId}`);
-      if (!response) {
-        throw new Error("Failed to fetch");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to fetch facilities");
-      }
-      const dataResponse = await response.json();
+  const { isLoading, error, data, isSuccess } = useGetAllFacilities(tournamentId)
+  
+  
+  
+  // useQuery<Facility[]>({
+  //   queryKey: ["facilities"],
+  //   queryFn: async () => {
+  //     const response = await fetchWithAuth(`facilities/${tournamentId}`);
+  //     if (!response) {
+  //       throw new Error("Failed to fetch");
+  //     }
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch facilities");
+  //     }
+  //     const dataResponse = await response.json();
 
-      return dataResponse || [];
-    },
-  });
+  //     return dataResponse || [];
+  //   },
+  // });
 
-  const { data: products } = useQuery<GetAllProductsResponse>({
-    queryKey: ["products"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(`products/${tournamentId}`);
-      if (!response) {
-        throw new Error("Failed to fetch products");
-      }
-      const data = await response.json();
+  const { data: products } = useGetAllProducts(tournamentId)
+  
+  
 
-      return data;
-    },
-  });
 
-  const { data: productlists } = useQuery<Productlist[]>({
-    queryKey: ["productlists"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(`productlists/${tournamentId}`);
-      if (!response) {
-        throw new Error("Failed to fetch product lists");
-      }
-      const data = await response.json();
-      console.log(data);
+  // useQuery<GetAllProductsResponse>({
+  //   queryKey: ["products"],
+  //   queryFn: async () => {
+  //     const response = await fetchWithAuth(`products/${tournamentId}`);
+  //     if (!response) {
+  //       throw new Error("Failed to fetch products");
+  //     }
+  //     const data = await response.json();
 
-      return data || [];
-    },
-  });
+  //     return data;
+  //   },
+  // });
+
+  const { data: productlists } = useGetAllProductlists(tournamentId)
+  
+  
+ 
 
   const toggleFacility = (facilityId: string) => {
     setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
