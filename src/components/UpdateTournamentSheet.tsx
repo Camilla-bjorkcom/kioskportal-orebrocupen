@@ -12,12 +12,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { toast } from "@/hooks/use-toast";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { UpdateTournament } from "@/interfaces/tournament";
 import DeleteTournamentButton from "@/components/DeleteTournamentButton";
 import { useNavigate } from "react-router-dom";
+import { updateTournament } from "@/api/functions/updateTournament";
+import { badToast, okToast } from "@/utils/toasts";
+import { NoResponseError } from "@/api/functions/apiErrors";
+import { Toaster } from "./ui/toaster";
 
 const UpdateTournamentSheet = ({
   tournament,
@@ -40,39 +42,29 @@ const UpdateTournamentSheet = ({
 
   const handleUpdate = async () => {
     try {
-      const response = await fetchWithAuth(`tournaments/${tournamentId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const updatedTournament = await updateTournament(tournamentId, formData);
 
-      if (!response) {
-        throw new Error("Failed to update tournament");
-      }
+      if (!updatedTournament)
+        throw new NoResponseError("No response from server");
+      okToast("Turneringen har uppdaterats");
+      queryClient.invalidateQueries({ queryKey: ["tournament"] });
 
-      queryClient.invalidateQueries({ queryKey: ["tournament", tournamentId] });
-
-      toast({
-        className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        title: "Ändringen sparades",
-        description: "Turneringen har uppdaterats",
-      });
+      
     } catch (error) {
       console.error("Failed to update tournament:", error);
-      toast({
-        title: "Fel",
-        description: "Misslyckades med att spara ändringar.",
-        className: "bg-red-200 dark:bg-red-400 dark:text-black",
-      });
+      badToast("Misslyckades med att spara ändringar.");
     }
   };
 
   const handleDelete = () => {
     queryClient.invalidateQueries({ queryKey: ["tournament"] });
+    okToast("Turnering raderades");
     navigate("/tournaments");
   };
 
   return (
+    <>
+    <Toaster />
     <Sheet>
       <SheetTrigger asChild>
         <Button
@@ -148,6 +140,7 @@ const UpdateTournamentSheet = ({
         </SheetFooter>
       </SheetContent>
     </Sheet>
+    </>
   );
 };
 
