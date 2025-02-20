@@ -59,7 +59,7 @@ function CreateProductListButton({
         throw new NoResponseError("No response from server");
       }
 
-      queryClient.invalidateQueries({ queryKey: ["productslists"] });
+      queryClient.invalidateQueries({ queryKey: ["productlists"] });
 
       okToast(`Produktlista ${values.productlistName} skapades`);
     } catch (error) {
