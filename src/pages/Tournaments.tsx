@@ -3,6 +3,7 @@ import { useGetAllTournaments } from "@/hooks/use-query";
 import CreateTournamentButton from "@/components/CreateTournamentButton";
 
 import Topbar from "@/components/Topbar";
+import { Toaster } from "@/components/ui/toaster";
 
 function Tournaments() {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ function Tournaments() {
 
   return (
     <>
+    <Toaster />
       <Topbar tournamentName={""} />
 
       <div className="container mx-auto mt-20 px-5">

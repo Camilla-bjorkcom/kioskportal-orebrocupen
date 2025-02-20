@@ -13,7 +13,7 @@ const Topbar = ({ tournamentName }: { tournamentName: string }) => {
           />
         ) : (
           <div className="flex-1 flex justify-center">
-            <p className="font-semibold text-4xl dark:text-gray-200">
+            <p className="font-semibold text-4xl text-black dark:text-gray-200">
               {tournamentName}
             </p>
           </div>
