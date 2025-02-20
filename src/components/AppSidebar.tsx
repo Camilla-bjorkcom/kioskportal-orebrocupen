@@ -1,15 +1,5 @@
 import { useAuth } from "react-oidc-context";
-import {
-  SquareChartGantt,
-  ChartSpline,
-  LogOut,
-  BadgeCheck,
-  BookHeart,
-  Bell,
-  Trophy,
-  ChevronsLeftRight,
-  ChevronsUpDown,
-} from "lucide-react";
+import { SquareChartGantt, ChartSpline, Bell, Trophy } from "lucide-react";
 
 import {
   Sidebar,
@@ -88,15 +78,12 @@ export function AppSidebar({ id }: { id?: string }) {
   ];
 
   // { title: "Din översikt", url: `/dashboard/${id}` },
-  const auth = useAuth();
-  const isMobile = useIsMobile();
 
   return (
     <Sidebar variant="sidebar" collapsible="icon" className="dark:bg-slate-800">
       <SidebarContent>
         <SidebarHeader>
           <div className="flex gap-2">
-            {/* Logotypen som döljs när isCollapsed är true */}
             {!isCollapsed && (
               <button
                 onClick={() => (window.location.href = `/dashboard/${id}`)}
