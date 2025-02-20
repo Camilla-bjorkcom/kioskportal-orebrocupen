@@ -165,15 +165,16 @@ function UpdateProductListButton({
             <div>
               <div className="flex justify-between items-center mb-4">
                 <p className="font-semibold">Välj produkter att lägga till:</p>
-                <Button type="button" onClick={toggleSelectAll}>
+                <Button type="button" onClick={toggleSelectAll} disabled={tournamentProducts.length === 0}>
                   {allSelected ? "Avmarkera alla" : "Markera alla"}
                 </Button>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                {tournamentProducts
-                  .slice()
+             
+                {tournamentProducts.length > 0 ? (
+                  tournamentProducts.slice()
                   .sort((a, b) => a.productName.localeCompare(b.productName))
                   .map((product) => (
+                    <div className="grid grid-cols-3 gap-4">
                     <div key={product.id} className="flex items-center gap-2">
                       <Checkbox
                         id={`product-${product.id}`}
@@ -203,8 +204,9 @@ function UpdateProductListButton({
                         {product.productName}
                       </label>
                     </div>
-                  ))}
-              </div>
+                    </div>
+                  ))) : (<p className="w-full">Inga produkter tillagda i turneringen</p>)}
+              
             </div>
             <Button className="mx-auto w-full" type="submit">
               Spara
