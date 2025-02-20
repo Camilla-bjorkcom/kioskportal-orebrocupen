@@ -26,14 +26,14 @@ function InventoryStorage() {
 
   const formSchema = z.object({
     amountPackages: z.array(
-      z.coerce
-        .number({
-          required_error: "Du måste ange ett antal förpackningar",
-          invalid_type_error: "Du måste ange ett värde",
-        })
-        .min(0, "Antal paket måste vara minst 0")
+      z
+        .union([z.number(), z.nan()])
+        .transform((val) => (isNaN(val) ? 0 : val)) // Om fältet är NaN (tomt), sätt 0
+        .refine((val) => val >= 0, { message: "Antal paket måste vara minst 0" }) // Säkerställer att värdet inte är negativt
     ),
   });
+  
+  
 
   const { isLoading, error, data, isSuccess } = useQuery<StorageInventory>({
     queryKey: ["storageProducts"],
@@ -73,7 +73,6 @@ function InventoryStorage() {
           amountPackages: values.amountPackages[index],
         } satisfies InventoryStorageProducts)
     );
-
     try {
       const response = await fetchWithAuth(
         `tournaments/${tournamentId}/inventories`,
@@ -136,9 +135,7 @@ function InventoryStorage() {
             Inventera huvudlager
           </h2>
           <div className="w-full place-items-center mt-5 gap-3 mb-16">
-            <p className="text-sm dark:text-gray-200">
-              Senast inventering gjord:
-            </p>
+            <p className="text-sm dark:text-gray-200">Senast inventering gjord:</p>
             <h3 className="text-sm font-semibold dark:text-gray-200">
               {data?.inventoryDate === "ingen inventering gjord"
                 ? data?.inventoryDate
@@ -152,72 +149,66 @@ function InventoryStorage() {
                   })}
             </h3>
           </div>
-
+  
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="w-fit mx-auto mb-20"
-            >
-              {isSuccess &&
-              data.products != null &&
-              data.products.length > 0 ? (
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit mx-auto mb-20">
+              {isSuccess && data.products && data.products.length > 0 ? (
                 data.products.map((product, index) => (
-                  <>
-                    <div
-                      key={product.id}
-                      className={`space-y-4 lg:flex ${
-                        index % 2 === 0
-                          ? "bg-gray-100 dark:bg-slate-800 rounded-lg p-5"
-                          : "bg-white dark:bg-slate-700 rounded-lg p-5"
-                      }`}
-                    >
-                      <FormItem className="place-content-center">
-                        <FormLabel>
-                          <p className="w-[280px] lg:w-[300px] text-lg dark:text-gray-200">
-                            {product.productName}
-                          </p>
-                        </FormLabel>
-                      </FormItem>
-
-                      <div className="flex gap-5 dark:border:solid dark:border-gray-500">
-                        <FormField
-                          key={product.id}
-                          control={form.control}
-                          name={`amountPackages.${index}`}
-                          render={({ field, fieldState }) => (
-                            <FormItem>
-                              <FormLabel className="dark:text-gray-200">
-                                Antal förpackningar
-                              </FormLabel>
-                              <FormControl className="dark:text-gray-200 dark:border-gray-500">
-                                <Input
-                                  {...field}
-                                  onChange={(e) =>
-                                    field.onChange(Number(e.target.value))
+                  <div
+                    key={product.id} // ✅ Fixad React-key här!
+                    className={`space-y-4 lg:flex ${
+                      index % 2 === 0
+                        ? "bg-gray-100 dark:bg-slate-800 rounded-lg p-5"
+                        : "bg-white dark:bg-slate-700 rounded-lg p-5"
+                    }`}
+                  >
+                    <FormItem className="place-content-center">
+                      <FormLabel>
+                        <p className="w-[280px] lg:w-[300px] text-lg dark:text-gray-200">
+                          {product.productName}
+                        </p>
+                      </FormLabel>
+                    </FormItem>
+  
+                    <div className="flex gap-5 dark:border:solid dark:border-gray-500">
+                      <FormField
+                        control={form.control}
+                        name={`amountPackages.${index}`}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel className="dark:text-gray-200">
+                              Antal förpackningar
+                            </FormLabel>
+                            <FormControl className="dark:text-gray-200 dark:border-gray-500">
+                              <Input
+                                {...field}
+                                value={field.value ?? ""} // ✅ Hanterar tomt fält korrekt
+                                placeholder="Ange antal"
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  field.onChange(val === "" ? undefined : Number(val));
+                                }}
+                                onBlur={(e) => {
+                                  if (e.target.value === "") {
+                                    field.onChange(0); // ✅ Om fältet töms, sätt tillbaka 0
                                   }
-                                />
-                              </FormControl>
-                              {fieldState.error && (
-                                <p className="text-red-500 text-sm">
-                                  {fieldState.error.message}
-                                </p>
-                              )}
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                                }}
+                              />
+                            </FormControl>
+                            {fieldState.error && (
+                              <p className="text-red-500 text-sm">{fieldState.error.message}</p>
+                            )}
+                          </FormItem>
+                        )}
+                      />
                     </div>
-                  </>
+                  </div>
                 ))
               ) : (
-                <p className="dark:text-white">
-                  Inga produkter tillagda i turneringen
-                </p>
+                <p className="dark:text-white">Inga produkter tillagda i turneringen</p>
               )}
               <div className="w-1/2 place-self-center">
-                <Button type="submit" className="w-full mt-10">
-                  Skicka in inventering
-                </Button>
+                <Button type="submit" className="w-full mt-10">Skicka in inventering</Button>
               </div>
             </form>
           </Form>
@@ -226,5 +217,4 @@ function InventoryStorage() {
     </>
   );
 }
-
 export default InventoryStorage;
