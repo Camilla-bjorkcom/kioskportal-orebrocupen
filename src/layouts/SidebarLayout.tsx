@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { Tournament } from "@/interfaces";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import ThemeToggle from "@/components/ThemeToggle";
+import Topbar from "@/components/Topbar";
 
 function TournamentDetails() {
   const { id } = useParams<{ id: string }>();
@@ -37,13 +37,7 @@ function TournamentDetails() {
     <SidebarProvider>
       <AppSidebar id={data.id} />
       <main className="w-full ">
-        <div className="p-1 shadow w-full flex items-center mb-8 dark:bg-slate-800 ">
-          <SidebarTrigger />
-          <p className="mx-auto font-semibold text-4xl dark:text-gray-200">
-            {data?.tournamentName}
-          </p>
-          <ThemeToggle />
-        </div>
+        <Topbar tournamentName={data?.tournamentName} />
         <Outlet />
       </main>
     </SidebarProvider>

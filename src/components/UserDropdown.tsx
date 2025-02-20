@@ -18,9 +18,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-export function UserDropdown({ id }: { id?: string }) {
+export function UserDropdown({}: {}) {
   const auth = useAuth();
-  const isMobile = useIsMobile(); // Kollar om det är mobilvy
+  const isMobile = useIsMobile();
 
   return (
     <div className="">
@@ -29,11 +29,11 @@ export function UserDropdown({ id }: { id?: string }) {
           <button className="flex items-center gap-2 p-2 rounded-lg bg-gray-200 dark:bg-slate-800 hover:bg-gray-300 dark:hover:bg-slate-600">
             <Avatar className="h-8 w-8 rounded-lg">
               <AvatarImage src={"user.avatar"} alt={"username"} />
-              <AvatarFallback className="rounded-lg bg-amber-500 font-bold">
+              <AvatarFallback className="rounded-lg bg-amber-500 font-bold text-slate-900">
                 KP
               </AvatarFallback>
             </Avatar>
-            <span className="text-sm hidden md:block">
+            <span className="text-sm hidden md:block text-slate-900 dark:text-gray-200">
               {auth.user?.profile["cognito:username"] as string}
             </span>
 
@@ -48,14 +48,8 @@ export function UserDropdown({ id }: { id?: string }) {
         >
           <DropdownMenuLabel className="p-0 font-normal">
             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={"user.avatar"} alt={"username"} />
-                <AvatarFallback className="rounded-lg bg-amber-500 font-bold">
-                  KP
-                </AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate text-xs">
+              <div className="grid flex-1 text-left text-sm leading-tigh ">
+                <span className="truncate text-xs ">
                   {auth.user?.profile["cognito:username"] as string}
                 </span>
               </div>
@@ -71,7 +65,7 @@ export function UserDropdown({ id }: { id?: string }) {
             </DropdownMenuItem>
             <DropdownMenuItem className="dark:hover:bg-slate-600">
               <BadgeCheck />
-              <a href={`/settings/${id}`} className="w-full flex">
+              <a href="/settings" className="w-full flex">
                 Inställningar
               </a>
             </DropdownMenuItem>

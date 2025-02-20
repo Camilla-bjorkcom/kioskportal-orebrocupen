@@ -90,7 +90,10 @@ function Dashboard() {
             </div>
 
             <div className="flex flex-col gap-4 w-full lg:w-1/3">
-              <Countdown startDate={tournament.startDate} />
+              <Countdown
+                startDate={tournament.startDate}
+                endDate={tournament.endDate}
+              />
               <div className="bg-white dark:bg-slate-800  p-5 rounded-lg shadow-md">
                 <p>
                   <strong>Startdatum:</strong>{" "}

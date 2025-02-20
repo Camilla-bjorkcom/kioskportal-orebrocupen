@@ -88,7 +88,7 @@ function Tournaments() {
 
   return (
     <>
-      <Topbar />
+      <Topbar tournamentName={""} />
 
       <div className="container mx-auto mt-20 px-5">
         <h2 className="mt-8 text-2xl pb-2">Dina turneringar</h2>
