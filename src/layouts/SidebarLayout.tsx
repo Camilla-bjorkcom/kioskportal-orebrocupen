@@ -3,7 +3,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { Outlet } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-import ThemeToggle from "@/components/ThemeToggle";
+import Topbar from "@/components/Topbar";
 import { useGetTournament } from "@/hooks/use-query";
 
 function TournamentDetails() {
@@ -24,7 +24,7 @@ function TournamentDetails() {
       </div>
     );
   }
-  
+
   if (!isSuccess) {
     return <div>Error: {String(error)}</div>;
   }
@@ -33,13 +33,7 @@ function TournamentDetails() {
     <SidebarProvider>
       <AppSidebar id={data.id} />
       <main className="w-full ">
-        <div className="p-1 shadow w-full flex items-center mb-8 dark:bg-slate-900 ">
-          <SidebarTrigger />
-          <p className="mx-auto font-semibold text-4xl dark:text-gray-200">
-            {data?.tournamentName}
-          </p>
-          <ThemeToggle />
-        </div>
+        <Topbar tournamentName={data?.tournamentName} />
         <Outlet />
       </main>
     </SidebarProvider>

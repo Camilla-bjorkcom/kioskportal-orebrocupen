@@ -1,19 +1,9 @@
 import { useAuth } from "react-oidc-context";
-import {
-  SquareChartGantt,
-  ChartSpline,
-  LogOut,
-  ChevronsUpDown,
-  BadgeCheck,
-  BookHeart,
-  Trophy,
-  Bell
-} from "lucide-react";
+import { SquareChartGantt, ChartSpline, Bell, Trophy } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -23,22 +13,21 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+
 import { useIsMobile } from "@/hooks/use-mobile";
 
+import { useState } from "react";
 
+// Menu items.
 
 export function AppSidebar({ id }: { id?: string }) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsCollapsed((prev) => !prev);
+  };
   const items = [
     {
       title: "Turneringsförberedelser",
@@ -57,20 +46,8 @@ export function AppSidebar({ id }: { id?: string }) {
       icon: SquareChartGantt,
       subitems: [
         { title: "Inventera huvudlager", url: `/inventorystorage/${id}` },
-        {
-          title: "Visa kioskernas inventeringar",
-          url: `/inventorystatus/${id}`,
-        },
-        {
-          title: "Visa huvudlagrets inventeringar",
-          url: `/inventorystatusstorage/${id}`,
-        },
-        { title: "QR koder till kiosker", url: `/facilitiesandkiosks/${id}` },
-        {
-          title: "Översikt av turneringens lager",
-          url: `/overviewinventories/${id}`,
 
-        }
+        { title: "QR koder till kiosker", url: `/facilitiesandkiosks/${id}` },
       ],
     },
     {
@@ -83,22 +60,47 @@ export function AppSidebar({ id }: { id?: string }) {
       title: "Statistik",
       url: "#",
       icon: ChartSpline,
-      subitems: [{ title: "Din översikt", url: `/dashboard/${id}` }],
+      subitems: [
+        {
+          title: "Visa kioskernas inventeringar",
+          url: `/inventorystatus/${id}`,
+        },
+        {
+          title: "Visa huvudlagrets inventeringar",
+          url: `/inventorystatusstorage/${id}`,
+        },
+        {
+          title: "Visa översikt av turneringens produkter",
+          url: `/overviewinventories/${id}`,
+        },
+      ],
     },
   ];
-  const auth = useAuth();
+
+  // { title: "Din översikt", url: `/dashboard/${id}` },
 
   return (
-    <Sidebar variant="sidebar" collapsible="icon" className="dark:bg-slate-900">
+    <Sidebar variant="sidebar" collapsible="icon" className="dark:bg-slate-800">
       <SidebarContent>
         <SidebarHeader>
-          <img
-            src="../src/assets/images/sidebarLogo.svg"
-            alt="kiosk portal logo"
-          />
+          <div className="flex gap-2">
+            {!isCollapsed && (
+              <button
+                onClick={() => (window.location.href = `/dashboard/${id}`)}
+              >
+                <img
+                  src="../src/assets/images/sidebarLogo.svg"
+                  alt="kiosk portal logo"
+                  className="transition-all duration-300"
+                />
+              </button>
+            )}
+            <SidebarTrigger onClick={toggleSidebar} />
+          </div>
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Meny</SidebarGroupLabel>
+
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -113,7 +115,6 @@ export function AppSidebar({ id }: { id?: string }) {
                     </div>
                   </SidebarMenuButton>
 
-               
                   {item.subitems && (
                     <SidebarMenuSub>
                       {item.subitems.map((subitem) => (
@@ -134,83 +135,6 @@ export function AppSidebar({ id }: { id?: string }) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground dark:hover:bg-slate-600 dark:data-[state=open]:bg-slate-600"
-                >
-                  <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={"user.avatar"} alt={"username"} />
-                    <AvatarFallback className="rounded-lg bg-amber-500 font-bold">
-                      KP
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate text-xs">
-                      {" "}
-                      {auth.user?.profile["cognito:username"] as string}
-                    </span>
-                  </div>
-                  <ChevronsUpDown className="ml-auto size-4" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg dark:bg-slate-900  "
-                align="end"
-                sideOffset={4}
-                side={useIsMobile() ? "top" : "right"}
-              >
-                <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src={"user.avatar"} alt={"username"} />
-                      <AvatarFallback className="rounded-lg bg-amber-500 font-bold">
-                        KP
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate text-xs">
-                        {auth.user?.profile["cognito:username"] as string}
-                      </span>
-                    </div>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup></DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem className="dark:hover:bg-slate-600">
-                    <BookHeart />
-                    <a href="/tournaments" className="w-full flex ">
-                      Mina turneringar
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="dark:hover:bg-slate-600">
-                    <BadgeCheck />
-                    <a href={`/settings/${id}`} className="w-full flex">
-                      Inställningar
-                    </a>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <button
-                    onClick={() => auth.removeUser()}
-                    className="w-full dark:hover:bg-slate-600"
-                  >
-                    <LogOut />
-                    <a href="/">Logga ut</a>
-                  </button>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
     </Sidebar>
   );
 }

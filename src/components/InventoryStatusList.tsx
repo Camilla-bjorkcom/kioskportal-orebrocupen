@@ -216,7 +216,7 @@ const InventoryStatusList = () => {
         type="multiple"
         value={expandedItems}
         onValueChange={(newValue) => setExpandedItems(newValue)}
-        className="flex flex-col mb-7 dark:bg-slate-900"
+        className="flex flex-col mb-7 dark:bg-slate-800"
       >
         {data.map((item) => (
           <AccordionItem
@@ -327,7 +327,7 @@ const InventoryStatusList = () => {
                   ${
                     productIndex % 2 === 0
                       ? "bg-gray-100"
-                      : "bg-white dark:bg-slate-900"
+                      : "bg-white dark:bg-slate-700"
                   }`}
                               >
                                 <p

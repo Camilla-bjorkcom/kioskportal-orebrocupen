@@ -23,7 +23,7 @@ function Home() {
           Logga in
         </h2>
         <button
-          className="flex text-center justify-center items-center border border-solid text-slate-800 hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow w-2/3 lg:w-1/3 dark:bg-slate-900 dark:hover:bg-slate-600 dark:text-gray-200 dark:border-slate-500"
+          className="flex text-center justify-center items-center border border-solid text-slate-800 hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow w-2/3 lg:w-1/3 dark:bg-slate-800 dark:hover:bg-slate-600 dark:text-gray-200 dark:border-slate-500"
           onClick={() => auth.signinRedirect()}
         >
           Fortsätt

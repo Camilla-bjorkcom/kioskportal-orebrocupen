@@ -139,14 +139,13 @@ function UpdateProductButton({
         </span>
       </DialogTrigger>
       <DialogContent>
-        
         <DialogHeader>
           <DialogTitle>Redigera Produkt</DialogTitle>
           <DialogDescription className="sr-only">
             Uppdatera informationen för redigera Produkt
           </DialogDescription>
         </DialogHeader>
-       
+
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(
@@ -200,31 +199,29 @@ function UpdateProductButton({
           </form>
         </Form>
         <div className="flex justify-end mt-3">
-        <AlertDialog>
-          <AlertDialogTrigger className="w-full">
-            <div className="flex gap-3 p-2 shadow bg-red-800 hover:bg-red-600 rounded items-center text-sm w-full justify-center">
-            Radera produkt <TrashIcon className="w-4 h-4"/>
-            </div>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Vill du radera produkten?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Den här åtgärden kan inte ångras. Produkten kommer att tas bort
-                permanent.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Avbryt</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete}>
-                Radera
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+          <AlertDialog>
+            <AlertDialogTrigger className="w-full">
+              <div className="flex gap-3 p-2 shadow bg-red-800 hover:bg-red-600 rounded items-center text-sm w-full justify-center">
+                Radera produkt <TrashIcon className="w-4 h-4" />
+              </div>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Vill du radera produkten?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Den här åtgärden kan inte ångras. Produkten kommer att tas
+                  bort permanent.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>
+                  Radera
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
-
-        
       </DialogContent>
     </Dialog>
   );

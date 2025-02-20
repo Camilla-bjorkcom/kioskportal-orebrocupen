@@ -122,7 +122,7 @@ function ProductHandler() {
           <h3 className="text-lg mb-7">Skapade produktlistor:</h3>
             <Accordion
               type="multiple"
-              className=" w-full 2xl:w-3/4 dark:bg-slate-900"
+              className=" w-full 2xl:w-3/4 dark:bg-slate-800"
             >
               {productlists?.map((productlist) => (
                 <AccordionItem

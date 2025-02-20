@@ -15,7 +15,9 @@ const InventoryStatusStorage = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
 
-  const { data, isLoading, error, isSuccess } = useGetAllStorageInventories(tournamentId!);
+  const { data, isLoading, error, isSuccess } = useGetAllStorageInventories(
+    tournamentId!
+  );
 
   if (isLoading) {
     return (
@@ -40,7 +42,7 @@ const InventoryStatusStorage = () => {
 
   const toggleExpandAll = () => {
     if (!isSuccess || !data) {
-      return; 
+      return;
     }
     if (expandedItems.length === 0) {
       const allItems = Object.entries(data).map(([date, value]) => date);
@@ -69,7 +71,7 @@ const InventoryStatusStorage = () => {
             <AccordionItem
               key={date}
               value={date}
-              className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:bg-slate-900 dark:border-slate-500"
+              className="p-3 border border-gray-200 rounded-md shadow hover:bg-gray-50 dark:bg-slate-800 dark:border-slate-500"
             >
               <AccordionTrigger>
                 <div className="flex flex-col gap-2">
@@ -124,7 +126,7 @@ const InventoryStatusStorage = () => {
                               className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 dark:bg-slate-800 dark:border-slate-500 dark:text-gray-200 dark:hover:bg-slate-600 ${
                                 productIndex % 2 === 0
                                   ? "bg-gray-100"
-                                  : "bg-white dark:bg-slate-900"
+                                  : "bg-white dark:bg-slate-800"
                               }`}
                             >
                               <p

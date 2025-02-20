@@ -3,6 +3,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -103,7 +104,8 @@ function CreateProductButton({ tournamentId }: CreateProductProps) {
           Skapa Produkt <Plus />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogOverlay className="backdrop-blur-0" />
+      <DialogContent blur={false}>
         <DialogHeader>
           <DialogTitle>Skapa Produkt</DialogTitle>
           <DialogDescription className="sr-only">

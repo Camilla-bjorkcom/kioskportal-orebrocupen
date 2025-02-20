@@ -6,6 +6,8 @@ import WeatherComponent from "@/components/WeatherComponent";
 import Countdown from "@/components/Countdown";
 import { InventoryGraph } from "@/components/InventoryGraph";
 import { OverviewRecord } from "@/interfaces/overview";
+import ChangePassword from "@/components/ChangePassword";
+import UpdateTournamentSheet from "@/components/UpdateTournamentSheet";
 
 function Dashboard() {
   const { id } = useParams<{ id: string }>();
@@ -88,8 +90,11 @@ function Dashboard() {
             </div>
 
             <div className="flex flex-col gap-4 w-full lg:w-1/3">
-              <Countdown startDate={tournament.startDate} />
-              <div className="bg-white dark:bg-slate-900  p-5 rounded shadow-md">
+              <Countdown
+                startDate={tournament.startDate}
+                endDate={tournament.endDate}
+              />
+              <div className="bg-white dark:bg-slate-800  p-5 rounded-lg shadow-md">
                 <p>
                   <strong>Startdatum:</strong>{" "}
                   {new Date(tournament.startDate).toLocaleDateString("sv-SE")}
@@ -101,6 +106,26 @@ function Dashboard() {
               </div>
               <div className="w-full">
                 <WeatherComponent lat={59.2753} lon={15.2134} />
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col justify-end lg:flex-row gap-8 ">
+            <div className="w-full lg:w-2/3"></div>
+            <div className="bg-white dark:bg-slate-800  gap-4 p-5 rounded-lg shadow-md w-full lg:w-1/3">
+              <p>
+                <p className="mb-4 text-lg font-semibold ">
+                  Turnerings inställningar
+                </p>
+              </p>
+              <div className="flex gap-4 mb-4">
+                <UpdateTournamentSheet
+                  tournament={{
+                    tournamentName: tournament.tournamentName,
+                    startDate: new Date(tournament.startDate),
+                    endDate: new Date(tournament.endDate),
+                  }}
+                  tournamentId={tournament.id}
+                />
               </div>
             </div>
           </div>
