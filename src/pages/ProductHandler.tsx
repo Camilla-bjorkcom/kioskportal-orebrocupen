@@ -1,4 +1,4 @@
-import CreateProductButton from "@/components/CreateProductButton"; 
+import CreateProductButton from "@/components/CreateProductButton";
 import {
   Tooltip,
   TooltipContent,
@@ -20,25 +20,19 @@ import { Toaster } from "@/components/ui/toaster";
 import ProductInfoComponent from "@/components/ProductInfoComponent";
 import { useGetAllProductlists, useGetAllProducts } from "@/hooks/use-query";
 import { deleteProductList } from "@/api/functions/deleteProductlist";
-import CreateProductListButton from "@/components/CreateProductlistButton";
-
+import CreateProductListButton from "@/components/CreateProductListButton";
 
 function ProductHandler() {
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
 
-  const {
-    data: products,
-    isLoading,
-    error,
-  } = useGetAllProducts(tournamentId!)
+  const { data: products, isLoading, error } = useGetAllProducts(tournamentId!);
 
   const {
     data: productlists,
     isLoading: isLoadingProductLists,
     error: errorProductList,
-  } = useGetAllProductlists(tournamentId!)
-
+  } = useGetAllProductlists(tournamentId!);
 
   if (isLoading || isLoadingProductLists) {
     return (
@@ -84,9 +78,7 @@ function ProductHandler() {
               </Tooltip>
             </TooltipProvider>
           </div>
-          <CreateProductButton
-            tournamentId={tournamentId!}
-          />
+          <CreateProductButton tournamentId={tournamentId!} />
 
           <div className="mt-8">
             <h3 className="text-lg mb-7">Skapade produkter:</h3>
@@ -115,11 +107,9 @@ function ProductHandler() {
         </div>
         <div className="container mx-auto px-4 flex-row items-center">
           <div className="border border-t-2 mb-8 dark:border-slate-600 w-3/4"></div>
-          <CreateProductListButton
-           tournamentId={tournamentId!}
-          />
+          <CreateProductListButton tournamentId={tournamentId!} />
           <div className="mt-8">
-          <h3 className="text-lg mb-7">Skapade produktlistor:</h3>
+            <h3 className="text-lg mb-7">Skapade produktlistor:</h3>
             <Accordion
               type="multiple"
               className=" w-full 2xl:w-3/4 dark:bg-slate-800"
@@ -139,7 +129,7 @@ function ProductHandler() {
                         <UpdateProductListButton
                           productlist={productlist}
                           tournamentProducts={products?.products || []}
-                          tournamentId={tournamentId!}  
+                          tournamentId={tournamentId!}
                         />
 
                         <TooltipProvider>
@@ -148,7 +138,12 @@ function ProductHandler() {
                               <DeleteButton
                                 id={productlist.id}
                                 type="Productlist"
-                                onDelete={() => deleteProductList(productlist.id, tournamentId!)}
+                                onDelete={() =>
+                                  deleteProductList(
+                                    productlist.id,
+                                    tournamentId!
+                                  )
+                                }
                               />
                             </TooltipTrigger>
                             <TooltipContent>
