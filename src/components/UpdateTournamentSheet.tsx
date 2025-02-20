@@ -17,7 +17,18 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { UpdateTournament } from "@/interfaces/tournament";
 import DeleteTournamentButton from "@/components/DeleteTournamentButton";
-import { useNavigate } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
+import { DatePicker } from "./DatePicker";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "./ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const UpdateTournamentSheet = ({
   tournament,
@@ -72,6 +83,34 @@ const UpdateTournamentSheet = ({
     navigate("/tournaments");
   };
 
+  const formSchema = z.object({
+    tournamentName: z
+      .string()
+      .min(2, { message: "Turneringsnamn måste ha minst 2 bokstäver" }),
+    startDate: z
+      .date({ required_error: "Startdatum är obligatoriskt" })
+      .optional(),
+    endDate: z
+      .date({ required_error: "Slutdatum är obligatoriskt" })
+      .optional(),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      tournamentName: tournament.tournamentName || "",
+      startDate: tournament.startDate || undefined,
+      endDate: tournament.endDate || undefined,
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    const updatedTournament: UpdateTournament = {
+      ...tournament,
+      ...data,
+    };
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -89,54 +128,64 @@ const UpdateTournamentSheet = ({
             Uppdatera turneringsinformationen här.
           </SheetDescription>
         </SheetHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="tournamentName" className="text-right">
-              Namn
-            </Label>
-            <Input
-              id="tournamentName"
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
               name="tournamentName"
-              value={formData.tournamentName}
-              onChange={handleInputChange}
-              className="col-span-3"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Turneringsnamn</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Skriv in turneringsnamn" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="startDate" className="text-right">
-              Startdatum
-            </Label>
-            <Input
-              id="startDate"
-              type="date"
+            <FormField
+              control={form.control}
               name="startDate"
-              value={
-                formData.startDate
-                  ? new Date(formData.startDate).toISOString().split("T")[0]
-                  : ""
-              }
-              onChange={handleInputChange}
-              className="col-span-3"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mr-3">Startdatum</FormLabel>
+                  <FormControl>
+                    <DatePicker
+                      selected={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="endDate" className="text-right">
-              Slutdatum
-            </Label>
-            <Input
-              id="endDate"
-              type="date"
+            <FormField
+              control={form.control}
               name="endDate"
-              value={
-                formData.endDate
-                  ? new Date(formData.endDate).toISOString().split("T")[0]
-                  : ""
-              }
-              onChange={handleInputChange}
-              className="col-span-3"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mr-3">Slutdatum</FormLabel>
+                  <FormControl>
+                    <DatePicker
+                      selected={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-        </div>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
+              >
+                Uppdatera Turnering
+              </button>
+            </div>
+          </form>
+        </Form>
         <SheetFooter>
           <SheetClose asChild>
             <Button onClick={handleUpdate}>Spara ändringar</Button>

@@ -16,14 +16,12 @@ function Countdown({
     const interval = setInterval(() => {
       const now = new Date().getTime();
 
-      if (now >= endTimestamp) {
-        setTimeLeft("Turneringen avslutad");
-        clearInterval(interval);
-        return;
-      }
-
       if (now >= startTimestamp) {
         setTimeLeft("Turneringen pågår");
+        return;
+      } else if (now > endTimestamp) {
+        setTimeLeft("Turneringen avslutad");
+        clearInterval(interval);
         return;
       }
 
