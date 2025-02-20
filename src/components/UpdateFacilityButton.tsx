@@ -27,6 +27,8 @@ import { badToast, okToast } from "@/utils/toasts";
 import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
 import { updateFacility } from "@/api/functions/updateFacility";
 import { useQueryClient } from "@tanstack/react-query";
+
+
 const formSchema = z.object({
   facilityName: z.string().min(2, {
     message: "Anläggnings namn måste ha minst 2 bokstäver",
@@ -34,11 +36,11 @@ const formSchema = z.object({
 });
 
 interface UpdateFacilityButtonProps {
-  id: string;
+  tournamentId: string;
   facility: Facility;
 }
 
-const UpdateFacilityButton = ({ id, facility }: UpdateFacilityButtonProps) => {
+const UpdateFacilityButton = ({ tournamentId, facility }: UpdateFacilityButtonProps) => {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -60,7 +62,7 @@ const UpdateFacilityButton = ({ id, facility }: UpdateFacilityButtonProps) => {
       const updatedFacility = await updateFacility(
         facility,
         values.facilityName,
-        id!
+        tournamentId!
       );
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
 

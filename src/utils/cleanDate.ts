@@ -4,7 +4,6 @@ export function cleanDate(isoDate: string): string {
     const date = new Date(isoDate);
     if (isNaN(date.getTime())) return "Ogiltigt datum";
 
-    // Formatera datumet korrekt
     return date.toLocaleString("sv-SE", {
         day: "numeric",
         month: "long",
@@ -15,4 +14,3 @@ export function cleanDate(isoDate: string): string {
     }).replace(", ", " kl. ");
 }
 
-//funkrion för att formatera UTC datum till UI 

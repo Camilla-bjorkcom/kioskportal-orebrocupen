@@ -6,10 +6,8 @@ import {
   ChevronsUpDown,
   BadgeCheck,
   BookHeart,
-  House,
-  ShoppingBasket,
-  Bell,
   Trophy,
+  Bell
 } from "lucide-react";
 
 import {
@@ -27,12 +25,6 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -44,7 +36,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Menu items.
+
 
 export function AppSidebar({ id }: { id?: string }) {
   const items = [
@@ -121,7 +113,7 @@ export function AppSidebar({ id }: { id?: string }) {
                     </div>
                   </SidebarMenuButton>
 
-                  {/* Subitems */}
+               
                   {item.subitems && (
                     <SidebarMenuSub>
                       {item.subitems.map((subitem) => (

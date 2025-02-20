@@ -21,6 +21,10 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { createTournament } from "@/api/functions/createTournament";
+import { NoResponseError } from "@/api/functions/apiErrors";
+import { okToast, badToast } from "@/utils/toasts";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   tournamentName: z.string().min(2, {
@@ -34,15 +38,11 @@ const formSchema = z.object({
   }),
 });
 
-interface CreateTournamentButtonProps {
-  onSave: (data: {
-    tournamentName: string;
-    startDate: Date;
-    endDate: Date;
-  }) => void;
-}
 
-function CreateTournamentBtn({ onSave }: CreateTournamentButtonProps) {
+function CreateTournamentButton() {
+  const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,12 +52,24 @@ function CreateTournamentBtn({ onSave }: CreateTournamentButtonProps) {
     },
   });
 
-  const [open, setOpen] = useState(false);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const tournamentCreated = await createTournament(values);
+      if (!tournamentCreated) {
+        throw new NoResponseError("No response from server");
+      }
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave(values);
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+
+      okToast(`Turnering ${values.tournamentName} skapades`);
+    } catch (error) {
+      if (error instanceof NoResponseError) {
+        badToast("Misslyckades med att skapa turnering.");
+      } else {
+        badToast("Misslyckades med att skapa turnering.");
+      }
+    }
     setOpen(false);
-    console.log(values);
     form.reset();
   }
 
@@ -138,4 +150,4 @@ function CreateTournamentBtn({ onSave }: CreateTournamentButtonProps) {
   );
 }
 
-export default CreateTournamentBtn;
+export default CreateTournamentButton;

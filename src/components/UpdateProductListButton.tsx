@@ -16,34 +16,39 @@ import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import { Pencil, Plus } from "lucide-react";
 import { Productlist, Product } from "@/interfaces";
+import { updateProductlist } from "@/api/functions/updateProductlist";
+import { useQueryClient } from "@tanstack/react-query";
+import { badToast, okToast } from "@/utils/toasts";
+import { NoResponseError, DuplicateError } from "@/api/functions/apiErrors";
 
 const formSchema = z.object({
-  productlistname: z.string().min(2, {
+  productlistName: z.string().min(2, {
     message: "Produktlistnamn måste ha minst 2 bokstäver",
   }),
 });
 
 interface UpdateProductListButtonProps {
   productlist: Productlist;
-  onUpdate: (updatedList: Productlist) => void;
+  tournamentId: string;
   tournamentProducts: Product[];
 }
 
 function UpdateProductListButton({
   productlist,
-  onUpdate,
+  tournamentId,
   tournamentProducts,
 }: UpdateProductListButtonProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      productlistname: productlist.productlistName,
-    },
-  });
-
+  const queryClient = useQueryClient();
   const [productlistForUpdate, setProductlistforUpdate] =
     useState<Productlist>(productlist);
   const [open, setOpen] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      productlistName: productlist.productlistName,
+    },
+  });
 
   const allSelected: boolean =
     tournamentProducts.length > 0 &&
@@ -57,7 +62,6 @@ function UpdateProductListButton({
       tournamentProducts.every((product) =>
         productlistForUpdate?.products.some((p) => p.id === product.id)
       );
-
     setProductlistforUpdate((prev) =>
       prev
         ? {
@@ -68,17 +72,37 @@ function UpdateProductListButton({
     );
   };
 
-  const handleSubmit = form.handleSubmit((values) => {
-    if (productlistForUpdate) {
-      const updatedList = {
-        ...productlistForUpdate,
-        productlistName: values.productlistname,
-      };
-      onUpdate(updatedList); // Skickar tillbaka den uppdaterade listan
-      form.reset();
-      setOpen(false);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      if (productlistForUpdate) {
+        const updatedList = {
+          ...productlistForUpdate,
+          productlistName: values.productlistName,
+        };
+        const updatedProductlist = await updateProductlist(
+          updatedList,
+          tournamentId
+        );
+
+        if (!updatedProductlist)
+          throw new NoResponseError("No response from server");
+
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+        queryClient.invalidateQueries({ queryKey: ["productlists"] });
+
+        okToast(`Produktlista  ${updatedProductlist.productlistName} uppdaterades`);
+      }
+    } catch (error) {
+      if (error instanceof DuplicateError) {
+        badToast(`Produktlista med namnet ${values.productlistName}  finns redan.`);
+      } else {
+        badToast("Misslyckades med att uppdatera produktlista.");
+      }
     }
-  });
+
+    form.reset();
+    setOpen(false);
+  }
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => setOpen(isOpen)}>
@@ -104,10 +128,21 @@ function UpdateProductListButton({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(
+              (values) => {
+                console.log("Formuläret är giltigt:", values);
+                onSubmit(values);
+              },
+              (errors) => {
+                console.error("Valideringsfel:", errors);
+              }
+            )}
+            className="space-y-8"
+          >
             <FormField
               control={form.control}
-              name="productlistname"
+              name="productlistName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Produktlistnamn</FormLabel>
