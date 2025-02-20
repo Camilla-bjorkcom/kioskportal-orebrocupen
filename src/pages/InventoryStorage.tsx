@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "../components/ui/toaster";
 import { useParams } from "react-router-dom";
@@ -18,22 +18,23 @@ import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useEffect } from "react";
 import { StorageInventory } from "@/interfaces/storageInventory";
 import { InventoryStorageProducts } from "@/interfaces/product";
+import { badToast, okToast } from "@/utils/toasts";
 
 function InventoryStorage() {
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
-  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const formSchema = z.object({
     amountPackages: z.array(
       z
         .union([z.number(), z.nan()])
         .transform((val) => (isNaN(val) ? 0 : val)) // Om fältet är NaN (tomt), sätt 0
-        .refine((val) => val >= 0, { message: "Antal paket måste vara minst 0" }) // Säkerställer att värdet inte är negativt
+        .refine((val) => val >= 0, {
+          message: "Antal paket måste vara minst 0",
+        }) // Säkerställer att värdet inte är negativt
     ),
   });
-  
-  
 
   const { isLoading, error, data, isSuccess } = useQuery<StorageInventory>({
     queryKey: ["storageProducts"],
@@ -91,19 +92,13 @@ function InventoryStorage() {
         throw new Error("Failed to update list");
       }
 
-      toast({
-        className: "bg-green-200 dark:bg-green-500 dark:text-black",
-        title: "Lyckat!",
-        description: "Inventering skickades iväg",
-      });
+      okToast("Inventeringen har skickats in");
       form.reset();
+      queryClient.invalidateQueries({ queryKey: ["storageProducts"] });
     } catch (error) {
       console.error("Update failed:", error);
-      toast({
-        className: "bg-red-200 dark:bg-red-500 dark:text-black",
-        title: "Misslyckat!",
-        description: "Inventering misslyckades",
-      });
+      badToast("Misslyckades med att skicka in inventering");
+
       throw error;
     }
   };
@@ -135,7 +130,9 @@ function InventoryStorage() {
             Inventera huvudlager
           </h2>
           <div className="w-full place-items-center mt-5 gap-3 mb-16">
-            <p className="text-sm dark:text-gray-200">Senast inventering gjord:</p>
+            <p className="text-sm dark:text-gray-200">
+              Senast inventering gjord:
+            </p>
             <h3 className="text-sm font-semibold dark:text-gray-200">
               {data?.inventoryDate === "ingen inventering gjord"
                 ? data?.inventoryDate
@@ -149,9 +146,12 @@ function InventoryStorage() {
                   })}
             </h3>
           </div>
-  
+
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit mx-auto mb-20">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="w-fit mx-auto mb-20"
+            >
               {isSuccess && data.products && data.products.length > 0 ? (
                 data.products.map((product, index) => (
                   <div
@@ -169,7 +169,7 @@ function InventoryStorage() {
                         </p>
                       </FormLabel>
                     </FormItem>
-  
+
                     <div className="flex gap-5 dark:border:solid dark:border-gray-500">
                       <FormField
                         control={form.control}
@@ -186,7 +186,9 @@ function InventoryStorage() {
                                 placeholder="Ange antal"
                                 onChange={(e) => {
                                   const val = e.target.value;
-                                  field.onChange(val === "" ? undefined : Number(val));
+                                  field.onChange(
+                                    val === "" ? undefined : Number(val)
+                                  );
                                 }}
                                 onBlur={(e) => {
                                   if (e.target.value === "") {
@@ -196,7 +198,9 @@ function InventoryStorage() {
                               />
                             </FormControl>
                             {fieldState.error && (
-                              <p className="text-red-500 text-sm">{fieldState.error.message}</p>
+                              <p className="text-red-500 text-sm">
+                                {fieldState.error.message}
+                              </p>
                             )}
                           </FormItem>
                         )}
@@ -205,10 +209,14 @@ function InventoryStorage() {
                   </div>
                 ))
               ) : (
-                <p className="dark:text-white">Inga produkter tillagda i turneringen</p>
+                <p className="dark:text-white">
+                  Inga produkter tillagda i turneringen
+                </p>
               )}
               <div className="w-1/2 place-self-center">
-                <Button type="submit" className="w-full mt-10">Skicka in inventering</Button>
+                <Button type="submit" className="w-full mt-10">
+                  Skicka in inventering
+                </Button>
               </div>
             </form>
           </Form>
