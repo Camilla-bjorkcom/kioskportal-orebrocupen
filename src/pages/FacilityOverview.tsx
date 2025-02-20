@@ -1,7 +1,4 @@
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmountForFacility";
-import { Facility } from "@/interfaces/facility";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { calculateTotalAmountForFacility } from "@/utils/calculateTotalAmountForFacility";
 import { useParams } from "react-router-dom";
 import {
   Table,
@@ -13,54 +10,39 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { KioskInventory } from "@/interfaces/kioskInventory";
-import { mapKioskInventoriesToFacility } from "@/functions/mapKioskInventoriesToFacility";
+import { mapKioskInventoriesToFacility } from "@/utils/mapKioskInventoriesToFacility";
 import { cleanDate } from "@/utils/cleanDate";
-import { useGetOneFacility } from "@/hooks/use-query";
+import {
+  useGetFirstKioskInventoriesForOneFacility,
+  useGetOneFacility,
+} from "@/hooks/use-query";
 
 const FacilityOverview = () => {
-  const { id: tournamentId, fid: facilityId } = useParams<{
-    id: string;
-    fid: string;
-  }>();
+  const tournamentId = useParams().id as string;
+  const facilityId = useParams().fid as string;
 
-  // 🔹 Hämtar facility-data
   const {
     isLoading,
     data: facility,
     isSuccess,
-  } = useGetOneFacility(tournamentId ?? "", facilityId ?? "")
+  } = useGetOneFacility(tournamentId, facilityId);
 
-  // 🔹 Vänta på att `facility` laddas innan vi skapar queries
   const currentKiosks = facility?.kiosks ?? [];
 
-  // 🔹 Hämta alla kiosk-inventeringar
-  const kioskInventoryQueries = useQueries({
-    queries: currentKiosks.map((kiosk) => ({
-      queryKey: ["kioskInventory", kiosk.id],
-      queryFn: async (): Promise<KioskInventory> => {
-        const response = await fetchWithAuth(
-          `firstkioskinventories/${tournamentId}/${kiosk.id}`
-        );
-        if (!response) {
-          throw new Error("Response is undefined");
-        }
-        if (!response.ok) {
-          throw new Error(`Failed to fetch inventory for kiosk ${kiosk.id}`);
-        }
-        const firstInventory = await response.json();
-        return firstInventory;
-      },
-      enabled: !!kiosk.id,
-    })),
-  });
+  const kiosksFirstInventories = useGetFirstKioskInventoriesForOneFacility(
+    tournamentId,
+    currentKiosks
+  );
 
-  const isFetchingInventories = kioskInventoryQueries.some(
+  const isFetchingInventories = kiosksFirstInventories.some(
     (query) => query.isFetching
   );
-  const isInventoryLoading = kioskInventoryQueries.some(
+  const isInventoryLoading = kiosksFirstInventories.some(
     (query) => query.isLoading
   );
-  const isInventoryError = kioskInventoryQueries.some((query) => query.isError);
+  const isInventoryError = kiosksFirstInventories.some(
+    (query) => query.isError
+  );
 
   if (isLoading || isFetchingInventories || isInventoryLoading) {
     return (
@@ -80,7 +62,7 @@ const FacilityOverview = () => {
     return <div>Error loading data.</div>;
   }
 
-  const kioskInventories = kioskInventoryQueries
+  const kioskInventories = kiosksFirstInventories
     .map((query) => query.data)
     .filter((data) => data && data.kioskInventoryId !== "");
 
@@ -88,18 +70,16 @@ const FacilityOverview = () => {
     ? calculateTotalAmountForFacility(facility)
     : null;
 
-  // 🔹 Filtrera bort `undefined` från `kioskInventories`
+  
   const validKioskInventories = kioskInventories.filter(
     (inventory): inventory is KioskInventory => !!inventory
   );
 
-  // 🔹 Använd den filtrerade listan
   const mappedFacilityFirstInventory = mapKioskInventoriesToFacility(
     facility,
     validKioskInventories
   );
 
-  // 🔹 Använd den omvandlade datan i `calculateTotalAmountForFacility`
   const facilityFirstForTable = calculateTotalAmountForFacility(
     mappedFacilityFirstInventory
   );
@@ -148,59 +128,50 @@ const FacilityOverview = () => {
                   const firstKioskInventory = validKioskInventories.find(
                     (inventory) => inventory.kioskId === kiosk.id
                   );
+                  const latestProduct = kiosk.products.find(
+                    (p) => p.id === product.id
+                  );
 
+                  // 🔹 Hitta motsvarande produkt i den första inventeringen
+                  const firstInventoryProduct =
+                    firstKioskInventory?.products.find(
+                      (p) => p.id === product.id
+                    );
+
+                  // 🔹 Beräkna totalAmount från den senaste inventeringen
+                  const latestAmountPackages =
+                    latestProduct?.amountPackages ?? 0;
+                  const latestAmountPerPackage =
+                    latestProduct?.amountPerPackage ?? 1;
+                  const latestAmountPieces = latestProduct?.amountPieces ?? 0;
+                  const latestTotalAmount =
+                    latestAmountPackages * latestAmountPerPackage +
+                    latestAmountPieces;
+
+                  // 🔹 Beräkna totalAmount från den första inventeringen
+                  const firstAmountPackages =
+                    firstInventoryProduct?.amountPackages ?? 0;
+                  const firstAmountPerPackage =
+                    firstInventoryProduct?.amountPerPackage ?? 1;
+                  const firstAmountPieces =
+                    firstInventoryProduct?.amountPieces ?? 0;
+                  const firstTotalAmount =
+                    firstAmountPackages * firstAmountPerPackage +
+                    firstAmountPieces;
+
+                  // 🔹 Bestäm om vi ska färga rött (nuvarande mängd < 20% av första mängden)
+                  const isLowStock =
+                    firstTotalAmount > 0 &&
+                    latestTotalAmount < firstTotalAmount * 0.2;
                   return (
                     <TableCell key={kiosk.id} className="text-center">
-
                       {/* 🔹 Hitta motsvarande produkt i kioskens senaste inventering */}
-                      {(() => {
-                        const latestProduct = kiosk.products.find(
-                          (p) => p.id === product.id
-                        );
 
-                        // 🔹 Hitta motsvarande produkt i den första inventeringen
-                        const firstInventoryProduct =
-                          firstKioskInventory?.products.find(
-                            (p) => p.id === product.id
-                          );
-
-                        // 🔹 Beräkna totalAmount från den senaste inventeringen
-                        const latestAmountPackages =
-                          latestProduct?.amountPackages ?? 0;
-                        const latestAmountPerPackage =
-                          latestProduct?.amountPerPackage ?? 1;
-                        const latestAmountPieces =
-                          latestProduct?.amountPieces ?? 0;
-                        const latestTotalAmount =
-                          latestAmountPackages * latestAmountPerPackage +
-                          latestAmountPieces;
-
-                        // 🔹 Beräkna totalAmount från den första inventeringen
-                        const firstAmountPackages =
-                          firstInventoryProduct?.amountPackages ?? 0;
-                        const firstAmountPerPackage =
-                          firstInventoryProduct?.amountPerPackage ?? 1;
-                        const firstAmountPieces =
-                          firstInventoryProduct?.amountPieces ?? 0;
-                        const firstTotalAmount =
-                          firstAmountPackages * firstAmountPerPackage +
-                          firstAmountPieces;
-
-                        // 🔹 Bestäm om vi ska färga rött (nuvarande mängd < 20% av första mängden)
-                        const isLowStock =
-                          firstTotalAmount > 0 &&
-                          latestTotalAmount < firstTotalAmount * 0.2;
-
-                        return (
-                          <span
-                            className={
-                              isLowStock ? "text-red-500 font-bold" : ""
-                            }
-                          >
-                            {latestTotalAmount}
-                          </span>
-                        );
-                      })()}
+                      <span
+                        className={isLowStock ? "text-red-500 font-bold" : ""}
+                      >
+                        {latestTotalAmount}
+                      </span>
                     </TableCell>
                   );
                 })}
@@ -220,7 +191,7 @@ const FacilityOverview = () => {
               </TableRow>
             );
           })}
-           <TableRow>
+          <TableRow>
             <TableHead className="font-normal dark:text-slate-300">
               Senaste Inventering
             </TableHead>
@@ -229,8 +200,7 @@ const FacilityOverview = () => {
                 <p>{cleanDate(kiosk.inventoryDate)}</p>
               </TableHead>
             ))}
-            
-            </TableRow>
+          </TableRow>
         </TableBody>
       </Table>
     </section>

@@ -1,4 +1,4 @@
-import { calculateTotalAmountForFacility } from "@/functions/calculateTotalAmountForFacility";
+import { calculateTotalAmountForFacility } from "@/utils/calculateTotalAmountForFacility";
 import { Link, useParams } from "react-router-dom";
 import {
   Table,
@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { calculateProductTotalsFacility } from "@/functions/calculateProductTotalsFacility";
+import { calculateProductTotalsFacility } from "@/utils/calculateProductTotalsFacility";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -17,27 +17,28 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { calculateFirstTotalAmountForFacility } from "@/functions/calculateFirstTotalAmountForFacility";
+import { calculateFirstTotalAmountForFacility } from "@/utils/calculateFirstTotalAmountForFacility";
 import { sortByInventoryDate } from "@/utils/sortByDate";
 import { useState } from "react";
 import { cleanDate } from "@/utils/cleanDate";
-import { useGetAllFacilities, useGetAllFirstKioskInventories, useGetFirstStorageInventory, useGetStorageInventory } from "@/hooks/use-query";
+import {
+  useGetAllFacilities,
+  useGetAllFirstKioskInventories,
+  useGetFirstStorageInventory,
+  useGetStorageInventory,
+} from "@/hooks/use-query";
 
 const OverviewInventories = () => {
-  const { id } = useParams<{ id: string }>();
-  const tournamentId = id ||"";
+  const tournamentId = useParams().id as string;
 
-  const { data: storageInventory } = useGetStorageInventory(tournamentId)
+  const { data: storageInventory } = useGetStorageInventory(tournamentId);
+  const { data: firstStorageInventory, isLoading } =
+    useGetFirstStorageInventory(tournamentId);
+  const { data: facilities } = useGetAllFacilities(tournamentId);
+  const { data: firstKioskInventories } =
+    useGetAllFirstKioskInventories(tournamentId);
 
-  const { data: firstStorageInventory, isLoading } = useGetFirstStorageInventory(tournamentId)
-  
-  const { data: facilities } = useGetAllFacilities(tournamentId)
-  
-  const { data: firstKioskInventories } = useGetAllFirstKioskInventories(tournamentId)
-
-  const allProducts = storageInventory?.products.map((product) => {
-    return product.productName;
-  });
+  const allProducts = storageInventory?.products.map((p) => p.productName);
 
   const productTotals = calculateProductTotalsFacility(storageInventory!);
 
@@ -140,12 +141,11 @@ const OverviewInventories = () => {
                 </TableHead>
               ))}
               <TableHead className="text-center font-bold dark:text-slate-300">
-              <p>Huvudlager</p>
+                <p>Huvudlager</p>
                 {viewDate && storageInventory?.inventoryDate && (
                   <p className="font-medium text-center">
                     {cleanDate(storageInventory.inventoryDate)}
                   </p>
-                
                 )}
               </TableHead>
               <TableHead className="text-center font-bold dark:text-slate-300">
@@ -173,7 +173,7 @@ const OverviewInventories = () => {
               const total = [productsInStorage, ...productsInFacilities]
                 .map((x) => x?.totalAmount ?? 0)
                 .reduce((a, c) => a + c, 0);
-              console.log(total);
+            
 
               const initialTotal = [
                 productsInStorageFirst,
@@ -181,7 +181,7 @@ const OverviewInventories = () => {
               ]
                 .map((x) => x?.totalAmount ?? 0)
                 .reduce((a, c) => a + c, 0);
-              console.log(initialTotal);
+           
 
               return (
                 <TableRow key={productName}>

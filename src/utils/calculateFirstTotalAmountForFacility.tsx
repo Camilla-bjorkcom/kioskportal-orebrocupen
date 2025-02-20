@@ -32,9 +32,6 @@ export const calculateFirstTotalAmountForFacility = (
       (inventory) => inventory.facilityId === facilityId
     );
   
-    console.log("Facility being processed:", facilityName);
-    console.log("Matching inventories for facility:", matchingInventories);
-  
     matchingInventories.forEach((inventory) => {
      
   
@@ -62,14 +59,7 @@ export const calculateFirstTotalAmountForFacility = (
         // Summera totalen
         totals[productId].totalAmount += totalAmount;
       });
-    });
-  
-    console.log(
-      "Final computed first totals for facility:",
-      facilityName,
-      Object.values(totals)
-    );
-  
+    }); 
     return {
       facilityName,
       id: facilityId,
