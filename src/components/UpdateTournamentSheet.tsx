@@ -15,13 +15,14 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { UpdateTournament } from "@/interfaces/tournament";
 import DeleteTournamentButton from "@/components/DeleteTournamentButton";
-import { Form, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { updateTournament } from "@/api/functions/updateTournament";
 import { badToast, okToast } from "@/utils/toasts";
 import { NoResponseError } from "@/api/functions/apiErrors";
 import { Toaster } from "./ui/toaster";
 import { DatePicker } from "./DatePicker";
 import {
+  Form,
   FormField,
   FormItem,
   FormLabel,
@@ -29,8 +30,9 @@ import {
   FormMessage,
 } from "./ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+
 import { z } from "zod";
+import { useForm } from "react-hook-form";
 
 const UpdateTournamentSheet = ({
   tournament,
@@ -46,24 +48,6 @@ const UpdateTournamentSheet = ({
   useEffect(() => {
     setFormData(tournament);
   }, [tournament]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleUpdate = async () => {
-    try {
-      const updatedTournament = await updateTournament(tournamentId, formData);
-
-      if (!updatedTournament)
-        throw new NoResponseError("No response from server");
-      okToast("Turneringen har uppdaterats");
-      queryClient.invalidateQueries({ queryKey: ["tournament"] });
-    } catch (error) {
-      console.error("Failed to update tournament:", error);
-      badToast("Misslyckades med att spara ändringar.");
-    }
-  };
 
   const handleDelete = () => {
     queryClient.invalidateQueries({ queryKey: ["tournament"] });
@@ -92,11 +76,18 @@ const UpdateTournamentSheet = ({
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    const updatedTournament: UpdateTournament = {
-      ...tournament,
-      ...data,
-    };
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      const updatedTournament = await updateTournament(tournamentId, data);
+
+      if (!updatedTournament)
+        throw new NoResponseError("No response from server");
+      okToast("Turneringen har uppdaterats");
+      queryClient.invalidateQueries({ queryKey: ["tournament"] });
+    } catch (error) {
+      console.error("Failed to update tournament:", error);
+      badToast("Misslyckades med att spara ändringar.");
+    }
   };
 
   return (
@@ -113,19 +104,19 @@ const UpdateTournamentSheet = ({
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Redigera turnering</SheetTitle>
-            <SheetDescription>
-              Uppdatera turneringsinformationen här.
-            </SheetDescription>
+            <SheetTitle className="mb-4">Redigera turnering</SheetTitle>
           </SheetHeader>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-col gap-6"
+            >
               <FormField
                 control={form.control}
                 name="tournamentName"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col">
                     <FormLabel>Turneringsnamn</FormLabel>
                     <FormControl>
                       <Input placeholder="Skriv in turneringsnamn" {...field} />
@@ -134,57 +125,58 @@ const UpdateTournamentSheet = ({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="startDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="mr-3">Startdatum</FormLabel>
-                    <FormControl>
-                      <DatePicker
-                        selected={field.value}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="endDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="mr-3">Slutdatum</FormLabel>
-                    <FormControl>
-                      <DatePicker
-                        selected={field.value}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className=" border border-solid hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow"
-                >
-                  Uppdatera Turnering
-                </button>
+
+              <div className="flex flex-wrap gap-4">
+                <FormField
+                  control={form.control}
+                  name="startDate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Startdatum</FormLabel>
+                      <FormControl>
+                        <DatePicker
+                          selected={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="endDate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Slutdatum</FormLabel>
+                      <FormControl>
+                        <DatePicker
+                          selected={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex justify-between items-center mt-6">
+                <SheetClose asChild>
+                  <Button
+                    type="submit"
+                    className="border border-solid hover:bg-slate-800 hover:text-white  shadow"
+                  >
+                    Uppdatera turnering
+                  </Button>
+                </SheetClose>
+                <DeleteTournamentButton
+                  tournamentId={tournamentId}
+                  onDelete={handleDelete}
+                />
               </div>
             </form>
           </Form>
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button onClick={handleUpdate}>Spara ändringar</Button>
-            </SheetClose>
-            <DeleteTournamentButton
-              tournamentId={tournamentId}
-              onDelete={handleDelete}
-            />
-          </SheetFooter>
         </SheetContent>
       </Sheet>
     </>

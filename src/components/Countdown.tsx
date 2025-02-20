@@ -10,21 +10,21 @@ function Countdown({
   const [timeLeft, setTimeLeft] = useState<string>("");
 
   useEffect(() => {
-    const startTimestamp = new Date(startDate).getTime();
-    const endTimestamp = new Date(endDate).getTime();
+    const startTimestamp = new Date(startDate).setHours(0, 0, 0, 0); // Start av dagen
+    const endTimestamp = new Date(endDate).setHours(23, 59, 59, 999); // Slut av dagen
 
-    const interval = setInterval(() => {
+    const updateCountdown = () => {
       const now = new Date().getTime();
 
-      if (now >= startTimestamp) {
+      if (now >= startTimestamp && now <= endTimestamp) {
         setTimeLeft("Turneringen pågår");
         return;
       } else if (now > endTimestamp) {
         setTimeLeft("Turneringen avslutad");
-        clearInterval(interval);
         return;
       }
 
+      // Nedräkning innan start
       const difference = startTimestamp - now;
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
       const hours = Math.floor(
@@ -34,7 +34,10 @@ function Countdown({
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
       setTimeLeft(`${days} dagar ${hours}h ${minutes}m ${seconds}s`);
-    }, 1000);
+    };
+
+    updateCountdown(); // Uppdatera direkt vid första renderingen
+    const interval = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(interval);
   }, [startDate, endDate]);
