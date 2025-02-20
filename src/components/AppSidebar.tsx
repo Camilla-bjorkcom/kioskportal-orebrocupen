@@ -1,4 +1,3 @@
-import { useAuth } from "react-oidc-context";
 import { SquareChartGantt, ChartSpline, Bell, Trophy } from "lucide-react";
 
 import {
@@ -15,8 +14,6 @@ import {
   SidebarMenuSubItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
-import { useIsMobile } from "@/hooks/use-mobile";
 
 import { useState } from "react";
 
