@@ -12,14 +12,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 
-export function UserDropdown({}: {}) {
+export function UserDropdown() {
   const auth = useAuth();
 
   return (
     <div className="">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center gap-2 p-2 rounded-lg bg-gray-200 dark:bg-slate-800 hover:bg-gray-300 dark:hover:bg-slate-600">
+          <button className="flex items-center gap-2 p-2 rounded-lg bg-white dark:bg-slate-800 hover:bg-gray-300 dark:hover:bg-slate-600">
             <Avatar className="h-8 w-8 rounded-lg">
               <AvatarImage src={"user.avatar"} alt={"username"} />
               <AvatarFallback className="rounded-lg bg-orange-500 font-bold text-slate-900">

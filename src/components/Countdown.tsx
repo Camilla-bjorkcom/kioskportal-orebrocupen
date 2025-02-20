@@ -43,7 +43,7 @@ function Countdown({
   }, [startDate, endDate]);
 
   return (
-    <div className="p-5 rounded-lg shadow-md dark:bg-slate-800">
+    <div className="p-5 rounded-lg shadow-md dark:bg-slate-800 bg-white">
       <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
         Turneringsstatus
       </h3>

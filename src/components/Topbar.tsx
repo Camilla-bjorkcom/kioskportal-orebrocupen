@@ -4,7 +4,7 @@ import logo from "@/assets/images/tempLogo.svg"
 
 const Topbar = ({ tournamentName }: { tournamentName: string }) => {
   return (
-    <div className="gap-4 w-full h-14 dark:bg-slate-800 bg-gray-200 text-white flex items-center px-4 shadow-md z-50">
+    <div className="gap-4 w-full h-14 dark:bg-slate-800 bg-white text-white flex items-center px-4 shadow-md z-50">
       <div className="container mx-auto flex justify-between items-center">
         {tournamentName === "" ? (
           <img

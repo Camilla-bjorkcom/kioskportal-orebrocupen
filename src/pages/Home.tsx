@@ -7,7 +7,7 @@ function Home() {
   const auth = useAuth();
 
   return (
-    <section className="flex flex-col items-center bg-gray-100 dark:bg-gray-900 h-full">
+    <section className="flex flex-col items-center h-full">
       <img
         className="h-20 mb-4 place-self-start"
         src={logo}
