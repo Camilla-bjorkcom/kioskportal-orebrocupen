@@ -6,7 +6,6 @@ import WeatherComponent from "@/components/WeatherComponent";
 import Countdown from "@/components/Countdown";
 import { InventoryGraph } from "@/components/InventoryGraph";
 import { OverviewRecord } from "@/interfaces/overview";
-import ChangePassword from "@/components/ChangePassword";
 import UpdateTournamentSheet from "@/components/UpdateTournamentSheet";
 
 function Dashboard() {

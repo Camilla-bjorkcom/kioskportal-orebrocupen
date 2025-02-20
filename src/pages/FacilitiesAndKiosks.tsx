@@ -1,7 +1,7 @@
 import AddFacilityButton from "@/components/AddFacilityButton";
 import AddKioskButton from "@/components/AddKioskButton";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+
 import UpdateFacilityButton from "@/components/UpdateFacilityButton";
 import DeleteButton from "@/components/DeleteButton";
 import {
@@ -10,13 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Facility,
-  Kiosk,
-  KioskForQr,
-  Product,
-  Productlist,
-} from "@/interfaces";
+import { Facility, Kiosk, KioskForQr, Product } from "@/interfaces";
 import {
   Accordion,
   AccordionContent,
@@ -28,8 +22,7 @@ import AddContactPersonButton from "@/components/AddContactPersonButton";
 import SelectedKiosksButton from "@/components/SelectedKiosksButton";
 import { Checkbox } from "@/components/ui/checkbox";
 import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
-import { GetAllProductsResponse } from "@/interfaces/getAllProducts";
+
 import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
 import QrCodeAllBtn from "@/components/QrCodeAllBtn";
@@ -38,7 +31,12 @@ import { deleteFacility } from "@/api/functions/deleteFacility";
 import { deleteContactPerson } from "@/api/functions/deleteContactPerson";
 import { deleteKiosk } from "@/api/functions/deleteKiosk";
 import UpdateKioskKioskButton from "@/components/UpdateKioskButton";
-import { useGetAllFacilities, useGetAllProductlists, useGetAllProducts, useGetOneKiosk } from "@/hooks/use-query";
+import {
+  useGetAllFacilities,
+  useGetAllProductlists,
+  useGetAllProducts,
+  useGetOneKiosk,
+} from "@/hooks/use-query";
 import { badToast } from "@/utils/toasts";
 
 function FacilitiesAndKiosks() {
@@ -52,48 +50,12 @@ function FacilitiesAndKiosks() {
   const [open, setOpen] = useState(false);
   const [openFacilityId, setOpenFacilityId] = useState<string | null>(null);
 
-  const { isLoading, error, data, isSuccess } = useGetAllFacilities(tournamentId)
-  
-  
-  
-  // useQuery<Facility[]>({
-  //   queryKey: ["facilities"],
-  //   queryFn: async () => {
-  //     const response = await fetchWithAuth(`facilities/${tournamentId}`);
-  //     if (!response) {
-  //       throw new Error("Failed to fetch");
-  //     }
-  //     if (!response.ok) {
-  //       throw new Error("Failed to fetch facilities");
-  //     }
-  //     const dataResponse = await response.json();
+  const { isLoading, error, data, isSuccess } =
+    useGetAllFacilities(tournamentId);
 
-  //     return dataResponse || [];
-  //   },
-  // });
+  const { data: products } = useGetAllProducts(tournamentId);
 
-  const { data: products } = useGetAllProducts(tournamentId)
-  
-  
-
-
-  // useQuery<GetAllProductsResponse>({
-  //   queryKey: ["products"],
-  //   queryFn: async () => {
-  //     const response = await fetchWithAuth(`products/${tournamentId}`);
-  //     if (!response) {
-  //       throw new Error("Failed to fetch products");
-  //     }
-  //     const data = await response.json();
-
-  //     return data;
-  //   },
-  // });
-
-  const { data: productlists } = useGetAllProductlists(tournamentId)
-  
-  
- 
+  const { data: productlists } = useGetAllProductlists(tournamentId);
 
   const toggleFacility = (facilityId: string) => {
     setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
@@ -110,16 +72,19 @@ function FacilitiesAndKiosks() {
   const handleEditClick = async (kiosk: Kiosk) => {
     try {
       setKioskForEdit(kiosk);
-     
-        const {data: fetchedKiosk, isSuccess: kioskSuccess} = useGetOneKiosk(tournamentId!, kiosk.facilityId, kiosk.id);
-        if(kioskSuccess){
-          setSelectedProducts(fetchedKiosk.products);
-          setOpen(true);
-        }
-        
+
+      const { data: fetchedKiosk, isSuccess: kioskSuccess } = useGetOneKiosk(
+        tournamentId!,
+        kiosk.facilityId,
+        kiosk.id
+      );
+      if (kioskSuccess) {
+        setSelectedProducts(fetchedKiosk.products);
+        setOpen(true);
+      }
     } catch (error) {
       console.error("Error handling edit click:", error);
-      badToast("Något gick fel.")
+      badToast("Något gick fel.");
     }
   };
 
@@ -254,7 +219,10 @@ function FacilitiesAndKiosks() {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
-                        <UpdateFacilityButton tournamentId={tournamentId!} facility={facility} />
+                        <UpdateFacilityButton
+                          tournamentId={tournamentId!}
+                          facility={facility}
+                        />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Redigera anläggning</p>
@@ -267,7 +235,9 @@ function FacilitiesAndKiosks() {
                         <DeleteButton
                           id={facility.id}
                           type="Facility"
-                          onDelete={() => deleteFacility(facility.id, tournamentId!)}
+                          onDelete={() =>
+                            deleteFacility(facility.id, tournamentId!)
+                          }
                         />
                       </TooltipTrigger>
                       <TooltipContent>
@@ -334,7 +304,11 @@ function FacilitiesAndKiosks() {
                                   id={kiosk.id}
                                   type="Kiosk"
                                   onDelete={() =>
-                                    deleteKiosk(kiosk.id, facility.id, tournamentId!)
+                                    deleteKiosk(
+                                      kiosk.id,
+                                      facility.id,
+                                      tournamentId!
+                                    )
                                   }
                                 />
                               </TooltipTrigger>

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useGetAllTournaments } from "@/hooks/use-query";
 import CreateTournamentButton from "@/components/CreateTournamentButton";
-import { UserDropdown } from "@/components/UserDropdown";
+
 import Topbar from "@/components/Topbar";
 import { Toaster } from "@/components/ui/toaster";
 

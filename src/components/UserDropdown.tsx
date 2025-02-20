@@ -1,11 +1,5 @@
 import { useAuth } from "react-oidc-context";
-import {
-  LogOut,
-  BadgeCheck,
-  BookHeart,
-  ChevronsLeftRight,
-  ChevronsUpDown,
-} from "lucide-react";
+import { LogOut, BadgeCheck, BookHeart, ChevronsUpDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,11 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export function UserDropdown({}: {}) {
   const auth = useAuth();
-  const isMobile = useIsMobile();
 
   return (
     <div className="">
