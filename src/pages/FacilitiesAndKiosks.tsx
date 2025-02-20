@@ -215,7 +215,7 @@ function FacilitiesAndKiosks() {
                   facilityId={facility.id}
                   onFacilityAdded={setOpenFacilityId}
                 />
-                <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto mr-5 w-fit basis-1/12 ">
+                <div className="flex justify-self-end gap-7 2xl:gap-2 ml-auto mr-5 w-fit basis-1/12 ">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>

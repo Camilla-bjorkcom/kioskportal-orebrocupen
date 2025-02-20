@@ -28,7 +28,6 @@ import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
 import { updateFacility } from "@/api/functions/updateFacility";
 import { useQueryClient } from "@tanstack/react-query";
 
-
 const formSchema = z.object({
   facilityName: z.string().min(2, {
     message: "Anläggnings namn måste ha minst 2 bokstäver",
@@ -40,7 +39,10 @@ interface UpdateFacilityButtonProps {
   facility: Facility;
 }
 
-const UpdateFacilityButton = ({ tournamentId, facility }: UpdateFacilityButtonProps) => {
+const UpdateFacilityButton = ({
+  tournamentId,
+  facility,
+}: UpdateFacilityButtonProps) => {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -85,7 +87,9 @@ const UpdateFacilityButton = ({ tournamentId, facility }: UpdateFacilityButtonPr
       <Toaster />
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Pencil className="w-5 h-5 hover:text-orange-n" />
+          <Button variant={"outline"} size={"icon"}>
+            <Pencil className="w-5 h-5 hover:text-orange-n" />
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
