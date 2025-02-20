@@ -20,7 +20,7 @@ import {
   SidebarMenuSubItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
+import logo from "@/assets/images/tempLogo.svg"
 import { useState } from "react";
 
 // Menu items.
@@ -99,7 +99,7 @@ export function AppSidebar({ id }: { id?: string }) {
                 onClick={() => (window.location.href = `/dashboard/${id}`)}
               >
                 <img
-                  src="../src/assets/images/sidebarLogo.svg"
+                  src={logo}
                   alt="kiosk portal logo"
                   className="transition-all duration-300"
                 />
