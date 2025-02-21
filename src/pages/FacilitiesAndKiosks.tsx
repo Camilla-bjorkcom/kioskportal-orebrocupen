@@ -215,7 +215,7 @@ function FacilitiesAndKiosks() {
                   facilityId={facility.id}
                   onFacilityAdded={setOpenFacilityId}
                 />
-                <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto mr-5 w-fit basis-1/12 ">
+                <div className="flex justify-self-end gap-7 2xl:gap-2 ml-auto mr-5 w-fit basis-1/12 ">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
@@ -261,7 +261,7 @@ function FacilitiesAndKiosks() {
                           {kiosk.kioskName}
                         </p>
 
-                        <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit items-center">
+                        <div className="flex justify-self-end gap-7 2xl:gap-3 ml-auto w-fit items-center">
                           <AddProductsToKioskButton
                             kioskForEdit={kiosk}
                             productlists={productlists || []}
@@ -376,7 +376,7 @@ function FacilitiesAndKiosks() {
                             {contactPerson.name} - {contactPerson.role} -{" "}
                             {contactPerson.phone}
                           </p>
-                          <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit items-center">
+                          <div className="flex justify-self-end gap-7 2xl:gap-3 ml-auto w-fit items-center">
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger>

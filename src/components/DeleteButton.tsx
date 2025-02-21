@@ -1,4 +1,4 @@
-import {  NoResponseError } from "@/api/functions/apiErrors";
+import { NoResponseError } from "@/api/functions/apiErrors";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,14 +13,15 @@ import {
 import { badToast, okToast } from "@/utils/toasts";
 import { useQueryClient } from "@tanstack/react-query";
 import { TrashIcon } from "lucide-react";
+import { Button } from "./ui/button";
 
 interface DeleteButtonProps {
-  id: string; 
-  type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist"; 
+  id: string;
+  type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist";
   onDelete: (
     id: string,
     type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist"
-  ) => Promise<void>; 
+  ) => Promise<void>;
 }
 
 const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
@@ -59,9 +60,11 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
     }
   };
 
-  function deleteConfirmed(type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist") {
+  function deleteConfirmed(
+    type: "Facility" | "Kiosk" | "ContactPerson" | "Productlist"
+  ) {
     try {
-      switch(type){
+      switch (type) {
         case "Facility":
         case "Kiosk":
         case "ContactPerson":
@@ -70,7 +73,7 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
         case "Productlist":
           queryClient.invalidateQueries({ queryKey: ["productlists"] });
           break;
-      }  
+      }
       okToast(`Objektet raderades`);
     } catch (error) {
       if (error instanceof NoResponseError) {
@@ -85,7 +88,9 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger className="flex w-fit">
-        <TrashIcon className=" mr-0.5 w-5 h-5  hover:text-red-500" />
+        <Button variant={"outline"} size={"icon"}>
+          <TrashIcon className=" mr-0.5 w-5 h-5  hover:text-red-500" />
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
