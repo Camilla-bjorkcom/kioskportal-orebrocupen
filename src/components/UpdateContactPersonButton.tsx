@@ -113,7 +113,9 @@ const UpdadeContactPersonButton = ({
       <Toaster />
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Pencil className="w-5 h-5 hover:text-orange-n place-self-center" />
+        <Button variant={"outline"} size={"icon"}>
+            <Pencil className="w-5 h-5 hover:text-orange-n" />
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>

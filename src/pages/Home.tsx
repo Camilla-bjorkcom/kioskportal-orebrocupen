@@ -1,34 +1,33 @@
 import { useAuth } from "react-oidc-context";
 import { ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import logo from "@/assets/images/tempLogo.svg"
 
 function Home() {
   const auth = useAuth();
 
-  auth.user?.id_token;
-
   return (
-    <section className="container mx-auto gap-5 h-screen w-screen">
-      <div className="bg-orange-n p-5 rounded-xl relative w-full">
-        <img
-          className="h-24 absolute left-2"
-          src="src\assets\images\tempLogo.svg"
-          alt="Kiosk Portalen"
-        ></img>
-        <h1 className="text-5xl font-bold py-5 place-self-center text-black">
+    <section className="flex flex-col items-center h-full">
+      <img
+        className="h-20 mb-4 place-self-start"
+        src={logo}
+        alt="Kiosk Portalen"
+      />
+      <div className="dark:bg-slate-800 bg-gray-200 p-8 rounded-2xl flex flex-col gap-4 items-center justify-center w-full max-w-2xl">
+        <h1 className="text-4xl font-extrabold text-center text-slate-900 dark:text-gray-200">
           Välkommen tillbaka
         </h1>
-      </div>
-      <div className="flex flex-col place-items-center mt-7">
-        <h2 className="font-bold lg:text-3xl pt-5 text-slate-800 dark:text-gray-200">
+
+        <h2 className="text-2xl font-semibold text-slate-900 dark:text-gray-200">
           Logga in
         </h2>
-        <button
-          className="flex text-center justify-center items-center border border-solid text-slate-800 hover:bg-slate-800 hover:text-white rounded-xl p-2 mt-8 shadow w-2/3 lg:w-1/3 dark:bg-slate-800 dark:hover:bg-slate-600 dark:text-gray-200 dark:border-slate-500"
+        <Button
+          className="flex items-center justify-center w-full max-w-sm mt-6 rounded-lg border:none text-lg font-medium dark:text-gray-200 dark:bg-slate-700 hover:bg-slate-600 "
           onClick={() => auth.signinRedirect()}
         >
           Fortsätt
-          <ChevronRight className="w-4 h-4 ml-3" />
-        </button>
+          <ChevronRight className="w-5 h-5 ml-3" />
+        </Button>
       </div>
     </section>
   );

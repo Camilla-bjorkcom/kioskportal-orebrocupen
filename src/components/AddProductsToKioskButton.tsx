@@ -1,17 +1,15 @@
+import { updateKiosk } from "@/api/functions/updateKiosk";
 import { Kiosk } from "@/interfaces/kiosk";
 import { Product } from "@/interfaces/product";
+import { Productlist } from "@/interfaces/productlist";
+import { badToast, okToast } from "@/utils/toasts";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { PlusIcon } from "lucide-react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "./ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import { PlusIcon } from "lucide-react";
-import { Toaster } from "./ui/toaster";
+import { Checkbox } from "./ui/checkbox";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import {
   Select,
   SelectContent,
@@ -19,10 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Checkbox } from "./ui/checkbox";
-import { Productlist } from "@/interfaces/productlist";
-import { badToast, okToast } from "@/utils/toasts";
-import { updateKiosk } from "@/api/functions/updateKiosk";
+import { Toaster } from "./ui/toaster";
 
 interface AddProductsToKioskButtonProps {
   kioskForEdit: Kiosk;
@@ -36,36 +31,15 @@ function AddProductsToKioskButton({
   kioskForEdit,
   productlists,
   products,
-  onKioskUpdated,
-  onEditClick,
 }: AddProductsToKioskButtonProps) {
-  const [open, setOpen] = useState(false);
-  const [selectedProductListId, setSelectedProductListId] =
-    useState<string>("");
-  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const { id } = useParams<{ id: string }>();
-  const tournamentId = id;
+  const tournamentId = useParams().id as string;
   const queryClient = useQueryClient();
 
-  
-  useEffect(() => {
-    if (kioskForEdit && kioskForEdit.products) {
-      setSelectedProducts(kioskForEdit.products);
-    }
-  }, [kioskForEdit]);
-
-  const handleDialogOpen = async (isOpen: boolean) => {
-    if (isOpen) {
-      
-      await onEditClick(kioskForEdit); 
-      setSelectedProducts(kioskForEdit.products);
-      setOpen(true);
-    } else {
-      setOpen(false);
-      setSelectedProductListId("");
-      setSelectedProducts([]);
-    }
-  };
+  const [open, setOpen] = useState(false);
+  const [selectedProductListId, setSelectedProductListId] = useState("");
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>(
+    kioskForEdit.products
+  );
 
   const handleProductListChange = (value: string) => {
     const selectedList = productlists.find((list) => list.id === value);
@@ -84,9 +58,9 @@ function AddProductsToKioskButton({
         selectedProducts.some((p) => p.id === product.id)
       )
     ) {
-      setSelectedProducts([]); 
+      setSelectedProducts([]);
     } else {
-      setSelectedProducts(products); 
+      setSelectedProducts(products);
     }
   };
 
@@ -98,32 +72,40 @@ function AddProductsToKioskButton({
 
   const addProductsToKiosk = async (kioskForEdit: Kiosk) => {
     try {
-      const updatedKiosk = await updateKiosk({tournamentId: tournamentId!, facilityId: kioskForEdit.facilityId, kioskId: kioskForEdit.id, products: selectedProducts});
+      await updateKiosk({
+        tournamentId: tournamentId!,
+        facilityId: kioskForEdit.facilityId,
+        kioskId: kioskForEdit.id,
+        products: selectedProducts,
+      });
       queryClient.invalidateQueries({ queryKey: ["facilities"] });
-     
+
       okToast(`Produkterna har sparats i kiosken!`);
 
-      onKioskUpdated(updatedKiosk); 
-      setOpen(false); 
+      setOpen(false);
     } catch (error) {
       console.error("Failed to update kiosk:", error);
       badToast(`Kunde inte spara produkterna till kiosken`);
     }
   };
 
+  const handleReset = () => {
+    setSelectedProducts(kioskForEdit.products);
+  };
+
   if (!kioskForEdit || !productlists || !products) {
-    return null; 
+    return null;
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleDialogOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <Toaster />
       <DialogTrigger>
         <Button
           variant="ghost"
           className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto"
           onClick={(e) => {
-            e.stopPropagation(); 
+            e.stopPropagation();
             setOpen(true);
           }}
         >
@@ -163,10 +145,11 @@ function AddProductsToKioskButton({
         </Select>
         {products.length > 0 ? (
           <>
-            <div className="mb-4 text-right">
+            <div className="mb-4 space-x-2 text-right">
               <Button type="button" onClick={toggleSelectAll}>
                 {allSelected ? "Avmarkera alla" : "Markera alla"}
               </Button>
+              <Button onClick={handleReset}>Återställ</Button>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -198,7 +181,10 @@ function AddProductsToKioskButton({
                 ))}
             </div>
             {selectedProducts.length > 0 ? (
-              <Button type="submit" onClick={() => addProductsToKiosk(kioskForEdit)}>
+              <Button
+                type="submit"
+                onClick={() => addProductsToKiosk(kioskForEdit)}
+              >
                 Spara valda produkter till valda kiosker
               </Button>
             ) : (

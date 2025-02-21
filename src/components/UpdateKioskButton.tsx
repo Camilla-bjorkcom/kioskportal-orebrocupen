@@ -79,7 +79,9 @@ function UpdateKioskKioskButton({
     <Dialog open={open} onOpenChange={setOpen}>
       <Toaster />
       <DialogTrigger asChild>
-        <Pencil className="w-5 h-5 hover:text-orange-n place-self-center" />
+      <Button variant={"outline"} size={"icon"}>
+            <Pencil className="w-5 h-5 hover:text-orange-n" />
+          </Button>
       </DialogTrigger>
       <DialogContent className="w-full max-w-4xl">
         <DialogHeader>
