@@ -109,7 +109,7 @@ export function AppSidebar({ id }: { id?: string }) {
                   </SidebarMenuButton>
 
                   {item.subitems && (
-                    <SidebarMenuSub className="border-white/50">
+                    <SidebarMenuSub className="dark:border-white/50 border-slate-900/50">
                       {item.subitems.map((subitem) => (
                         <SidebarMenuSubItem key={subitem.title}>
                           <a
