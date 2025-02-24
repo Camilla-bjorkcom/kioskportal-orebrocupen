@@ -89,7 +89,6 @@ export function AppSidebar({ id }: { id?: string }) {
                 <img src={logo} alt="kiosk portal logo" className=" " />
               </button>
             )}
-            <SidebarTrigger onClick={toggleSidebar} />
           </div>
         </SidebarHeader>
         <SidebarGroup>

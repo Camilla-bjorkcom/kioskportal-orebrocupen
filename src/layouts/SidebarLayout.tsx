@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Outlet } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -33,7 +33,10 @@ function TournamentDetails() {
     <SidebarProvider>
       <AppSidebar id={data.id} />
       <main className="w-full ">
-        <Topbar tournamentName={data?.tournamentName} />
+        <Topbar
+          leftComponent={<SidebarTrigger className="sm:hidden" />}
+          tournamentName={data?.tournamentName}
+        />
         <Outlet />
       </main>
     </SidebarProvider>

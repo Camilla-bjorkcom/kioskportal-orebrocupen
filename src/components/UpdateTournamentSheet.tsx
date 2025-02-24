@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetClose,
-  SheetContent, SheetHeader,
+  SheetContent,
+  SheetHeader,
   SheetTitle,
-  SheetTrigger
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { UpdateTournament } from "@/interfaces/tournament";
 import { badToast, okToast } from "@/utils/toasts";
@@ -26,7 +27,6 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { Toaster } from "./ui/toaster";
 
 const UpdateTournamentSheet = ({
   tournament,
@@ -81,7 +81,6 @@ const UpdateTournamentSheet = ({
 
   return (
     <>
-      <Toaster />
       <Sheet>
         <SheetTrigger asChild>
           <Button
@@ -150,11 +149,11 @@ const UpdateTournamentSheet = ({
                 />
               </div>
 
-              <div className="flex justify-between items-center mt-6">
+              <div className="flex:row sm:flex justify-between items-center mt-6">
                 <SheetClose asChild>
                   <Button
                     type="submit"
-                    className="border border-solid hover:bg-slate-800 hover:text-white  shadow"
+                    className="border border-solid hover:bg-slate-800 hover:text-white mb-4 sm:mb-0  shadow"
                   >
                     Uppdatera turnering
                   </Button>
