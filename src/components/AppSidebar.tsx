@@ -1,9 +1,4 @@
-import {
-  SquareChartGantt,
-  ChartSpline,
-  Bell,
-  Trophy,
-} from "lucide-react";
+import { SquareChartGantt, ChartSpline, Bell, Trophy } from "lucide-react";
 
 import {
   Sidebar,
@@ -19,7 +14,7 @@ import {
   SidebarMenuSubItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import logo from "@/assets/images/tempLogo.svg"
+import logo from "@/assets/images/tempLogo.svg";
 import { useState } from "react";
 
 // Menu items.
@@ -91,11 +86,7 @@ export function AppSidebar({ id }: { id?: string }) {
               <button
                 onClick={() => (window.location.href = `/dashboard/${id}`)}
               >
-                <img
-                  src={logo}
-                  alt="kiosk portal logo"
-                  className="transition-all duration-300"
-                />
+                <img src={logo} alt="kiosk portal logo" className=" " />
               </button>
             )}
             <SidebarTrigger onClick={toggleSidebar} />
@@ -109,7 +100,7 @@ export function AppSidebar({ id }: { id?: string }) {
               {items.map((item) => (
                 <SidebarMenuItem
                   key={item.title}
-                  className="font-bold hover:bg-none mb-2"
+                  className="font-bold hover:bg-none mb-2 "
                 >
                   <SidebarMenuButton asChild>
                     <div className="flex items-center gap-2 ">
@@ -119,19 +110,20 @@ export function AppSidebar({ id }: { id?: string }) {
                   </SidebarMenuButton>
 
                   {item.subitems && (
-                    <SidebarMenuSub>
+                    <SidebarMenuSub className="border-white/50">
                       {item.subitems.map((subitem) => (
-                        <SidebarMenuSubItem
-                          key={subitem.title}
-                          className="font-medium hover:bg-gray-100 dark:hover:bg-slate-600 w-full mb-1"
-                        >
-                          <a href={subitem.url} className="w-full flex">
+                        <SidebarMenuSubItem key={subitem.title}>
+                          <a
+                            href={subitem.url}
+                            className="w-full flex font-medium hover:bg-gray-100 dark:hover:bg-slate-600 p-2  rounded"
+                          >
                             {subitem.title}
                           </a>
                         </SidebarMenuSubItem>
                       ))}
                     </SidebarMenuSub>
                   )}
+                  {/* <div className="w-full h-px bg-white"></div> */}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
