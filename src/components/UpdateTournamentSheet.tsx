@@ -67,10 +67,15 @@ const UpdateTournamentSheet = ({
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
+      console.log("Submitting data:", data);
       const updatedTournament = await updateTournament(tournamentId, data);
 
-      if (!updatedTournament)
+      if (!updatedTournament) {
+        console.error("No response from server");
         throw new NoResponseError("No response from server");
+      }
+
+      console.log("Tournament updated successfully:", updatedTournament);
       okToast("Turneringen har uppdaterats");
       queryClient.invalidateQueries({ queryKey: ["tournament"] });
     } catch (error) {
