@@ -105,7 +105,7 @@ function AddContactPersonButton({
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto"
+          className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto dark:hover:bg-slate-700"
           onClick={(e) => e.stopPropagation()}
         >
           Lägg till kontaktperson{" "}
@@ -114,7 +114,7 @@ function AddContactPersonButton({
       </DialogTrigger>
       <DialogContent
         onClick={(e) => {
-          e.stopPropagation(); 
+          e.stopPropagation();
         }}
       >
         <DialogHeader>
@@ -125,7 +125,6 @@ function AddContactPersonButton({
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-           
             <FormField
               control={form.control}
               name="name"
@@ -143,7 +142,6 @@ function AddContactPersonButton({
               )}
             />
 
-           
             <FormField
               control={form.control}
               name="phone"
@@ -158,7 +156,6 @@ function AddContactPersonButton({
               )}
             />
 
-          
             <FormField
               control={form.control}
               name="role"

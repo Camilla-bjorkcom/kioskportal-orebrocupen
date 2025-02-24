@@ -108,7 +108,7 @@ function Dashboard() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col justify-end lg:flex-row gap-8 ">
+          <div className="flex flex-col justify-end lg:flex-row sm:gap-8">
             <div className="w-full lg:w-2/3"></div>
             <div className="bg-white dark:bg-slate-800  gap-4 p-5 rounded-lg shadow-md w-full lg:w-1/3">
               <p>

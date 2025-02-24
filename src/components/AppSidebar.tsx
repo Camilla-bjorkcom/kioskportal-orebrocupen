@@ -12,7 +12,6 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubItem,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import logo from "@/assets/images/tempLogo.svg";
 import { useState } from "react";
@@ -20,11 +19,8 @@ import { useState } from "react";
 // Menu items.
 
 export function AppSidebar({ id }: { id?: string }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsCollapsed((prev) => !prev);
-  };
   const items = [
     {
       title: "Turnering",
@@ -89,7 +85,6 @@ export function AppSidebar({ id }: { id?: string }) {
                 <img src={logo} alt="kiosk portal logo" className=" " />
               </button>
             )}
-            <SidebarTrigger onClick={toggleSidebar} />
           </div>
         </SidebarHeader>
         <SidebarGroup>
@@ -110,7 +105,7 @@ export function AppSidebar({ id }: { id?: string }) {
                   </SidebarMenuButton>
 
                   {item.subitems && (
-                    <SidebarMenuSub className="border-white/50">
+                    <SidebarMenuSub className="dark:border-white/50 border-slate-900/50">
                       {item.subitems.map((subitem) => (
                         <SidebarMenuSubItem key={subitem.title}>
                           <a
