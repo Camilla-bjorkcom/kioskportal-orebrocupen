@@ -26,7 +26,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
@@ -176,7 +175,6 @@ function AddContactPersonButton({
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel>Roller</SelectLabel>
                           <SelectItem value="Planansvarig">
                             Planansvarig
                           </SelectItem>

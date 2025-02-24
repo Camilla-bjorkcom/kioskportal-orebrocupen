@@ -173,13 +173,20 @@ function InventoryStorage() {
                             <FormControl className="dark:text-gray-200 dark:border-gray-500">
                               <Input
                                 {...field}
-                                value={field.value ?? ""}
+                                value={
+                                  field.value === undefined ||
+                                  isNaN(field.value)
+                                    ? ""
+                                    : field.value
+                                }
                                 placeholder="Ange antal"
                                 onChange={(e) => {
                                   const val = e.target.value;
-                                  field.onChange(
-                                    val === "" ? undefined : Number(val)
-                                  );
+                                  if (val === "" || /^\d+$/.test(val)) {
+                                    field.onChange(
+                                      val === "" ? undefined : Number(val)
+                                    );
+                                  }
                                 }}
                                 onBlur={(e) => {
                                   if (e.target.value === "") {

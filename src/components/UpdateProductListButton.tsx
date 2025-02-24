@@ -207,7 +207,7 @@ function UpdateProductListButton({
                       />
                       <label
                         htmlFor={`product-${product.id}`}
-                        className="font-medium hover:text-slate-800 cursor-pointer"
+                        className="font-medium hover:text-slate-800 dark:hover:text-gray-300 cursor-pointer"
                       >
                         {product.productName}
                       </label>
