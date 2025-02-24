@@ -69,11 +69,10 @@ function ProductHandler() {
   const col2 = sortedProducts.slice(half).reverse();
   return (
     <>
-    
       <Toaster />
       <section className="mb-10">
         <div className="container mx-auto px-4 flex-row items-center">
-        <ScrolltoTopBtn />
+          <ScrolltoTopBtn />
           <div className="flex justify-between w-3/4 text-start ">
             <h2 className="mt-8 text-2xl pb-2 mb-4 mr-2">Produkthantering</h2>
             <TooltipProvider>
@@ -151,11 +150,22 @@ function ProductHandler() {
                         {productlist.productlistName}
                       </label>
                       <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12 mr-5">
-                        <UpdateProductListButton
-                          productlist={productlist}
-                          tournamentProducts={products?.products || []}
-                          tournamentId={tournamentId!}
-                        />
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <UpdateProductListButton
+                                productlist={productlist}
+                                tournamentProducts={products?.products || []}
+                                tournamentId={tournamentId!}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                Redigera produktlista och lägg till produkter
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
 
                         <TooltipProvider>
                           <Tooltip>
