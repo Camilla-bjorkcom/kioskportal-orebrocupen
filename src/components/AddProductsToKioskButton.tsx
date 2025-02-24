@@ -171,7 +171,7 @@ function AddProductsToKioskButton({
                     />
                     <label
                       htmlFor={`product-${product.id}`}
-                      className="font-medium cursor-pointer"
+                      className="font-medium hover:text-slate-800 dark:hover:text-gray-300 cursor-pointer"
                     >
                       {product.productName}
                     </label>
