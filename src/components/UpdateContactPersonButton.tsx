@@ -25,16 +25,16 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { Input } from "./ui/input";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+
+import { Input } from "./ui/input";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -169,7 +169,6 @@ const UpdadeContactPersonButton = ({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>Roller</SelectLabel>
                             <SelectItem value="Planansvarig">
                               Planansvarig
                             </SelectItem>

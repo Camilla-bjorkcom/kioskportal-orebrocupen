@@ -178,13 +178,12 @@ function UpdateProductListButton({
                   {allSelected ? "Avmarkera alla" : "Markera alla"}
                 </Button>
               </div>
-
-              {tournamentProducts.length > 0 ? (
-                tournamentProducts
-                  .slice()
-                  .sort((a, b) => a.productName.localeCompare(b.productName))
-                  .map((product) => (
-                    <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                {tournamentProducts.length > 0 ? (
+                  tournamentProducts
+                    .slice()
+                    .sort((a, b) => a.productName.localeCompare(b.productName))
+                    .map((product) => (
                       <div key={product.id} className="flex items-center gap-2">
                         <Checkbox
                           id={`product-${product.id}`}
@@ -214,11 +213,13 @@ function UpdateProductListButton({
                           {product.productName}
                         </label>
                       </div>
-                    </div>
-                  ))
-              ) : (
-                <p className="w-full">Inga produkter tillagda i turneringen</p>
-              )}
+                    ))
+                ) : (
+                  <p className="w-full">
+                    Inga produkter tillagda i turneringen
+                  </p>
+                )}
+              </div>
             </div>
             <Button className="mx-auto w-full" type="submit">
               Spara

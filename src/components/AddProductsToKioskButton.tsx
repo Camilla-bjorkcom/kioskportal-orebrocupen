@@ -101,7 +101,7 @@ function AddProductsToKioskButton({
       <DialogTrigger>
         <Button
           variant="ghost"
-          className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto"
+          className="my-3 px-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto dark:hover:bg-slate-700"
           onClick={(e) => {
             e.stopPropagation();
             setOpen(true);
@@ -171,7 +171,7 @@ function AddProductsToKioskButton({
                     />
                     <label
                       htmlFor={`product-${product.id}`}
-                      className="font-medium cursor-pointer"
+                      className="font-medium hover:text-slate-800 dark:hover:text-gray-300 cursor-pointer"
                     >
                       {product.productName}
                     </label>

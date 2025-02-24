@@ -1,13 +1,13 @@
 import { useAuth } from "react-oidc-context";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/images/tempLogo.svg"
+import logo from "@/assets/images/tempLogo.svg";
 
 function Home() {
   const auth = useAuth();
 
   return (
-    <section className="flex flex-col items-center h-full">
+    <section className="flex flex-col items-center h-full container mx-auto">
       <img
         className="h-20 mb-4 place-self-start"
         src={logo}
