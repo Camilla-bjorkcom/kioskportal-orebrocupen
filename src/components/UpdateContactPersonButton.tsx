@@ -1,4 +1,5 @@
-import { Input } from "./ui/input";
+import { NoResponseError } from "@/api/functions/apiErrors";
+import { updateContactPerson } from "@/api/functions/updateContactPerson";
 import {
   Dialog,
   DialogContent,
@@ -7,9 +8,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ContactPerson } from "@/interfaces";
+import { badToast, okToast } from "@/utils/toasts";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Button } from "./ui/button";
 import {
   Form,
   FormControl,
@@ -169,7 +176,6 @@ const UpdadeContactPersonButton = ({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>Roller</SelectLabel>
                             <SelectItem value="Planansvarig">
                               Planansvarig
                             </SelectItem>

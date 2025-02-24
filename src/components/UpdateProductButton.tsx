@@ -93,7 +93,7 @@ function UpdateProductButton({
         productName: values.productName.trim(),
         amountPerPackage: correctedAmount,
       };
-
+      console.log(updatedProduct)
       const updatedNewProduct = await updateProduct(
         updatedProduct,
         tournamentId

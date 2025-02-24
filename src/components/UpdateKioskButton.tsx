@@ -20,7 +20,6 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import { Toaster } from "./ui/toaster";
 import { Pencil } from "lucide-react";
 import { updateKiosk } from "@/api/functions/updateKiosk";
 import { NoResponseError } from "@/api/functions/apiErrors";
