@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { InventoryStorageProducts } from "@/interfaces/product";
 import { badToast, okToast } from "@/utils/toasts";
 import { useGetAllStorageProducts } from "@/hooks/use-query";
+import ScrolltoTopBtn from "@/components/ScrollToTopBtn";
 
 function InventoryStorage() {
   const { id } = useParams<{ id: string }>();
@@ -116,6 +117,7 @@ function InventoryStorage() {
     <>
       <Toaster />
       <div className="container mx-auto p-3">
+      <ScrolltoTopBtn />
         <div className="rounded-xl border border-black border-solid text-black aspect-video dark:border-slate-500">
           <h2 className="text-lg lg:text-2xl text-center w-full mt-10 font-semibold dark:text-gray-200">
             Inventera huvudlager

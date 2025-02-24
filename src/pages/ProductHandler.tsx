@@ -21,6 +21,7 @@ import ProductInfoComponent from "@/components/ProductInfoComponent";
 import { useGetAllProductlists, useGetAllProducts } from "@/hooks/use-query";
 import { deleteProductList } from "@/api/functions/deleteProductlist";
 import CreateProductListButton from "@/components/CreateProductListButton";
+import ScrolltoTopBtn from "@/components/ScrollToTopBtn";
 
 function ProductHandler() {
   const { id } = useParams<{ id: string }>();
@@ -68,9 +69,11 @@ function ProductHandler() {
   const col2 = sortedProducts.slice(half).reverse();
   return (
     <>
+    
       <Toaster />
       <section className="mb-10">
         <div className="container mx-auto px-4 flex-row items-center">
+        <ScrolltoTopBtn />
           <div className="flex justify-between w-3/4 text-start ">
             <h2 className="mt-8 text-2xl pb-2 mb-4 mr-2">Produkthantering</h2>
             <TooltipProvider>
@@ -89,7 +92,7 @@ function ProductHandler() {
           <div className="mt-8">
             <h3 className="text-lg mb-7">Skapade produkter:</h3>
 
-            <div className="grid grid-cols-2 gap-2 mb-5 w-3/4">
+            <div className="grid xl:grid-cols-2 gap-2 mb-5 w-3/4">
               <div className="flex flex-col-reverse gap-2">
                 {col1.map((product) => (
                   <TooltipProvider key={product.id}>

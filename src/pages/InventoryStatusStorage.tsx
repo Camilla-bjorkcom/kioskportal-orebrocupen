@@ -1,3 +1,4 @@
+import ScrolltoTopBtn from "@/components/ScrollToTopBtn";
 import {
   Accordion,
   AccordionContent,
@@ -54,6 +55,7 @@ const InventoryStatusStorage = () => {
 
   return (
     <div className="container mx-auto ">
+      <ScrolltoTopBtn />
       <h2 className="mt-8 text-2xl pb-2 ml-2">Huvudlagrets inventeringar</h2>
       <div className="2xl:w-3/4 w-full ml-2">
         <div className="ml-auto w-fit flex">
