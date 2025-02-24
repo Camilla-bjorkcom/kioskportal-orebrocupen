@@ -1,10 +1,4 @@
-import {
-  SquareChartGantt,
-  ChartSpline,
-  Bell,
-  Trophy,
-  House,
-} from "lucide-react";
+import { SquareChartGantt, ChartSpline, Bell, Trophy } from "lucide-react";
 
 import {
   Sidebar,
@@ -20,7 +14,7 @@ import {
   SidebarMenuSubItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import logo from "@/assets/images/tempLogo.svg"
+import logo from "@/assets/images/tempLogo.svg";
 import { useState } from "react";
 
 // Menu items.
@@ -33,13 +27,15 @@ export function AppSidebar({ id }: { id?: string }) {
   };
   const items = [
     {
-      title: "Turneringsförberedelser",
+      title: "Turnering",
       url: "#",
       icon: Trophy,
       subitems: [
-        { title: "1. Produkthantering", url: `/producthandler/${id}` },
+        { title: "Din översikt", url: `/dashboard/${id}` },
 
-        { title: "2. Anläggningshantering", url: `/facilitiesandkiosks/${id}` },
+        { title: "Anläggningshantering", url: `/facilitiesandkiosks/${id}` },
+
+        { title: "Produkthantering", url: `/producthandler/${id}` },
       ],
     },
 
@@ -60,15 +56,15 @@ export function AppSidebar({ id }: { id?: string }) {
       icon: ChartSpline,
       subitems: [
         {
-          title: "Visa kioskernas inventeringar",
+          title: "Kioskinventeringar",
           url: `/inventorystatus/${id}`,
         },
         {
-          title: "Visa huvudlagrets inventeringar",
+          title: "Lagerinventeringar",
           url: `/inventorystatusstorage/${id}`,
         },
         {
-          title: "Visa översikt av turneringens produkter",
+          title: "Inventeringsöversikt",
           url: `/overviewinventories/${id}`,
         },
       ],
@@ -79,15 +75,7 @@ export function AppSidebar({ id }: { id?: string }) {
       icon: Bell,
       subitems: [{ title: "Skicka notiser", url: `/inventorystatus/${id}` }],
     },
-    {
-      title: "Turnering",
-      url: "#",
-      icon: House,
-      subitems: [{ title: "Din översikt", url: `/dashboard/${id}` }],
-    },
   ];
-
-  // { title: "Din översikt", url: `/dashboard/${id}` },
 
   return (
     <Sidebar variant="sidebar" collapsible="icon" className="dark:bg-slate-800">
@@ -98,11 +86,7 @@ export function AppSidebar({ id }: { id?: string }) {
               <button
                 onClick={() => (window.location.href = `/dashboard/${id}`)}
               >
-                <img
-                  src={logo}
-                  alt="kiosk portal logo"
-                  className="transition-all duration-300"
-                />
+                <img src={logo} alt="kiosk portal logo" className=" " />
               </button>
             )}
             <SidebarTrigger onClick={toggleSidebar} />
@@ -116,7 +100,7 @@ export function AppSidebar({ id }: { id?: string }) {
               {items.map((item) => (
                 <SidebarMenuItem
                   key={item.title}
-                  className="font-bold hover:bg-none"
+                  className="font-bold hover:bg-none mb-2 "
                 >
                   <SidebarMenuButton asChild>
                     <div className="flex items-center gap-2 ">
@@ -126,19 +110,20 @@ export function AppSidebar({ id }: { id?: string }) {
                   </SidebarMenuButton>
 
                   {item.subitems && (
-                    <SidebarMenuSub>
+                    <SidebarMenuSub className="border-white/50">
                       {item.subitems.map((subitem) => (
-                        <SidebarMenuSubItem
-                          key={subitem.title}
-                          className="font-medium hover:bg-gray-100 dark:hover:bg-slate-600 w-full"
-                        >
-                          <a href={subitem.url} className="w-full flex">
+                        <SidebarMenuSubItem key={subitem.title}>
+                          <a
+                            href={subitem.url}
+                            className="w-full flex font-medium hover:bg-gray-100 dark:hover:bg-slate-600 p-2  rounded"
+                          >
                             {subitem.title}
                           </a>
                         </SidebarMenuSubItem>
                       ))}
                     </SidebarMenuSub>
                   )}
+                  {/* <div className="w-full h-px bg-white"></div> */}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

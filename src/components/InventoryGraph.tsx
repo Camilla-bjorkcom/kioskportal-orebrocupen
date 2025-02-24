@@ -55,7 +55,7 @@ export function InventoryGraph({
         month: "short",
         day: "numeric",
       }),
-      count: overviewRecord[day]?.length ?? 0,
+      antal: overviewRecord[day]?.length ?? 0,
     }));
   };
 
@@ -104,7 +104,7 @@ export function InventoryGraph({
                 labelStyle={{ color: "#6b7280", fontWeight: "bold" }}
               />
               <Bar
-                dataKey="count"
+                dataKey="antal"
                 fill="#fb923c"
                 radius={[4, 4, 0, 0]}
                 barSize={100}

@@ -27,7 +27,7 @@ import { badToast, okToast } from "@/utils/toasts";
 import { NoResponseError } from "@/api/functions/apiErrors";
 import { sortByInventoryDate } from "@/utils/sortByDate";
 
-const InventoryStatusList = () => {
+const InventoryStatusListKiosks = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = id;
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
@@ -293,8 +293,7 @@ const InventoryStatusList = () => {
                           </h2>
                         ) : (
                           <h2>
-                            Ingen inventering har gjorts ännu hos{" "}
-                            {kiosk.kioskName} på {kiosk.facility}.
+                            Ingen inventering har gjorts ännu på denna kiosk.
                           </h2>
                         )}
                       </div>
@@ -386,4 +385,4 @@ const InventoryStatusList = () => {
   );
 };
 
-export default InventoryStatusList;
+export default InventoryStatusListKiosks;

@@ -110,7 +110,6 @@ const UpdadeContactPersonButton = ({
 
   return (
     <>
-      <Toaster />
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
         <Button variant={"outline"} size={"icon"}>

@@ -17,14 +17,15 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { okToast } from "@/utils/toasts";
 import { updateKiosk } from "@/api/functions/updateKiosk";
+import { ArrowRight } from "lucide-react";
 
 interface SelectedKiosksButtonProps {
-  selectedKiosks: Kiosk[]; 
-  productlists: Productlist[]; 
-  products: Product[]; 
+  selectedKiosks: Kiosk[];
+  productlists: Productlist[];
+  products: Product[];
   onClick: (open: boolean) => void;
   onKiosksUpdated: (updatedKiosks: Kiosk[]) => void;
   onClearSelected: () => void;
@@ -37,12 +38,13 @@ function SelectedKiosksButton({
   onKiosksUpdated,
   onClearSelected,
 }: SelectedKiosksButtonProps) {
+  const { id } = useParams<{ id: string }>();
+  const tournamentId = id;
+
   const [open, setOpen] = useState(false);
   const [selectedProductListId, setSelectedProductListId] =
     useState<string>("");
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const { id } = useParams<{ id: string }>();
-  const tournamentId = id;
   const queryClient = useQueryClient();
 
   const handleDialogOpenChange = async (isOpen: boolean) => {
@@ -87,8 +89,12 @@ function SelectedKiosksButton({
     const updatedKioskList = [];
 
     for (const kiosk of selectedKiosks) {
-      const updatedKiosk = await updateKiosk({ tournamentId: tournamentId!, facilityId: kiosk.facilityId, kioskId: kiosk.id, products: selectedProducts });
-      console.log(updatedKiosk);
+      const updatedKiosk = await updateKiosk({
+        tournamentId: tournamentId!,
+        facilityId: kiosk.facilityId,
+        kioskId: kiosk.id,
+        products: selectedProducts,
+      });
 
       updatedKioskList.push(updatedKiosk);
       onKiosksUpdated(updatedKioskList);
@@ -109,7 +115,7 @@ function SelectedKiosksButton({
           {selectedKiosks.length > 0 ? selectedKiosks.length : ""})
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-full">
+      <DialogContent className="w-full max-w-4xl">
         <DialogHeader>
           <DialogTitle className="text-lg">Valda kiosker:</DialogTitle>
           <ul className="mt-4 list-disc list-inside">
@@ -143,39 +149,65 @@ function SelectedKiosksButton({
           )}
         </Select>
 
-        <div className="mb-4 text-right">
-          <Button type="button" onClick={toggleSelectAll}>
-            {allSelected ? "Avmarkera alla" : "Markera alla"}
-          </Button>
-        </div>
-
-      
-        <div className="grid grid-cols-2 gap-4">
-          {products.map((product) => (
-            <div key={product.id} className="flex items-center gap-2">
-              <Checkbox
-                id={`product-${product.id}`}
-                checked={selectedProducts.some((p) => p.id === product.id)}
-                onCheckedChange={(checked) => {
-                  setSelectedProducts((prev) =>
-                    checked
-                      ? [...prev, product]
-                      : prev.filter((p) => p.id !== product.id)
-                  );
-                }}
-              />
-              <label
-                htmlFor={`product-${product.id}`}
-                className="font-medium cursor-pointer"
-              >
-                {product.productName}
-              </label>
+        {products.length > 0 ? (
+          <>
+            <div className="mb-4 space-x-2 text-right">
+              <Button type="button" onClick={toggleSelectAll}>
+                {allSelected ? "Avmarkera alla" : "Markera alla"}
+              </Button>
             </div>
-          ))}
-        </div>
-        <Button type="submit" onClick={saveProductsToKiosks}>
-          Spara valda produkter till valda kiosker
-        </Button>
+
+            <div className="grid grid-cols-2 gap-4">
+              {products
+                .slice()
+                .sort((a, b) => a.productName.localeCompare(b.productName))
+                .map((product) => (
+                  <div key={product.id} className="flex items-center gap-2">
+                    <Checkbox
+                      id={`product-${product.id}`}
+                      checked={selectedProducts.some(
+                        (p) => p.id === product.id
+                      )}
+                      onCheckedChange={(checked) =>
+                        setSelectedProducts((prev) =>
+                          checked
+                            ? [...prev, product]
+                            : prev.filter((p) => p.id !== product.id)
+                        )
+                      }
+                    />
+                    <label
+                      htmlFor={`product-${product.id}`}
+                      className="font-medium cursor-pointer"
+                    >
+                      {product.productName}
+                    </label>
+                  </div>
+                ))}
+            </div>
+            {selectedProducts.length > 0 ? (
+              <Button type="submit" onClick={saveProductsToKiosks}>
+                Spara valda produkter till valda kiosker
+              </Button>
+            ) : (
+              <Button type="submit" onClick={saveProductsToKiosks} disabled>
+                Spara valda produkter till valda kiosker
+              </Button>
+            )}
+          </>
+        ) : (
+          <div className="flex flex-col gap-5">
+            <p>Inga produkter är skapade i turneringen</p>
+            <Button type="button">
+              <Link
+                to={`/producthandler/${tournamentId}`}
+                className="flex items-center gap-4"
+              >
+                Produkthanterare <ArrowRight />
+              </Link>
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
