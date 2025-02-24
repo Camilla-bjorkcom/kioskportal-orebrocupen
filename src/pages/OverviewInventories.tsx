@@ -27,7 +27,7 @@ import {
   useGetFirstStorageInventory,
   useGetStorageInventory,
 } from "@/hooks/use-query";
-import AddKioskButton from "@/components/AddKioskButton";
+
 
 const OverviewInventories = () => {
   const tournamentId = useParams().id as string;
