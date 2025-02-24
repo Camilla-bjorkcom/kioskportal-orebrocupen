@@ -108,14 +108,22 @@ function UpdateProductListButton({
     <Dialog open={open} onOpenChange={(isOpen) => setOpen(isOpen)}>
       {productlist.products.length === 0 && (
         <DialogTrigger asChild>
-          <Button className="dark:bg-black">
-            Lägg till produkter <Plus />
+          <Button
+          variant="outline"
+          className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto dark:hover:bg-slate-600 dark:hover:text-gray-200"
+          onClick={(e) => e.stopPropagation()} 
+        >
+          Lägg till produkter <Plus />
           </Button>
         </DialogTrigger>
       )}
       {productlist.products.length >= 1 && (
         <DialogTrigger asChild>
-          <Button className="dark:bg-black">
+             <Button
+          variant="outline"
+          className="m-3  ml-0 flex w-fit gap-2 cursor-pointer font-semibold xl:ml-auto dark:hover:bg-slate-600 dark:hover:text-gray-200"
+          onClick={(e) => e.stopPropagation()} 
+        >
             Redigera produktlista <Pencil />
           </Button>
         </DialogTrigger>

@@ -3,7 +3,6 @@ import {
   ChartSpline,
   Bell,
   Trophy,
-  House,
 } from "lucide-react";
 
 import {
