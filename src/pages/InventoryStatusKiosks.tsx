@@ -1,7 +1,7 @@
 import InventoryStatusList from "@/components/InventoryStatusList";
 import ScrolltoTopBtn from "@/components/ScrollToTopBtn";
 
-const InventoryStatus = () => {
+const InventoryStatusKiosks = () => {
   return (
     <>
     <div className="container mx-auto">
@@ -13,4 +13,4 @@ const InventoryStatus = () => {
   )
 }
 
-export default InventoryStatus;
+export default InventoryStatusKiosks;

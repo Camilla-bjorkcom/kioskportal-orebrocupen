@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import SidebarLayout from "./layouts/SidebarLayout";
 import ProductHandler from "./pages/ProductHandler";
 import SettingsPage from "./pages/SettingsPage";
-import InventoryStatus from "./pages/InventoryStatus";
+import InventoryStatus from "./pages/InventoryStatusKiosks";
 import InventoryStorage from "./pages/InventoryStorage";
 import InventoryStatusStorage from "./pages/InventoryStatusStorage";
 import FacilitiesAndKiosks from "./pages/FacilitiesAndKiosks";

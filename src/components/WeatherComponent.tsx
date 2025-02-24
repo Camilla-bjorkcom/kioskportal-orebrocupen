@@ -101,7 +101,7 @@ const WeatherComponent: React.FC<WeatherComponentProps> = ({ lat, lon }) => {
         Nederbörd: <span className="font-medium">{precipitation} mm</span>
       </p>
       <p className="text-gray-500 text-sm mt-4 dark:text-gray-300">
-        Latitud: {lat}, Longitud: {lon}, Örebro
+         Örebro
       </p>
       <p className="text-gray-500 dark:text-gray-300 text-xs mt-4 flex justify-end">
         Väder från yr.no
