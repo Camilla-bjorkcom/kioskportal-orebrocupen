@@ -1,6 +1,6 @@
 import AddFacilityButton from "@/components/AddFacilityButton";
 import AddKioskButton from "@/components/AddKioskButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import UpdateFacilityButton from "@/components/UpdateFacilityButton";
 import DeleteButton from "@/components/DeleteButton";
@@ -38,10 +38,12 @@ import {
   useGetOneKiosk,
 } from "@/hooks/use-query";
 import { badToast } from "@/utils/toasts";
+import ScrolltoTopBtn from "@/components/ScrollToTopBtn";
 
 function FacilitiesAndKiosks() {
   const tournamentId = useParams().id as string;
 
+  const [selectedKiosk, setSelectedKiosk] = useState<Kiosk | null>(null);
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [, setKioskForEdit] = useState<Kiosk>();
   const [, setSelectedProducts] = useState<Product[]>([]);
@@ -57,6 +59,11 @@ function FacilitiesAndKiosks() {
 
   const { data: productlists } = useGetAllProductlists(tournamentId);
 
+  const { data: fetchedKiosk, isSuccess: kioskSuccess } = useGetOneKiosk(
+    tournamentId!,
+    selectedKiosk?.facilityId ?? "",
+    selectedKiosk?.id ?? ""
+  );
   const toggleFacility = (facilityId: string) => {
     setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
   };
@@ -69,15 +76,18 @@ function FacilitiesAndKiosks() {
     alert(`Du har valt ${kiosksForUpdate.length} kiosker.`);
   };
 
+  useEffect(() => {
+    if (kioskSuccess && fetchedKiosk) {
+      setSelectedProducts(fetchedKiosk.products);
+      setOpen(true);
+    }
+  }, [kioskSuccess, fetchedKiosk]);
+
   const handleEditClick = async (kiosk: Kiosk) => {
     try {
       setKioskForEdit(kiosk);
+      setSelectedKiosk(kiosk);
 
-      const { data: fetchedKiosk, isSuccess: kioskSuccess } = useGetOneKiosk(
-        tournamentId!,
-        kiosk.facilityId,
-        kiosk.id
-      );
       if (kioskSuccess) {
         setSelectedProducts(fetchedKiosk.products);
         setOpen(true);
@@ -139,8 +149,9 @@ function FacilitiesAndKiosks() {
 
   return (
     <section className="container mx-auto px-5">
-      <div className="flex flex-col md:flex-row justify-between items-center w-full md:w-3/4">
-        <h1 className="mt-8 text-2xl pb-2 mb-4">Anläggningshantering</h1>
+      <ScrolltoTopBtn />
+      <div className="flex justify-between items-center w-3/4">
+        <h1 className="mt-8 text-2xl pb-2 mb-4 ">Anläggningshantering</h1>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>

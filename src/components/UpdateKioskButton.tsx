@@ -20,7 +20,6 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import { Toaster } from "./ui/toaster";
 import { Pencil } from "lucide-react";
 import { updateKiosk } from "@/api/functions/updateKiosk";
 import { NoResponseError } from "@/api/functions/apiErrors";
@@ -77,7 +76,6 @@ function UpdateKioskKioskButton({
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Toaster />
       <DialogTrigger asChild>
       <Button variant={"outline"} size={"icon"}>
             <Pencil className="w-5 h-5 hover:text-orange-n" />

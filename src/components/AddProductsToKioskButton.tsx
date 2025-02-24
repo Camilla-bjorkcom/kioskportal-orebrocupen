@@ -4,7 +4,7 @@ import { Product } from "@/interfaces/product";
 import { Productlist } from "@/interfaces/productlist";
 import { badToast, okToast } from "@/utils/toasts";
 import { useQueryClient } from "@tanstack/react-query";
-import { PlusIcon } from "lucide-react";
+import { ArrowRight, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "./ui/button";
@@ -17,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Toaster } from "./ui/toaster";
 
 interface AddProductsToKioskButtonProps {
   kioskForEdit: Kiosk;
@@ -99,7 +98,6 @@ function AddProductsToKioskButton({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Toaster />
       <DialogTrigger>
         <Button
           variant="ghost"
@@ -173,7 +171,7 @@ function AddProductsToKioskButton({
                     />
                     <label
                       htmlFor={`product-${product.id}`}
-                      className="font-medium cursor-pointer"
+                      className="font-medium hover:text-slate-800 dark:hover:text-gray-300 cursor-pointer"
                     >
                       {product.productName}
                     </label>
@@ -205,7 +203,7 @@ function AddProductsToKioskButton({
                 to={`/producthandler/${tournamentId}`}
                 className="flex items-center gap-4"
               >
-                Produkthanterare
+                Produkthanterare <ArrowRight />
               </Link>
             </Button>
           </div>

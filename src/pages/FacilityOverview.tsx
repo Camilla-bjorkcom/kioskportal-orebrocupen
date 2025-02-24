@@ -196,8 +196,8 @@ const FacilityOverview = () => {
               Senaste Inventering
             </TableHead>
             {facility.kiosks.map((kiosk) => (
-              <TableHead className="text-center font-bold" key={kiosk.id}>
-                <p>{cleanDate(kiosk.inventoryDate)}</p>
+              <TableHead className="text-center" key={kiosk.id}>
+                <p>{kiosk.firstInventoryMade ? cleanDate(kiosk.inventoryDate) : ""}</p>
               </TableHead>
             ))}
           </TableRow>

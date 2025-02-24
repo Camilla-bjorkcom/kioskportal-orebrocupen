@@ -114,8 +114,8 @@ const OverviewInventories = () => {
               </TableHead>
               {facilities?.map((facility) => (
                 <TableHead
-                  className="text-center font-bold"
                   key={facility.facilityName}
+                  className="text-center font-bold group hover:bg-gray-200 dark:hover:bg-gray-700"
                 >
                   <Link
                     to={`/facilityinventory/${tournamentId}/${facility.id}`}
@@ -124,124 +124,63 @@ const OverviewInventories = () => {
                       {facility.facilityName}
                     </p>
                   </Link>
-                  {sortByInventoryDate(facility.kiosks).map((kiosk) =>
-                    viewDate ? (
-                      <div className="flex gap-1 mx-auto w-fit">
-                        <p className="font-medium text-center" key={kiosk.id}>
-                          {kiosk.kioskName}:
-                        </p>
-                        <p className="font-medium text-center">
-                          {cleanDate(kiosk.inventoryDate)}
-                        </p>
-                      </div>
-                    ) : (
-                      <p key={kiosk.id}></p>
-                    )
-                  )}
                 </TableHead>
               ))}
               <TableHead className="text-center font-bold dark:text-slate-300">
                 <p>Huvudlager</p>
-                {viewDate && storageInventory?.inventoryDate && (
-                  <p className="font-medium text-center">
-                    {cleanDate(storageInventory.inventoryDate)}
-                  </p>
-                )}
               </TableHead>
               <TableHead className="text-center font-bold dark:text-slate-300">
                 Totalt antal
               </TableHead>
             </TableRow>
           </TableHeader>
+
           <TableBody>
-            {/* Loopa igenom alla produkter och skapa en rad för varje produkt */}
-            {allProducts?.map((productName) => {
-              const productsInFacilities = facilitiesWithTotals.map((x) =>
-                x.products.find((p) => p.productName === productName)
-              );
+            {allProducts?.map((productName) => (
+              <TableRow key={productName}>
+                {/* Produktnamn */}
+                <TableCell className="dark:text-slate-300">
+                  {productName}
+                </TableCell>
 
-              const productsInStorage = productTotals.find(
-                (x) => x.productName === productName
-              );
-              const productsInStorageFirst = productsFirstTotals.find(
-                (x) => x.productName === productName
-              );
-              const productsFirstInFacility = facilitiesFirstTotals.map((x) =>
-                x.products.find((p) => p.productName === productName)
-              );
+                {/* Facility-värden */}
+                {facilitiesWithTotals.map((facility, index) => {
+                  const currentTotal =
+                    facilitiesWithTotals[index]?.products.find(
+                      (p) => p.productName === productName
+                    )?.totalAmount ?? 0;
 
-              const total = [productsInStorage, ...productsInFacilities]
-                .map((x) => x?.totalAmount ?? 0)
-                .reduce((a, c) => a + c, 0);
-            
+                  return (
+                    <TableCell
+                      key={facility.facilityName + productName}
+                      className="text-center dark:text-slate-300 group-hover:bg-gray-200 dark:group-hover:bg-gray-700"
+                    >
+                      {currentTotal ?? "-"}
+                    </TableCell>
+                  );
+                })}
 
-              const initialTotal = [
-                productsInStorageFirst,
-                ...productsFirstInFacility,
-              ]
-                .map((x) => x?.totalAmount ?? 0)
-                .reduce((a, c) => a + c, 0);
-           
+                {/* Huvudlager */}
+                <TableCell className="text-center dark:text-slate-300">
+                  {productTotals.find((p) => p.productName === productName)
+                    ?.totalAmount ?? "-"}
+                </TableCell>
 
-              return (
-                <TableRow key={productName}>
-                  {/* Produktnamn */}
-                  <TableCell>
-                    <p className="font-bold dark:text-slate-300">
-                      {productName}
-                    </p>
-                  </TableCell>
-
-                  {/* För varje facility, hämta totalAmount för denna produkt */}
-                  {facilitiesWithTotals.map((facility, index) => {
-                    const currentTotal =
-                      productsInFacilities[index]?.totalAmount ?? 0;
-                    const firstTotal =
-                      facilitiesFirstTotals[index]?.products.find(
-                        (p) => p.productName === productName
-                      )?.totalAmount ?? 0;
-
-                    const isLowStock = currentTotal < firstTotal * 0.2; // Kolla om värdet är under 20% av första inventeringen
-
-                    return (
-                      <TableCell
-                        key={facility.facilityName + productName}
-                        className={`text-center dark:text-slate-300 ${
-                          isLowStock
-                            ? "text-red-500 font-bold dark:text-red-500 dark:font-bold"
-                            : ""
-                        }`}
-                      >
-                        {currentTotal ?? "-"}
-                      </TableCell>
-                    );
-                  })}
-
-                  {/* Huvudlager-värde */}
-                  <TableCell
-                    className={`text-center dark:text-slate-300 ${
-                      (productsInStorage?.totalAmount ?? 0) <
-                      (productsInStorageFirst?.totalAmount ?? 0) * 0.2
-                        ? "text-red-500 font-bold dark:text-red-500 dark:font-bold" // 🔴 Röd text om värdet är under 20%
-                        : ""
-                    }`}
-                  >
-                    {productsInStorage?.totalAmount ?? "-"}
-                  </TableCell>
-
-                  {/* Totalt antal (summa av alla facilities + huvudlager) */}
-                  <TableCell
-                    className={`text-center font-bold dark:text-slate-300 ${
-                      (total ?? 0) < (initialTotal ?? 0) * 0.2
-                        ? "text-red-500 font-bold dark:text-red-500 dark:font-bold" // 🔴 Röd text om värdet är under 20%
-                        : ""
-                    }`}
-                  >
-                    {total}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                {/* Totalt antal */}
+                <TableCell className="text-center font-bold dark:text-slate-300">
+                  {[
+                    productTotals.find((p) => p.productName === productName)
+                      ?.totalAmount ?? 0,
+                    ...facilitiesWithTotals.map(
+                      (facility) =>
+                        facility.products.find(
+                          (p) => p.productName === productName
+                        )?.totalAmount ?? 0
+                    ),
+                  ].reduce((a, c) => a + c, 0)}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>

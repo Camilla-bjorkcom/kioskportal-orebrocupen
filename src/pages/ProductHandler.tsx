@@ -21,6 +21,7 @@ import ProductInfoComponent from "@/components/ProductInfoComponent";
 import { useGetAllProductlists, useGetAllProducts } from "@/hooks/use-query";
 import { deleteProductList } from "@/api/functions/deleteProductlist";
 import CreateProductListButton from "@/components/CreateProductListButton";
+import ScrolltoTopBtn from "@/components/ScrollToTopBtn";
 
 function ProductHandler() {
   const { id } = useParams<{ id: string }>();
@@ -59,12 +60,19 @@ function ProductHandler() {
       </div>
     );
   }
+  const sortedProducts = [...(products?.products || [])].sort((a, b) =>
+    a.productName.localeCompare(b.productName)
+  );
 
+  const half = Math.ceil(sortedProducts.length / 2);
+  const col1 = sortedProducts.slice(0, half).reverse();
+  const col2 = sortedProducts.slice(half).reverse();
   return (
     <>
       <Toaster />
-      <section>
+      <section className="mb-10">
         <div className="container mx-auto px-4 flex-row items-center">
+          <ScrolltoTopBtn />
           <div className="flex justify-between w-3/4 text-start ">
             <h2 className="mt-8 text-2xl pb-2 mb-4 mr-2">Produkthantering</h2>
             <TooltipProvider>
@@ -83,11 +91,9 @@ function ProductHandler() {
           <div className="mt-8">
             <h3 className="text-lg mb-7">Skapade produkter:</h3>
 
-            <div className="grid grid-cols-4 mb-10 gap-2 w-full 2xl:w-3/4">
-              {products?.products
-                .slice()
-                .sort((a, b) => a.productName.localeCompare(b.productName))
-                .map((product) => (
+            <div className="grid xl:grid-cols-2 gap-2 mb-5 w-3/4">
+              <div className="flex flex-col-reverse gap-2">
+                {col1.map((product) => (
                   <TooltipProvider key={product.id}>
                     <Tooltip>
                       <TooltipTrigger>
@@ -102,6 +108,24 @@ function ProductHandler() {
                     </Tooltip>
                   </TooltipProvider>
                 ))}
+              </div>
+              <div className="flex flex-col-reverse gap-2">
+                {col2.map((product) => (
+                  <TooltipProvider key={product.id}>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <UpdateProductButton
+                          product={product}
+                          tournamentId={tournamentId!}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Redigera produkt</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -126,11 +150,22 @@ function ProductHandler() {
                         {productlist.productlistName}
                       </label>
                       <div className="flex justify-self-end gap-7 2xl:gap-10 ml-auto w-fit basis-1/12 mr-5">
-                        <UpdateProductListButton
-                          productlist={productlist}
-                          tournamentProducts={products?.products || []}
-                          tournamentId={tournamentId!}
-                        />
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <UpdateProductListButton
+                                productlist={productlist}
+                                tournamentProducts={products?.products || []}
+                                tournamentId={tournamentId!}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                Redigera produktlista och lägg till produkter
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
 
                         <TooltipProvider>
                           <Tooltip>
