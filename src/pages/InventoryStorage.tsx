@@ -12,7 +12,6 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { Toaster } from "../components/ui/toaster";
 import { useParams } from "react-router-dom";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useEffect } from "react";

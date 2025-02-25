@@ -33,7 +33,7 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import { badToast, okToast } from "@/utils/toasts";
-import { Toaster } from "./ui/toaster";
+
 import { updateProduct } from "@/api/functions/updateProduct";
 import { deleteProduct } from "@/api/functions/deleteProduct";
 import { DuplicateError, NoResponseError } from "@/api/functions/apiErrors";
@@ -85,7 +85,7 @@ function UpdateProductButton({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const correctedAmount =
-        values.amountPerPackage && values.amountPerPackage <= 0
+        values.amountPerPackage && values.amountPerPackage >= 0
           ? values.amountPerPackage
           : 1;
       const updatedProduct: TournamentProduct = {
