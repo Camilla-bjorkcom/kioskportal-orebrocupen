@@ -197,7 +197,7 @@ const FacilityOverview = () => {
             </TableHead>
             {facility.kiosks.map((kiosk) => (
               <TableHead className="text-center" key={kiosk.id}>
-                <p>{kiosk.firstInventoryMade ? cleanDate(kiosk.inventoryDate) : ""}</p>
+                <p>{kiosk.firstInventoryMade ? cleanDate(kiosk.inventoryDate) : "Ingen inventering gjord"}</p>
               </TableHead>
             ))}
           </TableRow>
