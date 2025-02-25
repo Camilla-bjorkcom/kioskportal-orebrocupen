@@ -93,7 +93,7 @@ function UpdateProductButton({
         productName: values.productName.trim(),
         amountPerPackage: correctedAmount,
       };
-      console.log(updatedProduct)
+      console.log(updatedProduct);
       const updatedNewProduct = await updateProduct(
         updatedProduct,
         tournamentId
@@ -132,7 +132,6 @@ function UpdateProductButton({
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <Toaster />
       <DialogTrigger asChild>
         <span className="flex border-2 border-transparent hover:border-solid hover:border-1 rounded-md hover:text-white hover:bg-black dark:bg-slate-900 dark:hover:bg-slate-600 dark:text-gray-200">
           <p className="ml-2">{product.productName}</p>
