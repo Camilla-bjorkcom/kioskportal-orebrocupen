@@ -44,7 +44,6 @@ function Tournaments() {
 
   return (
     <>
-    <Toaster />
       <Topbar tournamentName={""} />
 
       <div className="container mx-auto mt-20 px-5">

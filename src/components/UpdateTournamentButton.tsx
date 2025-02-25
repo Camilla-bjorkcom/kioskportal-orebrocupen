@@ -67,8 +67,6 @@ const UpdateTournamentButton = ({
 
   return (
     <>
-      <Toaster />
-
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button>Uppdatera turnering</Button>
