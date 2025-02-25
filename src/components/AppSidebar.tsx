@@ -82,7 +82,11 @@ export function AppSidebar({ id }: { id?: string }) {
               <button
                 onClick={() => (window.location.href = `/dashboard/${id}`)}
               >
-                <img src={logo} alt="kiosk portal logo" className=" " />
+                <img
+                  src={logo}
+                  alt="kiosk portal logo"
+                  className="w-[60%] md:w-[100%]"
+                />
               </button>
             )}
           </div>
@@ -118,7 +122,6 @@ export function AppSidebar({ id }: { id?: string }) {
                       ))}
                     </SidebarMenuSub>
                   )}
-                  {/* <div className="w-full h-px bg-white"></div> */}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

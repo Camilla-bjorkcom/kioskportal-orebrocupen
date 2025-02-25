@@ -115,9 +115,8 @@ function InventoryStorage() {
 
   return (
     <>
-      <Toaster />
       <div className="container mx-auto p-3">
-      <ScrolltoTopBtn />
+        <ScrolltoTopBtn />
         <div className="rounded-xl border border-black border-solid text-black aspect-video dark:border-slate-500">
           <h2 className="text-lg lg:text-2xl text-center w-full mt-10 font-semibold dark:text-gray-200">
             Inventera huvudlager

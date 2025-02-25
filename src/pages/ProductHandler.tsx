@@ -69,7 +69,6 @@ function ProductHandler() {
   const col2 = sortedProducts.slice(half).reverse();
   return (
     <>
-      <Toaster />
       <section className="mb-10">
         <div className="container mx-auto px-4 flex-row items-center">
           <ScrolltoTopBtn />
