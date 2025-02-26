@@ -113,7 +113,12 @@ function AddProductsToKioskButton({
           <PlusIcon className="w-4 h-4 place-self-center" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-4xl">
+      <DialogContent
+        className="w-full max-w-4xl"
+        onEscapeKeyDown={(e) => e.preventDefault()}
+        onPointerDown={(e) => e.preventDefault()}
+        onInteractOutside={(e) => e.preventDefault()}
+      >
         <DialogTitle className="text-lg">
           Vald kiosk:{" "}
           {kioskForEdit ? kioskForEdit.kioskName : "Ingen kiosk vald"}
