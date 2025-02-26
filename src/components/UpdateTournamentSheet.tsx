@@ -98,16 +98,16 @@ const UpdateTournamentSheet = ({
     reader.onloadend = async () => {
       const base64String = reader.result?.toString().split(",")[1]; // Extrahera Base64-datan
 
-      console.log("fil:", file)
-      console.log("filnamn:", file.name)
+      console.log("fil:", file);
+      console.log("filnamn:", file.name);
       const dataResponse = await uploadImageFile(
         file.name,
         base64String,
         tournamentId!
       );
       if (dataResponse) {
-        setImageUrl(dataResponse);
-        console.log(dataResponse);
+        setImageUrl(dataResponse.fileUrl);
+        console.log(dataResponse.fileUrl);
         queryClient.invalidateQueries({ queryKey: ["tournament"] });
         okToast("Turneringslogga uppdaterades");
       }
@@ -201,7 +201,9 @@ const UpdateTournamentSheet = ({
             </form>
           </Form>
           <div className="p-4 border rounded-lg mt-10">
-          <h4 className="text-sm text-muted-foreground dark:text-gray-200 mb-5 font-medium">Ladda upp en turneringslogga</h4>           
+            <h4 className="text-sm text-muted-foreground dark:text-gray-200 mb-5 font-medium">
+              Ladda upp en turneringslogga
+            </h4>
             <input type="file" accept="image/*" onChange={handleFileChange} />
             {imageUrl && (
               <img
