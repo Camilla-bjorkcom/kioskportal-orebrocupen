@@ -27,6 +27,8 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { uploadImageFile } from "@/api/functions/uploadImageFile";
+import { useState } from "react";
 
 const UpdateTournamentSheet = ({
   tournament,
@@ -37,6 +39,7 @@ const UpdateTournamentSheet = ({
 }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const handleDelete = () => {
     queryClient.invalidateQueries({ queryKey: ["tournament"] });
@@ -82,6 +85,33 @@ const UpdateTournamentSheet = ({
       console.error("Failed to update tournament:", error);
       badToast("Misslyckades med att spara ändringar.");
     }
+  };
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = async () => {
+      const base64String = reader.result?.toString().split(",")[1]; // Extrahera Base64-datan
+
+      console.log("fil:", file)
+      console.log("filnamn:", file.name)
+      const dataResponse = await uploadImageFile(
+        file.name,
+        base64String,
+        tournamentId!
+      );
+      if (dataResponse) {
+        setImageUrl(dataResponse);
+        console.log(dataResponse);
+        queryClient.invalidateQueries({ queryKey: ["tournament"] });
+        okToast("Turneringslogga uppdaterades");
+      }
+    };
   };
 
   return (
@@ -170,6 +200,17 @@ const UpdateTournamentSheet = ({
               </div>
             </form>
           </Form>
+          <div className="p-4 border rounded-lg mt-10">
+          <h4 className="text-sm text-muted-foreground dark:text-gray-200 mb-5 font-medium">Ladda upp en turneringslogga</h4>           
+            <input type="file" accept="image/*" onChange={handleFileChange} />
+            {imageUrl && (
+              <img
+                src={imageUrl}
+                alt="Logo"
+                className="mt-4 w-32 h-32 object-contain"
+              />
+            )}
+          </div>
         </SheetContent>
       </Sheet>
     </>
