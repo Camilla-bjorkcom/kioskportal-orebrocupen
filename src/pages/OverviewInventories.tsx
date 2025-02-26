@@ -196,13 +196,13 @@ const OverviewInventories = () => {
                   {/* För varje facility, hämta totalAmount för denna produkt */}
                   {facilitiesWithTotals.map((facility, index) => {
                     const currentTotal =
-                      productsInFacilities[index]?.totalAmount ?? 0;
+                      productsInFacilities[index]?.totalAmount ?? null;
                     const firstTotal =
                       facilitiesFirstTotals[index]?.products.find(
                         (p) => p.productName === productName
                       )?.totalAmount ?? 0;
 
-                    const isLowStock = currentTotal < firstTotal * 0.2; // Kolla om värdet är under 20% av första inventeringen
+                      const isLowStock = currentTotal !== null && currentTotal < firstTotal * 0.2; // Kolla om värdet är under 20% av första inventeringen
 
                     return (
                       <TableCell
@@ -213,7 +213,7 @@ const OverviewInventories = () => {
                             : ""
                         }`}
                       >
-                        {currentTotal ?? "-"}
+                        {currentTotal !== null ? currentTotal : "-"} {/* Om null, visa '-' */}
                       </TableCell>
                     );
                   })}
