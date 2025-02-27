@@ -14,7 +14,7 @@ const Topbar = ({ tournamentName, leftComponent }: Props) => {
 
       <div className="container mx-auto flex justify-between items-center">
         {tournamentName === "" ? (
-          <img src={logo} alt="KioskPortal Logo" className="h-10 w-auto" />
+          <img src={logo} alt="Kiosk Portal Logo" className="h-10 w-auto" />
         ) : (
           <div className="flex-1 flex justify-center">
             <p className="font-semibold sm:text-3xl text-black dark:text-gray-200 text-md">

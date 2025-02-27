@@ -6,7 +6,7 @@ export function cleanDate(isoDate: string): string {
 
     return date.toLocaleString("sv-SE", {
         day: "numeric",
-        month: "long",
+        month: "short",
         hour: "2-digit",
         minute: "2-digit",
         timeZone: "Europe/Stockholm",

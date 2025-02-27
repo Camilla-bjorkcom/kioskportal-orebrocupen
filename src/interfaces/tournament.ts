@@ -5,10 +5,12 @@ export interface Tournament {
   endDate: string;
   id: string;
   created: string;
+  logoUrl:string;
 }
 
 export interface UpdateTournament {
   tournamentName: string;
   startDate: Date;
   endDate: Date;
+  logoUrl: string;
 }

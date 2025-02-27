@@ -121,18 +121,18 @@ const OverviewInventories = () => {
                   <Link
                     to={`/facilityinventory/${tournamentId}/${facility.id}`}
                   >
-                    <p className="font-bold underline dark:text-slate-300">
+                    <p className="font-bold hover:underline dark:text-slate-300">
                       {facility.facilityName}
                     </p>
                   </Link>
                   {sortByInventoryDate(facility.kiosks).map((kiosk) =>
                     viewDate && kiosk.firstInventoryMade ? (
-                      <div className="flex gap-1 mx-auto w-fit">
-                        <p className="font-medium text-center" key={kiosk.id}>
-                          {kiosk.kioskName}:
-                        </p>
-                        <p className="font-medium text-center">
-                          {cleanDate(kiosk.inventoryDate)}
+                      <div className="mx-auto w-fit flex">
+                        <p className="font-medium text-center text-xs whitespace-nowrap" key={kiosk.id}>
+                          {kiosk.kioskName}:  {" "}</p>
+                          {"  "}
+                          <p className="font-medium text-center text-xs whitespace-nowrap">
+                           ({cleanDate(kiosk.inventoryDate)})
                         </p>
                       </div>
                     ) : (

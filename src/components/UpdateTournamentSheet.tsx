@@ -29,6 +29,15 @@ import {
 } from "./ui/form";
 import { uploadImageFile } from "@/api/functions/uploadImageFile";
 import { useState } from "react";
+import { TrashIcon } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import fetchWithAuth from "@/api/functions/fetchWithAuth";
+import { deleteLogoFile } from "@/api/functions/deleteLogoFile";
 
 const UpdateTournamentSheet = ({
   tournament,
@@ -39,7 +48,6 @@ const UpdateTournamentSheet = ({
 }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const handleDelete = () => {
     queryClient.invalidateQueries({ queryKey: ["tournament"] });
@@ -106,13 +114,24 @@ const UpdateTournamentSheet = ({
         tournamentId!
       );
       if (dataResponse) {
-        setImageUrl(dataResponse.fileUrl);
         console.log(dataResponse.fileUrl);
         queryClient.invalidateQueries({ queryKey: ["tournament"] });
         okToast("Turneringslogga uppdaterades");
       }
     };
   };
+
+  const handleDeleteLogo = async (tournamentId: string) => {
+    const response = await deleteLogoFile(tournamentId);
+    if (response) {
+      console.log(response);
+      queryClient.invalidateQueries({ queryKey: ["tournament"] });
+      okToast("Turneringslogga raderades");
+    }
+    else {
+      badToast("Misslyckades radera turneringslogga")
+    }
+  }
 
   return (
     <>
@@ -200,19 +219,42 @@ const UpdateTournamentSheet = ({
               </div>
             </form>
           </Form>
-          <div className="p-4 border rounded-lg mt-10">
-            <h4 className="text-sm text-muted-foreground dark:text-gray-200 mb-5 font-medium">
-              Ladda upp en turneringslogga
-            </h4>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            {imageUrl && (
-              <img
-                src={imageUrl}
-                alt="Logo"
-                className="mt-4 w-32 h-32 object-contain"
+          {tournament.logoUrl ? (
+            <>
+              <p className="mt-10 text-sm font-medium">Turneringslogga</p>
+              <div className="flex items-center gap-5">
+                <img
+                  src={tournament.logoUrl}
+                  alt="Logo"
+                  className="mt-4 w-[30%] object-contain"
+                />{" "}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Button onClick={() => handleDeleteLogo(tournamentId)}variant={"destructive"}>
+                        <TrashIcon />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Radera turneringslogga</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </>
+          ) : (
+            <div className="p-4 border rounded-lg mt-10">
+              <h4 className="text-sm text-muted-foreground dark:text-gray-200 mb-5 font-medium">
+                Ladda upp en turneringslogga{" "}
+                <p className="text-xs">(max 6 mb)</p>
+              </h4>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/svg+xml"
+                onChange={handleFileChange}
               />
-            )}
-          </div>
+            </div>
+          )}
         </SheetContent>
       </Sheet>
     </>
