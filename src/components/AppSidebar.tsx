@@ -1,5 +1,4 @@
 import { SquareChartGantt, ChartSpline, Bell, Trophy } from "lucide-react";
-
 import {
   Sidebar,
   SidebarContent,
@@ -15,11 +14,23 @@ import {
 } from "@/components/ui/sidebar";
 import logo from "@/assets/images/tempLogo.svg";
 import { useState } from "react";
+import { useGetTournament } from "@/hooks/use-query";
+import { Link } from "react-router-dom";
 
 // Menu items.
 
 export function AppSidebar({ id }: { id?: string }) {
   const [isCollapsed] = useState(false);
+
+  const { data: tournament, error } = useGetTournament(id!);
+  if (error) {
+    return (
+      <div>
+        <p>Error occurred while fetching data:</p>
+        {error && <p>Tournament error: {String(error)}</p>}
+      </div>
+    );
+  }
 
   const items = [
     {
@@ -77,17 +88,24 @@ export function AppSidebar({ id }: { id?: string }) {
     <Sidebar variant="sidebar" collapsible="icon" className="dark:bg-slate-800">
       <SidebarContent>
         <SidebarHeader>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center justify-center mx-auto">
             {!isCollapsed && (
-              <button
-                onClick={() => (window.location.href = `/dashboard/${id}`)}
-              >
-                <img
+              <Link to={`/dashboard/${id}`}> 
+                {tournament?.logoUrl ? (
+                  <img
+                  src={tournament?.logoUrl}
+                  alt="tournament logo"
+                  className="w-[60%] md:w-[80%] place-self-center "
+                />
+                  
+                ) : (
+                  <img
                   src={logo}
                   alt="kiosk portal logo"
                   className="w-[60%] md:w-[100%]"
                 />
-              </button>
+                )}
+              </Link>
             )}
           </div>
         </SidebarHeader>

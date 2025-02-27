@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/accordion";
 import UpdateProductListButton from "@/components/UpdateProductListButton";
 import DeleteButton from "@/components/DeleteButton";
-
 import ProductInfoComponent from "@/components/ProductInfoComponent";
 import { useGetAllProductlists, useGetAllProducts } from "@/hooks/use-query";
 import { deleteProductList } from "@/api/functions/deleteProductlist";

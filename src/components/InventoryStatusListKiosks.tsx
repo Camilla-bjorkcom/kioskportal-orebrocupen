@@ -95,7 +95,7 @@ const InventoryStatusListKiosks = () => {
 
       persistNewInventory(data);
     }
-  }, [isSuccess, data]); // Run only when `isSuccess` or `data` changes
+  }, [isSuccess, data]);
 
   const facilityStatus = groupBy(inventoryStatus, (x) => x.facilityId);
   const kioskStatus = groupBy(inventoryStatus, (x) => x.id);

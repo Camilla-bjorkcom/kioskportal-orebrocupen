@@ -1,7 +1,6 @@
 import AddFacilityButton from "@/components/AddFacilityButton";
 import AddKioskButton from "@/components/AddKioskButton";
 import { useEffect, useState } from "react";
-
 import UpdateFacilityButton from "@/components/UpdateFacilityButton";
 import DeleteButton from "@/components/DeleteButton";
 import {
@@ -22,7 +21,6 @@ import AddContactPersonButton from "@/components/AddContactPersonButton";
 import SelectedKiosksButton from "@/components/SelectedKiosksButton";
 import { Checkbox } from "@/components/ui/checkbox";
 import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
-
 import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
 import QrCodeAllBtn from "@/components/QrCodeAllBtn";
@@ -42,28 +40,24 @@ import ScrolltoTopBtn from "@/components/ScrollToTopBtn";
 
 function FacilitiesAndKiosks() {
   const tournamentId = useParams().id as string;
-
   const [selectedKiosk, setSelectedKiosk] = useState<Kiosk | null>(null);
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [, setKioskForEdit] = useState<Kiosk>();
   const [, setSelectedProducts] = useState<Product[]>([]);
   const [, setKiosks] = useState<Kiosk[]>([]);
-
   const [, setOpen] = useState(false);
   const [openFacilityId, setOpenFacilityId] = useState<string | null>(null);
 
   const { isLoading, error, data, isSuccess } =
     useGetAllFacilities(tournamentId);
-
   const { data: products } = useGetAllProducts(tournamentId);
-
   const { data: productlists } = useGetAllProductlists(tournamentId);
-
   const { data: fetchedKiosk, isSuccess: kioskSuccess } = useGetOneKiosk(
     tournamentId!,
     selectedKiosk?.facilityId ?? "",
     selectedKiosk?.id ?? ""
   );
+  
   const toggleFacility = (facilityId: string) => {
     setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
   };
