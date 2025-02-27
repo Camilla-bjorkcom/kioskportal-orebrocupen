@@ -22,7 +22,6 @@ import {
 import { UpdateTournament } from "@/interfaces";
 import { DatePicker } from "./DatePicker";
 import { Button } from "./ui/button";
-import { Toaster } from "./ui/toaster";
 
 interface UpdateTournamentButtonProps {
   onUpdate: (updatedTournament: UpdateTournament) => void;

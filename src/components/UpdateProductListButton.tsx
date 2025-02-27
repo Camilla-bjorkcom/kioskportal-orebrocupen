@@ -20,12 +20,6 @@ import { updateProductlist } from "@/api/functions/updateProductlist";
 import { useQueryClient } from "@tanstack/react-query";
 import { badToast, okToast } from "@/utils/toasts";
 import { NoResponseError, DuplicateError } from "@/api/functions/apiErrors";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
 
 const formSchema = z.object({
   productlistName: z.string().min(2, {
