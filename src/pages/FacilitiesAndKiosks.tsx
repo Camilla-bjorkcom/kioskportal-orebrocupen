@@ -353,10 +353,15 @@ function FacilitiesAndKiosks() {
                         Produkter ({kiosk.products.length})
                       </div>
                       {kiosk.products && kiosk.products.length > 0 ? (
-                        <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
+                        <ul
+                          className="sm:grid flex flex-col sm:grid-flow-col gap-3 mt-2"
+                          style={{
+                            gridTemplateRows: `repeat(${Math.ceil(kiosk.products.length / 3)}, 1fr)`,
+                          }}
+                        >
                           {kiosk.products
                             .slice()
-                            .sort((a, b) =>
+                            .toSorted((a, b) =>
                               a.productName.localeCompare(b.productName)
                             )
                             .map((product: Product, index: number) => (

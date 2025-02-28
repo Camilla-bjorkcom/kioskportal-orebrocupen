@@ -119,7 +119,7 @@ function UpdateProductListButton({
           Redigera produktlista <Pencil />
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-4xl">
+      <DialogContent className="w-full max-w-4xl max-h-[90vh] overflow-y-auto ">
         <DialogHeader>
           <DialogTitle>Uppdatera produktlista</DialogTitle>
           <DialogDescription className="sr-only">
@@ -172,11 +172,18 @@ function UpdateProductListButton({
                   {allSelected ? "Avmarkera alla" : "Markera alla"}
                 </Button>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div
+                className="sm:grid flex flex-col grid-cols-2 sm:grid-flow-col gap-4"
+                style={{
+                  gridTemplateRows: `repeat(${Math.ceil(tournamentProducts.length / 2)}, 1fr)`,
+                }}
+              >
                 {tournamentProducts.length > 0 ? (
                   tournamentProducts
                     .slice()
-                    .sort((a, b) => a.productName.localeCompare(b.productName))
+                    .toSorted((a, b) =>
+                      a.productName.localeCompare(b.productName)
+                    )
                     .map((product) => (
                       <div key={product.id} className="flex items-center gap-2">
                         <Checkbox
