@@ -63,7 +63,7 @@ function InventoryStorage() {
           productName: product.productName,
           amountPerPackage: product.amountPerPackage,
           amountPackages: values.amountPackages[index],
-        } satisfies InventoryStorageProducts)
+        }) satisfies InventoryStorageProducts
     );
     try {
       const response = await fetchWithAuth(
@@ -144,68 +144,68 @@ function InventoryStorage() {
               className="w-fit mx-auto mb-20"
             >
               {isSuccess && data.products && data.products.length > 0 ? (
-                data.products.map((product, index) => (
-                  <div
-                    key={product.id}
-                    className={`space-y-4 lg:flex ${
-                      index % 2 === 0
-                        ? "bg-gray-100 dark:bg-slate-800 rounded-lg p-5"
-                        : "bg-white dark:bg-slate-700 rounded-lg p-5"
-                    }`}
-                  >
-                    <FormItem className="place-content-center">
-                      <FormLabel>
-                        <p className="w-[280px] lg:w-[300px] text-lg dark:text-gray-200">
-                          {product.productName}
-                        </p>
-                      </FormLabel>
-                    </FormItem>
+                data.products
+                  .toSorted((a, b) =>
+                    a.productName.localeCompare(b.productName)
+                  )
+                  .map((product, index) => (
+                    <div
+                      key={product.id}
+                      className="space-y-4 lg:flex odd:bg-gray-200 dark:bg-slate-800  bg-white odd:dark:bg-slate-700 rounded-lg p-5"
+                    >
+                      <FormItem className="place-content-center">
+                        <FormLabel>
+                          <p className="w-[280px] lg:w-[300px] text-lg dark:text-gray-200">
+                            {product.productName}
+                          </p>
+                        </FormLabel>
+                      </FormItem>
 
-                    <div className="flex gap-5 dark:border:solid dark:border-gray-500">
-                      <FormField
-                        control={form.control}
-                        name={`amountPackages.${index}`}
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel className="dark:text-gray-200">
-                              Antal förpackningar
-                            </FormLabel>
-                            <FormControl className="dark:text-gray-200 dark:border-gray-500">
-                              <Input
-                                {...field}
-                                value={
-                                  field.value === undefined ||
-                                  isNaN(field.value)
-                                    ? ""
-                                    : field.value
-                                }
-                                placeholder="Ange antal"
-                                onChange={(e) => {
-                                  const val = e.target.value;
-                                  if (val === "" || /^\d+$/.test(val)) {
-                                    field.onChange(
-                                      val === "" ? undefined : Number(val)
-                                    );
+                      <div className="flex gap-5 dark:border:solid dark:border-gray-500">
+                        <FormField
+                          control={form.control}
+                          name={`amountPackages.${index}`}
+                          render={({ field, fieldState }) => (
+                            <FormItem>
+                              <FormLabel className="dark:text-gray-200">
+                                Antal förpackningar
+                              </FormLabel>
+                              <FormControl className="dark:text-gray-200 dark:border-gray-500">
+                                <Input
+                                  {...field}
+                                  value={
+                                    field.value === undefined ||
+                                    isNaN(field.value)
+                                      ? ""
+                                      : field.value
                                   }
-                                }}
-                                onBlur={(e) => {
-                                  if (e.target.value === "") {
-                                    field.onChange(0);
-                                  }
-                                }}
-                              />
-                            </FormControl>
-                            {fieldState.error && (
-                              <p className="text-red-500 text-sm">
-                                Fältet måste fyllas i
-                              </p>
-                            )}
-                          </FormItem>
-                        )}
-                      />
+                                  placeholder="Ange antal"
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    if (val === "" || /^\d+$/.test(val)) {
+                                      field.onChange(
+                                        val === "" ? undefined : Number(val)
+                                      );
+                                    }
+                                  }}
+                                  onBlur={(e) => {
+                                    if (e.target.value === "") {
+                                      field.onChange(0);
+                                    }
+                                  }}
+                                />
+                              </FormControl>
+                              {fieldState.error && (
+                                <p className="text-red-500 text-sm">
+                                  Fältet måste fyllas i
+                                </p>
+                              )}
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))
+                  ))
               ) : (
                 <p className="dark:text-white">
                   Inga produkter tillagda i turneringen

@@ -113,7 +113,7 @@ function AddProductsToKioskButton({
           <PlusIcon className="w-4 h-4 place-self-center" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-4xl">
+      <DialogContent className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogTitle className="text-lg">
           Vald kiosk:{" "}
           {kioskForEdit ? kioskForEdit.kioskName : "Ingen kiosk vald"}
@@ -150,10 +150,15 @@ function AddProductsToKioskButton({
               <Button onClick={handleReset}>Återställ</Button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div
+              className="sm:grid grid-cols-2 sm:grid-flow-col flex flex-col gap-4"
+              style={{
+                gridTemplateRows: `repeat(${Math.ceil(products.length / 2)}, 1fr)`,
+              }}
+            >
               {products
                 .slice()
-                .sort((a, b) => a.productName.localeCompare(b.productName))
+                .toSorted((a, b) => a.productName.localeCompare(b.productName))
                 .map((product) => (
                   <div key={product.id} className="flex items-center gap-2">
                     <Checkbox
