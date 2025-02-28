@@ -122,6 +122,7 @@ function Dashboard() {
                     tournamentName: tournament.tournamentName,
                     startDate: new Date(tournament.startDate),
                     endDate: new Date(tournament.endDate),
+                    logoUrl: tournament.logoUrl ?? undefined
                   }}
                   tournamentId={tournament.id}
                 />

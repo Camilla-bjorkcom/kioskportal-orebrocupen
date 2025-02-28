@@ -120,18 +120,22 @@ const OverviewInventories = () => {
                   <Link
                     to={`/facilityinventory/${tournamentId}/${facility.id}`}
                   >
-                    <p className="font-bold underline dark:text-slate-300">
+                    <p className="font-bold hover:underline dark:text-slate-300">
                       {facility.facilityName}
                     </p>
                   </Link>
                   {sortByInventoryDate(facility.kiosks).map((kiosk) =>
                     viewDate && kiosk.firstInventoryMade ? (
-                      <div className="flex gap-1 mx-auto w-fit">
-                        <p className="font-medium text-center" key={kiosk.id}>
-                          {kiosk.kioskName}:
+                      <div className="mx-auto w-fit flex">
+                        <p
+                          className="font-medium text-center text-xs whitespace-nowrap"
+                          key={kiosk.id}
+                        >
+                          {kiosk.kioskName}:{" "}
                         </p>
-                        <p className="font-medium text-center">
-                          {cleanDate(kiosk.inventoryDate)}
+                        {"  "}
+                        <p className="font-medium text-center text-xs whitespace-nowrap">
+                          ({cleanDate(kiosk.inventoryDate)})
                         </p>
                       </div>
                     ) : (
@@ -196,13 +200,15 @@ const OverviewInventories = () => {
                     {/* För varje facility, hämta totalAmount för denna produkt */}
                     {facilitiesWithTotals.map((facility, index) => {
                       const currentTotal =
-                        productsInFacilities[index]?.totalAmount ?? 0;
+                        productsInFacilities[index]?.totalAmount ?? null;
                       const firstTotal =
                         facilitiesFirstTotals[index]?.products.find(
                           (p) => p.productName === productName
                         )?.totalAmount ?? 0;
 
-                      const isLowStock = currentTotal < firstTotal * 0.2; // Kolla om värdet är under 20% av första inventeringen
+                      const isLowStock =
+                        currentTotal !== null &&
+                        currentTotal < firstTotal * 0.2; // Kolla om värdet är under 20% av första inventeringen
 
                       return (
                         <TableCell
@@ -213,7 +219,8 @@ const OverviewInventories = () => {
                               : ""
                           }`}
                         >
-                          {currentTotal ?? "-"}
+                          {currentTotal !== null ? currentTotal : "-"}{" "}
+                          {/* Om null, visa '-' */}
                         </TableCell>
                       );
                     })}
