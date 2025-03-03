@@ -88,8 +88,8 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger className="flex w-fit">
-        <Button variant={"outline"} size={"icon"}>
-          <TrashIcon className=" mr-0.5 w-5 h-5  hover:text-red-500" />
+        <Button className="dark:hover:bg-slate-600 dark:hover:text-gray-200" variant={"outline"} size={"icon"}>
+          <TrashIcon className=" mr-0.5 w-5 h-5  hover:text-red-500 dark:hover:text-red-500" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -105,6 +105,7 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
             onClick={() => {
               onDelete(id, type).then(() => deleteConfirmed(type));
             }}
+            className="bg-red-500 dark:bg-red-500"
           >
             Radera
           </AlertDialogAction>

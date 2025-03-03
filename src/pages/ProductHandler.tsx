@@ -19,7 +19,7 @@ import DeleteButton from "@/components/DeleteButton";
 import ProductInfoComponent from "@/components/ProductInfoComponent";
 import { useGetAllProductlists, useGetAllProducts } from "@/hooks/use-query";
 import { deleteProductList } from "@/api/functions/deleteProductlist";
-import CreateProductListButton from "@/components/CreateProductListButton";
+import CreateProductListButton from "@/components/CreateProductlistButton/index";
 import ScrolltoTopBtn from "@/components/ScrollToTopBtn";
 
 function ProductHandler() {
