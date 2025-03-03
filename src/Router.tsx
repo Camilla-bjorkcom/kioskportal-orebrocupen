@@ -25,26 +25,26 @@ function Router() {
             <Route path="/tournaments" element={<Tournaments />} />
           </Route>
           <Route element={<SidebarLayout />}>
-            <Route path="dashboard/:id" element={<Dashboard />} />
-            <Route path="producthandler/:id" element={<ProductHandler />} />
+            <Route path=":id/dashboard" element={<Dashboard />} />
+            <Route path=":id/producthandler" element={<ProductHandler />} />
 
             <Route
-              path="facilitiesandkiosks/:id"
+              path=":id/facilitiesandkiosks"
               element={<FacilitiesAndKiosks />}
             />
 
-            <Route path="inventorystatus/:id" element={<InventoryStatus />} />
-            <Route path="inventorystorage/:id" element={<InventoryStorage />} />
+            <Route path=":id/inventorystatus" element={<InventoryStatus />} />
+            <Route path=":id/inventorystorage" element={<InventoryStorage />} />
             <Route
-              path="inventorystatusstorage/:id"
+              path=":id/inventorystatusstorage"
               element={<InventoryStatusStorage />}
             />
             <Route
-              path="overviewinventories/:id"
+              path=":id/overviewinventories"
               element={<OverviewInventories />}
             />
             <Route
-              path="facilityinventory/:id/:fid"
+              path=":id/:fid/facilityinventory"
               element={<FacilityOverview />}
             />
           </Route>

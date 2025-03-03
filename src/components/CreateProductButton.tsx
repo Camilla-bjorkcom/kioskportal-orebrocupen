@@ -79,7 +79,7 @@ function CreateProductButton({ tournamentId }: CreateProductProps) {
         tournamentId!
       );
       if (!productCreated) throw new NoResponseError("No response from server");
-      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "products"] });
 
       setSavedMessage("Produkten har sparats ✅");
       okToast(`Produkt ${values.productName} skapades`);

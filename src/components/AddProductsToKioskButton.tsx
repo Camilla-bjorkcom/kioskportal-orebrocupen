@@ -77,7 +77,7 @@ function AddProductsToKioskButton({
         kioskId: kioskForEdit.id,
         products: selectedProducts,
       });
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "facilities"] });
 
       okToast(`Produkterna har sparats i kiosken!`);
 

@@ -51,15 +51,15 @@ export function UserDropdown() {
           <DropdownMenuGroup>
             <DropdownMenuItem className="dark:hover:bg-slate-600 text-xs text-center w-full">
               <BookHeart />
-              <a href="/tournaments" className="w-full flex">
+              <Link to="/tournaments" className="w-full flex">
                 Mina turneringar
-              </a>
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="dark:hover:bg-slate-600 text-xs text-center ">
               <BadgeCheck />
-              <a href="/settings" className="w-full flex">
+              <Link to="/settings" className="w-full flex">
                 Inställningar
-              </a>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

@@ -47,7 +47,6 @@ function FacilitiesAndKiosks() {
   const [, setKiosks] = useState<Kiosk[]>([]);
   const [, setOpen] = useState(false);
   const [openFacilityId, setOpenFacilityId] = useState<string | null>(null);
-
   const { isLoading, error, data, isSuccess } =
     useGetAllFacilities(tournamentId);
   const { data: products } = useGetAllProducts(tournamentId);

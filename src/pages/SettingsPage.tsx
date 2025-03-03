@@ -4,7 +4,6 @@ import { useAuth } from "react-oidc-context";
 
 const SettingsPage = () => {
   const auth = useAuth();
-  console.log("hej");
 
   return (
     <>

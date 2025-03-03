@@ -91,7 +91,7 @@ const UpdadeContactPersonButton = ({
         },
         tournamentId!
       );
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "facilities"] });
 
       if (!updatedContactPerson) throw new Error("No contact person found");
       okToast("Kontaktpersonen har uppdaterats");

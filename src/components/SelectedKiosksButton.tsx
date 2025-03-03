@@ -101,7 +101,7 @@ function SelectedKiosksButton({
       onClearSelected();
       setOpen(false);
     }
-    queryClient.invalidateQueries({ queryKey: ["facilities"] });
+    queryClient.invalidateQueries({ queryKey: [tournamentId, "facilities"] });
     okToast(
       `Valda kiosker populerades med ${selectedProducts.length} produkter`
     );

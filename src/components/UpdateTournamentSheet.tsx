@@ -16,7 +16,6 @@ import { badToast, okToast } from "@/utils/toasts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { DatePicker } from "./DatePicker";
 import {
@@ -28,7 +27,6 @@ import {
   FormMessage,
 } from "./ui/form";
 import { uploadImageFile } from "@/api/functions/uploadImageFile";
-import { useState } from "react";
 import { TrashIcon } from "lucide-react";
 import {
   Tooltip,
@@ -36,7 +34,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { deleteLogoFile } from "@/api/functions/deleteLogoFile";
 
 const UpdateTournamentSheet = ({
@@ -47,18 +44,11 @@ const UpdateTournamentSheet = ({
   tournamentId: string;
 }) => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
-
-  const handleDelete = () => {
-    queryClient.invalidateQueries({ queryKey: ["tournament"] });
-    okToast("Turnering raderades");
-    navigate("/tournaments");
-  };
 
   const formSchema = z.object({
     tournamentName: z
       .string()
-      .min(2, { message: "Turneringsnamn måste ha minst 2 bokstäver" }),
+      .min(2, { message: "Turneringsnamn måste ha minst 2 bokstäver" }).max(25, {message: "Turneringsnamn är för långt. Max 25 bokstäver."}),
     startDate: z
       .date({ required_error: "Startdatum är obligatoriskt" })
       .optional(),
@@ -214,7 +204,6 @@ const UpdateTournamentSheet = ({
                 </SheetClose>
                 <DeleteTournamentButton
                   tournamentId={tournamentId}
-                  onDelete={handleDelete}
                 />
               </div>
             </form>

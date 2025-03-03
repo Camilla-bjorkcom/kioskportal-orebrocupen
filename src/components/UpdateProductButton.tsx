@@ -101,8 +101,8 @@ function UpdateProductButton({
       if (!updatedNewProduct)
         throw new NoResponseError("No response from server");
 
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-      queryClient.invalidateQueries({ queryKey: ["productlists"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "products"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "productlists"] });
 
       okToast("Produkten har uppdaterats!");
       setIsDialogOpen(false);

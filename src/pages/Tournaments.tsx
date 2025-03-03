@@ -1,12 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useGetAllTournaments } from "@/hooks/use-query";
 import CreateTournamentButton from "@/components/CreateTournamentButton";
 
 import Topbar from "@/components/Topbar";
 
 function Tournaments() {
-  const navigate = useNavigate();
-
   const { isLoading, error, data, isSuccess } = useGetAllTournaments();
 
   if (isLoading) {
@@ -56,12 +54,7 @@ function Tournaments() {
           <div className="mt-4 flex flex-wrap gap-4">
             {activeTournaments.length > 0 ? (
               activeTournaments.map((tournament, index) => (
-                <button
-                  onClick={() =>
-                    navigate(`/dashboard/${tournament.id}`, {
-                      state: { tournament },
-                    })
-                  }
+                <Link to={`/${tournament.id}/dashboard`} state={tournament}
                   key={index}
                   className="flex flex-col p-2 justify-between rounded-xl border bg-card text-card-foreground shadow hover:bg-slate-800 hover:text-white text-black aspect-video h-32 relative dark:bg-slate-800 dark:hover:bg-slate-600 dark:text-gray-200 dark:border-slate-500"
                 >
@@ -73,7 +66,7 @@ function Tournaments() {
                       {new Date(tournament.endDate).toLocaleDateString()}
                     </p>
                   </div>
-                </button>
+                </Link>
               ))
             ) : (
               <p className="text-gray-500 dark:text-gray-200">
@@ -91,12 +84,7 @@ function Tournaments() {
           <div className="mt-4 flex flex-wrap gap-4">
             {finishedTournaments.length > 0 ? (
               finishedTournaments.map((tournament, index) => (
-                <button
-                  onClick={() =>
-                    navigate(`/dashboard/${tournament.id}`, {
-                      state: { tournament },
-                    })
-                  }
+                <Link to={`/${tournament.id}/dashboard`} state={tournament}
                   key={index}
                   className="flex flex-col p-2 justify-between rounded-xl border bg-gray-200 text-black shadow hover:bg-gray-400 hover:text-white aspect-video h-32 relative dark:bg-zinc-900 dark:hover:bg-gray-600 dark:text-gray-200 dark:border-zinc-500"
                 >
@@ -110,7 +98,7 @@ function Tournaments() {
                       {new Date(tournament.endDate).toLocaleDateString()}
                     </p>
                   </div>
-                </button>
+                </Link>
               ))
             ) : (
               <p className="text-gray-500 dark:text-gray-200">

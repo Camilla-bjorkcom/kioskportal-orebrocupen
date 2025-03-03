@@ -85,7 +85,7 @@ function InventoryStorage() {
 
       okToast("Inventeringen har skickats in");
       form.reset();
-      queryClient.invalidateQueries({ queryKey: ["storageProducts"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "storageProducts"] });
     } catch (error) {
       console.error("Update failed:", error);
       badToast("Misslyckades med att skicka in inventering");
