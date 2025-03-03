@@ -148,7 +148,7 @@ const UpdateTournamentSheet = ({
                   <FormItem className="flex flex-col">
                     <FormLabel>Turneringsnamn</FormLabel>
                     <FormControl>
-                      <Input placeholder="Skriv in turneringsnamn" {...field} />
+                      <Input placeholder={tournament.tournamentName} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

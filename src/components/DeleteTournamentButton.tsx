@@ -53,7 +53,7 @@ const DeleteTournamentButton = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Avbryt</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDeleteTournament}>
+          <AlertDialogAction className="dark:bg-red-700 bg-red-600" onClick={handleDeleteTournament}>
             Jag är säker
           </AlertDialogAction>
         </AlertDialogFooter>
