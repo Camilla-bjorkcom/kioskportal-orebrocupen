@@ -55,7 +55,7 @@ function FacilitiesAndKiosks() {
     tournamentId!,
     selectedKiosk?.facilityId ?? "",
     selectedKiosk?.id ?? ""
-  );
+  ); //denna bör kanske göras någon annanstans då man direkt när man kommer in på sidan ej har valt någon kiosk
   
   const toggleFacility = (facilityId: string) => {
     setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
@@ -204,6 +204,7 @@ function FacilitiesAndKiosks() {
             className="p-4 border border-gray-200 rounded-md shadow dark:bg-slate-800 dark:text-gray-200 dark:border-slate-500 mb-4"
           >
             <AccordionTrigger
+              data-wow="Hello"
               className="text-lg font-medium hover:no-underline mr-2"
               onClick={() => toggleFacility(facility.id)}
             >
