@@ -56,7 +56,7 @@ function FacilitiesAndKiosks() {
     tournamentId!,
     selectedKiosk?.facilityId ?? "",
     selectedKiosk?.id ?? ""
-  );
+  ); //denna bör kanske göras någon annanstans då man direkt när man kommer in på sidan ej har valt någon kiosk
   
   const toggleFacility = (facilityId: string) => {
     setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
