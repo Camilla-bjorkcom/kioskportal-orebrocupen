@@ -47,7 +47,6 @@ function FacilitiesAndKiosks() {
   const [, setKiosks] = useState<Kiosk[]>([]);
   const [, setOpen] = useState(false);
   const [openFacilityId, setOpenFacilityId] = useState<string | null>(null);
-
   const { isLoading, error, data, isSuccess } =
     useGetAllFacilities(tournamentId);
   const { data: products } = useGetAllProducts(tournamentId);
@@ -259,7 +258,8 @@ function FacilitiesAndKiosks() {
             <AccordionContent>
               <div className="p-4">
                 <div>
-                  {facility.kiosks?.map((kiosk) => (
+                  {facility.kiosks.length > 0 ? (
+                    facility.kiosks?.map((kiosk) => (
                     <div
                       key={kiosk.id}
                       className="p-4 border border-gray-200 rounded-md shadow dark:border-slate-500 mb-4"
@@ -341,6 +341,7 @@ function FacilitiesAndKiosks() {
                                 );
                               }
                             }}
+                          
                           />
                         </div>
                       </div>
@@ -369,7 +370,10 @@ function FacilitiesAndKiosks() {
                         </p>
                       )}
                     </div>
-                  ))}
+                    ))
+                  ) : (
+                    <div>Inga kiosker är tillagda i anläggningen</div>
+                  )}
                 </div>
               </div>
 

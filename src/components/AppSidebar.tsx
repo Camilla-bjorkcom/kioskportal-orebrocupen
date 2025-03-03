@@ -19,10 +19,11 @@ import { Link } from "react-router-dom";
 
 // Menu items.
 
-export function AppSidebar({ id }: { id?: string }) {
+export function AppSidebar({ id }: { id: string }) {
   const [isCollapsed] = useState(false);
 
   const { data: tournament, error } = useGetTournament(id!);
+
   if (error) {
     return (
       <div>
@@ -38,11 +39,11 @@ export function AppSidebar({ id }: { id?: string }) {
       url: "#",
       icon: Trophy,
       subitems: [
-        { title: "Din översikt", url: `/dashboard/${id}` },
+        { title: "Din översikt", url: `${id}/dashboard` },
 
-        { title: "Anläggningshantering", url: `/facilitiesandkiosks/${id}` },
+        { title: "Anläggningshantering", url: `${id}/facilitiesandkiosks` },
 
-        { title: "Produkthantering", url: `/producthandler/${id}` },
+        { title: "Produkthantering", url: `${id}/producthandler` },
       ],
     },
 
@@ -51,9 +52,9 @@ export function AppSidebar({ id }: { id?: string }) {
       url: "#",
       icon: SquareChartGantt,
       subitems: [
-        { title: "Inventera huvudlager", url: `/inventorystorage/${id}` },
+        { title: "Inventera huvudlager", url: `${id}/inventorystorage` },
 
-        { title: "QR koder till kiosker", url: `/facilitiesandkiosks/${id}` },
+        { title: "QR koder till kiosker", url: `${id}/facilitiesandkiosks` },
       ],
     },
 
@@ -64,15 +65,15 @@ export function AppSidebar({ id }: { id?: string }) {
       subitems: [
         {
           title: "Kioskinventeringar",
-          url: `/inventorystatus/${id}`,
+          url: `${id}/inventorystatus`,
         },
         {
           title: "Lagerinventeringar",
-          url: `/inventorystatusstorage/${id}`,
+          url: `${id}/inventorystatusstorage`,
         },
         {
           title: "Inventeringsöversikt",
-          url: `/overviewinventories/${id}`,
+          url: `${id}/overviewinventories`,
         },
       ],
     },
@@ -80,7 +81,7 @@ export function AppSidebar({ id }: { id?: string }) {
       title: "Notiser",
       url: "#",
       icon: Bell,
-      subitems: [{ title: "Skicka notiser", url: `/inventorystatus/${id}` }],
+      subitems: [{ title: "Skicka notiser", url: `${id}/inventorystatus` }],
     },
   ];
 
@@ -90,7 +91,7 @@ export function AppSidebar({ id }: { id?: string }) {
         <SidebarHeader>
           <div className="flex gap-2 items-center justify-center mx-auto">
             {!isCollapsed && (
-              <Link to={`/dashboard/${id}`}> 
+              <Link to={`${id}/dashboard`}> 
                 {tournament?.logoUrl ? (
                   <img
                   src={tournament?.logoUrl}
@@ -130,12 +131,11 @@ export function AppSidebar({ id }: { id?: string }) {
                     <SidebarMenuSub className="dark:border-white/50 border-slate-900/50">
                       {item.subitems.map((subitem) => (
                         <SidebarMenuSubItem key={subitem.title}>
-                          <a
-                            href={subitem.url}
+                          <Link to={subitem.url}
                             className="w-full flex font-medium hover:bg-gray-100 dark:hover:bg-slate-600 p-2  rounded"
                           >
                             {subitem.title}
-                          </a>
+                          </Link>
                         </SidebarMenuSubItem>
                       ))}
                     </SidebarMenuSub>

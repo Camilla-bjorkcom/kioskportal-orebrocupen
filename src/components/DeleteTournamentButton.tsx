@@ -1,4 +1,4 @@
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
+import { deleteTournament } from "@/api/functions/deleteTournament";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,37 +11,29 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
+import { badToast, okToast } from "@/utils/toasts";
+import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 interface DeleteTournamentButtonProps {
   tournamentId: string;
-  onDelete: (id: string) => void;
 }
 
 const DeleteTournamentButton = ({
   tournamentId,
-  onDelete,
 }: DeleteTournamentButtonProps) => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const handleDeleteTournament = async () => {
     try {
-      const response = await fetchWithAuth(`tournaments/${tournamentId}`, {
-        method: "DELETE",
-      });
-      if (!response) {
-        throw new Error("Failed to fetch");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to delete tournament");
-      }
-      if (response.ok) {
-        toast({
-          title: "Lyckat",
-          description: "Turneringen har tagits bort",
-          className: "bg-green-200 dark:bg-green-400 dark:text-black",
-        });
-      }
-      onDelete(tournamentId);
+      await deleteTournament(tournamentId);
+      navigate("/tournaments");
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+      okToast("Turneringen raderades");
+      
     } catch (error) {
+      badToast("Misslyckades radera turnering");
       console.error("Error:", error);
     }
   };
@@ -61,7 +53,7 @@ const DeleteTournamentButton = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Avbryt</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDeleteTournament}>
+          <AlertDialogAction className="dark:bg-red-700 bg-red-600" onClick={handleDeleteTournament}>
             Jag är säker
           </AlertDialogAction>
         </AlertDialogFooter>

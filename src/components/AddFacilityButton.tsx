@@ -55,7 +55,7 @@ function AddFacilityButton({ tournamentId }: AddFacilityButtonProps) {
         throw new NoResponseError("No response from server");
       }
 
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "facilities"] });
 
       okToast(`Anläggning ${values.facilityName} skapades`);
     } catch (error) {

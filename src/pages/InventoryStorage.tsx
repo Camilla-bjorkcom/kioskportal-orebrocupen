@@ -11,11 +11,9 @@ import {
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { useQueryClient } from "@tanstack/react-query";
-
 import { useParams } from "react-router-dom";
 import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { useEffect } from "react";
-
 import { InventoryStorageProducts } from "@/interfaces/product";
 import { badToast, okToast } from "@/utils/toasts";
 import { useGetAllStorageProducts } from "@/hooks/use-query";
@@ -41,6 +39,7 @@ function InventoryStorage() {
     tournamentId!
   );
 
+  queryClient.invalidateQueries({ queryKey: [tournamentId, "storageProducts"] });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { amountPackages: [] },
@@ -85,7 +84,7 @@ function InventoryStorage() {
 
       okToast("Inventeringen har skickats in");
       form.reset();
-      queryClient.invalidateQueries({ queryKey: ["storageProducts"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "storageProducts"] });
     } catch (error) {
       console.error("Update failed:", error);
       badToast("Misslyckades med att skicka in inventering");
@@ -117,10 +116,10 @@ function InventoryStorage() {
       <div className="container mx-auto p-3">
         <ScrolltoTopBtn />
         <div className="rounded-xl border border-black border-solid text-black aspect-video dark:border-slate-500">
-          <h2 className="text-lg lg:text-2xl text-center w-full mt-10 font-semibold dark:text-gray-200">
+          <h2 className="mt-8 items-center text-center text-2xl pb-2 ml-2 dark:text-gray-200">
             Inventera huvudlager
           </h2>
-          <div className="w-full place-items-center mt-5 gap-3 mb-16">
+          <div className="w-full text-center mt-5 gap-3 mb-16 ml-3">
             <p className="text-sm dark:text-gray-200">
               Senast inventering gjord:
             </p>
@@ -141,7 +140,7 @@ function InventoryStorage() {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="w-fit mx-auto mb-20"
+              className=" mb-20"
             >
               {isSuccess && data.products && data.products.length > 0 ? (
                 data.products
@@ -151,7 +150,7 @@ function InventoryStorage() {
                   .map((product, index) => (
                     <div
                       key={product.id}
-                      className="space-y-4 lg:flex odd:bg-gray-200 dark:bg-slate-800  bg-white odd:dark:bg-slate-700 rounded-lg p-5"
+                      className="lg:flex odd:bg-gray-100 dark:bg-slate-900 bg-white odd:dark:bg-slate-700  p-3"
                     >
                       <FormItem className="place-content-center">
                         <FormLabel>
@@ -211,10 +210,10 @@ function InventoryStorage() {
                   Inga produkter tillagda i turneringen
                 </p>
               )}
-              <div className="w-1/2 place-self-center">
+              <div className="place-self-center">
                 <Button
                   type="submit"
-                  className="w-full mt-10"
+                  className="w-fit mt-10"
                   disabled={!formState.isValid}
                 >
                   Skicka in inventering

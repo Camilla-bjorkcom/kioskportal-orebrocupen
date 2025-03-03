@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -16,7 +15,6 @@ import { badToast, okToast } from "@/utils/toasts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { DatePicker } from "./DatePicker";
 import {
@@ -28,7 +26,6 @@ import {
   FormMessage,
 } from "./ui/form";
 import { uploadImageFile } from "@/api/functions/uploadImageFile";
-import { useState } from "react";
 import { TrashIcon } from "lucide-react";
 import {
   Tooltip,
@@ -36,8 +33,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import { deleteLogoFile } from "@/api/functions/deleteLogoFile";
+import { useState } from "react";
 
 const UpdateTournamentSheet = ({
   tournament,
@@ -47,24 +44,15 @@ const UpdateTournamentSheet = ({
   tournamentId: string;
 }) => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
-
-  const handleDelete = () => {
-    queryClient.invalidateQueries({ queryKey: ["tournament"] });
-    okToast("Turnering raderades");
-    navigate("/tournaments");
-  };
 
   const formSchema = z.object({
     tournamentName: z
       .string()
-      .min(2, { message: "Turneringsnamn måste ha minst 2 bokstäver" }),
+      .min(2, { message: "Turneringsnamn måste ha minst 2 bokstäver" }).max(25, {message: "Turneringsnamn är för långt. Max 25 bokstäver."}),
     startDate: z
-      .date({ required_error: "Startdatum är obligatoriskt" })
-      .optional(),
+      .date({ required_error: "Startdatum är obligatoriskt" }),
     endDate: z
-      .date({ required_error: "Slutdatum är obligatoriskt" })
-      .optional(),
+      .date({ required_error: "Slutdatum är obligatoriskt" }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -87,8 +75,9 @@ const UpdateTournamentSheet = ({
       }
 
       console.log("Tournament updated successfully:", updatedTournament);
+      setTimeout(() => setOpen(false), 1500);
       okToast("Turneringen har uppdaterats");
-      queryClient.invalidateQueries({ queryKey: ["tournament"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "tournament"] });
     } catch (error) {
       console.error("Failed to update tournament:", error);
       badToast("Misslyckades med att spara ändringar.");
@@ -106,16 +95,14 @@ const UpdateTournamentSheet = ({
     reader.onloadend = async () => {
       const base64String = reader.result?.toString().split(",")[1]; // Extrahera Base64-datan
 
-      console.log("fil:", file);
-      console.log("filnamn:", file.name);
+      
       const dataResponse = await uploadImageFile(
         file.name,
         base64String,
         tournamentId!
       );
       if (dataResponse) {
-        console.log(dataResponse.fileUrl);
-        queryClient.invalidateQueries({ queryKey: ["tournament"] });
+        queryClient.invalidateQueries({ queryKey: [tournamentId, "tournament"] });
         okToast("Turneringslogga uppdaterades");
       }
     };
@@ -124,18 +111,18 @@ const UpdateTournamentSheet = ({
   const handleDeleteLogo = async (tournamentId: string) => {
     const response = await deleteLogoFile(tournamentId);
     if (response) {
-      console.log(response);
-      queryClient.invalidateQueries({ queryKey: ["tournament"] });
+      console.log("tournamentlogo deleted");
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "tournament"] });
       okToast("Turneringslogga raderades");
     }
     else {
       badToast("Misslyckades radera turneringslogga")
     }
   }
-
+  const [open, setOpen] = useState(false);
   return (
     <>
-      <Sheet>
+       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button
             className="dark:bg-slate-700 dark:hover:bg-slate-600"
@@ -161,7 +148,7 @@ const UpdateTournamentSheet = ({
                   <FormItem className="flex flex-col">
                     <FormLabel>Turneringsnamn</FormLabel>
                     <FormControl>
-                      <Input placeholder="Skriv in turneringsnamn" {...field} />
+                      <Input placeholder={tournament.tournamentName} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -204,17 +191,16 @@ const UpdateTournamentSheet = ({
               </div>
 
               <div className="flex:row sm:flex justify-between items-center mt-6">
-                <SheetClose asChild>
+               
                   <Button
                     type="submit"
                     className="border border-solid hover:bg-slate-800 hover:text-white mb-4 sm:mb-0  shadow"
                   >
                     Uppdatera turnering
                   </Button>
-                </SheetClose>
+                
                 <DeleteTournamentButton
                   tournamentId={tournamentId}
-                  onDelete={handleDelete}
                 />
               </div>
             </form>
@@ -231,7 +217,7 @@ const UpdateTournamentSheet = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Button onClick={() => handleDeleteLogo(tournamentId)}variant={"destructive"}>
+                      <Button onClick={() => handleDeleteLogo(tournamentId)} variant={"destructive"}>
                         <TrashIcon />
                       </Button>
                     </TooltipTrigger>

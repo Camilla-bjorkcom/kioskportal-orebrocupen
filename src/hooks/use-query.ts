@@ -10,10 +10,11 @@ import { Productlist } from "@/interfaces/productlist";
 import { KioskInventory } from "@/interfaces/kioskInventory";
 import { Tournament } from "@/interfaces/tournament";
 import { Kiosk } from "@/interfaces";
+import { OverviewRecord } from "@/interfaces/overview";
 
 export const useGetAllFacilities = (tournamentId: string) => {
   return useQuery<Facility[]>({
-    queryKey: ["facilities"],
+    queryKey: [tournamentId, "facilities"],
     queryFn: async () => {
       const response = await fetchWithAuth(`facilities/${tournamentId}`);
 
@@ -28,7 +29,7 @@ export const useGetAllFacilities = (tournamentId: string) => {
 
 export const useGetOneFacility = (tournamentId: string, facilityId: string) => {
   return useQuery<Facility>({
-    queryKey: ["facilities", facilityId],
+    queryKey: [facilityId, "facilities"],
     queryFn: async () => {
       const response = await fetchWithAuth(
         `facilities/${tournamentId}/${facilityId}`
@@ -44,7 +45,7 @@ export const useGetOneFacility = (tournamentId: string, facilityId: string) => {
 
 export const useGetAllStorageInventories = (tournamentId: string) => {
   return useQuery<GroupedStorageInventories>({
-    queryKey: ["inventoryStorageList"],
+    queryKey: [tournamentId, "inventoryStorageList"],
     queryFn: async () => {
       const response = await fetchWithAuth(`
 tournaments/${tournamentId}/inventories`);
@@ -59,7 +60,7 @@ tournaments/${tournamentId}/inventories`);
 
 export const useGetAllProducts = (tournamentId: string) => {
   return useQuery<GetAllProductsResponse>({
-    queryKey: ["products"],
+    queryKey: [tournamentId, "products"],
     queryFn: async () => {
       const response = await fetchWithAuth(`products/${tournamentId}`);
       if (!response || !response.ok) {
@@ -73,7 +74,7 @@ export const useGetAllProducts = (tournamentId: string) => {
 
 export const useGetAllStorageProducts = (tournamentId: string) => {
   return useQuery<StorageInventory>({
-    queryKey: ["storageProducts"],
+    queryKey: [tournamentId, "storageProducts"],
     queryFn: async () => {
       const response = await fetchWithAuth(`products/${tournamentId}`);
       if (!response || !response.ok) {
@@ -87,7 +88,7 @@ export const useGetAllStorageProducts = (tournamentId: string) => {
 
 export const useGetAllProductlists = (tournamentId: string) => {
   return useQuery<Productlist[]>({
-    queryKey: ["productlists"],
+    queryKey: [tournamentId, "productlists"],
     queryFn: async () => {
       const response = await fetchWithAuth(`productlists/${tournamentId}`);
       if (!response || !response.ok) {
@@ -102,7 +103,7 @@ export const useGetAllProductlists = (tournamentId: string) => {
 
 export const useGetTournament = (tournamentId: string) => {
   return useQuery<Tournament>({
-    queryKey: ["tournament"],
+    queryKey: [tournamentId, "tournament"],
     queryFn: async () => {
       const response = await fetchWithAuth(`tournaments/${tournamentId}`);
       if (!response || !response.ok) {
@@ -136,7 +137,7 @@ export const useGetOneKiosk = (
   kioskId: string
 ) => {
   return useQuery<Kiosk>({
-    queryKey: ["kiosk"],
+    queryKey: [tournamentId, "kiosk"],
     queryFn: async () => {
       const response = await fetchWithAuth(
         `facilities/${tournamentId}/${facilityId}/kiosks/${kioskId}`
@@ -152,7 +153,7 @@ export const useGetOneKiosk = (
 };
 export const useGetStorageInventory = (tournamentId: string) => {
   return useQuery<StorageInventory>({
-    queryKey: ["inventoryList"],
+    queryKey: [tournamentId, "inventoryList"],
     queryFn: async () => {
       const response = await fetchWithAuth(
         `tournaments/${tournamentId}/inventoryoverview`
@@ -172,7 +173,7 @@ export const useGetStorageInventory = (tournamentId: string) => {
 
 export const useGetFirstStorageInventory = (tournamentId: string) => {
   return useQuery<StorageInventory>({
-    queryKey: ["firstInventoryList"],
+    queryKey: [tournamentId, "firstInventoryList"],
     queryFn: async () => {
       const response = await fetchWithAuth(
         `tournaments/${tournamentId}/firstinventory`
@@ -192,7 +193,7 @@ export const useGetFirstStorageInventory = (tournamentId: string) => {
 
 export const useGetAllFirstKioskInventories = (tournamentId: string) => {
   return useQuery<KioskInventory[]>({
-    queryKey: ["firstkioskinventories"],
+    queryKey: [tournamentId, "firstkioskinventories"],
     queryFn: async () => {
       const response = await fetchWithAuth(
         `firstkioskinventories/${tournamentId}`
@@ -215,7 +216,7 @@ export const useGetOneKioskFirstInventory = (
   kioskId: string
 ) => {
   return useQuery<KioskInventory>({
-    queryKey: ["firstKioskInventory"],
+    queryKey: [tournamentId, "firstKioskInventory"],
     queryFn: async () => {
       const response = await fetchWithAuth(
         `firstkioskinventories/${tournamentId}/${kioskId}`
@@ -239,7 +240,7 @@ export const useGetFirstKioskInventoriesForOneFacility = (
 ) => {
   return useQueries({
     queries: kiosks.map((kiosk) => ({
-      queryKey: ["kioskInventory", kiosk.id],
+      queryKey: [kiosk.id, "kioskInventory" ],
       queryFn: async (): Promise<KioskInventory> => {
         const response = await fetchWithAuth(
           `firstkioskinventories/${tournamentId}/${kiosk.id}`
@@ -257,3 +258,15 @@ export const useGetFirstKioskInventoriesForOneFacility = (
     })),
   });
 };
+
+
+export const useGetOverview = (tournamentId: string) => {
+  return useQuery<OverviewRecord>({
+    queryKey: [tournamentId, "overview"],
+    queryFn: async () => {
+      const response = await fetchWithAuth(`tournaments/${tournamentId}/overview`);
+      if (!response) throw new Error("Failed to fetch overview stats");
+      return response.json();
+    },
+  });
+}

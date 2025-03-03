@@ -68,10 +68,10 @@ const DeleteButton = ({ id, type, onDelete }: DeleteButtonProps) => {
         case "Facility":
         case "Kiosk":
         case "ContactPerson":
-          queryClient.invalidateQueries({ queryKey: ["facilities"] });
+          queryClient.invalidateQueries({ queryKey: [id, "facilities"] });
           break;
         case "Productlist":
-          queryClient.invalidateQueries({ queryKey: ["productlists"] });
+          queryClient.invalidateQueries({ queryKey: [id, "productlists"] });
           break;
       }
       okToast(`Objektet raderades`);

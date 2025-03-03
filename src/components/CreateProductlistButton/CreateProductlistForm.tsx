@@ -49,7 +49,7 @@ function CreateProductlistForm( {tournamentId, onDialogClosed}: CreateProductLis
         throw new NoResponseError("No response from server");
       }
 
-      queryClient.invalidateQueries({ queryKey: ["productlists"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "productlists"] });
 
       okToast(`Produktlista ${values.productlistName} skapades`);
       if (onDialogClosed) {

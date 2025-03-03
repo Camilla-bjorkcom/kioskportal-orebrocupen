@@ -65,7 +65,7 @@ const UpdateFacilityButton = ({
         values.facilityName,
         tournamentId!
       );
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "facilities"] });
 
       if (!updatedFacility) throw new Error("No facility found");
       okToast("Anläggning uppdaterad");

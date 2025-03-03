@@ -2,13 +2,12 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Outlet } from "react-router-dom";
 import { useParams } from "react-router-dom";
-
 import Topbar from "@/components/Topbar";
 import { useGetTournament } from "@/hooks/use-query";
 
-function TournamentDetails() {
-  const { id } = useParams<{ id: string }>();
 
+function SideBarLayout() {
+  const { id } = useParams<{ id: string }>();
   const { isLoading, error, data, isSuccess } = useGetTournament(id!);
 
   if (isLoading) {
@@ -33,9 +32,9 @@ function TournamentDetails() {
     <SidebarProvider>
       <AppSidebar id={data.id} />
       <main className="w-full ">
-        <Topbar
-          leftComponent={<SidebarTrigger className="sm:hidden" />}
-          tournamentName={data?.tournamentName}
+      <Topbar
+        leftComponent={<SidebarTrigger className="sm:hidden" />}
+          tournamentName={data.tournamentName}
         />
         <Outlet />
       </main>
@@ -43,4 +42,4 @@ function TournamentDetails() {
   );
 }
 
-export default TournamentDetails;
+export default SideBarLayout;

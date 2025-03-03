@@ -59,7 +59,7 @@ function UpdateKioskKioskButton({
     try {
      
       const updatedKioskResult = await updateKiosk({tournamentId:tournamentId!, facilityId:kioskForEdit.facilityId, kioskId:kioskForEdit.id, kioskName:values.kioskName});
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "facilities"] });
 
       if (!updatedKioskResult) throw new Error("Misslyckades med att uppdatera kiosknamn");
       okToast("Kiosknamn har uppdaterats");

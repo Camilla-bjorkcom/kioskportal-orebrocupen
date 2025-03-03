@@ -57,7 +57,7 @@ function AddKioskButton({
     try {
       const kioskCreated = await createKiosk(values.kioskName, facilityId, tournamentId!);
       if (!kioskCreated) throw new NoResponseError("No response from server");
-      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "facilities"] });
 
       onFacilityAdded?.(facilityId);
 
