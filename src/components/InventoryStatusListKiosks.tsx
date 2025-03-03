@@ -95,7 +95,7 @@ const InventoryStatusListKiosks = () => {
 
       persistNewInventory(data);
     }
-  }, [isSuccess, data]); // Run only when `isSuccess` or `data` changes
+  }, [isSuccess, data]);
 
   const facilityStatus = groupBy(inventoryStatus, (x) => x.facilityId);
   const kioskStatus = groupBy(inventoryStatus, (x) => x.id);
@@ -310,10 +310,10 @@ const InventoryStatusListKiosks = () => {
 
                         {kiosk.products
                           .slice()
-                          .sort((a, b) =>
+                          .toSorted((a, b) =>
                             a.productName.localeCompare(b.productName)
                           )
-                          .map((product, productIndex) => {
+                          .map((product) => {
                             const isOutOfStock =
                               product.amountPieces === 0 ||
                               product.amountPackages === 0;
@@ -321,13 +321,7 @@ const InventoryStatusListKiosks = () => {
                             return (
                               <div
                                 key={product.id}
-                                className={`px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 hover:bg-gray-200 
-                  dark:bg-slate-800 dark:text-gray-300 dark:border-slate-500 dark:hover:bg-slate-700 
-                  ${
-                    productIndex % 2 === 0
-                      ? "bg-gray-100"
-                      : "bg-white dark:bg-slate-700"
-                  }`}
+                                className="px-4 grid grid-cols-4 gap-4 py-2 text-gray-700 border-b border-gray-200 dark:bg-slate-800 dark:text-gray-300 dark:border-slate-500 odd:bg-gray-200 odd:dark:bg-slate-700"
                               >
                                 <p
                                   className={

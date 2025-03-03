@@ -1,7 +1,6 @@
 import AddFacilityButton from "@/components/AddFacilityButton";
 import AddKioskButton from "@/components/AddKioskButton";
 import { useEffect, useState } from "react";
-
 import UpdateFacilityButton from "@/components/UpdateFacilityButton";
 import DeleteButton from "@/components/DeleteButton";
 import {
@@ -22,7 +21,6 @@ import AddContactPersonButton from "@/components/AddContactPersonButton";
 import SelectedKiosksButton from "@/components/SelectedKiosksButton";
 import { Checkbox } from "@/components/ui/checkbox";
 import UpdateContactPersonButton from "@/components/UpdateContactPersonButton";
-
 import AddProductsToKioskButton from "@/components/AddProductsToKioskButton";
 import QrCodeSingleBtn from "@/components/QrCodeSingleBtn";
 import QrCodeAllBtn from "@/components/QrCodeAllBtn";
@@ -42,28 +40,24 @@ import ScrolltoTopBtn from "@/components/ScrollToTopBtn";
 
 function FacilitiesAndKiosks() {
   const tournamentId = useParams().id as string;
-
   const [selectedKiosk, setSelectedKiosk] = useState<Kiosk | null>(null);
   const [kiosksForUpdate, setKiosksforUpdate] = useState<Kiosk[]>([]);
   const [, setKioskForEdit] = useState<Kiosk>();
   const [, setSelectedProducts] = useState<Product[]>([]);
   const [, setKiosks] = useState<Kiosk[]>([]);
-
   const [, setOpen] = useState(false);
   const [openFacilityId, setOpenFacilityId] = useState<string | null>(null);
 
   const { isLoading, error, data, isSuccess } =
     useGetAllFacilities(tournamentId);
-
   const { data: products } = useGetAllProducts(tournamentId);
-
   const { data: productlists } = useGetAllProductlists(tournamentId);
-
   const { data: fetchedKiosk, isSuccess: kioskSuccess } = useGetOneKiosk(
     tournamentId!,
     selectedKiosk?.facilityId ?? "",
     selectedKiosk?.id ?? ""
-  );
+  ); //denna bör kanske göras någon annanstans då man direkt när man kommer in på sidan ej har valt någon kiosk
+  
   const toggleFacility = (facilityId: string) => {
     setOpenFacilityId((prevId) => (prevId === facilityId ? null : facilityId));
   };
@@ -354,10 +348,15 @@ function FacilitiesAndKiosks() {
                         Produkter ({kiosk.products.length})
                       </div>
                       {kiosk.products && kiosk.products.length > 0 ? (
-                        <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
+                        <ul
+                          className="sm:grid flex flex-col sm:grid-flow-col gap-3 mt-2"
+                          style={{
+                            gridTemplateRows: `repeat(${Math.ceil(kiosk.products.length / 3)}, 1fr)`,
+                          }}
+                        >
                           {kiosk.products
                             .slice()
-                            .sort((a, b) =>
+                            .toSorted((a, b) =>
                               a.productName.localeCompare(b.productName)
                             )
                             .map((product: Product, index: number) => (

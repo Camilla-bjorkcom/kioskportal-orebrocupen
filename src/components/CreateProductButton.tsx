@@ -10,7 +10,7 @@ import {
 import { Input } from "./ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { z } from "zod";
 import {
   Form,
@@ -32,6 +32,8 @@ const formSchema = z.object({
     message: "Produktnamn måste ha minst 2 bokstäver",
   }),
 
+  
+
   amountPerPackage: z.preprocess(
     (val) => (val === "" ? undefined : Number(val)),
     z
@@ -45,6 +47,7 @@ const formSchema = z.object({
       .optional()
   ),
 });
+
 interface CreateProductProps {
   tournamentId: string;
 }
@@ -60,6 +63,8 @@ function CreateProductButton({ tournamentId }: CreateProductProps) {
       amountPerPackage: 1,
     },
   });
+
+  const productNameInputRef = useRef<HTMLInputElement | null>(null);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -95,6 +100,9 @@ function CreateProductButton({ tournamentId }: CreateProductProps) {
     }, 3000);
 
     form.reset();
+    if(productNameInputRef.current) {
+      productNameInputRef.current.focus();
+    }
   }
 
   return (
@@ -117,11 +125,15 @@ function CreateProductButton({ tournamentId }: CreateProductProps) {
             <FormField
               control={form.control}
               name="productName"
+              
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Produktnamn</FormLabel>
                   <FormControl>
-                    <Input placeholder="Skriv in produktnamn" {...field} />
+                    <Input placeholder="Skriv in produktnamn"  {...field} ref={(e) => {
+                                field.ref(e);
+                                productNameInputRef.current = e;
+                            }} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

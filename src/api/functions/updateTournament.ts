@@ -7,6 +7,7 @@ export const updateTournament = async (
     tournamentName: string;
     startDate?: Date | undefined;
     endDate?: Date | undefined;
+    logoUrl?: string | undefined;
   }
 ) => {
   const response = await fetchWithAuth(`tournaments/${tournamentId}`, {

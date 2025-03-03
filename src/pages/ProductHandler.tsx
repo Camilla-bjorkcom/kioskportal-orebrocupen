@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/accordion";
 import UpdateProductListButton from "@/components/UpdateProductListButton";
 import DeleteButton from "@/components/DeleteButton";
-
 import ProductInfoComponent from "@/components/ProductInfoComponent";
 import { useGetAllProductlists, useGetAllProducts } from "@/hooks/use-query";
 import { deleteProductList } from "@/api/functions/deleteProductlist";
@@ -194,12 +193,15 @@ function ProductHandler() {
                     </div>
                     {productlist.products && productlist.products.length > 0 ? (
                       <ul
-                        className="grid grid-cols-3 gap-4 mt-2 p-4"
+                        className="sm:grid flex flex-col grid-cols-3 gap-4 mt-2 p-4 sm:grid-flow-col "
+                        style={{
+                          gridTemplateRows: `repeat(${Math.ceil(productlist.products.length / 3)}, 1fr)`,
+                        }}
                         key={productlist.id}
                       >
                         {productlist.products
                           .slice()
-                          .sort((a, b) =>
+                          .toSorted((a, b) =>
                             a.productName.localeCompare(b.productName)
                           )
                           .map((product: Product, index: number) => (
