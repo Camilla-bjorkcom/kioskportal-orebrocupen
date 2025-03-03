@@ -78,7 +78,7 @@ const UpdateTournamentSheet = ({
 
       console.log("Tournament updated successfully:", updatedTournament);
       okToast("Turneringen har uppdaterats");
-      queryClient.invalidateQueries({ queryKey: ["tournament"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "tournament"] });
     } catch (error) {
       console.error("Failed to update tournament:", error);
       badToast("Misslyckades med att spara ändringar.");
@@ -105,7 +105,7 @@ const UpdateTournamentSheet = ({
       );
       if (dataResponse) {
         console.log(dataResponse.fileUrl);
-        queryClient.invalidateQueries({ queryKey: ["tournament"] });
+        queryClient.invalidateQueries({ queryKey: [tournamentId, "tournament"] });
         okToast("Turneringslogga uppdaterades");
       }
     };
@@ -115,7 +115,7 @@ const UpdateTournamentSheet = ({
     const response = await deleteLogoFile(tournamentId);
     if (response) {
       console.log(response);
-      queryClient.invalidateQueries({ queryKey: ["tournament"] });
+      queryClient.invalidateQueries({ queryKey: [tournamentId, "tournament"] });
       okToast("Turneringslogga raderades");
     }
     else {

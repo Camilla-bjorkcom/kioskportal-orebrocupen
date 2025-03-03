@@ -91,7 +91,7 @@ export function AppSidebar({ id }: { id: string }) {
         <SidebarHeader>
           <div className="flex gap-2 items-center justify-center mx-auto">
             {!isCollapsed && (
-              <Link to={`/dashboard/${id}`}> 
+              <Link to={`${id}/dashboard`}> 
                 {tournament?.logoUrl ? (
                   <img
                   src={tournament?.logoUrl}
