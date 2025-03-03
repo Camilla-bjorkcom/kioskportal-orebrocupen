@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -35,6 +34,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { deleteLogoFile } from "@/api/functions/deleteLogoFile";
+import { useState } from "react";
 
 const UpdateTournamentSheet = ({
   tournament,
@@ -50,11 +50,9 @@ const UpdateTournamentSheet = ({
       .string()
       .min(2, { message: "Turneringsnamn måste ha minst 2 bokstäver" }).max(25, {message: "Turneringsnamn är för långt. Max 25 bokstäver."}),
     startDate: z
-      .date({ required_error: "Startdatum är obligatoriskt" })
-      .optional(),
+      .date({ required_error: "Startdatum är obligatoriskt" }),
     endDate: z
-      .date({ required_error: "Slutdatum är obligatoriskt" })
-      .optional(),
+      .date({ required_error: "Slutdatum är obligatoriskt" }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -77,6 +75,7 @@ const UpdateTournamentSheet = ({
       }
 
       console.log("Tournament updated successfully:", updatedTournament);
+      setTimeout(() => setOpen(false), 1500);
       okToast("Turneringen har uppdaterats");
       queryClient.invalidateQueries({ queryKey: [tournamentId, "tournament"] });
     } catch (error) {
@@ -96,15 +95,13 @@ const UpdateTournamentSheet = ({
     reader.onloadend = async () => {
       const base64String = reader.result?.toString().split(",")[1]; // Extrahera Base64-datan
 
-      console.log("fil:", file);
-      console.log("filnamn:", file.name);
+      
       const dataResponse = await uploadImageFile(
         file.name,
         base64String,
         tournamentId!
       );
       if (dataResponse) {
-        console.log(dataResponse.fileUrl);
         queryClient.invalidateQueries({ queryKey: [tournamentId, "tournament"] });
         okToast("Turneringslogga uppdaterades");
       }
@@ -114,7 +111,7 @@ const UpdateTournamentSheet = ({
   const handleDeleteLogo = async (tournamentId: string) => {
     const response = await deleteLogoFile(tournamentId);
     if (response) {
-      console.log(response);
+      console.log("tournamentlogo deleted");
       queryClient.invalidateQueries({ queryKey: [tournamentId, "tournament"] });
       okToast("Turneringslogga raderades");
     }
@@ -122,10 +119,10 @@ const UpdateTournamentSheet = ({
       badToast("Misslyckades radera turneringslogga")
     }
   }
-
+  const [open, setOpen] = useState(false);
   return (
     <>
-      <Sheet>
+       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button
             className="dark:bg-slate-700 dark:hover:bg-slate-600"
@@ -194,14 +191,14 @@ const UpdateTournamentSheet = ({
               </div>
 
               <div className="flex:row sm:flex justify-between items-center mt-6">
-                <SheetClose asChild>
+               
                   <Button
                     type="submit"
                     className="border border-solid hover:bg-slate-800 hover:text-white mb-4 sm:mb-0  shadow"
                   >
                     Uppdatera turnering
                   </Button>
-                </SheetClose>
+                
                 <DeleteTournamentButton
                   tournamentId={tournamentId}
                 />
@@ -220,7 +217,7 @@ const UpdateTournamentSheet = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Button onClick={() => handleDeleteLogo(tournamentId)}variant={"destructive"}>
+                      <Button onClick={() => handleDeleteLogo(tournamentId)} variant={"destructive"}>
                         <TrashIcon />
                       </Button>
                     </TooltipTrigger>

@@ -1,42 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { Tournament } from "@/interfaces";
-import fetchWithAuth from "@/api/functions/fetchWithAuth";
 import WeatherComponent from "@/components/WeatherComponent";
 import Countdown from "@/components/Countdown";
 import { InventoryGraph } from "@/components/InventoryGraph";
-import { OverviewRecord } from "@/interfaces/overview";
 import UpdateTournamentSheet from "@/components/UpdateTournamentSheet";
+import { useGetOverview, useGetTournament } from "@/hooks/use-query";
 
 function Dashboard() {
   const { id } = useParams<{ id: string }>();
-
+  
   const {
     isLoading,
     error,
     data: tournament,
-  } = useQuery<Tournament>({
-    queryKey: ["tournament", id],
-    queryFn: async () => {
-      const response = await fetchWithAuth(`tournaments/${id}`);
-      if (!response) throw new Error("Failed to fetch tournament");
-      return response.json();
-    },
-    enabled: !!id,
-  });
+  } = useGetTournament(id!)
 
   const {
     isLoading: isLoadingOverview,
     data: overview,
     error: errorOverview,
-  } = useQuery<OverviewRecord>({
-    queryKey: ["overview"],
-    queryFn: async () => {
-      const response = await fetchWithAuth(`tournaments/${id}/overview`);
-      if (!response) throw new Error("Failed to fetch overview stats");
-      return response.json();
-    },
-  });
+  } = useGetOverview(id!)
 
   if (!id) {
     return (

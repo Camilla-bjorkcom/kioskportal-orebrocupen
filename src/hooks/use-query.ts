@@ -10,6 +10,7 @@ import { Productlist } from "@/interfaces/productlist";
 import { KioskInventory } from "@/interfaces/kioskInventory";
 import { Tournament } from "@/interfaces/tournament";
 import { Kiosk } from "@/interfaces";
+import { OverviewRecord } from "@/interfaces/overview";
 
 export const useGetAllFacilities = (tournamentId: string) => {
   return useQuery<Facility[]>({
@@ -257,3 +258,15 @@ export const useGetFirstKioskInventoriesForOneFacility = (
     })),
   });
 };
+
+
+export const useGetOverview = (tournamentId: string) => {
+  return useQuery<OverviewRecord>({
+    queryKey: [tournamentId, "overview"],
+    queryFn: async () => {
+      const response = await fetchWithAuth(`tournaments/${tournamentId}/overview`);
+      if (!response) throw new Error("Failed to fetch overview stats");
+      return response.json();
+    },
+  });
+}

@@ -24,17 +24,16 @@ const DeleteTournamentButton = ({
 }: DeleteTournamentButtonProps) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  
+
   const handleDeleteTournament = async () => {
     try {
-      const dataResponse = await deleteTournament(tournamentId) 
-      if(dataResponse){
-        queryClient.invalidateQueries({ queryKey: [tournamentId, "tournament"] });
-        okToast("Turnering raderades");
-        navigate("/tournaments");
-      }
-      badToast("Misslyckades radera turnering")
+      await deleteTournament(tournamentId);
+      navigate("/tournaments");
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+      okToast("Turneringen raderades");
+      
     } catch (error) {
+      badToast("Misslyckades radera turnering");
       console.error("Error:", error);
     }
   };
