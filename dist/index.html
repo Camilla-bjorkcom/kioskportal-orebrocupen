@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kiosk Portalen</title>
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!localStorage.getItem("theme") &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-BflSrSkd.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BOgQabrf.css">
+  </head>
+  <body class="font-custom bg-slate-50 dark:bg-slate-900">
+    <div id="root"></div>
+  </body>
+</html>
